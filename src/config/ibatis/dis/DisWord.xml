@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DisWord_NS">
+	<!--table:DIS_WORD -->
+	<typeAlias alias="disWord" type="com.shangde.edu.dis.domain.DisWord" />
+	
+	<!-- 后台分页查看 -->
+	<resultMap id="disWordResultBack" class="com.shangde.edu.dis.domain.DisWord">
+		<result property="word" column="word"/>
+		<result property="createTime" column="createTime"/>
+		<result property="id" column="id"/>
+	</resultMap>
+	
+	<!-- 所有敏感词查看 -->
+	<resultMap class="com.shangde.edu.dis.domain.DisWord" id="disWordResultFilter">
+		<result property="word" column="word"/>
+	</resultMap>
+	
+	<insert id="createDisWord" parameterClass="disWord" >
+	INSERT INTO dis_word_tbl (word, createTime) 
+	VALUES
+	  (#word#, #createTime#)
+	<selectKey resultClass="int" type="post" keyProperty="id" >   
+    	<include refid="public_sql.increment_sql"/>
+    </selectKey>
+	</insert>
+
+	<!-- Count -->
+	<select id="getDisWordCount" resultClass="int">
+		SELECT COUNT(*) FROM dis_word_tbl
+	</select>
+
+	<!-- 后台分页查看 -->
+	<select id="getDisWordByList" resultMap="disWordResultBack" >
+		<include refid="public_sql.page_begin" />
+		SELECT
+			dis_word_tbl.id,
+			dis_word_tbl.word,
+			dis_word_tbl.createTime
+		FROM dis_word_tbl 
+		ORDER BY CREATETIME DESC 
+		<include refid="public_sql.page_end" />
+	</select>
+	
+	<!-- 所有敏感词查看 -->
+	<select id="getAllDisWord" resultMap="disWordResultFilter" >
+		SELECT
+			dis_word_tbl.id,
+			dis_word_tbl.word,
+			dis_word_tbl.createTime
+		FROM dis_word_tbl
+	</select>
+
+	<delete id="delDisWordById" parameterClass="int">
+		DELETE FROM dis_word_tbl WHERE id = #id#
+	</delete>
+	<!--end -->
+	
+</sqlMap>

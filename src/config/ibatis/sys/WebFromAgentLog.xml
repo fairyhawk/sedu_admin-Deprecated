@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="WebFromAgentLog_NS">
+	<typeAlias alias="WebFromAgentLog" type="com.shangde.edu.sys.domain.WebFromAgentLog" />
+	<typeAlias alias="QueryWebFromAgentLogsCondition" type="com.shangde.edu.sys.condition.QueryWebFromAgentLogsCondition" />
+	<typeAlias alias="StatisticsWebFromDTO" type="com.shangde.edu.sys.dto.StatisticsWebFromDTO" />
+	<typeAlias alias="QueryUserWebFromCondition" type="com.shangde.edu.sys.condition.QueryUserWebFromCondition" />
+	<typeAlias alias="UserWebFromDTO" type="com.shangde.edu.sys.dto.UserWebFromDTO" />
+	<resultMap id="WebFromAgentLogResult" class="WebFromAgentLog">
+		<result property="id" column="ID" />
+		<result property="webFrom" column="WEB_FROM" />
+		<result property="webAgent" column="WEB_AGENT" />
+		<result property="webPath" column="WEB_PATH" />
+		<result property="domain" column="DOMAIN" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="clickTime" column="CLICK_TIME" />
+	</resultMap>
+	<resultMap id="StatisticsWebFromDTOResult" class="StatisticsWebFromDTO">
+		<result property="clickCount" column="CLICK_COUNT" />
+		<result property="webFrom" column="WEB_FROM" />
+		<result property="registerCount" column="REGISTER_COUNT" />
+		<result property="contractCount" column="CONTRACT_COUNT" />
+		<result property="contractMoneySum" column="CONTRACT_MONEY_SUM" />
+		<result property="payedContractCount" column="PAYED_CONTRACT_COUNT" />
+		<result property="payedContractMoneySum" column="PAYED_CONTRACT_MONEY_SUM" />
+	</resultMap>
+	<resultMap id="UserWebFromDTOResult" class="UserWebFromDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="mobile" column="MOBILE" />
+		<result property="email" column="EMAIL" />
+		<result property="webFrom" column="CUS_WEB_FROM" />
+		<result property="webAgent" column="CUS_WEB_AGENT" />
+		<result property="regDate" column="REG_TIME" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="subjectName" column="SUBJECT_NAME" />
+		<result property="recordCount" column="RECORD_COUNT" />
+		<result property="payedRecordCount" column="PAYED_RECORED_COUNT" />
+	</resultMap>
+	<select id="statisticWebFromLog" parameterClass="QueryWebFromAgentLogsCondition" resultMap="StatisticsWebFromDTOResult">
+		SELECT 
+		    A.WEB_FROM,
+		    IFNULL(B.CLICK_COUNT, 0) AS CLICK_COUNT,
+		    IFNULL(C.REGISTER_COUNT, 0) AS REGISTER_COUNT,
+		    IFNULL(D.CONTRACT_COUNT, 0) AS CONTRACT_COUNT,
+		    IFNULL(D.CONTRACT_MONEY_SUM, 0) AS CONTRACT_MONEY_SUM,
+		    IFNULL(E.PAYED_CONTRACT_COUNT, 0) AS PAYED_CONTRACT_COUNT,
+		    IFNULL(E.PAYED_CONTRACT_MONEY_SUM, 0) AS PAYED_CONTRACT_MONEY_SUM 
+		FROM
+		    (SELECT 
+		        WEBFROM_AGENT_TBL.WEB_FROM 
+		    FROM
+		        WEBFROM_AGENT_TBL 
+		    WHERE 1 = 1
+		    	<isNotEmpty prepend="AND" property="webFrom">
+		        	WEBFROM_AGENT_TBL.WEB_FROM LIKE '%$webFrom$%'
+		        </isNotEmpty>
+		    GROUP BY WEBFROM_AGENT_TBL.WEB_FROM) A 
+		    LEFT JOIN 
+		        (SELECT 
+		            WEBFROM_AGENT_LOG_TBL.WEB_FROM,
+		            SUM(ccount) AS CLICK_COUNT 
+		        FROM
+		            WEBFROM_AGENT_LOG_TBL 
+		        WHERE 1 = 1
+		        <isNotEmpty prepend="AND" property="webFrom">
+		        	WEBFROM_AGENT_LOG_TBL.WEB_FROM LIKE '%$webFrom$%' 
+		        </isNotEmpty>
+		        <isNotEmpty property="subjectId">
+		        	<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+		            	WEBFROM_AGENT_LOG_TBL.SUBJECT_ID = #subjectId# 
+		            </isNotEqual>
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="domain">
+		            WEBFROM_AGENT_LOG_TBL.DOMAIN = #domain# 
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="startTime">
+		        <![CDATA[
+		            WEBFROM_AGENT_LOG_TBL.CLICK_TIME >= #startTime# 
+		        ]]>
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="endTime">
+		        <![CDATA[
+		            WEBFROM_AGENT_LOG_TBL.CLICK_TIME <= #endTime# 
+		        ]]>
+		        </isNotEmpty>
+		        GROUP BY WEBFROM_AGENT_LOG_TBL.WEB_FROM) B 
+		        ON A.WEB_FROM = B.WEB_FROM 
+		    LEFT JOIN 
+		        (SELECT 
+		            CUS_CUSTOMER_TBL.CUS_WEB_FROM,
+		            COUNT(CUS_CUSTOMER_TBL.CUS_ID) AS REGISTER_COUNT 
+		        FROM
+		            CUS_CUSTOMER_TBL 
+		        WHERE 1 = 1
+		        	<isNotEmpty prepend="AND" property="webFrom">
+		        	    CUS_CUSTOMER_TBL.CUS_WEB_FROM LIKE '%$webFrom$%' 
+		        	</isNotEmpty>
+		        	<isNotEmpty property="subjectId">
+		        		<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+		                	CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId# 
+		                </isNotEqual>
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="domain">
+		                CUS_CUSTOMER_TBL.CUS_FROM_URL = #domain# 
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="startTime">
+		            <![CDATA[
+		                CUS_CUSTOMER_TBL.REG_TIME >= #startTime# 
+		            ]]>
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="endTime">
+		            <![CDATA[
+		                CUS_CUSTOMER_TBL.REG_TIME <= #endTime# 
+		            ]]>
+		            </isNotEmpty>
+		        GROUP BY CUS_CUSTOMER_TBL.CUS_WEB_FROM) C 
+		        ON A.WEB_FROM = C.CUS_WEB_FROM 
+		    LEFT JOIN 
+		        (SELECT 
+				    T1.WEB_FROM,
+				    COUNT(T1.ID) AS CONTRACT_COUNT,
+				    SUM(
+				        IFNULL(T1.CONTRACT_CUTSUMMONEY, 0)
+				    ) AS CONTRACT_MONEY_SUM 
+				FROM
+				    (SELECT 
+				        FINANCE_CONTRACT_TBL.ID,
+				        FINANCE_CONTRACT_TBL.WEB_FROM,
+				        FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY + FINANCE_CONTRACT_TBL.FREIGHT AS CONTRACT_CUTSUMMONEY,
+				        FINANCE_CASH_RECORD_TBL.CT_ID 
+				    FROM
+				        FINANCE_CONTRACT_TBL,
+				        FINANCE_CASH_RECORD_TBL 
+				    WHERE FINANCE_CASH_RECORD_TBL.CT_ID = FINANCE_CONTRACT_TBL.ID 
+		        	<isNotEmpty property="subjectId">
+		        		<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+		        			FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID = #subjectId#
+		        		</isNotEqual>
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="webFrom">
+		        	    FINANCE_CONTRACT_TBL.WEB_FROM LIKE '%$webFrom$%' 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="domain">
+		                FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL = #domain# 
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="startTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.CREATE_TIME >= #startTime# 
+		            ]]>
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="endTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.CREATE_TIME <= #endTime# 
+		            ]]>
+		            </isNotEmpty>
+		        	GROUP BY FINANCE_CASH_RECORD_TBL.CT_ID) AS T1 
+		        GROUP BY T1.WEB_FROM) AS D
+		        ON A.WEB_FROM = D.WEB_FROM 
+		    LEFT JOIN 
+		        (SELECT 
+				    T1.WEB_FROM,
+				    COUNT(T1.ID) AS PAYED_CONTRACT_COUNT,
+				    SUM(
+				        IFNULL(T1.CONTRACT_CUTSUMMONEY, 0)
+				    ) AS PAYED_CONTRACT_MONEY_SUM 
+				FROM
+				    (SELECT 
+				        FINANCE_CONTRACT_TBL.ID,
+				        FINANCE_CONTRACT_TBL.WEB_FROM,
+				        FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY + FINANCE_CONTRACT_TBL.FREIGHT AS CONTRACT_CUTSUMMONEY,
+				        FINANCE_CASH_RECORD_TBL.CT_ID 
+				    FROM
+				        FINANCE_CONTRACT_TBL,
+				        FINANCE_CASH_RECORD_TBL 
+				    WHERE FINANCE_CASH_RECORD_TBL.CT_ID = FINANCE_CONTRACT_TBL.ID 
+				    	AND FINANCE_CONTRACT_TBL.STATUS = 1
+		        	<isNotEmpty property="subjectId">
+		        		<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+		        			FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID = #subjectId#
+		        		</isNotEqual>
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="webFrom">
+		        	    FINANCE_CONTRACT_TBL.WEB_FROM LIKE '%$webFrom$%' 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="domain">
+		                FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL = #domain# 
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="startTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.PAY_TIME >= #startTime# 
+		            ]]>
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="endTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.PAY_TIME <= #endTime# 
+		            ]]>
+		            </isNotEmpty>
+		        	GROUP BY FINANCE_CASH_RECORD_TBL.CT_ID) AS T1 
+		        GROUP BY T1.WEB_FROM) AS E 
+		        ON A.WEB_FROM = E.WEB_FROM 
+		    ORDER BY CLICK_COUNT DESC 
+		    LIMIT #startRecord#, #pageSize#
+	</select>
+	<select id="statisticWebFromLogOthers" parameterClass="QueryWebFromAgentLogsCondition" resultMap="StatisticsWebFromDTOResult">
+		SELECT 
+		    '其它' AS WEB_FROM,
+		    SUM(IFNULL(CLICK_COUNT, 0)) AS CLICK_COUNT,
+		    SUM(IFNULL(REGISTER_COUNT, 0)) AS REGISTER_COUNT,
+		    SUM(IFNULL(CONTRACT_COUNT, 0)) AS CONTRACT_COUNT,
+		    SUM(IFNULL(CONTRACT_MONEY_SUM, 0)) AS CONTRACT_MONEY_SUM,
+		    SUM(IFNULL(PAYED_CONTRACT_COUNT, 0)) AS PAYED_CONTRACT_COUNT,
+		    SUM(
+		        IFNULL(PAYED_CONTRACT_MONEY_SUM, 0)
+		    ) AS PAYED_CONTRACT_MONEY_SUM 
+		FROM
+		    (SELECT 
+		        A.WEB_FROM,
+		        B.CLICK_COUNT,
+		        C.REGISTER_COUNT,
+		        D.CONTRACT_COUNT,
+		        D.CONTRACT_MONEY_SUM,
+		        E.PAYED_CONTRACT_COUNT,
+		        E.PAYED_CONTRACT_MONEY_SUM 
+		    FROM
+		        (SELECT 
+		            WEB_FROM 
+		        FROM
+		            (SELECT 
+		                CUS_CUSTOMER_TBL.CUS_WEB_FROM AS WEB_FROM 
+		            FROM
+		                CUS_CUSTOMER_TBL 
+		            WHERE CUS_CUSTOMER_TBL.CUS_WEB_FROM IS NOT NULL 
+		            UNION
+		            ALL 
+		            SELECT 
+		                WEBFROM_AGENT_LOG_TBL.WEB_FROM AS WEB_FROM 
+		            FROM
+		                WEBFROM_AGENT_LOG_TBL 
+		            WHERE WEBFROM_AGENT_LOG_TBL.WEB_FROM IS NOT NULL 
+		            UNION
+		            ALL 
+		            SELECT 
+		                FINANCE_CONTRACT_TBL.WEB_FROM AS WEB_FROM 
+		            FROM
+		                FINANCE_CONTRACT_TBL 
+		            WHERE FINANCE_CONTRACT_TBL.WEB_FROM IS NOT NULL) TMP 
+		        WHERE WEB_FROM NOT IN 
+		            (SELECT 
+		                WEB_FROM 
+		            FROM
+		                WEBFROM_AGENT_TBL) 
+		        GROUP BY WEB_FROM) AS A 
+		        LEFT JOIN 
+		            (SELECT 
+		                WEBFROM_AGENT_LOG_TBL.WEB_FROM,
+		               SUM(ccount) AS CLICK_COUNT 
+		            FROM
+		                WEBFROM_AGENT_LOG_TBL 
+		            WHERE 1 = 1
+		                <isNotEmpty property="subjectId">
+		                	<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+				            	WEBFROM_AGENT_LOG_TBL.SUBJECT_ID = #subjectId# 
+				            </isNotEqual>
+				        </isNotEmpty>
+				        <isNotEmpty prepend="AND" property="domain">
+				            WEBFROM_AGENT_LOG_TBL.DOMAIN = #domain# 
+				        </isNotEmpty>
+				        <isNotEmpty prepend="AND" property="startTime">
+				        <![CDATA[
+				            WEBFROM_AGENT_LOG_TBL.CLICK_TIME >= #startTime# 
+				        ]]>
+				        </isNotEmpty>
+				        <isNotEmpty prepend="AND" property="endTime">
+				        <![CDATA[
+				            WEBFROM_AGENT_LOG_TBL.CLICK_TIME <= #endTime# 
+				        ]]>
+				        </isNotEmpty>
+		            GROUP BY WEBFROM_AGENT_LOG_TBL.WEB_FROM) B 
+		            ON A.WEB_FROM = B.WEB_FROM 
+		        LEFT JOIN 
+		            (SELECT 
+		                CUS_CUSTOMER_TBL.CUS_WEB_FROM,
+		                COUNT(CUS_CUSTOMER_TBL.CUS_ID) AS REGISTER_COUNT 
+		            FROM
+		                CUS_CUSTOMER_TBL 
+		            WHERE 1 = 1
+		                <isNotEmpty property="subjectId">
+		                	<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+			                	CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId# 
+			                </isNotEqual>
+			            </isNotEmpty>
+			            <isNotEmpty prepend="AND" property="domain">
+			                CUS_CUSTOMER_TBL.CUS_FROM_URL = #domain# 
+			            </isNotEmpty>
+			            <isNotEmpty prepend="AND" property="startTime">
+			            <![CDATA[
+			                CUS_CUSTOMER_TBL.REG_TIME >= #startTime# 
+			            ]]>
+			            </isNotEmpty>
+			            <isNotEmpty prepend="AND" property="endTime">
+			            <![CDATA[
+			                CUS_CUSTOMER_TBL.REG_TIME <= #endTime# 
+			            ]]>
+			            </isNotEmpty>
+		            GROUP BY CUS_CUSTOMER_TBL.CUS_WEB_FROM) C 
+		            ON A.WEB_FROM = C.CUS_WEB_FROM 
+		        LEFT JOIN 
+		            (SELECT 
+				    T1.WEB_FROM,
+				    COUNT(T1.ID) AS CONTRACT_COUNT,
+				    SUM(
+				        IFNULL(T1.CONTRACT_CUTSUMMONEY, 0)
+				    ) AS CONTRACT_MONEY_SUM 
+				FROM
+				    (SELECT 
+				        FINANCE_CONTRACT_TBL.ID,
+				        FINANCE_CONTRACT_TBL.WEB_FROM,
+				        FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY + FINANCE_CONTRACT_TBL.FREIGHT AS CONTRACT_CUTSUMMONEY,
+				        FINANCE_CASH_RECORD_TBL.CT_ID 
+				    FROM
+				        FINANCE_CONTRACT_TBL,
+				        FINANCE_CASH_RECORD_TBL 
+				    WHERE FINANCE_CASH_RECORD_TBL.CT_ID = FINANCE_CONTRACT_TBL.ID 
+		        	<isNotEmpty property="subjectId">
+		        		<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+		        			FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID = #subjectId#
+		        		</isNotEqual>
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="webFrom">
+		        	    FINANCE_CONTRACT_TBL.WEB_FROM LIKE '%$webFrom$%' 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="domain">
+		                FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL = #domain# 
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="startTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.CREATE_TIME >= #startTime# 
+		            ]]>
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="endTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.CREATE_TIME <= #endTime# 
+		            ]]>
+		            </isNotEmpty>
+		        	GROUP BY FINANCE_CASH_RECORD_TBL.CT_ID) AS T1 
+		        GROUP BY T1.WEB_FROM) AS D
+		            ON A.WEB_FROM = D.WEB_FROM 
+		        LEFT JOIN 
+		            (SELECT 
+				    T1.WEB_FROM,
+				    COUNT(T1.ID) AS PAYED_CONTRACT_COUNT,
+				    SUM(
+				        IFNULL(T1.CONTRACT_CUTSUMMONEY, 0)
+				    ) AS PAYED_CONTRACT_MONEY_SUM 
+				FROM
+				    (SELECT 
+				        FINANCE_CONTRACT_TBL.ID,
+				        FINANCE_CONTRACT_TBL.WEB_FROM,
+				        FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY + FINANCE_CONTRACT_TBL.FREIGHT AS CONTRACT_CUTSUMMONEY,
+				        FINANCE_CASH_RECORD_TBL.CT_ID 
+				    FROM
+				        FINANCE_CONTRACT_TBL,
+				        FINANCE_CASH_RECORD_TBL 
+				    WHERE FINANCE_CASH_RECORD_TBL.CT_ID = FINANCE_CONTRACT_TBL.ID 
+				    	AND FINANCE_CONTRACT_TBL.STATUS = 1
+		        	<isNotEmpty property="subjectId">
+		        		<isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+		        			FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID = #subjectId#
+		        		</isNotEqual>
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="webFrom">
+		        	    FINANCE_CONTRACT_TBL.WEB_FROM LIKE '%$webFrom$%' 
+		        	</isNotEmpty>
+		        	<isNotEmpty prepend="AND" property="domain">
+		                FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL = #domain# 
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="startTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.PAY_TIME >= #startTime# 
+		            ]]>
+		            </isNotEmpty>
+		            <isNotEmpty prepend="AND" property="endTime">
+		            <![CDATA[
+		                FINANCE_CONTRACT_TBL.PAY_TIME <= #endTime# 
+		            ]]>
+		            </isNotEmpty>
+		        	GROUP BY FINANCE_CASH_RECORD_TBL.CT_ID) AS T1 
+		        GROUP BY T1.WEB_FROM) AS E 
+		            ON A.WEB_FROM = E.WEB_FROM) OTHERS
+	</select>
+
+	<select id="statisticCountWebFromLog" resultClass="int" parameterClass="QueryWebFromAgentLogsCondition">
+		SELECT COUNT(1) FROM (SELECT WEB_FROM FROM WEBFROM_AGENT_TBL WHERE 1 = 1
+		<isNotEmpty property="webFrom" prepend="AND">
+			WEB_FROM LIKE '%$webFrom$%'
+		</isNotEmpty>
+		GROUP BY WEB_FROM) AS A
+	</select>
+	
+	<select id="statisticUserWebFrom" resultMap="UserWebFromDTOResult" parameterClass="QueryUserWebFromCondition">
+		SELECT 
+		    CUS_CUSTOMER_TBL.CUS_ID,
+		    CUS_CUSTOMER_TBL.MOBILE,
+		    CUS_CUSTOMER_TBL.EMAIL,
+		    CUS_CUSTOMER_TBL.CUS_WEB_FROM,
+		    CUS_CUSTOMER_TBL.CUS_WEB_AGENT,
+		    CUS_CUSTOMER_TBL.REG_TIME,
+		    CUS_CUSTOMER_TBL.SUBJECT_ID,
+		    (SELECT SYS_SUBJECT_TBL.SUBJECT_NAME FROM SYS_SUBJECT_TBL WHERE SYS_SUBJECT_TBL.SUBJECT_ID = CUS_CUSTOMER_TBL.SUBJECT_ID) AS SUBJECT_NAME,
+		    (SELECT COUNT(FINANCE_CONTRACT_TBL.ID) FROM FINANCE_CONTRACT_TBL WHERE FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID) AS RECORD_COUNT,
+		    (SELECT COUNT(FINANCE_CONTRACT_TBL.ID) FROM FINANCE_CONTRACT_TBL WHERE FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND FINANCE_CONTRACT_TBL.STATUS = 1) AS PAYED_RECORED_COUNT
+		FROM CUS_CUSTOMER_TBL
+		WHERE 1 = 1
+		<isNotEmpty prepend="AND" property="startTime">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.REG_TIME >= #startTime#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="endTime">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.REG_TIME <= #endTime#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="webFrom">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.cus_web_from like '%$webFrom$%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="webAgent">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.CUS_WEB_AGENT like '%$webAgent$%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="subjectId">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mobile">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.MOBILE like '%$mobile$%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="email">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.EMAIL like '%$email$%'
+		]]>
+		</isNotEmpty>
+		ORDER BY CUS_CUSTOMER_TBL.CUS_ID DESC
+		LIMIT #pageSize# OFFSET #startRecord#
+	</select>
+
+	<select id="statisticUserWebFromCount" resultClass="int" parameterClass="QueryUserWebFromCondition">
+		SELECT 
+		    count(CUS_CUSTOMER_TBL.CUS_ID)
+		FROM CUS_CUSTOMER_TBL
+		WHERE 1 = 1
+		<isNotEmpty prepend="AND" property="startTime">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.REG_TIME >= #startTime#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="endTime">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.REG_TIME <= #endTime#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="webFrom">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.cus_web_from like '%$webFrom$%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="webAgent">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.CUS_WEB_AGENT like '%$webAgent$%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="subjectId">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mobile">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.MOBILE like '%$mobile$%'
+		]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="email">
+		<![CDATA[
+			CUS_CUSTOMER_TBL.EMAIL like '%$email$%'
+		]]>
+		</isNotEmpty>
+	</select>
+</sqlMap>

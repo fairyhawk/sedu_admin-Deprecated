@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Course_NS">
+        <typeAlias alias="Course" type="com.shangde.edu.cou.domain.Course"/>
+        <typeAlias alias="QueryCourseCondition" type="com.shangde.edu.cou.condition.QueryCourseCondition"/>
+        <typeAlias alias="KeyValueDTO" type="com.shangde.edu.cou.dto.KeyValueDTO"/>
+        <typeAlias alias="ListeningCourseDTO" type="com.shangde.edu.cou.dto.ListeningCourseDTO"/>
+        <typeAlias alias="CourseDTOResult" type="com.shangde.edu.cou.dto.CourseDTO"/>
+        <typeAlias alias="CourseIsAuditionDTO" type="com.shangde.edu.cou.dto.CourseIsAuditionDTO"/>
+        <typeAlias alias="UserCenterCourseDTO" type="com.shangde.edu.cou.webdto.UserCenterCourseDTO"/>
+        <typeAlias alias="Teacher" type="com.shangde.edu.cou.domain.Teacher"/>
+		<!-- course dto -->
+		<resultMap id="CourseDTOResult" class="CourseDTOResult">
+			<result property="teacherId" column="TEACHER_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="title" column="TITLE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="price" column="COU_COURSE_TBL.PRICE"/>
+            <result property="oldPrice" column="COU_COURSE_TBL.OLD_PRICE"/>
+            <result property="lessionTime" column="COU_COURSE_TBL.LESSION_TIME"/>
+            <result property="teacher" column="TEACHER_ID" select="Teacher_NS.getTeacherById"/>
+        </resultMap>
+        <resultMap id="CoursePlanDTOResult" class="CourseDTOResult">
+            <result property="title" column="TITLE"/>
+            <result property="pointName" column="NAME"/>
+            <result property="pointId" column="POINT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="pdfUrl" column="dpdfurl"/>
+            <result property="bkUrl" column="BK_URL"/>
+            <result property="ypUrl" column="YP_URL"/>
+            <result property="tcName" column="tcname"/>
+            <result property="voUrl" column="VO_URL"/>
+            <result property="level" column="level"/>
+            <result property="leaf" column="leaf"/>
+            
+            
+        </resultMap>
+        <resultMap id="CourseDTOKpointResult" class="CourseDTOResult">
+			<result property="teacherId" column="TEACHER_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="title" column="TITLE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="price" column="COU_COURSE_TBL.PRICE"/>
+            <result property="oldPrice" column="COU_COURSE_TBL.OLD_PRICE"/>
+            <result property="lessionTime" column="COU_COURSE_TBL.LESSION_TIME"/>
+        </resultMap>
+        <!-- UserCenterCourseDTO -->
+		<resultMap id="UserCenterCourseDTOResult" class="UserCenterCourseDTO">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="title" column="TITLE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="lessionTime" column="COU_COURSE_TBL.LESSION_TIME"/>
+            <!-- <result property="lastTime" column="last_time"/> -->
+            <result property="subjectId" column="COU_COURSE_TBL.subject_id"/>
+            <result property="teacherList" column="COURSE_ID" select="Course_NS.getTeacherListByCourseId"/>
+            <result property="sellId" column="sellId"/>
+            <result property="dpdfUrl" column="cou_course_tbl.dpdfurl"/>
+            <result property="dpptUrl" column="cou_course_tbl.dppturl"/>
+            <result property="introduce" column="cou_course_tbl.introduce"/>
+            <result property="dmp3Url" column="cou_course_tbl.dmp3Url"/>
+        </resultMap>
+        
+        <!-- course isAudition dto -->
+		<resultMap id="CourseIsAuditionDTOResult" class="CourseIsAuditionDTO">
+			<result property="courseId" column="COU_COURSE_TBL.COURSE_ID"/>
+            <result property="voName" column="COU_KPOINT_TBL.name"/>
+            <result property="voUrl" column="RES_VEDIO_TBL.VO_URL"/>
+        </resultMap>
+        
+        <!-- key value dto result -->
+		<resultMap id="KeyValueDTOResult" class="KeyValueDTO">
+            <result property="id" column="COURSE_ID"/>
+            <result property="name" column="TITLE"/>
+        </resultMap>
+        
+        <!-- listening dto -->
+        <resultMap id="ListeningKeyValueDTOResult" class="ListeningCourseDTO">
+            <result property="courseId" column="COU_COURSE_TBL.COURSE_ID"/>
+            <result property="title" column="COU_COURSE_TBL.TITLE"/>
+            <result property="teacherId" column="COU_COURSE_TBL.TEACHER_ID"/>
+            <result property="voId" column="RES_VEDIO_TBL.VO_ID"/>
+            <result property="voName" column="RES_VEDIO_TBL.VO_NAME"/>
+            <result property="pointId" column="COU_KPOINT_TBL.POINT_ID"/>
+            <result property="kpointName" column="COU_KPOINT_TBL.NAME"/>
+            <result property="vedio" column="VO_ID" select="Vedio_NS.getVedioById"/>
+        	<result property="teacher" column="TEACHER_ID" select="Teacher_NS.getTeacherById"/>
+        </resultMap>
+        
+        <!-- nomal course -->
+        <resultMap id="NomalCourseResult" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="oldPrice" column="OLD_PRICE"/>
+            <result property="passFlag" column="PASS_FLAG"/>
+            <result property="QAFlag" column="QA_FLAG"/>
+            <result property="learnResFlag" column="LEARN_RES_FLAG"/>
+            <result property="pptFlag" column="PPT_FLAG"/>
+            <result property="examResFlag" column="EXAM_RES_FLAG"/>
+            <result property="tjVedioId" column="TJ_VEDIO_ID"/>
+            <result property="teacherTjCourse" column="TEACHER_TJ_COURSE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="thinkMap" column="THINK_MAP"/>
+            <result property="learnAdvice" column="LEARN_ADVICE"/>
+            <result property="supportNum" column="SUPPORT_NUM"/>
+            <result property="unsupportNum" column="UNSUPPORT_NUM"/>
+       		<result property="teacher" column="TEACHER_ID" select="Teacher_NS.getTeacherById"/>
+       		<result property="tjvedio" column="TJ_VEDIO_ID" select="Vedio_NS.getVedioById"/>
+        </resultMap>
+        
+        <!-- course result  -->
+        <resultMap id="CourseResult" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="oldPrice" column="OLD_PRICE"/>
+            <result property="passFlag" column="PASS_FLAG"/>
+            <result property="QAFlag" column="QA_FLAG"/>
+            <result property="learnResFlag" column="LEARN_RES_FLAG"/>
+            <result property="pptFlag" column="PPT_FLAG"/>
+            <result property="examResFlag" column="EXAM_RES_FLAG"/>
+            <result property="tjVedioId" column="TJ_VEDIO_ID"/>
+            <result property="teacherTjCourse" column="TEACHER_TJ_COURSE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="thinkMap" column="THINK_MAP"/>
+            <result property="learnAdvice" column="LEARN_ADVICE"/>
+            <result property="supportNum" column="SUPPORT_NUM"/>
+            <result property="unsupportNum" column="UNSUPPORT_NUM"/>
+            <result property="forPeople" column="FOR_PEOPLE"/>
+            <result property="includeModule" column="INCLUDE_MODULE"/>
+            <result property="includeService" column="INCLUDE_SERVICE"/>
+            <result property="dpptUrl" column="dppturl"/>
+            <result property="dpdfUrl" column="dpdfurl"/>
+            <result property="dmp3Url" column="dmp3Url"/>
+            <result property="disProperty" column="DISPROPERTY"/>
+            <result property="disPosition" column="DISPOSITION"/>
+            <result property="courseDirectory" column="COURSE_DIRECTORY"/>
+            <result property="teacherName" column="TEACHER_NAME"/>
+            <result property="realUpNum" column="REAL_UP_NUM"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+        </resultMap>
+        
+        <!-- shixiaofeng result  -->
+        <resultMap id="CourseResultAndSort" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="oldPrice" column="OLD_PRICE"/>
+            <result property="passFlag" column="PASS_FLAG"/>
+            <result property="QAFlag" column="QA_FLAG"/>
+            <result property="learnResFlag" column="LEARN_RES_FLAG"/>
+            <result property="pptFlag" column="PPT_FLAG"/>
+            <result property="examResFlag" column="EXAM_RES_FLAG"/>
+            <result property="tjVedioId" column="TJ_VEDIO_ID"/>
+            <result property="teacherTjCourse" column="TEACHER_TJ_COURSE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="thinkMap" column="THINK_MAP"/>
+            <result property="learnAdvice" column="LEARN_ADVICE"/>
+            <result property="supportNum" column="SUPPORT_NUM"/>
+            <result property="unsupportNum" column="UNSUPPORT_NUM"/>
+            <result property="forPeople" column="FOR_PEOPLE"/>
+            <result property="includeModule" column="INCLUDE_MODULE"/>
+            <result property="includeService" column="INCLUDE_SERVICE"/>
+            <result property="dpptUrl" column="dppturl"/>
+            <result property="dpdfUrl" column="dpdfurl"/>
+            <result property="dmp3Url" column="dmp3Url"/>
+            <result property="disProperty" column="DISPROPERTY"/>
+            <result property="disPosition" column="DISPOSITION"/>
+            <result property="courseDirectory" column="COURSE_DIRECTORY"/>
+            <result property="teacherName" column="TEACHER_NAME"/>
+            <result property="realUpNum" column="REAL_UP_NUM"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <!-- 
+            <result property="upRate" column="UP_RATE"/>
+             -->
+            <result property="subjectName" column="subject_name"/>
+        </resultMap>
+        
+        <!-- all course info result  -->
+        <resultMap id="CourseAllResult" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="oldPrice" column="OLD_PRICE"/>
+            <result property="passFlag" column="PASS_FLAG"/>
+            <result property="QAFlag" column="QA_FLAG"/>
+            <result property="learnResFlag" column="LEARN_RES_FLAG"/>
+            <result property="pptFlag" column="PPT_FLAG"/>
+            <result property="examResFlag" column="EXAM_RES_FLAG"/>
+            <result property="tjVedioId" column="TJ_VEDIO_ID"/>
+            <result property="teacherTjCourse" column="TEACHER_TJ_COURSE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="thinkMap" column="THINK_MAP"/>
+            <result property="learnAdvice" column="LEARN_ADVICE"/>
+            <result property="supportNum" column="SUPPORT_NUM"/>
+            <result property="unsupportNum" column="UNSUPPORT_NUM"/>
+            <result property="forPeople" column="FOR_PEOPLE"/>
+            <result property="includeModule" column="INCLUDE_MODULE"/>
+            <result property="includeService" column="INCLUDE_SERVICE"/>
+            <result property="tjvedio" column="TJ_VEDIO_ID" select="Vedio_NS.getVedioById"/>
+            <result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectById"/>
+            <result property="grade" column="GRADE_ID" select="Grade_NS.getGradeById"/>
+        	<result property="teacher" column="TEACHER_ID" select="Teacher_NS.getTeacherById"/>
+        	<result property="teacherList" column="COURSE_ID" select="Course_NS.getTeacherListByCourseId"/>
+        </resultMap> 
+        <!-- all course info result  -->
+        <resultMap id="CourseAllResultWeb" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="oldPrice" column="OLD_PRICE"/>
+            <result property="passFlag" column="PASS_FLAG"/>
+            <result property="QAFlag" column="QA_FLAG"/>
+            <result property="learnResFlag" column="LEARN_RES_FLAG"/>
+            <result property="pptFlag" column="PPT_FLAG"/>
+            <result property="examResFlag" column="EXAM_RES_FLAG"/>
+            <result property="tjVedioId" column="TJ_VEDIO_ID"/>
+            <result property="teacherTjCourse" column="TEACHER_TJ_COURSE"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+            <result property="thinkMap" column="THINK_MAP"/>
+            <result property="learnAdvice" column="LEARN_ADVICE"/>
+            <result property="supportNum" column="SUPPORT_NUM"/>
+            <result property="unsupportNum" column="UNSUPPORT_NUM"/>
+            <result property="forPeople" column="FOR_PEOPLE"/>
+            <result property="includeModule" column="INCLUDE_MODULE"/>
+            <result property="includeService" column="INCLUDE_SERVICE"/>
+            <result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectByIdWeb"/>
+        </resultMap>
+        
+        <resultMap id="TeacherResult" class="Teacher">
+            <result property="tcId" column="TC_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="education" column="EDUCATION"/>
+            <result property="career" column="CAREER"/>
+            <result property="isStar" column="IS_STAR"/>
+            <result property="picPath" column="PIC_PATH"/>
+        </resultMap>
+        
+        <sql id="COU_TEACHER_TBL_columns">
+            COU_TEACHER_TBL.TC_ID,
+            COU_TEACHER_TBL.NAME,
+            COU_TEACHER_TBL.EDUCATION,
+            COU_TEACHER_TBL.CAREER,
+            COU_TEACHER_TBL.IS_STAR,
+            COU_TEACHER_TBL.PIC_PATH
+        </sql>
+        
+        <!-- key value dto columns -->
+		<sql id="COU_COURSE_TBL_DTO_columns">
+            COU_COURSE_TBL.COURSE_ID,
+            COU_COURSE_TBL.TITLE
+           
+        </sql>
+        
+        <!-- cou courseDto  -->
+        <sql id="COU_CourseDTO_columns">
+        	COU_COURSE_TBL.TEACHER_ID,
+            COU_COURSE_TBL.COURSE_ID,
+            COU_COURSE_TBL.TITLE,
+            COU_COURSE_TBL.VEDIO_PIC_URL,
+            COU_COURSE_TBL.PRICE,
+            COU_COURSE_TBL.OLD_PRICE,
+            COU_COURSE_TBL.LESSION_TIME
+        </sql>
+        
+        <sql id="COU_LISTENINGCOURSEDTO_columns">
+            COU_COURSE_TBL.COURSE_ID,
+            COU_COURSE_TBL.TEACHER_ID,
+            COU_COURSE_TBL.TITLE,
+            COU_KPOINT_TBL.POINT_ID,
+            COU_KPOINT_TBL.NAME,
+            RES_VEDIO_TBL.VO_ID,
+          	RES_VEDIO_TBL.VO_NAME
+        </sql>
+        
+        <sql id="COU_COURSE_TBL_columns">
+            COU_COURSE_TBL.COURSE_ID,
+            COU_COURSE_TBL.SORT_ID,
+            COU_COURSE_TBL.TEACHER_ID,
+            COU_COURSE_TBL.PRICE,
+            COU_COURSE_TBL.TJ_MODE,
+            COU_COURSE_TBL.LESSION_TIME,
+            COU_COURSE_TBL.CONTENT,
+            COU_COURSE_TBL.ADDTIME,
+            COU_COURSE_TBL.TITLE,
+            COU_COURSE_TBL.INTRODUCE,
+            COU_COURSE_TBL.PRECOURSE_ID,
+            COU_COURSE_TBL.FLOWCOURSE_ID,
+            COU_COURSE_TBL.STATUS,
+            COU_COURSE_TBL.GM_NUM,
+            COU_COURSE_TBL.SC_NUM,
+            COU_COURSE_TBL.TG_NUM,
+            COU_COURSE_TBL.CLICK_NUM,
+            COU_COURSE_TBL.VALID_TIME,
+            COU_COURSE_TBL.GRADE_ID,
+            COU_COURSE_TBL.SUBJECT_ID,
+            COU_COURSE_TBL.OLD_PRICE,
+            COU_COURSE_TBL.PASS_FLAG,
+            COU_COURSE_TBL.QA_FLAG,
+            COU_COURSE_TBL.LEARN_RES_FLAG,
+            COU_COURSE_TBL.PPT_FLAG,
+            COU_COURSE_TBL.EXAM_RES_FLAG,
+            COU_COURSE_TBL.TJ_VEDIO_ID,
+            COU_COURSE_TBL.TEACHER_TJ_COURSE,
+            COU_COURSE_TBL.VEDIO_PIC_URL,
+            COU_COURSE_TBL.THINK_MAP,
+            COU_COURSE_TBL.LEARN_ADVICE,
+            COU_COURSE_TBL.SUPPORT_NUM,
+            COU_COURSE_TBL.UNSUPPORT_NUM,
+            COU_COURSE_TBL.FOR_PEOPLE,
+            COU_COURSE_TBL.INCLUDE_MODULE,
+            COU_COURSE_TBL.INCLUDE_SERVICE,
+            COU_COURSE_TBL.dppturl,
+            COU_COURSE_TBL.dpdfurl,
+            COU_COURSE_TBL.dmp3Url,    
+            COU_COURSE_TBL.DISPROPERTY,
+            COU_COURSE_TBL.DISPOSITION ,
+            COU_COURSE_TBL.COURSE_DIRECTORY,
+            COU_COURSE_TBL.TEACHER_NAME,
+            COU_COURSE_TBL.REAL_UP_NUM,
+            COU_COURSE_TBL.UPDATE_TIME    
+        </sql>
+
+        <sql id="COU_COURSE_TBL_properties">
+            #courseId#,
+            #sortId#,
+            #teacherId#,
+            #price#,
+            #tjMode#,
+            #lessionTime#,
+            #content#,
+            now(),
+            #title#,
+            #introduce#,
+            #precourseId#,
+            #flowcourseId#,
+            #status#,
+            #gmNum#,
+            #scNum#,
+            #tgNum#,
+            #clickNum#,
+            #validTime#,
+            #gradeId#,
+            #subjectId#,
+            #oldPrice#,
+            #passFlag#,
+            #QAFlag#,
+            #learnResFlag#,
+            #pptFlag#,
+            #examResFlag#,
+            #tjVedioId#,
+            #teacherTjCourse#,
+            #vedioPicUrl#,
+            #thinkMap#,
+            #learnAdvice#,
+            #supportNum#,
+            #unsupportNum#,
+            #forPeople#,
+            #includeModule#,
+            #includeService#,
+            #dpptUrl#,
+            #dpdfUrl#,
+            #dmp3Url#,
+            #disProperty#,
+            #disPosition#,
+            #courseDirectory#,
+            #teacherName#,
+            0,
+            #updateTime#
+        </sql>
+
+        <insert id="createCourse" parameterClass="Course">
+            INSERT INTO COU_COURSE_TBL (<include refid="Course_NS.COU_COURSE_TBL_columns"/>) VALUES (<include refid="Course_NS.COU_COURSE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="courseId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCourseById" parameterClass="int">
+            DELETE FROM COU_COURSE_TBL
+            WHERE
+                COURSE_ID = #value#
+        </delete>
+
+        <update id="updateCourse" parameterClass="Course">
+            UPDATE COU_COURSE_TBL SET
+                COURSE_ID = #courseId#,
+                SORT_ID = #sortId#,
+                TEACHER_ID = #teacherId#,
+                PRICE = #price#,
+                TJ_MODE = #tjMode#,
+                LESSION_TIME = #lessionTime#,
+                CONTENT = #content#,
+                ADDTIME = #addtime#,
+                TITLE = #title#,
+                INTRODUCE = #introduce#,
+                PRECOURSE_ID = #precourseId#,
+                FLOWCOURSE_ID = #flowcourseId#,
+                STATUS = #status#,
+                GM_NUM = #gmNum#,
+                SC_NUM = #scNum#,
+                TG_NUM = #tgNum#,
+                CLICK_NUM = #clickNum#,
+                VALID_TIME = #validTime#,
+                GRADE_ID = #gradeId#,
+                SUBJECT_ID = #subjectId#,
+                OLD_PRICE = #oldPrice#,
+                PASS_FLAG = #passFlag#,
+                QA_FLAG = #QAFlag#,
+                LEARN_RES_FLAG = #learnResFlag#,
+                PPT_FLAG = #pptFlag#,
+                EXAM_RES_FLAG = #examResFlag#,
+                TJ_VEDIO_ID = #tjVedioId#,
+                TEACHER_TJ_COURSE = #teacherTjCourse#,
+                VEDIO_PIC_URL = #vedioPicUrl#,
+                THINK_MAP = #thinkMap#,
+                LEARN_ADVICE = #learnAdvice#,
+                SUPPORT_NUM = #supportNum#,
+                UNSUPPORT_NUM = #unsupportNum#,
+                FOR_PEOPLE = #forPeople#,
+                INCLUDE_MODULE = #includeModule#,
+                INCLUDE_SERVICE = #includeService#,
+                COU_COURSE_TBL.dppturl = #dpptUrl#,
+                COU_COURSE_TBL.dpdfurl = #dpdfUrl#,
+                COU_COURSE_TBL.dmp3Url = #dmp3Url#,
+                DISPROPERTY=#disProperty#,
+                DISPOSITION=#disPosition#,
+                COURSE_DIRECTORY=#courseDirectory#,
+                TEACHER_NAME=#teacherName#,
+                real_up_num=#realUpNum#,
+                update_time=#updateTime#
+            WHERE
+                COURSE_ID = #courseId#
+        </update>
+
+        <select id="getCourseById" resultMap="Course_NS.CourseResult" parameterClass="int">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            WHERE
+                COURSE_ID = #value#
+        </select>
+        
+        <select id="getAllCourseInfoById" resultMap="Course_NS.CourseAllResult" parameterClass="int">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            WHERE
+                COURSE_ID = #value#
+        </select>
+         <select id="getAllCourseInfoByIdWeb" resultMap="Course_NS.CourseAllResultWeb" parameterClass="int">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            WHERE
+                COURSE_ID = #value#
+        </select>
+        <select id="getCourseDTOById" resultMap="Course_NS.CourseDTOResult" parameterClass="int">
+            SELECT
+            <include refid="Course_NS.COU_CourseDTO_columns"/>
+            FROM COU_COURSE_TBL
+            WHERE
+                COURSE_ID = #value#
+        </select>
+
+        <select id="getCourseList" resultMap="Course_NS.CourseResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL WHERE COU_COURSE_TBL.STATUS  != 2 
+            <isNotEqual property="subjectId" compareValue="0" prepend="and" >
+            	COU_COURSE_TBL.SUBJECT_ID=#subjectId#
+            </isNotEqual>
+        </select>
+
+        <select id="getAllCourseList" resultMap="Course_NS.CourseResult">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL WHERE COU_COURSE_TBL.STATUS  = 0 
+        </select>
+               
+        <!-- all course  -->
+        <select id="getAllCourseInfoList" resultMap="Course_NS.CourseAllResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL WHERE COU_COURSE_TBL.STATUS  = 0
+        </select>
+       <!-- all course end -->
+        
+       <!-- getcourses by sortId  -->
+        <select id="getCourseListBySortId" resultMap="Course_NS.CourseResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            	WHERE COU_COURSE_TBL.STATUS  != 2 AND COU_COURSE_TBL.SORT_ID = #sortId#
+        </select>
+        <!-- getcourses by sortId end  -->
+        
+        <!-- getcourses by status  -->
+        <select id="getCourseListByStatus" resultMap="Course_NS.CourseResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            	WHERE COU_COURSE_TBL.STATUS  = #status#
+        </select>
+        <!-- getcourses by status end  -->
+        
+        <!-- search dto by sortid   -->
+        <select id="getCourseDTOListtBySortId" resultMap="Course_NS.KeyValueDTOResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_DTO_columns"/>
+            FROM COU_COURSE_TBL
+            	WHERE COU_COURSE_TBL.STATUS  != 2 AND COU_COURSE_TBL.SORT_ID = #sortId#
+        </select>
+        <select id="getCourseDTOListAddOrUpdate" resultMap="Course_NS.KeyValueDTOResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_DTO_columns"/>
+            FROM COU_COURSE_TBL
+            	WHERE COU_COURSE_TBL.STATUS  != 2 AND COU_COURSE_TBL.STATUS  != 1 AND COU_COURSE_TBL.SORT_ID = #sortId#
+        </select>
+        
+        <!-- fen ye search  -->
+        <select id="getNomalCourseListBySortId" resultMap="Course_NS.CourseResultAndSort" parameterClass="QueryCourseCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>,sys_subject_tbl.subject_name
+            FROM COU_COURSE_TBL left join sys_subject_tbl on COU_COURSE_TBL.subject_id=sys_subject_tbl.subject_id
+              WHERE
+                COU_COURSE_TBL.STATUS  != 2
+                <isNotNull property="searchKey">
+	            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+			                  COU_COURSE_TBL.TITLE like  CONCAT('%',#searchKey#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	<isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		COU_COURSE_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        	</isNotNull>
+	        	<isEqual property="uploadStatus" prepend="and" compareValue="1">
+	        	COU_COURSE_TBL.REAL_UP_NUM=0
+	        	</isEqual>
+	        	<isEqual property="uploadStatus" prepend="and" compareValue="2">
+	        	COU_COURSE_TBL.REAL_UP_NUM>0 and COU_COURSE_TBL.lession_Time>0 and COU_COURSE_TBL.lession_Time > COU_COURSE_TBL.REAL_UP_NUM
+	        	</isEqual>
+	        	<isEqual property="uploadStatus" prepend="and" compareValue="3">
+	        	COU_COURSE_TBL.REAL_UP_NUM = COU_COURSE_TBL.lession_Time and COU_COURSE_TBL.REAL_UP_NUM>0 and COU_COURSE_TBL.lession_Time>0 
+	        	</isEqual>
+	        	<isNotNull property="addStartDate" prepend="and">  	 
+	                		 COU_COURSE_TBL.ADDTIME >= #addStartDate#
+	        	</isNotNull>
+	        	<isNotNull property="addEndDate" prepend="and">
+	            	<![CDATA[ COU_COURSE_TBL.ADDTIME <= #addEndDate# ]]>
+	        	</isNotNull>
+	        	<isNotNull property="updateStartDate" prepend="and">
+	            	 COU_COURSE_TBL.UPDATE_TIME >= #updateStartDate#
+	        	</isNotNull>
+	        	<isNotNull property="updateEndDate" prepend="and">
+	            	 <![CDATA[ COU_COURSE_TBL.UPDATE_TIME <= #updateEndDate# ]]>
+	        	</isNotNull>
+	        	order by COU_COURSE_TBL.course_id desc
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getNomalCourseListCountBySortId" resultClass="int" parameterClass="QueryCourseCondition">
+            SELECT COUNT(1)
+            FROM COU_COURSE_TBL
+            WHERE
+                COU_COURSE_TBL.STATUS  != 2
+                <isNotNull property="searchKey">
+	            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+			                  COU_COURSE_TBL.TITLE like  CONCAT('%',#searchKey#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	<isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		COU_COURSE_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        	</isNotNull>
+	        	<isEqual property="uploadStatus" prepend="and" compareValue="1">
+	        	COU_COURSE_TBL.REAL_UP_NUM=0
+	        	</isEqual>
+	        	<isEqual property="uploadStatus" prepend="and" compareValue="2">
+	        	COU_COURSE_TBL.REAL_UP_NUM>0 and COU_COURSE_TBL.lession_Time>0 and COU_COURSE_TBL.lession_Time > COU_COURSE_TBL.REAL_UP_NUM
+	        	</isEqual>
+	        	<isEqual property="uploadStatus" prepend="and" compareValue="3">
+	        	COU_COURSE_TBL.REAL_UP_NUM = COU_COURSE_TBL.lession_Time and COU_COURSE_TBL.REAL_UP_NUM>0 and COU_COURSE_TBL.lession_Time>0 
+	        	</isEqual>
+	        	<isNotNull property="addStartDate" prepend="and">  	 
+	                		 COU_COURSE_TBL.ADDTIME >= #addStartDate#
+	        	</isNotNull>
+	        	<isNotNull property="addEndDate" prepend="and">
+	            	<![CDATA[ COU_COURSE_TBL.ADDTIME <= #addEndDate# ]]>
+	        	</isNotNull>
+	        	<isNotNull property="updateStartDate" prepend="and">
+	            	 COU_COURSE_TBL.UPDATE_TIME >= #updateStartDate#
+	        	</isNotNull>
+	        	<isNotNull property="updateEndDate" prepend="and">
+	            	 <![CDATA[ COU_COURSE_TBL.UPDATE_TIME <= #updateEndDate# ]]>
+	        	</isNotNull>
+        </select>
+         
+        <!--                                         WEB                                             -->
+        <select id="getFrontCourseListBySortId" resultMap="Course_NS.CourseResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            	WHERE COU_COURSE_TBL.STATUS  = 0 AND COU_COURSE_TBL.SORT_ID = #sortId#
+        </select>
+        
+         <!-- search dto by sortid limit by num  -->
+        <select id="getCourseListtBySortIdLimit" resultMap="Course_NS.NomalCourseResult" parameterClass="QueryCourseCondition">
+            SELECT
+            	<include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL
+            	WHERE COU_COURSE_TBL.STATUS = 0 
+            <isNotNull property="subjectId">
+	            	 <isGreaterThan prepend="and" property="subjectId" compareValue="0">
+	                		COU_COURSE_TBL.SUBJECT_ID=#subjectId#
+	                </isGreaterThan>
+	        </isNotNull>
+	        <isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		COU_COURSE_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        </isNotNull>	
+            	
+            order by COU_COURSE_TBL.COURSE_ID desc limit #num#
+        </select>
+        
+        <select id="getWebCourseList" resultMap="Course_NS.CourseResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL WHERE COU_COURSE_TBL.STATUS  =0 
+            
+            <isNotNull property="teacherId">
+	            	 <isGreaterThan prepend="and" property="teacherId" compareValue="0">
+	                		COU_COURSE_TBL.TEACHER_ID=#teacherId#
+	                </isGreaterThan>
+	        </isNotNull>
+	        
+	        <isNotNull property="subjectId">
+	            	 <isGreaterThan prepend="and" property="subjectId" compareValue="0">
+	                		COU_COURSE_TBL.SUBJECT_ID=#subjectId#
+	                </isGreaterThan>
+	        </isNotNull>
+	        
+	        <isNotNull property="teacherTjCourse">
+	            	 <isGreaterThan prepend="and" property="teacherTjCourse" compareValue="0">
+	                		COU_COURSE_TBL.TEACHER_TJ_COURSE=#teacherTjCourse#
+	                </isGreaterThan>
+	        </isNotNull>
+        </select>
+        
+        
+        <select id="getWebListenintCourseDTOByVedioId" resultMap="Course_NS.ListeningKeyValueDTOResult" parameterClass="int">
+            SELECT
+            <include refid="COU_LISTENINGCOURSEDTO_columns"/>
+            FROM COU_COURSE_TBL , COU_KPOINT_TBL, RES_VEDIO_TBL WHERE COU_COURSE_TBL.STATUS  =0 AND COU_KPOINT_TBL.STATUS = 0
+            AND cou_course_tbl.course_id = cou_kpoint_tbl.course_id and cou_kpoint_tbl.point_id = res_vedio_tbl.pointid and 
+			res_vedio_tbl.VO_ID = #value#
+           
+        </select>
+        
+        <!-- lasted courses -->
+         <select id="getWebCourseListLimit" resultMap="Course_NS.CourseDTOResult" parameterClass="int">
+            SELECT
+            <include refid="Course_NS.COU_CourseDTO_columns"/>
+            from 
+            cou_course_tbl where cou_course_tbl.STATUS = 0 order by addtime  desc limit #value#
+        </select>
+
+        <select id="getCourseListForTag" resultMap="Course_NS.CourseAllResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL 
+            WHERE COU_COURSE_TBL.STATUS  != 2 
+            	<isNotEqual property="subjectId" compareValue="0" prepend="AND">
+            		COU_COURSE_TBL.SUBJECT_ID = #subjectId#
+            	</isNotEqual>
+        </select>
+        
+        <select id="getCourseListByClazzIdForTag" resultMap="Course_NS.CourseAllResult" parameterClass="QueryCourseCondition">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+	            from cou_course_tbl, cou_clazz_cou_tbl where cou_course_tbl.COURSE_ID =  cou_clazz_cou_tbl.COURSE_ID and  
+	            cou_clazz_cou_tbl.CLAZZ_ID = #clazzId#
+        </select>
+     	<!-- lasted courses -->
+     	
+     	 <select id="getAuditionCourseListByCourseId" resultMap="Course_NS.CourseIsAuditionDTOResult" parameterClass="int">
+           select cou_course_tbl.course_id, COU_KPOINT_TBL.name,res_vedio_tbl.VO_URL from cou_course_tbl,cou_kpoint_tbl, res_vedio_tbl 
+           		where cou_course_tbl.COURSE_ID = cou_kpoint_tbl.COURSE_ID and cou_kpoint_tbl.POINT_ID = res_vedio_tbl.POINTID  
+           			and cou_course_tbl.COURSE_ID = #value# and res_vedio_tbl.IS_AUDITION = 1;
+        </select>
+        
+        <select id="getTeacherListByCourseId" resultMap="Course_NS.TeacherResult" parameterClass="int">
+           select distinct <include refid="Course_NS.COU_TEACHER_TBL_columns"/>
+           		from  cou_teacher_tbl,cou_kpoint_tbl ,res_vedio_tbl where cou_kpoint_tbl.COURSE_ID = #value# and 
+           			cou_kpoint_tbl.POINT_ID = res_vedio_tbl.POINTID and 
+           			cou_teacher_tbl.TC_ID = res_vedio_tbl.TC_ID and  cou_teacher_tbl.TC_ID != 0 and cou_kpoint_tbl.STATUS=0 
+        </select>
+        
+        <select id="getUserCenterCourseListByCusId" resultMap="Course_NS.UserCenterCourseDTOResult" parameterClass="QueryCourseCondition">
+			SELECT 
+				cou_course_tbl.COURSE_ID, 
+			        cou_course_tbl.TITLE, 
+			        cou_course_tbl.VEDIO_PIC_URL , 
+			        cou_course_tbl.LESSION_TIME ,
+			        cou_course_tbl.dpdfurl ,
+			        cou_course_tbl.dppturl ,
+				COU_COURSE_TBL.subject_id,
+				ma_course.sell_id as sellId,
+				cou_course_tbl.introduce,
+				cou_course_tbl.dmp3Url
+			from 
+			   (SELECT 
+				 cou_sell_cou_tbl.COURSE_ID,
+						cou_sell_cou_tbl.sell_id as sell_id
+			from 
+				(
+				SELECT
+				distinct finance_cash_record_tbl.PACK_ID  as sell_id
+				from finance_cash_record_tbl  
+				where
+				finance_cash_record_tbl.CUS_ID=#cusId#
+				and finance_cash_record_tbl.STATUS=1 
+				group by
+				finance_cash_record_tbl.PACK_ID)as ma_sell inner join cou_sell_cou_tbl 
+				on cou_sell_cou_tbl.SELL_ID=ma_sell.sell_id) ma_course
+				inner join COU_COURSE_TBL on 
+				ma_course.COURSE_ID=COU_COURSE_TBL.COURSE_ID
+				<isNotEqual property="subjectId" compareValue="0" prepend="AND">
+					COU_COURSE_TBL.SUBJECT_ID = #subjectId#
+			    </isNotEqual>
+			group by ma_course.COURSE_ID
+			order by ma_course.sell_id,COU_COURSE_TBL.subject_id,cou_course_tbl.COURSE_ID
+        </select>
+        
+         <select id="getAllCourseInfoByIdAndFinance" resultMap="Course_NS.CourseAllResult" parameterClass="int">
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+           from COU_COURSE_TBL
+				where COURSE_ID in
+				(
+				SELECT distinct  cou_sell_cou_tbl.COURSE_ID
+				from 
+				(SELECT
+				distinct finance_cash_record_tbl.PACK_ID  as sell_id
+				from finance_cash_record_tbl  
+				where
+				finance_cash_record_tbl.CUS_ID=#value#
+				and finance_cash_record_tbl.STATUS=1 
+				group by
+				finance_cash_record_tbl.PACK_ID)as ma_sell inner join cou_sell_cou_tbl 
+				on cou_sell_cou_tbl.SELL_ID=ma_sell.sell_id
+				)
+        </select>       
+        
+        <!-- 根据cus_id获得用户购买成功的包 -->
+        <select id="getUserCenterSellWayListByCusId" resultMap="SellWay_NS.SellWayResult" parameterClass="QueryCourseCondition">
+			SELECT 
+            	<include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+            FROM COU_SELL_WAY_TBL ,finance_cash_record_tbl
+			where 
+			finance_cash_record_tbl.CUS_ID=#cusId# and
+			finance_cash_record_tbl.PACK_ID=COU_SELL_WAY_TBL.sell_id   and 
+			finance_cash_record_tbl.STATUS=1  
+				<isNotEqual property="subjectId" compareValue="0" prepend="AND">
+					cou_sell_way_tbl.SUBJECT_ID = #subjectId#
+			    </isNotEqual>
+				group by finance_cash_record_tbl.PACK_ID  
+				
+        </select>  
+        
+        <!-- 根据包获得下面所有的课程 -->
+        <select id="getCouserListBySellId"  resultMap="Course_NS.UserCenterCourseDTOResult" parameterClass="java.lang.String">
+			SELECT 
+				cou_course_tbl.COURSE_ID, 
+			    cou_course_tbl.TITLE, 
+			    cou_course_tbl.VEDIO_PIC_URL , 
+		        cou_course_tbl.LESSION_TIME ,
+				COU_COURSE_TBL.subject_id,
+				cou_course_tbl.dpdfurl ,
+				cou_course_tbl.dppturl ,
+				cou_sell_cou_tbl.sell_id as sellId,
+				cou_course_tbl.introduce,
+				cou_course_tbl.dmp3url
+				
+				
+			  from cou_sell_cou_tbl, COU_COURSE_TBL 
+		  	  where 
+			  cou_sell_cou_tbl.COURSE_ID=COU_COURSE_TBL.COURSE_ID and
+			cou_sell_cou_tbl.SELL_ID=#sellId#
+			order by COU_COURSE_TBL.COURSE_ID
+        </select>
+ 		 
+		<!-- 课程进度 sql begin -->
+ 		 		<select id="getCoursePlan" resultMap="Course_NS.CoursePlanDTOResult" parameterClass="int">
+ 			SELECT
+			cou_course_tbl.TITLE,
+			cou_kpoint_tbl.NAME,
+			cou_kpoint_tbl.POINT_ID,
+			cou_kpoint_tbl.P_ID,
+			cou_course_tbl.dpdfurl,
+			cou_course_tbl.dmp3url,
+			res_books_tbl.BK_URL ,
+			cou_teacher_tbl.NAME AS tcName,
+			res_vedio_tbl.VO_URL,
+			COU_KPOINT_TBL.level,
+			COU_KPOINT_TBL.leaf
+			
+			FROM cou_kpoint_tbl
+	
+			LEFT JOIN cou_course_tbl
+			ON cou_kpoint_tbl.COURSE_ID=cou_course_tbl.COURSE_ID
+	
+			LEFT JOIN  
+			(SELECT res_books_tbl.BK_URL,res_books_tbl.POINTID FROM res_books_tbl ,  ( SELECT MAX(BK_ID) AS bk_id  FROM res_books_tbl    GROUP BY POINTID   ) 
+			AS tbl WHERE res_books_tbl.`BK_ID`=tbl.bk_id) AS res_books_tbl  
+
+			ON cou_kpoint_tbl.POINT_ID= res_books_tbl.POINTID
+			LEFT JOIN res_vedio_tbl
+			ON cou_kpoint_tbl.POINT_ID=res_vedio_tbl.POINTID
+	
+			LEFT JOIN cou_teacher_tbl
+			ON res_vedio_tbl.TC_ID=cou_teacher_tbl.TC_ID
+	
+			WHERE cou_kpoint_tbl.COURSE_ID=#value# AND cou_kpoint_tbl.STATUS=0 ORDER BY cou_kpoint_tbl.POINT_ID
+ 		</select>
+ 		<!-- 课程进度 sql end -->
+        
+            <select id="getCourseBySellId" resultMap="Course_NS.KeyValueDTOResult" parameterClass="int">
+    SELECT  cou_course_tbl.COURSE_ID, cou_course_tbl.TITLE from cou_sell_cou_tbl, COU_COURSE_TBL 
+where cou_sell_cou_tbl.COURSE_ID=COU_COURSE_TBL.COURSE_ID and cou_sell_cou_tbl.SELL_ID=#value#
+    </select>   
+    
+    <select id="getCourseIdAllCourseInfoByIdAndFinance" resultClass="Integer" parameterClass="int">
+            SELECT
+            COURSE_ID
+           from COU_COURSE_TBL
+				where COURSE_ID in
+				(
+				SELECT distinct  cou_sell_cou_tbl.COURSE_ID
+				from 
+				(SELECT
+				distinct finance_cash_record_tbl.PACK_ID  as sell_id
+				from finance_cash_record_tbl  
+				where
+				finance_cash_record_tbl.CUS_ID=#value#
+				and finance_cash_record_tbl.STATUS=1 
+				group by
+				finance_cash_record_tbl.PACK_ID)as ma_sell inner join cou_sell_cou_tbl 
+				on cou_sell_cou_tbl.SELL_ID=ma_sell.sell_id
+				)
+        </select>    
+        
+       <!-- 获取所有的课程id -->
+      <select id="getCourseIdAll" resultClass="Integer" parameterClass="Integer">
+      select course_id from cou_course_tbl where 1=1
+      <isNotEmpty property="value">
+      and SUBJECT_ID=#value#
+      </isNotEmpty>
+      </select>   
+</sqlMap>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Tjcourse_NS">
+        <!--table:COU_TJCOURSE_TBL-->
+        <typeAlias alias="Tjcourse" type="com.shangde.edu.cou.domain.Tjcourse"/>
+        <typeAlias alias="QueryTjcourseCondition" type="com.shangde.edu.cou.condition.QueryTjcourseCondition"/>
+
+        <resultMap id="TjcourseResult" class="Tjcourse">
+            <result property="id" column="ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="tjcourseId" column="TJCOURSE_ID"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="picPath" column="PIC_PATH"/>
+            <result property="title" column="TITLE"/>
+            <result property="info" column="INFO"/>
+            <result property="buyMethod" column="BUY_METHOD"/>
+            <result property="tjPicPath" column="TJPIC_PATH"/>
+            <result property="tjTitle" column="TJTITLE"/>
+            <result property="tjClickTimes" column="TJCLICK_TIMES"/>
+            <result property="tjURL" column="TJURL"/>
+            <result property="tjBuyMethod" column="TJBUY_METHOD"/>
+        </resultMap>
+
+        <sql id="COU_TJCOURSE_TBL_columns">
+            COU_TJCOURSE_TBL.ID,
+            COU_TJCOURSE_TBL.COURSE_ID,
+            COU_TJCOURSE_TBL.TJCOURSE_ID,
+            COU_TJCOURSE_TBL.ADD_TIME,
+            COU_TJCOURSE_TBL.PIC_PATH,
+            COU_TJCOURSE_TBL.TITLE,
+            COU_TJCOURSE_TBL.INFO,
+            COU_TJCOURSE_TBL.BUY_METHOD,
+            COU_TJCOURSE_TBL.TJPIC_PATH,
+            COU_TJCOURSE_TBL.TJTITLE,
+            COU_TJCOURSE_TBL.TJCLICK_TIMES,
+            COU_TJCOURSE_TBL.TJURL,
+            COU_TJCOURSE_TBL.TJBUY_METHOD
+        </sql>
+
+        <sql id="COU_TJCOURSE_TBL_properties">
+            #id#,
+            #courseId#,
+            #tjcourseId#,
+            #addTime#,
+            #picPath#,
+            #title#,
+            #info#,
+            #buyMethod#,
+            #tjPicPath#,
+            #tjTitle#,
+            #tjClickTimes#,
+            #tjURL#,
+            #tjBuyMethod#
+        </sql>
+
+        <insert id="createTjcourse" parameterClass="Tjcourse">
+            INSERT INTO COU_TJCOURSE_TBL (<include refid="Tjcourse_NS.COU_TJCOURSE_TBL_columns"/>) VALUES (<include refid="Tjcourse_NS.COU_TJCOURSE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTjcourseById" parameterClass="int">
+            DELETE FROM COU_TJCOURSE_TBL
+            WHERE
+                ID = #value#
+
+        </delete>
+        
+         <delete id="deleteTjcourseByCourseId" parameterClass="Tjcourse">
+            DELETE FROM COU_TJCOURSE_TBL
+            WHERE
+                COURSE_ID = #courseId# AND TJCOURSE_ID = #tjcourseId#
+
+        </delete>
+
+        <update id="updateTjcourse" parameterClass="Tjcourse">
+            UPDATE COU_TJCOURSE_TBL SET
+                ID = #id#,
+                COURSE_ID = #courseId#,
+                TJCOURSE_ID = #tjcourseId#,
+                ADD_TIME = #addTime#,
+                PIC_PATH = #picPath#,
+                TITLE = #title#,
+                INFO = #info#,
+                BUY_METHOD = #buyMethod#,
+                TJPIC_PATH = #tjPicPath#,
+                TJTITLE = #tjTitle#,
+                TJCLICK_TIMES = #tjClickTimes#,
+                TJURL = #tjURL#,
+                TJBUY_METHOD = #tjBuyMethod#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getTjcourseById" resultMap="Tjcourse_NS.TjcourseResult" parameterClass="int">
+            SELECT
+            <include refid="Tjcourse_NS.COU_TJCOURSE_TBL_columns"/>
+            FROM COU_TJCOURSE_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getTjcourseList" resultMap="Tjcourse_NS.TjcourseResult" parameterClass="QueryTjcourseCondition">
+            SELECT
+            <include refid="Tjcourse_NS.COU_TJCOURSE_TBL_columns"/>
+            FROM COU_TJCOURSE_TBL
+            <dynamic prepend="WHERE">
+	            <isNotNull property="ycourseId">
+		            	 <isGreaterThan prepend="and" property="ycourseId" compareValue="0">
+		                		COU_TJCOURSE_TBL.COURSE_ID=#ycourseId#
+		                </isGreaterThan>
+		        </isNotNull>
+		        <isNotEqual prepend="and" property="id" compareValue="0">
+		      		course_id = #id#
+		        </isNotEqual>
+	        </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

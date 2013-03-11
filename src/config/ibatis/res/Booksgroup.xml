@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Booksgroup_NS">
+        <!--table:RES_BOOKSGROUP_TBL-->
+        <typeAlias alias="Booksgroup" type="com.shangde.edu.res.domain.Booksgroup"/>
+        <typeAlias alias="QueryBooksgroupCondition" type="com.shangde.edu.res.condition.QueryBooksgroupCondition"/>
+
+        <resultMap id="BooksgroupResult" class="Booksgroup">
+            <result property="bgId" column="BG_ID"/>
+            <result property="bgName" column="BG_NAME"/>
+            <result property="bgType" column="BG_TYPE"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="bgInfo" column="BG_INFO"/>
+        </resultMap>
+
+        <sql id="RES_BOOKSGROUP_TBL_columns">
+            RES_BOOKSGROUP_TBL.BG_ID,
+            RES_BOOKSGROUP_TBL.BG_NAME,
+            RES_BOOKSGROUP_TBL.BG_TYPE,
+            RES_BOOKSGROUP_TBL.CREATE_TIME,
+            RES_BOOKSGROUP_TBL.BG_INFO
+        </sql>
+
+        <sql id="RES_BOOKSGROUP_TBL_properties">
+            #bgId#,
+            #bgName#,
+            #bgType#,
+            #createTime#,
+            #bgInfo#
+        </sql>
+
+        <insert id="createBooksgroup" parameterClass="Booksgroup">
+            INSERT INTO RES_BOOKSGROUP_TBL (<include refid="Booksgroup_NS.RES_BOOKSGROUP_TBL_columns"/>) VALUES (<include refid="Booksgroup_NS.RES_BOOKSGROUP_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="bgId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteBooksgroupById" parameterClass="int">
+            DELETE FROM RES_BOOKSGROUP_TBL
+            WHERE
+                BG_ID = #value#
+
+        </delete>
+
+        <update id="updateBooksgroup" parameterClass="Booksgroup">
+            UPDATE RES_BOOKSGROUP_TBL SET
+                BG_ID = #bgId#,
+                BG_NAME = #bgName#,
+                BG_TYPE = #bgType#,
+                CREATE_TIME = #createTime#,
+                BG_INFO = #bgInfo#
+            WHERE
+                BG_ID = #bgId#
+
+        </update>
+
+        <select id="getBooksgroupById" resultMap="Booksgroup_NS.BooksgroupResult" parameterClass="int">
+            SELECT
+            <include refid="Booksgroup_NS.RES_BOOKSGROUP_TBL_columns"/>
+            FROM RES_BOOKSGROUP_TBL
+            WHERE
+                BG_ID = #value#
+
+        </select>
+         <select id="getBooksgroupListCount" resultClass="int" parameterClass="QueryBooksgroupCondition">
+            SELECT COUNT(1)
+            FROM RES_BOOKSGROUP_TBL 
+             <dynamic prepend="WHERE"> 
+            <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		               BG_NAME like  CONCAT('%',#searchKey#,'%')
+		          	
+			    </isNotEqual>
+			  </isNotNull>
+           </dynamic>
+           
+        </select>
+        <select id="getBooksgroupList" resultMap="Booksgroup_NS.BooksgroupResult" parameterClass="QueryBooksgroupCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Booksgroup_NS.RES_BOOKSGROUP_TBL_columns"/>
+            FROM RES_BOOKSGROUP_TBL 
+             <dynamic prepend="WHERE"> 
+            <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		               BG_NAME like  CONCAT('%',#searchKey#,'%')
+		          	
+			    </isNotEqual>
+			  </isNotNull>
+           </dynamic>
+            <include refid="public_sql.page_end"/>
+        </select>
+            <select id="getBooksgroupByList" resultMap="Booksgroup_NS.BooksgroupResult" parameterClass="QueryBooksgroupCondition">
+          
+            SELECT
+            <include refid="Booksgroup_NS.RES_BOOKSGROUP_TBL_columns"/>
+            FROM RES_BOOKSGROUP_TBL GROUP BY BG_NAME
+         
+        </select>
+        <!--end-->
+</sqlMap>

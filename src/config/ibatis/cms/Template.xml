@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Template_NS">
+        <!--table:CMS_TEMPLATE_TBL-->
+        <typeAlias alias="Template" type="com.shangde.edu.cms.domain.Template"/>
+        <typeAlias alias="QueryTemplateCondition" type="com.shangde.edu.cms.condition.QueryTemplateCondition"/>
+
+        <resultMap id="TemplateResult" class="Template">
+            <result property="tmpId" column="TMP_ID"/>
+            <result property="tmpName" column="TMP_NAME"/>
+            <result property="tmpType" column="TMP_TYPE"/>
+            <result property="tmpContent" column="TMP_CONTENT"/>
+            <result property="tmpContent_bak" column="TMP_CONTENT_BAK"/>
+            <result property="isUse" column="IS_USE"/>
+        </resultMap>
+
+        <sql id="CMS_TEMPLATE_TBL_columns">
+            CMS_TEMPLATE_TBL.TMP_ID,
+            CMS_TEMPLATE_TBL.TMP_NAME,
+            CMS_TEMPLATE_TBL.TMP_TYPE,
+            CMS_TEMPLATE_TBL.TMP_CONTENT,
+            CMS_TEMPLATE_TBL.TMP_CONTENT_BAK,
+            CMS_TEMPLATE_TBL.IS_USE
+        </sql>
+
+        <sql id="CMS_TEMPLATE_TBL_properties">
+            #tmpId#,
+            #tmpName#,
+            #tmpType#,
+            #tmpContent#,
+            #tmpContent_bak#,
+            #isUse#
+        </sql>
+
+        <insert id="createTemplate" parameterClass="Template">
+            INSERT INTO CMS_TEMPLATE_TBL (<include refid="Template_NS.CMS_TEMPLATE_TBL_columns"/>) VALUES (<include refid="Template_NS.CMS_TEMPLATE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="tmpId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTemplateById" parameterClass="int">
+            DELETE FROM CMS_TEMPLATE_TBL
+            WHERE
+                TMP_ID = #value#
+
+
+
+
+        </delete>
+
+        <update id="updateTemplate" parameterClass="Template">
+            UPDATE CMS_TEMPLATE_TBL SET
+                TMP_ID = #tmpId#,
+                TMP_NAME = #tmpName#,
+                TMP_TYPE = #tmpType#,
+                TMP_CONTENT = #tmpContent#,
+                TMP_CONTENT_BAK = #tmpContent_bak#,
+                IS_USE = #isUse#
+            WHERE
+                TMP_ID = #tmpId#
+
+
+
+
+        </update>
+
+        <select id="getTemplateById" resultMap="Template_NS.TemplateResult" parameterClass="int">
+            SELECT
+            <include refid="Template_NS.CMS_TEMPLATE_TBL_columns"/>
+            FROM CMS_TEMPLATE_TBL
+            WHERE
+                TMP_ID = #value#
+
+
+
+
+        </select>
+
+        <select id="getTemplateList" resultMap="Template_NS.TemplateResult" parameterClass="QueryTemplateCondition">
+            SELECT
+            <include refid="Template_NS.CMS_TEMPLATE_TBL_columns"/>            	
+            FROM CMS_TEMPLATE_TBL
+            <dynamic prepend="WHERE">
+	            <isNotNull property="tmpType">
+	           		<isNotEqual property="tmpType" compareValue="">
+	            		<isNotEqual property="tmpType" compareValue="-1">
+	            			TMP_TYPE = #tmpType#
+	            		</isNotEqual>
+	           		</isNotEqual>
+	           	</isNotNull>
+	            <isNotNull property="tmpName">
+	           		<isNotEqual property="tmpName" compareValue="" prepend="AND">
+	            			TMP_NAME = #tmpName#
+	           		</isNotEqual>
+	           	</isNotNull>
+           	</dynamic>
+        </select>
+        
+        <!-- 分页查询 -->
+        <select id="getTemplateListByCondition" resultMap="Template_NS.TemplateResult" parameterClass="QueryTemplateCondition">
+        	SELECT 
+        	<include refid="Template_NS.CMS_TEMPLATE_TBL_columns"/>
+        	FROM CMS_TEMPLATE_TBL
+        	WHERE 1=1
+        	<isNotNull property="tmpName">
+          		AND TMP_NAME LIKE CONCAT('%',#tmpName#,'%')
+            </isNotNull >
+            <isNotNull property="tmpType">
+           		<isNotEqual property="tmpType" compareValue="">
+            		<isNotEqual property="tmpType" compareValue="-1">
+            			AND TMP_TYPE = #tmpType#
+            		</isNotEqual>
+           		</isNotEqual>
+            </isNotNull >  
+            <isNotNull property="tmpContent">
+          		AND TMP_CONTENT LIKE CONCAT('%',#tmpContent#,'%')
+            </isNotNull >  
+            <isNotNull property="isUse">
+          		AND IS_USE = #isUse#
+            </isNotNull >             
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getTemplateCountByCondition" resultClass="int" parameterClass="QueryTemplateCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM CMS_TEMPLATE_TBL
+        	WHERE 1=1
+        	<isNotNull property="tmpName">
+          		AND TMP_NAME LIKE CONCAT('%',#tmpName#,'%')
+            </isNotNull >
+            <isNotNull property="tmpType">
+           		<isNotEqual property="tmpType" compareValue="">
+            		<isNotEqual property="tmpType" compareValue="-1">
+            			AND TMP_TYPE = #tmpType#
+            		</isNotEqual>
+           		</isNotEqual>
+            </isNotNull >  
+            <isNotNull property="tmpContent">
+          		AND TMP_CONTENT LIKE CONCAT('%',#tmpContent#,'%')
+            </isNotNull >  
+            <isNotNull property="isUse">
+          		AND IS_USE = #isUse#
+            </isNotNull >          
+        </select>
+
+        <select id="getTemplateListForTag" resultMap="Template_NS.TemplateResult" parameterClass="QueryTemplateCondition">
+            SELECT
+            <include refid="Template_NS.CMS_TEMPLATE_TBL_columns"/>            	
+            FROM CMS_TEMPLATE_TBL
+            <dynamic prepend="WHERE">
+		        <isNotNull property="tmpName">
+		        	TMP_NAME = #tmpName#
+		        </isNotNull>
+           	</dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

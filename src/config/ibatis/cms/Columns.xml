@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Columns_NS">
+        <!--table:CMS_COLUMNS_TBL-->
+        <typeAlias alias="Columns" type="com.shangde.edu.cms.domain.Columns"/>
+        <typeAlias alias="QueryColumnsCondition" type="com.shangde.edu.cms.condition.QueryColumnsCondition"/>
+
+        <resultMap id="ColumnsResult" class="Columns">
+            <result property="columnId" column="COLUMN_ID"/>
+            <result property="parentId" column="PARENT_ID"/>
+            <result property="columnName" column="COLUMN_NAME"/>
+            <result property="explanation" column="EXPLANATION"/>
+            <result property="catalog" column="CATALOG"/>
+            <result property="meta" column="META"/>
+            <result property="indexTemplateId" column="INDEX_TEMPLATE_ID"/>
+            <result property="articleTemplateId" column="ARTICLE_TEMPLATE_ID"/>
+            <result property="sequence" column="SEQUENCE"/>
+            <result property="isFinally" column="IS_FINALLY"/>
+            <result property="linkUrl" column="LINK_URL"/>
+            <result property="path" column="PATH"/>
+            <result property="columnType" column="COLUMN_TYPE"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="staticType" column="STATIC_TYPE"/>
+            <result property="keyWord" column="KEY_WORD"/>
+        </resultMap>
+
+        <sql id="CMS_COLUMNS_TBL_columns">
+            CMS_COLUMNS_TBL.COLUMN_ID,
+            CMS_COLUMNS_TBL.PARENT_ID,
+            CMS_COLUMNS_TBL.COLUMN_NAME,
+            CMS_COLUMNS_TBL.EXPLANATION,
+            CMS_COLUMNS_TBL.CATALOG,
+            CMS_COLUMNS_TBL.META,
+            CMS_COLUMNS_TBL.INDEX_TEMPLATE_ID,
+            CMS_COLUMNS_TBL.ARTICLE_TEMPLATE_ID,
+            CMS_COLUMNS_TBL.SEQUENCE,
+            CMS_COLUMNS_TBL.IS_FINALLY,
+            CMS_COLUMNS_TBL.LINK_URL,
+            CMS_COLUMNS_TBL.PATH,
+            CMS_COLUMNS_TBL.COLUMN_TYPE,
+            CMS_COLUMNS_TBL.SUBJECT_ID,
+            CMS_COLUMNS_TBL.STATIC_TYPE,
+            CMS_COLUMNS_TBL.KEY_WORD
+        </sql>
+
+        <sql id="CMS_COLUMNS_TBL_properties">
+            #columnId#,
+            #parentId#,
+            #columnName#,
+            #explanation#,
+            #catalog#,
+            #meta#,
+            #indexTemplateId#,
+            #articleTemplateId#,
+            #sequence#,
+            #isFinally#,
+            #linkUrl#,
+            #path#,
+            #columnType#,
+            #subjectId#,
+            #staticType#,
+            #keyWord#
+        </sql>
+
+        <insert id="createColumns" parameterClass="Columns">
+            INSERT INTO CMS_COLUMNS_TBL (<include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>) VALUES (<include refid="Columns_NS.CMS_COLUMNS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="columnId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteColumnsById" parameterClass="int">
+            DELETE FROM CMS_COLUMNS_TBL
+            WHERE
+                COLUMN_ID = #value#
+        </delete>
+
+        <update id="updateColumns" parameterClass="Columns">
+            UPDATE CMS_COLUMNS_TBL SET
+                COLUMN_ID = #columnId#,
+                PARENT_ID = #parentId#,
+                COLUMN_NAME = #columnName#,
+                EXPLANATION = #explanation#,
+                CATALOG = #catalog#,
+                META = #meta#,
+                INDEX_TEMPLATE_ID = #indexTemplateId#,
+                ARTICLE_TEMPLATE_ID = #articleTemplateId#,
+                SEQUENCE = #sequence#,
+                IS_FINALLY = #isFinally#,
+                LINK_URL = #linkUrl#,
+                PATH = #path#,
+                COLUMN_TYPE = #columnType#,
+                SUBJECT_ID = #subjectId#,
+                STATIC_TYPE = #staticType#,
+                KEY_WORD = #keyWord#
+            WHERE
+                COLUMN_ID = #columnId#
+        </update>
+
+        <select id="getColumnsById" resultMap="Columns_NS.ColumnsResult" parameterClass="int">
+            SELECT
+            <include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>
+            FROM CMS_COLUMNS_TBL
+            WHERE
+                COLUMN_ID = #value#
+        </select>
+
+        <select id="getColumnsByKeyWord" resultMap="Columns_NS.ColumnsResult" parameterClass="String">
+            SELECT
+            <include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>
+            FROM CMS_COLUMNS_TBL
+            WHERE
+                KEY_WORD = #value#
+        </select>
+
+        <select id="getColumnsList" resultMap="Columns_NS.ColumnsResult" parameterClass="QueryColumnsCondition">
+            SELECT
+            <include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>
+            FROM CMS_COLUMNS_TBL
+        </select>
+
+        <!-- 查询总条数 -->
+
+        <select id="getColumnCountByParentId" resultClass="int" parameterClass="QueryColumnsCondition">
+        	SELECT COUNT(1) FROM
+        	CMS_COLUMNS_TBL WHERE PARENT_ID = #parentId#
+        </select>
+
+        <!-- 分页查询 -->
+
+        <select id="getColumnListByParentId" resultMap="Columns_NS.ColumnsResult" parameterClass="QueryColumnsCondition">
+        	SELECT 
+        	<include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>
+        	FROM CMS_COLUMNS_TBL
+        	WHERE PARENT_ID = #parentId# 
+        	<include refid="public_sql.page_end"/>
+        </select>
+
+        <!-- 按parentid查询 -->
+
+        <select id="getColumnsByParentId" resultMap="Columns_NS.ColumnsResult" parameterClass="QueryColumnsCondition">
+        	SELECT 
+        	<include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>
+        	FROM CMS_COLUMNS_TBL
+        	WHERE PARENT_ID = #parentId# 
+        </select>
+          <select id="getColumnNameById" resultClass="String" parameterClass="int">
+            SELECT
+           	COLUMN_NAME
+            FROM CMS_COLUMNS_TBL
+            WHERE
+                COLUMN_ID = #value#
+        </select>
+
+        <select id="getColumnsListForTag" resultMap="Columns_NS.ColumnsResult" parameterClass="QueryColumnsCondition">
+            SELECT
+            <include refid="Columns_NS.CMS_COLUMNS_TBL_columns"/>
+            FROM CMS_COLUMNS_TBL
+            WHERE 1=1
+            <isNotNull property="parentId">
+            	<isNotEqual property="parentId" compareValue="0" prepend="AND">
+            		CMS_COLUMNS_TBL.PARENT_ID = #parentId#
+            	</isNotEqual>
+            </isNotNull>
+            <isNotNull property="meta">
+            	<isNotEqual property="meta" compareValue="" prepend="AND">
+            		CMS_COLUMNS_TBL.META = #meta#
+            	</isNotEqual>
+            </isNotNull>
+            <isNotNull property="subjectId">
+            	<isNotEqual property="subjectId" compareValue="0" prepend="AND">
+            		CMS_COLUMNS_TBL.SUBJECT_ID = #subjectId#
+            	</isNotEqual>
+            </isNotNull>
+            <isNotNull property="keyWord">
+            	AND CMS_COLUMNS_TBL.KEY_WORD = #keyWord#
+            </isNotNull>
+            <isNotEqual property="columnId" compareValue="0">
+            	AND CMS_COLUMNS_TBL.COLUMN_ID = #columnId#
+            </isNotEqual>
+            ORDER BY SEQUENCE
+        </select>
+        <!--end-->
+</sqlMap>

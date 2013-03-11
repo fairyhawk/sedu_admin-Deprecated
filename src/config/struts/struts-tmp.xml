@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="tmp" namespace="/tmp" extends="edu-default">
+		<action name="user" class="com.shangde.edu.tmp.action.TmpStUserAction">
+			<result name="getTmpUserPage">/back/jsp/tmp/user_list.jsp</result>
+			<result name="success">/back/jsp/common/success.jsp</result>
+			<result name="excel" type="stream">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportname}"</param>
+			 </result> 
+		</action>
+		<action name="yhj" class="com.shangde.edu.tmp.action.TmpStYhjAction">
+			<result name="success">/back/jsp/tmp/yhj_list.jsp</result>
+		</action>
+	</package>
+</struts>

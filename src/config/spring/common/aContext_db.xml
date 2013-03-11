@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+ 	<!-- 数据源1 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/fairy?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+	  <!-- 配置初始化大小、最小、最大 -->
+	    <property name="initialSize" value="5" />
+	    <property name="minIdle" value="1" />
+	    <property name="maxActive" value="20" />
+	 
+	    <!-- 配置获取连接等待超时的时间 -->
+	    <property name="maxWait" value="60000" />
+	 
+	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	 
+	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+	    <property name="minEvictableIdleTimeMillis" value="300000" />
+	 
+	    <property name="validationQuery" value="SELECT 'x'" />
+	    <property name="testWhileIdle" value="true" />
+	    <property name="testOnBorrow" value="false" />
+	    <property name="testOnReturn" value="false" />
+	 
+	    <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+	    <property name="poolPreparedStatements" value="true" />
+	    <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+	 
+	    <!-- 配置监控统计拦截的filters -->
+	    <property name="filters" value="stat" />
+       </bean>
+    <!-- 数据源2read -->
+    <bean id="dataSourceRead" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close" >
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/fairy?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+	    <!-- 配置初始化大小、最小、最大 -->
+	    <property name="initialSize" value="5" />
+	    <property name="minIdle" value="1" />
+	    <property name="maxActive" value="20" />
+	    <!-- 配置获取连接等待超时的时间 -->
+	    <property name="maxWait" value="60000" />
+	 
+	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	 
+	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+	    <property name="minEvictableIdleTimeMillis" value="300000" />
+	 
+	    <property name="validationQuery" value="SELECT 'x'" />
+	    <property name="testWhileIdle" value="true" />
+	    <property name="testOnBorrow" value="false" />
+	    <property name="testOnReturn" value="false" />
+	 
+	    <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+	    <property name="poolPreparedStatements" value="true" />
+	    <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+	 
+	    <!-- 配置监控统计拦截的filters -->
+	    <property name="filters" value="stat" />
+    </bean>
+    <!-- hadata数据源-->
+     <bean id="dataSourceHaData" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/fairy?useUnicode=true&amp;characterEncoding=UTF-8"/>
+         <property name="username" value="root"/>
+        <property name="password" value="root"/>
+       <!-- 配置初始化大小、最小、最大 -->
+	    <property name="initialSize" value="5" />
+	    <property name="minIdle" value="1" />
+	    <property name="maxActive" value="20" />
+	 
+	    <!-- 配置获取连接等待超时的时间 -->
+	    <property name="maxWait" value="60000" />
+	 
+	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	 
+	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+	    <property name="minEvictableIdleTimeMillis" value="300000" />
+	 
+	    <property name="validationQuery" value="SELECT 'x'" />
+	    <property name="testWhileIdle" value="true" />
+	    <property name="testOnBorrow" value="false" />
+	    <property name="testOnReturn" value="false" />
+	 
+	    <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+	    <property name="poolPreparedStatements" value="true" />
+	    <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+	 
+	    <!-- 配置监控统计拦截的filters -->
+	    <property name="filters" value="stat" />
+    </bean>
+
+	<!-- 根据dataSource和SqlMapConfig.xml创建一个sqlMapClient --> 
+    <bean id="sqlMapClient"
+          class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation"
+                  value="classpath:/config/ibatis/SqlMapConfig.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 根据dataSourceRead和SqlMapConfig.xml创建一个sqlMapClientRead --> 
+    <bean id="sqlMapClientRead"
+          class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation"
+                  value="classpath:/config/ibatis/SqlMapConfig.xml"/>
+        <property name="dataSource" ref="dataSourceRead"/>
+    </bean>
+      <!-- 根据dataSourceHaData和SqlMapConfig.xml创建一个sqlMapClientHaData --> 
+    <bean id="sqlMapClientHaData"
+          class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation"
+                  value="classpath:/config/ibatis/SqlMapConfig.xml"/>
+        <property name="dataSource" ref="dataSourceHaData"/>
+    </bean>
+	<!-- 配置DAO，并注入所使用的sqlMapClient实例 --> 
+    <bean id="simpleDao" class="com.shangde.common.dao.IbatisSimpleDaoImpl">
+        <property name="sqlMapClient" ref="sqlMapClient"/>
+    </bean>
+    <!-- 配置DAO，并注入所使用的sqlMapClientRead实例 --> 
+    <bean id="simpleDaoRead" class="com.shangde.common.dao.IbatisSimpleDaoImpl">
+        <property name="sqlMapClient" ref="sqlMapClientRead"/>
+    </bean>
+    <!-- 配置DAO，并注入所使用的sqlMapClientHaData实例 --> 
+    <bean id="simpleDaoHaData" class="com.shangde.common.dao.IbatisSimpleDaoImpl">
+        <property name="sqlMapClient" ref="sqlMapClientHaData"/>
+    </bean>
+
+    <!-- JOTM实例 -->
+	<bean id="jotm" class="org.springframework.transaction.jta.JotmFactoryBean"/>
+	<!-- JTA事务管理器 -->
+    <bean id="jtaTM" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="userTransaction" ref="jotm"/>
+    </bean>
+	
+    <!-- 通知配置 --> 
+    <tx:advice id="txAdvice" transaction-manager="jtaTM">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="transfer*" propagation="REQUIRED"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <!-- 事务切面配置 --> 
+        <!-- 定义切面，表达式最后一个*为方法，不能省略 -->
+        <aop:pointcut id="allManagerMethod" expression="execution(* *.logic.impl.*.*(..))"/>
+        <aop:pointcut id="serviceAll" expression="execution(* com.shangde.edu..service.*Impl.*(..))"/>
+        <!--   <aop:pointcut id="actionAll" expression="execution(* com.shangde.edu..action.*(..))"/> -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceAll"/>
+      <!--   <aop:advisor advice-ref="txAdvice" pointcut-ref="actionAll"/> -->
+    </aop:config>
+</beans>

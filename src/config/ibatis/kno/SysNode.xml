@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SysNode_NS">
+        <!--table:KNO_SYS_NODE_TBL-->
+        <typeAlias alias="SysNode" type="com.shangde.edu.kno.domain.SysNode"/>
+        <typeAlias alias="QuerySysNodeCondition" type="com.shangde.edu.kno.condition.QuerySysNodeCondition"/>
+        <typeAlias alias="SysNodeDTO" type="com.shangde.edu.kno.dto.SysNodeDTO"/>
+
+        <resultMap id="SysNodeResult" class="SysNode">
+            <result property="ksnId" column="KSN_ID"/>
+            <result property="ksId" column="KS_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="parentId" column="PARENT_ID"/>
+            <result property="nodeName" column="NODE_NAME"/>
+            <result property="nodeId" column="NODE_ID"/>
+            <result property="level" column="LEVEL"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+        </resultMap>
+        
+        <resultMap class="SysNodeDTO" id="SysNodeDTOResult">
+       	 <result property="nodeId" column="NODE_ID"/>
+       	 <result property="nodeName" column="NODE_NAME"/>
+       	 <result property="ksnId" column="KSN_ID"/>
+       	 <result property="sortId" column="SORT_ID"/>
+       	 <result property="preNodeName" column="PRE_NODE_NAME"/>
+       	 <result property="counts" column="KSN_ID" select="SysNode_NS.getCountByParentId"/>
+        </resultMap>
+
+        <sql id="KNO_SYS_NODE_TBL_columns">
+            KNO_SYS_NODE_TBL.KSN_ID,
+            KNO_SYS_NODE_TBL.KS_ID,
+            KNO_SYS_NODE_TBL.SORT_ID,
+            KNO_SYS_NODE_TBL.PARENT_ID,
+            KNO_SYS_NODE_TBL.NODE_NAME,
+            KNO_SYS_NODE_TBL.NODE_ID,
+            KNO_SYS_NODE_TBL.LEVEL,
+            KNO_SYS_NODE_TBL.CREATE_TIME,
+            KNO_SYS_NODE_TBL.AUTHOR,
+            KNO_SYS_NODE_TBL.LAST_EDIT_TIME
+        </sql>
+
+        <sql id="KNO_SYS_NODE_TBL_properties">
+            #ksnId#,
+            #ksId#,
+            #sortId#,
+            #parentId#,
+            #nodeName#,
+            #nodeId#,
+            #level#,
+            #createTime#,
+            #author#,
+            #lastEditTime#
+        </sql>
+
+        <insert id="createSysNode" parameterClass="SysNode">
+            INSERT INTO KNO_SYS_NODE_TBL (<include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>) VALUES (<include refid="SysNode_NS.KNO_SYS_NODE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="ksnId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSysNodeById" parameterClass="int">
+            DELETE FROM KNO_SYS_NODE_TBL
+            WHERE
+                KSN_ID = #value#
+
+
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateSysNode" parameterClass="SysNode">
+            UPDATE KNO_SYS_NODE_TBL SET
+                KSN_ID = #ksnId#,
+                KS_ID = #ksId#,
+                SORT_ID = #sortId#,
+                PARENT_ID = #parentId#,
+                NODE_NAME = #nodeName#,
+                NODE_ID = #nodeId#,
+                LEVEL = #level#,
+                CREATE_TIME = #createTime#,
+                AUTHOR = #author#,
+                LAST_EDIT_TIME=#lastEditTime#
+            WHERE
+                KSN_ID = #ksnId#
+
+
+
+
+
+
+
+
+        </update>
+		<!-- 获取知识树节点列表 -->
+		<select id="getSysTreeById" resultMap="SysNode_NS.SysNodeResult" parameterClass="int">
+		SELECT
+		<include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+		FROM KNO_SYS_NODE_TBL
+		WHERE 
+			KS_ID=#value#
+			ORDER BY SORT_ID ASC
+		</select>
+		
+		<!-- 获取知识树根节点（专业）的作者 -->
+		<select id="getSysAuthorByKsId" resultClass="String" parameterClass="int">
+		SELECT	AUTHOR
+		FROM KNO_SYS_NODE_TBL
+		WHERE 
+		KS_ID=#value#
+		GROUP BY KS_ID
+		</select>
+		
+		<!-- 获取根节点对象 -->
+		<select id="getSysNodeBySysId" resultMap="SysNode_NS.SysNodeResult" parameterClass="int">
+			SELECT 
+			<include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+			FROM KNO_SYS_NODE_TBL
+			WHERE 
+				PARENT_ID=-1 AND KS_ID =#value#
+		</select>
+		
+		<!-- 获取子节点对象 -->
+		<select id="getSysNodeByParentId" resultMap="SysNode_NS.SysNodeResult" parameterClass="int">
+			SELECT 
+			<include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+			FROM KNO_SYS_NODE_TBL
+			WHERE 
+				PARENT_ID=#value#
+		</select>
+		
+		<!-- 获取子节点数量 -->
+		<select id="getCountByParentId" resultClass="int" parameterClass="int">
+			SELECT COUNT(1)
+			FROM KNO_SYS_NODE_TBL
+			WHERE 
+				PARENT_ID=#parentId#
+		</select>
+
+        <select id="getSysNodeById" resultMap="SysNode_NS.SysNodeResult" parameterClass="int">
+            SELECT
+            <include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+            FROM KNO_SYS_NODE_TBL
+            WHERE
+                KSN_ID = #value#
+
+
+        </select>
+
+        <select id="getSysNodeList" resultMap="SysNode_NS.SysNodeResult" parameterClass="QuerySysNodeCondition">
+            SELECT
+            <include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+            FROM KNO_SYS_NODE_TBL
+        </select>
+        <!-- 查询知识树下子节点数量 -->
+         <select id="getSysNodeCount" resultClass="int" parameterClass="int">
+            SELECT
+            COUNT(1)
+            FROM KNO_SYS_NODE_TBL
+            WHERE KS_ID=#value#
+        </select>
+        
+         <!-- 查询知识树下某节点子节点排序超过x的节点对象 -->
+         <select id="getSysNodeListByCondition" resultMap="SysNode_NS.SysNodeResult" parameterClass="QuerySysNodeCondition">
+            SELECT
+             <include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+            FROM KNO_SYS_NODE_TBL
+            WHERE PARENT_ID=#parentId# 
+            <isNotNull property="minId" >
+            	<isNotEqual property="minId" prepend="and" compareValue="0">
+            	<![CDATA[KNO_SYS_NODE_TBL.SORT_ID>=#minId#]]>
+            	</isNotEqual>
+            </isNotNull>
+            <isNotNull property="maxId" >
+            	<isNotEqual property="maxId" prepend="and" compareValue="0">
+            	<![CDATA[KNO_SYS_NODE_TBL.SORT_ID <= #maxId#]]>
+            	</isNotEqual>
+            </isNotNull>
+            ORDER BY KNO_SYS_NODE_TBL.SORT_ID ASC
+        </select>
+        
+        <select id="getSysNodeDTOList" resultMap="SysNode_NS.SysNodeDTOResult" parameterClass="int">
+            SELECT 
+            kno_sys_node_tbl.NODE_ID,
+            kno_sys_node_tbl.node_name,
+            kno_sys_node_tbl.KSN_ID,
+            kno_sys_node_tbl.SORT_ID,
+            kno_node_pre_mid_tbl.pre_node_name
+ 			FROM kno_sys_node_tbl LEFT JOIN kno_node_pre_mid_tbl
+			ON kno_sys_node_tbl.`KSN_ID`=kno_node_pre_mid_tbl.`KSN_ID`
+			where 
+				PARENT_ID=#value# 
+				ORDER BY kno_sys_node_tbl.SORT_ID
+        </select>
+        
+        <!-- 王超 开始 -->
+	<!-- 获取知识树节点列表 -->
+		<select id="getSysTreeByKsnId" resultMap="SysNode_NS.SysNodeResult" parameterClass="QuerySysNodeCondition">
+		SELECT
+		<include refid="SysNode_NS.KNO_SYS_NODE_TBL_columns"/>
+		FROM KNO_SYS_NODE_TBL
+		WHERE 
+			(KS_ID=#ksId# and parent_id!=#parentId#) or (parent_id=#parentId# and ksn_id=#ksnId#)
+			ORDER BY SORT_ID ASC
+		</select>
+<!-- 王超 结束 -->
+        <!--end-->
+</sqlMap>

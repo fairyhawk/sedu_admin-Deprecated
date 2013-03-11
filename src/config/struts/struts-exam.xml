@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="exam" namespace="/exam" extends="edu-default">
+    	<!--考试后台action -->
+       <action name="exampaper" class="com.shangde.edu.exam.action.ExamAction">
+       		<interceptor-ref name="eduStack"/>
+       		 <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+	       <result name="addExam">/back/jsp/exam/success.jsp</result>
+	       <result name="UpdateQst">/back/jsp/exam/Exam_Qst_Update.jsp</result>
+	       <result name="toAddExam">/back/jsp/exam/Testpaperadd.jsp</result>
+	       <result name="toUpdateExam">/back/jsp/exam/TestpaperUpdate.jsp</result>
+	       <result name="addRandomPaper">/back/jsp/exam/randompaper.jsp</result>
+	       <result name="toPreviewExampaper">/back/jsp/exam/exampaperPreview.jsp</result>
+	       <result name="listExamPaperByCondition">/back/jsp/exam/exampaper_list.jsp</result>
+	       <result name="freezeExampapers" type="redirect">
+	      		exampaper!listExamPaperByCondition.action?queryExampaperCondition.currentPage=1
+	       </result>
+           	<result name="read">/back/jsp/exam/test_read.jsp</result>
+           	<result name="toaddQst" >/back/jsp/exam/Exam_Qst_add.jsp</result>
+           
+		   <param name="savePath">/exam</param>
+		   <interceptor-ref name="fileUpload">  
+	              <!-- 配置允许上传的文件类型，多个用","分隔 -->   
+	              <param name="allowedTypes">  
+	                  　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+	                  image/pjpeg
+	              </param>  
+	              <!-- 配置允许上传的文件大小，单位字节 -->  
+	              <param name="maximumSize">3072000</param>  
+	        </interceptor-ref>
+	        <result name="reupload" type="redirect">exam!toAddExam.action</result>
+	        
+       </action>
+       
+       <action name="qst" class="com.shangde.edu.exam.action.QstAction">
+       <interceptor-ref name="eduStack" />
+       <result name="toqstadd">/back/jsp/exam/Qst_add.jsp</result>
+       <result name="QstAdd">/back/jsp/exam/success.jsp</result>
+       <result name="Qstlist">/back/jsp/exam/Qstlist.jsp</result>
+        <result name="Qstlisttanchuan">/back/jsp/exam/qst_listtanchuang.jsp</result>
+       <result name="toQstUpdate">/back/jsp/exam/Qst_Upadate.jsp</result>
+       <result name="QstUpdate">/back/jsp/exam/success.jsp</result>
+       <result name="toQstcailiaoAdd">/back/jsp/exam/Qst_Qst_add.jsp</result>
+           <result name="json" type="json">
+				<param name="root">result</param>
+		</result>
+		<result name="toQstcailiaoAdd">/back/jsp/exam/Qst_Qst_add.jsp</result>
+           <result name="qstjson" type="json">
+				<param name="root">result</param>
+		</result>
+       </action>
+       
+       <action name="qstmid" class="com.shangde.edu.exam.action.ExamQstMidAction">
+       <result name="EcxamQstAdd">/back/jsp/exam/success.jsp</result>
+       <result name="json" type="json">
+				<param name="root">result</param>
+		</result>
+       </action>
+        <action name="examrecord" class="com.shangde.edu.exam.action.ExamRecordAction">
+      	<interceptor-ref name="eduStack"/>
+      	<result name="ExamRecordAll">/back/jsp/exam/examrecord_list.jsp</result>
+      </action>
+
+    </package>
+</struts>

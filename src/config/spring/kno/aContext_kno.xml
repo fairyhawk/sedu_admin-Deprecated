@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="nodePreMidService" class="com.shangde.edu.kno.service.NodePreMidImpl" parent="baseService"/>
+    <bean id="preItemService" class="com.shangde.edu.kno.service.PreItemImpl" parent="baseService"/>
+    <bean id="preNodeService" class="com.shangde.edu.kno.service.PreNodeImpl" parent="baseService"/>
+    <bean id="sysNodeService" class="com.shangde.edu.kno.service.SysNodeImpl" parent="baseService"/>
+    <bean id="resolveService" class="com.shangde.edu.kno.service.ResolveImpl" parent="baseService"/>
+    <bean id="videoRelService" class="com.shangde.edu.kno.service.VideoRelImpl" parent="baseService"/>
+    <bean id="sysService" class="com.shangde.edu.kno.service.SysImpl" parent="baseService"/>
+     <bean id="qstRelService" class="com.shangde.edu.kno.service.QstRelImpl" parent="baseService"/>
+</beans>

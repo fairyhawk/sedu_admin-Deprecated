@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="articleService" class="com.shangde.edu.cms.service.ArticleImpl" parent="baseService"/>
+    <bean id="columnsService" class="com.shangde.edu.cms.service.ColumnsImpl" parent="baseService" autowire="byName">
+    	<property name="articleService" ref="articleService"></property>
+    	<property name="templateService" ref="templateService"></property>
+    	<property name="courseService" ref="courseService"></property>
+    	<property name="coursesortService" ref="coursesortService"></property>
+    	<property name="clazzService" ref="clazzService"></property>
+    	<property name="clazzCouService" ref="clazzCouService"></property>
+    	<property name="coursepicService" ref="coursepicService"></property>
+    	<property name="commentService" ref="commentService"></property>
+    </bean>
+    <bean id="commentService" class="com.shangde.edu.cms.service.CommentImpl" parent="baseService"/>
+    <bean id="commentfromService" class="com.shangde.edu.cms.service.CommentfromImpl" parent="baseService"/>
+    <bean id="templateService" class="com.shangde.edu.cms.service.TemplateImpl" parent="baseService">
+    	<property name="columnsService" ref="columnsService"></property>
+    	<property name="courseService" ref="courseService"></property>
+    	<property name="teacherService" ref="teacherService"></property>
+    	<property name="coursesortService" ref="coursesortService"></property>
+    	<property name="clazzService" ref="clazzService"></property>
+    	<property name="surveyQstService" ref="surveyQstService"></property>
+    	<property name="configurator" ref="configurator"></property>
+    	<property name="commentService" ref="commentService"></property>
+    	<property name="pageUtil" ref="pageUtil"></property>
+    	<property name="articleService" ref="articleService"></property>
+    </bean>
+    <bean id="sqAnswerService" class="com.shangde.edu.cms.service.SqAnswerImpl" parent="baseService"/>
+    <bean id="surveyQstService" class="com.shangde.edu.cms.service.SurveyQstImpl" parent="baseService">
+    	<property name="templateService" ref="templateService"></property>
+    </bean>
+    <bean id="tmpHistoryService" class="com.shangde.edu.cms.service.TmpHistoryImpl" parent="baseService"></bean>
+    <bean id="acementService" class="com.shangde.edu.cms.service.AnnouncementImpl" parent="baseService"></bean>
+    <bean id="pageUtil" class="com.shangde.common.util.page.PageUtilImpl"/>
+</beans>

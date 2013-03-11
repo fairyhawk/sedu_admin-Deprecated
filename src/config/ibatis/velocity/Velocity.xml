@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Velocity_NS">
+	<typeAlias alias="Velocity"
+		type="com.shangde.edu.velocity.domain.Velocity" />
+	<typeAlias alias="QueryVelocityCondition"
+		type="com.shangde.edu.velocity.condition.QueryVelocityCondition" />
+
+	<sql id="SYS_TEST_VELOCITY_TBL_columns">
+		SYS_TEST_VELOCITY_TBL.ID, SYS_TEST_VELOCITY_TBL.EMAIL,
+		SYS_TEST_VELOCITY_TBL.MOBILE, SYS_TEST_VELOCITY_TBL.PROVINCE,
+		SYS_TEST_VELOCITY_TBL.DISTRICT, SYS_TEST_VELOCITY_TBL.SUBJECT,
+		SYS_TEST_VELOCITY_TBL.BROWSER, SYS_TEST_VELOCITY_TBL.NETWORK,
+		SYS_TEST_VELOCITY_TBL.BROAD_BAND, SYS_TEST_VELOCITY_TBL.PROBLEM,
+		SYS_TEST_VELOCITY_TBL.SUBMIT_TIME,
+		SYS_TEST_VELOCITY_TBL.SOLVE_DEPARTMENT,
+		SYS_TEST_VELOCITY_TBL.SOLVE_SCHEME,
+		SYS_TEST_VELOCITY_TBL.SOLVE_TIME
+	</sql>
+
+	<sql id="SYS_TEST_VELOCITY_TBL_propertie">
+		#id#, #mail#, #mobile#, #province#, #district#, #subject#,
+		#browser#, #netWork#, #broadBand#, #problem#, #submitTime#,
+		#solveDepartment#, #solveScheme#, #solveScheme#, #solveTime#
+	</sql>
+	<resultMap class="Velocity" id="VelocityReulst">
+		<result property="id" column="ID" />
+		<result property="mail" column="EMAIL" />
+		<result property="mobile" column="MOBILE" />
+		<result property="province" column="PROVINCE" />
+		<result property="district" column="DISTRICT" />
+		<result property="subject" column="SUBJECT" />
+		<result property="browser" column="BROWSER" />
+		<result property="network" column="NETWORK" />
+		<result property="broadBand" column="BROAD_BAND" />
+		<result property="problem" column="PROBLEM" />
+		<result property="submitTime" column="SUBMIT_TIME" />
+		<result property="solveDepartment" column="SOLVE_DEPARTMENT" />
+		<result property="solveScheme" column="SOLVE_SCHEME" />
+		<result property="solveTime" column="SOLVE_TIME" />
+	</resultMap>
+
+	<select id="getAllVelocity" resultMap="Velocity_NS.VelocityReulst"
+		parameterClass="QueryVelocityCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT
+		<include refid="SYS_TEST_VELOCITY_TBL_columns" />
+		FROM SYS_TEST_VELOCITY_TBL WHERE 1=1
+		<isNotNull property="mail">
+			<isNotEqual prepend="and" property="mail" compareValue="">
+				sys_test_velocity_tbl.EMAIL LIKE CONCAT('%',#mail#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="mobile">
+			<isNotEqual prepend="and" property="mobile"
+				compareValue="">
+				sys_test_velocity_tbl.MOBILE LIKE CONCAT('%',#mobile#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual  property="province" compareValue="-1">
+			AND sys_test_velocity_tbl.PROVINCE=#province#
+		</isNotEqual>
+		<isNotEqual property="district" compareValue="-1">
+			AND sys_test_velocity_tbl.DISTRICT=#district#
+		</isNotEqual>
+		<isNotEqual property="subject" compareValue="-1">
+			AND sys_test_velocity_tbl.SUBJECT=#subject#
+		</isNotEqual>
+		<isNotNull property="browser">
+			<isNotEqual prepend="and" property="browser"
+				compareValue="">
+				sys_test_velocity_tbl.BROWSER LIKE CONCAT('%',#browser#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="network">
+			<isNotEqual prepend="and" property="network"
+				compareValue="">
+				sys_test_velocity_tbl.NETWORK LIKE CONCAT('%',#network#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isEqual prepend="and" property="broadBand" compareValue="70">
+			<![CDATA[  sys_test_velocity_tbl.BROAD_BAND <= #broadBand# ]]>
+		</isEqual>
+		<isEqual prepend="and" property="broadBand" compareValue="71">
+			<![CDATA[  sys_test_velocity_tbl.BROAD_BAND > #broadBand# ]]>
+		</isEqual>
+		<include refid="public_sql.page_end" />
+	</select>
+		<select id="getAllVelocityCount" resultClass="int"
+		parameterClass="QueryVelocityCondition">
+		SELECT COUNT(*)
+		FROM SYS_TEST_VELOCITY_TBL WHERE 1=1
+		<isNotNull property="mail">
+			<isNotEqual prepend="and" property="mail" compareValue="">
+				sys_test_velocity_tbl.EMAIL LIKE CONCAT('%',#mail#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="mobile">
+			<isNotEqual prepend="and" property="mobile"
+				compareValue="">
+				sys_test_velocity_tbl.MOBILE LIKE CONCAT('%',#mobile#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual  property="province" compareValue="-1">
+			AND sys_test_velocity_tbl.PROVINCE=#province#
+		</isNotEqual>
+		<isNotEqual property="district" compareValue="-1">
+			AND sys_test_velocity_tbl.DISTRICT=#district#
+		</isNotEqual>
+		<isNotEqual property="subject" compareValue="-1">
+			AND sys_test_velocity_tbl.SUBJECT=#subject#
+		</isNotEqual>
+		<isNotNull property="browser">
+			<isNotEqual prepend="and" property="browser"
+				compareValue="">
+				sys_test_velocity_tbl.BROWSER LIKE CONCAT('%',#browser#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="network">
+			<isNotEqual prepend="and" property="network"
+				compareValue="">
+				sys_test_velocity_tbl.NETWORK LIKE CONCAT('%',#network#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isEqual prepend="and" property="broadBand" compareValue="70">
+			<![CDATA[  sys_test_velocity_tbl.BROAD_BAND <= #broadBand# ]]>
+		</isEqual>
+		<isEqual prepend="and" property="broadBand" compareValue="71">
+			<![CDATA[  sys_test_velocity_tbl.BROAD_BAND > #broadBand# ]]>
+		</isEqual>
+	</select>
+</sqlMap>

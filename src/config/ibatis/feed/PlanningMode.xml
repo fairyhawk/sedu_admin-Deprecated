@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PlanningMode_NS">
+        <!--table:FEED_SUBSCRIBE_USER_TBL-->
+        <typeAlias alias="PlanningMode" type="com.shangde.edu.feed.domain.PlanningMode"/>
+        <typeAlias alias="QueryPlanningModeCondition" type="com.shangde.edu.feed.condition.QueryPlanningModeCondition"/>
+
+        <resultMap id="PlanningModeResult" class="PlanningMode">
+            <result property="id" column="ID"/>
+            <result property="name" column="NAME"/>
+            <result property="cronExpression" column="CRON_EXPRESSION"/>
+            <result property="remark" column="REMARK"/>
+            <result property="status" column="STATUS"/>
+            <result property="pubdate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+        </resultMap>
+
+        <sql id="FEED_PLANNING_MODE_TBL_columns">
+            FEED_PLANNING_MODE_TBL.ID,
+            FEED_PLANNING_MODE_TBL.NAME,
+            FEED_PLANNING_MODE_TBL.CRON_EXPRESSION,
+            FEED_PLANNING_MODE_TBL.REMARK,
+            FEED_PLANNING_MODE_TBL.STATUS,
+            FEED_PLANNING_MODE_TBL.PUBDATE,
+            FEED_PLANNING_MODE_TBL.MODIFIED
+        </sql>
+
+        <sql id="FEED_PLANNING_MODE_TBL_properties">
+            #id#,
+            #name#,
+            #cronExpression#,
+            #remark#,
+            #status#,
+            #pubdate#,
+            #modified#
+        </sql>
+
+        <insert id="createPlanningMode" parameterClass="PlanningMode">
+            INSERT INTO FEED_PLANNING_MODE_TBL (<include refid="PlanningMode_NS.FEED_PLANNING_MODE_TBL_columns"/>) VALUES (<include refid="PlanningMode_NS.FEED_PLANNING_MODE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deletePlanningModeById" parameterClass="int">
+            DELETE FROM FEED_PLANNING_MODE_TBL
+            WHERE id = #id#
+        </delete>
+
+        <update id="updatePlanningMode" parameterClass="PlanningMode">
+            UPDATE FEED_PLANNING_MODE_TBL SET
+                ID = #id#,
+                NAME = #name#,
+                CRON_EXPRESSION = #cronExpression#,
+                STATUS = #status#,
+                PUBDATE = #pubdate#,
+                MODIFIED = #modified#
+            WHERE ID = #id#
+        </update>
+
+        <select id="getPlanningModeById" resultMap="PlanningMode_NS.PlanningModeResult" parameterClass="int">
+            SELECT
+            <include refid="PlanningMode_NS.FEED_PLANNING_MODE_TBL_columns"/>
+            FROM FEED_PLANNING_MODE_TBL
+            WHERE id = #id#
+        </select>
+
+        <select id="getPlanningModePageList" resultMap="PlanningMode_NS.PlanningModeResult" parameterClass="QueryPlanningModeCondition">
+            <include refid="public_sql.page_begin" />
+            SELECT
+            <include refid="PlanningMode_NS.FEED_PLANNING_MODE_TBL_columns"/>
+            FROM FEED_PLANNING_MODE_TBL
+            <include refid="public_sql.page_end" />
+        </select>
+        <select id="getPlanningModePageCount" resultMap="PlanningMode_NS.PlanningModeResult" parameterClass="QueryPlanningModeCondition">
+            SELECT count(1) FROM FEED_PLANNING_MODE_TBL
+        </select>
+        
+        <select id="getPlanningModeList" resultMap="PlanningMode_NS.PlanningModeResult">
+            SELECT
+            <include refid="PlanningMode_NS.FEED_PLANNING_MODE_TBL_columns"/>
+            FROM FEED_PLANNING_MODE_TBL where status = 1
+        </select>
+        <!--end-->
+</sqlMap>

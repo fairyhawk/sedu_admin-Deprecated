@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Ad_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="Ad" type="com.shangde.edu.feed.domain.Ad" />
+	<typeAlias alias="QueryAdCondition" type="com.shangde.edu.feed.condition.QueryAdCondition" />
+
+	<resultMap id="AdResult" class="Ad">
+		 <result property="id" column="ID"/>
+		 <result property="name" column="name"/>
+		 <result property="remark" column="remark"/>
+		 <result property="status" column="status"/>
+		 <result property="pubDate" column="pubdate"/>
+		 <result property="modified" column="modified"/>
+	</resultMap>
+
+	<sql id="FEED_AD_TBL_columns">
+		feed_ad_tbl.id,feed_ad_tbl.name,feed_ad_tbl.remark,feed_ad_tbl.status,feed_ad_tbl.pubdate,feed_ad_tbl.modified
+	</sql>
+
+	<sql id="FEED_AD_TBL_properties">
+		#id#, #name#, #remark#,#status#, #pubDate#, #modified#
+	</sql>
+
+	<insert id="createAd" parameterClass="Ad">
+		INSERT INTO feed_ad_tbl (
+		<include refid="Feed_Ad_NS.FEED_AD_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_Ad_NS.FEED_AD_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<update id="updateAd" parameterClass="Ad">
+		UPDATE feed_ad_tbl SET 
+			ID = #id#,
+			NAME = #name#,
+			REMARK = #remark#,
+			STATUS = #status#,
+			MODIFIED = #modified# 
+		WHERE ID = #id#
+	</update>
+
+	<select id="getAdById" resultMap="Feed_Ad_NS.AdResult" parameterClass="int">
+		SELECT * FROM feed_ad_tbl WHERE ID = #id#
+	</select>
+
+	<select id="getAdList" resultMap="Feed_Ad_NS.AdResult" parameterClass="QueryAdCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_ad_tbl
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getAdListCount" resultClass="int" parameterClass="QueryAdCondition">
+		SELECT count(1) FROM feed_ad_tbl
+	</select>
+	
+	<!-- 查询所有广告数据,status=1表示正常/-1表示屏蔽 -->
+	<select id="getAdAllList" resultMap="Feed_Ad_NS.AdResult" parameterClass="QueryAdCondition">
+		SELECT * FROM feed_ad_tbl where status = #status#
+	</select>
+	
+	<!--end-->
+</sqlMap>

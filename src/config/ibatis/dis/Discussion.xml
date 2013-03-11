@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Discussion_NS">
+	<!--table:DIS_DISCUSSION_TBL -->
+	<typeAlias alias="Discussion" type="com.shangde.edu.dis.domain.Discussion" />
+	<typeAlias alias="QueryDiscussionCondition"
+		type="com.shangde.edu.dis.condition.QueryDiscussionCondition" />
+	<typeAlias alias="DisCustomerDTO" type="com.shangde.edu.dis.dto.DisCustomerDTO" />
+	<typeAlias alias="DisDTO" type="com.shangde.edu.dis.dto.DisDTO" />
+
+	<resultMap id="DisCustomerDTOResult" class="com.shangde.edu.dis.dto.DisCustomerDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="photo" column="PHOTO" />
+		<result property="subjectId" column="SUBJECT_ID" />
+	</resultMap>
+	
+	<resultMap class="com.shangde.edu.dis.dto.DisDTO" id="DisDTOResult">
+		<result property="id" column="ID" />
+		<result property="name" column="NAME" />
+		<result property="createtime" column="CREATETIME" />
+		<result property="creatuser" column="CREATUSER" />
+		<result property="features" column="FEATURES" />
+		<result property="introduction" column="INTRODUCTION" />
+		<result property="picurl" column="PICURL" />
+		<result property="inflag" column="INFLAG" />
+		<result property="type" column="TYPE" />
+		<result property="status" column="STATUS" />
+		<result property="subject" column="SUBJECT" />
+		<result property="subjectId" column="SUBJECTID" />
+		<result property="userCount" column="USERCOUNT" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="disId" column="DIS_ID" />
+		<result property="cudId" column="CUDID" />
+	</resultMap>
+	<resultMap id="DiscussionResult" class="Discussion">
+		<result property="id" column="ID" />
+		<result property="name" column="NAME" />
+		<result property="createtime" column="CREATETIME" />
+		<result property="creatuser" column="CREATUSER" />
+		<result property="features" column="FEATURES" />
+		<result property="introduction" column="INTRODUCTION" />
+		<result property="picurl" column="PICURL" />
+		<result property="inflag" column="INFLAG" />
+		<result property="type" column="TYPE" />
+		<result property="status" column="STATUS" />
+		<result property="subject" column="SUBJECT" />
+		<result property="subjectId" column="SUBJECTID" />
+		<result property="member" column="MEMBER" />
+	</resultMap>
+	<resultMap id="DiscussionResultBack" class="com.shangde.edu.dis.dto.DisDTO">
+		<result property="id" column="ID" />
+		<result property="subject" column="subject" />
+		<result property="name" column="name" />
+		<result property="type" column="type" />
+		<result property="creatuser" column="creatuser" />
+		<result property="userCount" column="userCount" />
+		<result property="status" column="STATUS" />
+		<result property="createtime" column="CREATETIME" />
+ 	</resultMap>
+ 	
+	
+	
+
+	<sql id="DIS_DISCUSSION_TBL_columns">
+		DIS_DISCUSSION_TBL.ID, DIS_DISCUSSION_TBL.NAME,
+		DIS_DISCUSSION_TBL.CREATETIME, DIS_DISCUSSION_TBL.CREATUSER,
+		DIS_DISCUSSION_TBL.FEATURES, DIS_DISCUSSION_TBL.INTRODUCTION,
+		DIS_DISCUSSION_TBL.PICURL, DIS_DISCUSSION_TBL.INFLAG,
+		DIS_DISCUSSION_TBL.SUBJECTID, DIS_DISCUSSION_TBL.SUBJECT,
+		DIS_DISCUSSION_TBL.TYPE, DIS_DISCUSSION_TBL.STATUS,
+		DIS_DISCUSSION_TBL.MEMBER
+	</sql>
+
+	<sql id="DIS_DISCUSSION_TBL_properties">
+		#id#, #name#, #createtime#, #creatuser#, #features#,
+		#introduction#, #picurl#, #inflag#, #subjectId#, #subject#,
+		#type#,#status#, #member#
+	</sql>
+
+	<!-- 添加小组 -->
+	<insert id="createDiscussion" parameterClass="Discussion">
+		INSERT INTO DIS_DISCUSSION_TBL (
+		<include refid="Discussion_NS.DIS_DISCUSSION_TBL_columns" />
+		) VALUES (
+		<include refid="Discussion_NS.DIS_DISCUSSION_TBL_properties" />
+		)
+		<selectKey resultClass="int" keyProperty="id"> 
+		 SELECT LAST_INSERT_ID() 
+		</selectKey>
+	</insert>
+
+	<!-- 删除小组 -->
+	<delete id="deleteDiscussionById" parameterClass="int">
+		DELETE FROM
+		DIS_DISCUSSION_TBL WHERE ID = #id#
+	</delete>
+
+	<!-- 更新小组信息 -->
+	<update id="updateDiscussion" parameterClass="Discussion">
+		UPDATE
+		DIS_DISCUSSION_TBL SET ID = #id#, NAME = #name#,
+		CREATETIME =
+		#createtime#, CREATUSER = #creatuser#, FEATURES =
+		#features#,
+		INTRODUCTION = #introduction#, PICURL = #picurl#,
+		INFLAG = #inflag#,
+		SUBJECTID = #subjectId#, SUBJECT = #subject#,
+		TYPE = #type#, STATUS = #status#, MEMBER = #member#
+		WHERE ID = #id#
+	</update>
+
+	<!-- 根据ID获取小组信息 -->
+	<select id="getDiscussionById" resultMap="Discussion_NS.DiscussionResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Discussion_NS.DIS_DISCUSSION_TBL_columns" />
+		FROM DIS_DISCUSSION_TBL WHERE ID = #id#
+	</select>
+	<!-- 根据专业获取小组 -->
+	<select id="getDisListBySubjectId" resultMap="Discussion_NS.DiscussionResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Discussion_NS.DIS_DISCUSSION_TBL_columns" />
+		FROM DIS_DISCUSSION_TBL WHERE SUBJECTID = #subjectId#
+	</select>
+
+
+	<!-- Count -->
+	<select id="getDiscussionCount" resultClass="int"
+		parameterClass="QueryDiscussionCondition">
+		SELECT COUNT(*) FROM DIS_DISCUSSION_TBL
+	</select>
+
+	<!-- 获取全部小组 -->
+	<select id="getDiscussionList" resultMap="Discussion_NS.DiscussionResult"
+		parameterClass="QueryDiscussionCondition">
+		SELECT
+		<include refid="Discussion_NS.DIS_DISCUSSION_TBL_columns" />
+		FROM DIS_DISCUSSION_TBL
+		<dynamic prepend="WHERE">
+			status = 0
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="0" prepend="and">
+					SUBJECTID=#subjectId#
+			    </isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+
+	<!-- 后台，获取小组列表,status升序 0=启用,1=禁用,相同状态挨在一块 -->
+	<select id="getDiscussionByList" resultMap="Discussion_NS.DiscussionResultBack"
+		parameterClass="QueryDiscussionCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT 
+			*,(select count(1) from cus_user_dis_tbl cus_user_dis where cus_user_dis.dis_id = discussion.id) as userCount 
+		FROM DIS_DISCUSSION_TBL discussion
+		ORDER BY STATUS asc,CREATETIME DESC 
+		<include refid="public_sql.page_end" />
+	</select>
+	<!-- 根据小组ID查询小组成员,发帖量高的用户(活跃成员) -->
+	<select id="findCustomerByDisId" resultMap="Discussion_NS.DisCustomerDTOResult" parameterClass="int">
+		SELECT cus.*,(select count(topic.id) from dis_topic_tbl topic where topic.cus_id = cus.cus_id) as topicCount FROM CUS_CUSTOMER_TBL cus
+			inner join CUS_USER_DIS_TBL cus_ on cus_.cus_id = cus.CUS_ID and cus_.dis_id = #id#
+				order by topicCount desc
+					limit 9 
+	</select>
+	
+	<!-- 查询全部小组,并统计小组成员 -->
+	<select id="getPageDisByCountUser" resultMap="Discussion_NS.DisDTOResult"
+		parameterClass="QueryDiscussionCondition">
+		SELECT
+		dis_discussion_tbl.*,
+		cus_user_dis_tbl.id as cudId,
+		cus_user_dis_tbl.cus_id,
+		cus_user_dis_tbl.dis_id,
+		COUNT(cus_user_dis_tbl.cus_id) as usercount
+
+		FROM
+		dis_discussion_tbl ,
+		cus_user_dis_tbl
+		
+		WHERE
+		dis_discussion_tbl.id=cus_user_dis_tbl.dis_id
+		GROUP BY dis_discussion_tbl.id 
+	</select>
+	
+	
+	<!-- 后台条件查询 -->
+   	<select id="searchDisList" resultMap="Discussion_NS.DiscussionResultBack" parameterClass="QueryDiscussionCondition">
+   		select  discussion.id,subject.subject_name as subject,discussion.name,discussion.type,discussion.creatuser,
+	       (select count(1) from cus_user_dis_tbl cus_user_dis where cus_user_dis.dis_id = discussion.id) as userCount,
+	       discussion.status,discussion.createtime 
+	       
+		 from (dis_discussion_tbl discussion,sys_subject_tbl subject) 
+	    where discussion.subjectid = subject.subject_id
+	    <dynamic>
+	        <isEqual property="searchCriteria" compareValue="-1">
+	        	and (discussion.name like '%$keyWorld$%' or discussion.introduction like '%$keyWorld$%' or discussion.creatuser like '%$keyWorld$%')
+	        </isEqual>
+	        <isNotEqual property="searchCriteria" compareValue="-1">
+	        	<isEqual property="searchCriteria" compareValue="1">
+	        		and discussion.name like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="2">
+	        		and discussion.creatuser like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="3">
+	        		and discussion.introduction like '%$keyWorld$%'
+	        	</isEqual>
+	        </isNotEqual>
+	        
+	        <isNotEqual property="subjectId" compareValue="-1">
+	        	and subject.subject_id = #subjectId#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="type" compareValue="-1">
+	        	 and discussion.type = #type#
+	        </isNotEqual>
+	        <isNotEqual property="status" compareValue="-1">
+	        	 and discussion.status = #status#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="createTimeStart" compareValue="-1">
+				<![CDATA[ and discussion.createtime >= #createTimeStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="createTimeEnd" compareValue="-1">
+				<![CDATA[ and discussion.createtime <= #createTimeEnd# ]]>
+			</isNotEqual>
+			
+        </dynamic>
+	    <include refid="public_sql.page_end" />
+   	</select>
+   	<select id="searchDisCountByList" resultClass="int" parameterClass="QueryDiscussionCondition">
+   		select count(1) from (dis_discussion_tbl discussion,sys_subject_tbl subject) 
+	    where discussion.subjectid = subject.subject_id
+	    <dynamic>
+	        <isEqual property="searchCriteria" compareValue="-1">
+	        	and (discussion.name like '%$keyWorld$%' or discussion.introduction like '%$keyWorld$%' or discussion.creatuser like '%$keyWorld$%')
+	        </isEqual>
+	        <isNotEqual property="searchCriteria" compareValue="-1">
+	        	<isEqual property="searchCriteria" compareValue="1">
+	        		and discussion.name like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="2">
+	        		and discussion.creatuser like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="3">
+	        		and discussion.introduction like '%$keyWorld$%'
+	        	</isEqual>
+	        </isNotEqual>
+	        
+	        <isNotEqual property="subjectId" compareValue="-1">
+	        	and subject.subject_id = #subjectId#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="type" compareValue="-1">
+	        	 and discussion.type = #type#
+	        </isNotEqual>
+	        <isNotEqual property="status" compareValue="-1">
+	        	 and discussion.status = #status#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="createTimeStart" compareValue="-1">
+				<![CDATA[ and discussion.createtime >= #createTimeStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="createTimeEnd" compareValue="-1">
+				<![CDATA[ and discussion.createtime <= #createTimeEnd# ]]>
+			</isNotEqual>
+			
+        </dynamic>
+   	</select>
+   	
+   	
+   	
+   	
+   	<!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+   	
+   	<resultMap id="DisOrganizeDTOResult" class="DisDTO">
+		<result property="auth" column="AUTH" />
+		<result property="discussion" column="dis_id" select="Discussion_NS.getDiscussionById" />
+		<result property="topicCount" column="topicCount" />
+		<result property="topCount" column="topCount" />
+		<result property="userCount" column="USERCOUNT" />
+	</resultMap>
+	
+   	
+   	<!-- 已加入的小组结果 -->
+   	<select id="getDisOrganizeList" parameterClass="int" resultMap="Discussion_NS.DisOrganizeDTOResult">
+   		select cus_user_dis.dis_id as dis_Id,cus_user_dis.auth as auth,
+	   		(select count(1) from dis_topic_tbl dis_topic where dis_topic.dis_id = cus_user_dis.dis_id and (STATUS = 0 or STATUS = 1)) as topicCount,
+	       	IFNULL((select sum(recCount) from dis_topic_tbl dis_topic where dis_topic.dis_id = cus_user_dis.dis_id and recCount > 0 and (STATUS = 0 or STATUS = 1)),0) as topCount,       
+	       	(select count(1) from cus_user_dis_tbl cus_user_dis_inner where cus_user_dis_inner.dis_id = cus_user_dis.dis_id) as userCount
+       	from cus_user_dis_tbl cus_user_dis inner join dis_discussion_tbl dis where cus_user_dis.dis_id = dis.id and dis.status = 0 and  cus_user_dis.cus_id = #value#
+   	</select>
+   	
+</sqlMap>

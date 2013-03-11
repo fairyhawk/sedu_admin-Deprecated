@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VoteDetail_NS">
+        <!--table:DIS_VOTE_DETAIL_TBL-->
+        <typeAlias alias="VoteDetail" type="com.shangde.edu.dis.domain.VoteDetail"/>
+        <typeAlias alias="QueryVoteDetailCondition" type="com.shangde.edu.dis.condition.QueryVoteDetailCondition"/>
+
+        <resultMap id="VoteDetailResult" class="VoteDetail">
+            <result property="id" column="ID"/>
+            <result property="voteId" column="VOTE_ID"/>
+            <result property="voteOrder" column="VOTE_ORDER"/>
+            <result property="voteOption" column="VOTE_OPTION"/>
+            <result property="voteCount" column="VOTE_COUNT"/>
+        </resultMap>
+
+        <sql id="DIS_VOTE_DETAIL_TBL_columns">
+            DIS_VOTE_DETAIL_TBL.ID,
+            DIS_VOTE_DETAIL_TBL.VOTE_ID,
+            DIS_VOTE_DETAIL_TBL.VOTE_ORDER,
+            DIS_VOTE_DETAIL_TBL.VOTE_OPTION,
+            DIS_VOTE_DETAIL_TBL.VOTE_COUNT
+        </sql>
+
+        <sql id="DIS_VOTE_DETAIL_TBL_properties">
+            #id#,
+            #voteId#,
+            #voteOrder#,
+            #voteOption#,
+            #voteCount#
+        </sql>
+
+        <insert id="createVoteDetail" parameterClass="VoteDetail">
+            INSERT INTO DIS_VOTE_DETAIL_TBL (<include refid="VoteDetail_NS.DIS_VOTE_DETAIL_TBL_columns"/>) VALUES (<include refid="VoteDetail_NS.DIS_VOTE_DETAIL_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+		<select id="getVoteDetailById" resultMap="VoteDetail_NS.VoteDetailResult" parameterClass="int">
+            SELECT
+            <include refid="VoteDetail_NS.DIS_VOTE_DETAIL_TBL_columns"/>
+            FROM DIS_VOTE_DETAIL_TBL
+            WHERE id = #value#
+        </select>
+        
+        <update id="updateVoteDetail" parameterClass="VoteDetail">
+            UPDATE DIS_VOTE_DETAIL_TBL SET
+                VOTE_ID = #voteId#,
+                VOTE_ORDER = #voteOrder#,
+                VOTE_OPTION = #voteOption#,
+            WHERE id = #id#
+        </update>
+        
+        <select id="getVoteDetailListByVoteId" resultMap="VoteDetail_NS.VoteDetailResult" parameterClass="int">
+            SELECT
+            <include refid="VoteDetail_NS.DIS_VOTE_DETAIL_TBL_columns"/>
+            FROM DIS_VOTE_DETAIL_TBL where vote_id = #value# order by VOTE_ORDER
+        </select>
+        <delete id="deleteVoteDetailByVoteId" parameterClass="int">
+            DELETE FROM DIS_VOTE_DETAIL_TBL
+            WHERE vote_id = #value#
+        </delete>
+        
+        <update id="updateVoteDetailCount" parameterClass="int">
+            UPDATE DIS_VOTE_DETAIL_TBL SET
+                VOTE_COUNT = VOTE_COUNT + 1
+            WHERE id = #value#
+        </update>
+        
+        <select id="getVoteDetailCountByVoteId" parameterClass="int" resultClass="int">
+        	select count(id) from DIS_VOTE_DETAIL_TBL where VOTE_ID = #value#
+        </select>
+        
+        
+        <!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+        
+        
+        
+        
+        
+        
+        
+</sqlMap>

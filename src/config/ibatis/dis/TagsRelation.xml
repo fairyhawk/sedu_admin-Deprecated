@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TagsRelation_NS">
+
+
+	<typeAlias alias="TagsRelation" type="com.shangde.edu.dis.domain.TagsRelation" />
+	<resultMap class="TagsRelation" id="TagsRelationResult">
+		<result property="id" column="id"/>
+		<result property="objectTypeId" column="objectTypeId"/>
+		<result property="ObjectId" column="objectid"/>
+		<result property="tagId" column="tag_id"/>
+	</resultMap>
+	<sql id="DIS_TagsRelation_TBL_columns">
+		DIS_TagsRelation_TBL.ID, 
+		DIS_TagsRelation_TBL.objectTypeId,
+		DIS_TagsRelation_TBL.objectId, 
+		DIS_TagsRelation_TBL.tag_id
+	</sql>
+	<sql id="DIS_TagsRelation_TBL_properties">
+		#id#, #objectTypeId#, #objectId#, #tagId#
+	</sql>
+
+	<!-- 添加标签 -->
+	<insert id="createTagsRelation" parameterClass="TagsRelation">
+		INSERT INTO DIS_TagsRelation_TBL (
+			<include refid="TagsRelation_NS.DIS_TagsRelation_TBL_columns" />
+		) VALUES (
+			<include refid="TagsRelation_NS.DIS_TagsRelation_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+	</insert>
+
+	<select id="getTagsRelationByTopicId" resultMap="TagsRelationResult" parameterClass="int">
+		SELECT 
+			id, 
+			objectTypeId, Id
+			objectid, 
+			tag_id 
+		FROM dis_tagsrelation_tbl 
+			WHERE objectId = #topicId# 
+			AND objectTypeId = 1
+	</select>
+	
+	<!--  -->
+	<delete id="delTagsRelationByTopicId" parameterClass="Map">
+		DELETE 
+			FROM 
+		dis_tagsrelation_tbl 
+			WHERE objectId = #objectId# AND objectTypeId = #objectTypeId#
+	</delete>
+
+	<!-- 修改话题与标签之间的关联关系 -->
+	<update id="updateByTopicId" parameterClass="Map">
+		UPDATE 
+		dis_tagsrelation_tbl 
+			SET tag_id = #tagId#
+			WHERE objectTypeId = #objectTypeId# AND objectId = #topicId#
+	</update>
+
+</sqlMap>

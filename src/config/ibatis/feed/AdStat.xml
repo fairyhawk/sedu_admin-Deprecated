@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_AdStat_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="AdStat" type="com.shangde.edu.feed.domain.AdStat" />
+	<typeAlias alias="QueryAdStatCondition" type="com.shangde.edu.feed.condition.QueryAdStatCondition" />
+	<typeAlias alias="QueryStatCommonCondition" type="com.shangde.edu.feed.condition.QueryStatCommonCondition" />
+	
+	<resultMap id="AdStatResult" class="AdStat">
+		 <result property="id" column="ID"/>
+		 <result property="adId" column="AD_ID"/>
+		 <result property="cusId" column="CUS_ID"/>
+		 <result property="ip" column="IP"/>
+		 <result property="ua" column="UA"/>
+		 <result property="pubDate" column="PUBDATE"/>
+		 
+		 <result property="ad" column="AD_ID" select="Feed_Ad_NS.getAdById"/>
+	</resultMap>
+
+	<resultMap id="AdStatResultIds" class="AdStat">
+		<result property="id" column="ID" />
+ 	</resultMap>
+
+	<sql id="FEED_AD_STAT_TBL_columns">
+		feed_ad_stat_tbl.id,feed_ad_stat_tbl.ad_id,feed_ad_stat_tbl.cus_id,feed_ad_stat_tbl.ip,feed_ad_stat_tbl.ua,feed_ad_stat_tbl.pubdate
+	</sql>
+
+	<sql id="FEED_AD_STAT_TBL_properties">
+		#id#, #adId#, #cusId#,#ip#, #ua#, #pubDate#
+	</sql>
+
+	<insert id="createAdStat" parameterClass="AdStat">
+		INSERT INTO feed_ad_stat_tbl (
+		<include refid="Feed_AdStat_NS.FEED_AD_STAT_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_AdStat_NS.FEED_AD_STAT_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<!-- 时间条件查询 -->
+	<select id="getAdStatList" resultMap="Feed_AdStat_NS.AdStatResult" parameterClass="QueryStatCommonCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_ad_stat_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getAdStatListCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) FROM feed_ad_stat_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	<select id="getAdStatGroupCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		select count(groupResult.ip) from 
+		(SELECT DISTINCT ip from feed_ad_stat_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		) groupResult
+	</select>
+	
+	<!-- 某时间段,adId查询分组数 -->
+	<select id="getAdStatAndAdIdGroupCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		select count(groupResult.ip) from 
+		(SELECT DISTINCT ip from feed_ad_stat_tbl
+		where 1=1 and ad_id = #adId#
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		) groupResult
+	</select>
+	<!-- 某时间段,adId查询数 -->
+	<select id="getAdStatAndAdIdCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) from feed_ad_stat_tbl
+		where 1=1 and ad_id = #adId#
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	
+	<!-- **************************日查询相关******************************** -->
+	<!-- 条件，今日数据查询List -->
+	<select id="getAdStatDATEList" resultMap="Feed_AdStat_NS.AdStatResult" parameterClass="QueryAdStatCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_ad_stat_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE() order by pubdate desc,ad_id
+		<include refid="public_sql.page_end"/>
+	</select>
+	<!-- 条件，今日数据查询List.size -->
+	<select id="getAdStatDATEListCount" resultClass="int" parameterClass="QueryAdStatCondition">
+		SELECT count(1) FROM feed_ad_stat_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()
+	</select>
+	<select id="getAdStatDATEGroupCount" resultClass="int" parameterClass="QueryAdStatCondition">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_ad_stat_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()) groupResult
+	</select>
+	<!-- 查询某日渠道，ad_id=(num)的情况下分组个数 -->
+	<select id="getAdStatDATEAndAdIdGroupCount" resultClass="int" parameterClass="int">
+		select count(groupResult.ip) from (SELECT DISTINCT ip FROM feed_ad_stat_tbl where ad_id = #adId# and DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()) groupResult
+	</select>
+	<!-- 查询某日渠道，ad_id=(num)的情况下个数 -->
+	<select id="getAdStatDATEAndAdIdCount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_ad_stat_tbl where ad_id = #adId# and DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()
+	</select>
+	
+	<!-- **************************周查询相关******************************** -->
+	<!-- 条件，本周数据查询List -->
+	<select id="getAdStatWEEKList" resultMap="Feed_AdStat_NS.AdStatResult" parameterClass="QueryAdStatCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_ad_stat_tbl where WEEK(pubdate,1) = WEEK(CURDATE())
+		<include refid="public_sql.page_end"/>
+	</select>
+	<!-- 条件，本周数据查询List.size -->
+	<select id="getAdStatWEEKListCount" resultClass="int" parameterClass="QueryAdStatCondition">
+		SELECT count(1) FROM feed_ad_stat_tbl where WEEK(pubdate,1) = WEEK(CURDATE())
+	</select>
+	<select id="getAdStatWEEKGroupCount" resultClass="int" parameterClass="QueryAdStatCondition">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_ad_stat_tbl where WEEK(pubdate,1) = WEEK(CURDATE())) groupResult
+	</select>
+	<!-- 查询周渠道，ad_id=(num)的情况下分组个数 -->
+	<select id="getAdStatWEEKAndAdIdGroupCount" resultClass="int" parameterClass="int">
+		select count(groupResult.ip) from (SELECT DISTINCT ip FROM feed_ad_stat_tbl where ad_id = #adId# and WEEK(pubdate,1) = WEEK(CURDATE())) groupResult
+	</select>
+	<!-- 查询周渠道，ad_id=(num)的情况下个数 -->
+	<select id="getAdStatWEEKAndAdIdCount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_ad_stat_tbl where ad_id = #adId# and WEEK(pubdate,1) = WEEK(CURDATE())
+	</select>
+	
+	<!-- **************************月查询相关******************************** -->
+	<!-- 条件，本月数据查询List -->
+	<select id="getAdStatMONTHList" resultMap="Feed_AdStat_NS.AdStatResult" parameterClass="QueryAdStatCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_ad_stat_tbl where MONTH(pubdate) = MONTH(CURDATE())
+		<include refid="public_sql.page_end"/>
+	</select>
+	<!-- 条件，本月数据查询List.size -->
+	<select id="getAdStatMONTHListCount" resultClass="int" parameterClass="QueryAdStatCondition">
+		SELECT count(1) FROM feed_ad_stat_tbl where MONTH(pubdate) = MONTH(CURDATE())
+	</select>
+	<select id="getAdStatMONTHGroupCount" resultClass="int" parameterClass="QueryAdStatCondition">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_ad_stat_tbl where MONTH(pubdate) = MONTH(CURDATE())) groupResult
+	</select>
+	<!-- 查询月渠道，ad_id=(num)的情况下分组个数 -->
+	<select id="getAdStatMONTHAndAdIdGroupCount" resultClass="int" parameterClass="int">
+		select count(groupResult.ip) from (SELECT DISTINCT ip FROM feed_ad_stat_tbl where ad_id = #adId# and MONTH(pubdate) = MONTH(CURDATE())) groupResult
+	</select>
+	<!-- 查询月渠道，ad_id=(num)的情况下个数 -->
+	<select id="getAdStatMONTHAndAdIdCount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_ad_stat_tbl where ad_id = #adId# and MONTH(pubdate) = MONTH(CURDATE())
+	</select>
+	
+	
+	<!--end-->
+</sqlMap>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="QstKb_NS">
+        <!--table:EXAM_QST_KB_TBL-->
+        <typeAlias alias="QstKb" type="com.shangde.edu.exam.domain.QstKb"/>
+
+        <sql id="EXAM_QST_KB_TBL_columns">
+            EXAM_QST_KB_TBL.ID,
+            EXAM_QST_KB_TBL.K_ID,
+            EXAM_QST_KB_TBL.QST_ID
+        </sql>
+
+        <sql id="EXAM_QST_KB_TBL_properties">
+            #id#,
+            #kId#,
+            #qstId#
+        </sql>
+
+        <insert id="createQstKb" parameterClass="QstKb">
+            INSERT INTO EXAM_QST_KB_TBL (<include refid="QstKb_NS.EXAM_QST_KB_TBL_columns"/>) VALUES (<include refid="QstKb_NS.EXAM_QST_KB_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+</sqlMap>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CourseSummary_NS">
+        <!--table:STU_COURSE_SUMMARY_TBL-->
+        <typeAlias alias="CourseSummary" type="com.shangde.edu.stu.domain.CourseSummary"/>
+        <typeAlias alias="QueryCourseSummaryCondition" type="com.shangde.edu.stu.condition.QueryCourseSummaryCondition"/>
+		<typeAlias alias="Kpoint" type="com.shangde.edu.cou.domain.Kpoint"/>
+		
+        <resultMap id="CourseSummaryResult" class="CourseSummary">
+            <result property="cSumId" column="C_SUM_ID"/>
+            <result property="planId" column="PLAN_ID"/>
+            <result property="summarydate" column="SUMMARYDATE"/>
+            <result property="iscourse" column="ISCOURSE"/>
+            <result property="pointId" column="POINT_ID"/>
+            <result property="pointName" column="POINT_NAME"/>
+            <result property="cusId" column="CUS_ID"/>
+        </resultMap>
+
+        <sql id="STU_COURSE_SUMMARY_TBL_columns">
+            STU_COURSE_SUMMARY_TBL.C_SUM_ID,
+            STU_COURSE_SUMMARY_TBL.PLAN_ID,
+            STU_COURSE_SUMMARY_TBL.SUMMARYDATE,
+            STU_COURSE_SUMMARY_TBL.ISCOURSE,
+            STU_COURSE_SUMMARY_TBL.POINT_ID,
+            STU_COURSE_SUMMARY_TBL.POINT_NAME,
+            STU_COURSE_SUMMARY_TBL.CUS_ID
+        </sql>
+
+        <sql id="STU_COURSE_SUMMARY_TBL_properties">
+            #cSumId#,
+            #planId#,
+            #summarydate#,
+            #iscourse#,
+            #pointId#,
+            #pointName#,
+            #cusId#
+        </sql>
+
+        <insert id="createCourseSummary" parameterClass="CourseSummary">
+            INSERT INTO STU_COURSE_SUMMARY_TBL (<include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_columns"/>) VALUES (<include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="cSumId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+        <select id="getCourseSummaryLimt" resultMap="CourseSummary_NS.CourseSummaryResult" parameterClass="QueryCourseSummaryCondition">
+            SELECT
+            <include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_columns"/>
+            FROM STU_COURSE_SUMMARY_TBL
+            WHERE
+				cus_id=  #cusId# 
+				limit 1 
+
+        </select> 
+          
+        <select id="getCourseSummaryLimtContent" resultMap="CourseSummary_NS.CourseSummaryResult" parameterClass="QueryCourseSummaryCondition">
+            SELECT
+            <include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_columns"/>
+            FROM STU_COURSE_SUMMARY_TBL
+            WHERE
+				cus_id=  #cusId# 
+				<isNotEmpty prepend="AND" property="summarydate">
+            		( SUMMARYDATE LIKE '%$summarydate$%')
+            	</isNotEmpty>
+				
+        </select>
+        
+        <select id="getCourseSummaryListBySummarydate" resultMap="CourseSummary_NS.CourseSummaryResult" parameterClass="QueryCourseSummaryCondition">
+            SELECT
+            <include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_columns"/>
+            FROM STU_COURSE_SUMMARY_TBL
+            WHERE
+				cus_id=  #cusId# 
+				<isNotEmpty prepend="AND" property="summarydate">
+            		( SUMMARYDATE LIKE '%$summarydate$%')
+            	</isNotEmpty>
+        </select>
+        
+         <resultMap id="CourseSummary_NSKpointResult" class="Kpoint">
+            <result property="pointId" column="POINT_ID"/>
+            <result property="name" column="NAME"/>
+        </resultMap>
+          
+        <select id="getKpointListBypointIdList" resultMap="CourseSummary_NS.CourseSummary_NSKpointResult" parameterClass="java.util.ArrayList">
+            SELECT
+	    		POINT_ID,
+	            NAME
+           from COU_KPOINT_TBL
+			<dynamic prepend =" where POINT_ID in  ">
+				<iterate open="(" close =")" conjunction=",">
+				#list[]#
+				</iterate>
+			</dynamic>
+			
+        </select>
+        
+        
+        
+        
+
+        <delete id="deleteCourseSummaryById" parameterClass="int">
+            DELETE FROM STU_COURSE_SUMMARY_TBL
+            WHERE
+				C_SUM_ID = #value#
+        </delete>
+
+	<!-- 暂时先注释，启用的时候  再开启
+        <update id="updateCourseSummary" parameterClass="CourseSummary">
+            UPDATE STU_COURSE_SUMMARY_TBL SET
+                C_SUM_ID = #cSumId#,
+                PLAN_ID = #planId#,
+                SUMMARYDATE = #summarydate#,
+                ISCOURSE = #iscourse#,
+                COURSE_ID = #courseId#,
+                COURSENAME = #coursename#,
+                CUS_ID = #cusId#
+            WHERE
+
+        </update>
+
+        <select id="getCourseSummaryById" resultMap="CourseSummary_NS.CourseSummaryResult" parameterClass="">
+            SELECT
+            <include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_columns"/>
+            FROM STU_COURSE_SUMMARY_TBL
+            WHERE
+
+        </select>
+
+        <select id="getCourseSummaryList" resultMap="CourseSummary_NS.CourseSummaryResult" parameterClass="QueryCourseSummaryCondition">
+            SELECT
+            <include refid="CourseSummary_NS.STU_COURSE_SUMMARY_TBL_columns"/>
+            FROM STU_COURSE_SUMMARY_TBL
+        </select>
+        -->
+        <!--end-->
+</sqlMap>

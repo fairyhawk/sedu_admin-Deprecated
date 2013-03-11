@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SellWayCount_NS">
+
+	<typeAlias alias="SellWayCountDTO" type="com.shangde.edu.count.dto.SellWayCountDTO" />
+	
+	<typeAlias alias="SellWay" type="com.shangde.edu.cou.domain.SellWay" />
+	
+	<typeAlias alias="QuerySellWayCountCondition" type="com.shangde.edu.count.condition.QuerySellWayCountCondition" />
+	
+	<typeAlias alias="SellDTO" type="com.shangde.edu.count.dto.SellWayDTO" />
+	<!-- 配置缓存模型 -->
+		<cacheModel id="SellWayCount_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+			<property value="1000" name="size" />
+		</cacheModel>
+	<!-- 商品统计优化 -->
+	<typeAlias alias="SellWayCountNewDTO" type="com.shangde.edu.count.dto.SellWayCountNewDTO" />
+	<resultMap id="SellWayCountNewDTOResult" class="SellWayCountNewDTO">
+		<result property="allStudent" column="allStudent" />
+		<result property="allOrder" column="allOrder" />
+		<result property="dtoOrder" column="dtoOrder" />
+		<result property="dtoOrderNo" column="dtoOrderNo" />
+		<result property="bankOrder" column="bankOrder" />
+		<result property="bankOrderNo" column="bankOrderNo" />
+		<result property="quickOrder" column="quickOrder" />
+		<result property="quickOrderNo" column="quickOrderNo" />
+		<result property="internetOrder" column="internetOrder" />
+		<result property="internetOrderNo" column="internetOrderNo" />		
+		<result property="truefriendsOrder" column="truefriendsOrder" />
+		<result property="truefriendsOrderNo" column="truefriendsOrderNo" />
+		<result property="remittanceOrder" column="remittanceOrder" />
+		<result property="remittanceOrderNo" column="remittanceOrderNo" />		
+		<result property="orderNo" column="orderNo" />
+		<result property="giftOrder" column="giftOrder" />
+		<result property="afterAmount" column="afterAmount" />
+		<result property="Refund" column="Refund" />
+		<result property="allLinshi" column="allLinshi" />
+		<result property="sellName" column="SELL_NAME" />
+		<result property="cupOrder" column="cupOrder" />
+		<result property="cupOrderNo" column="cupOrderNo" />
+	</resultMap>
+	
+	<resultMap class="SellDTO" id="SellWayDtoResult">
+		<result property="sellId" column="SELL_ID"/>
+		<result property="sellName" column="SELL_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="ctId" column="CT_ID" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="payType" column="PAY_TYPE" />
+		<result property="sellPrice" column="SELL_PRICE" />
+	</resultMap>
+
+
+	<resultMap class="SellWay" id="SellWayResult">
+        <result property="sellId" column="SELL_ID"/>
+        <result property="sellName" column="SELL_Name"/>
+	</resultMap>
+	
+	<select id="getSellWayCountBySellWayId" resultMap="SellWayCount_NS.SellWayDtoResult" parameterClass="QuerySellWayCountCondition" cacheModel="SellWayCount_NS-cache">
+		select
+		finance_contract_tbl.STATUS,
+		cou_sell_way_tbl.SELL_ID,
+		cou_sell_way_tbl.SELL_NAME,
+		finance_contract_tbl.PAY_TYPE, 
+		finance_cash_record_tbl.CT_ID,
+		cou_sell_way_tbl.SELL_PRICE,
+		cou_sell_way_tbl.SUBJECT_ID
+		from finance_cash_record_tbl
+		inner join finance_contract_tbl
+		inner join cou_sell_way_tbl
+		on finance_cash_record_tbl.CT_ID=finance_contract_tbl.ID
+		and finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+		where 1=1
+		and cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		and cou_sell_way_tbl.SELL_ID=#sellWayId#
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				<![CDATA[  finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_FROM= #webFrom# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_AGENT= #webAgnet# ]]>
+			</isNotEqual>
+		</isNotNull>
+		group by finance_cash_record_tbl.ct_id
+		
+	</select>
+	
+	<select id="getWFSellWayCountBySellWayId" resultMap="SellWayCount_NS.SellWayDtoResult" parameterClass="QuerySellWayCountCondition" cacheModel="SellWayCount_NS-cache">
+		SELECT finance_contract_tbl.STATUS,cou_sell_way_tbl.SELL_ID,cou_sell_way_tbl.SELL_NAME,
+		finance_contract_tbl.PAY_TYPE, finance_cash_record_tbl.CT_ID,
+		cou_sell_way_tbl.SUBJECT_ID, cou_sell_way_tbl.SELL_PRICE FROM
+		finance_cash_record_tbl INNER JOIN finance_contract_tbl INNER
+		JOIN cou_sell_way_tbl ON
+		finance_cash_record_tbl.CT_ID=finance_contract_tbl.ID AND
+		finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+		WHERE 1=1
+		AND cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		AND cou_sell_way_tbl.SELL_ID=#sellWayId#
+		AND(finance_contract_tbl.STATUS=0 OR finance_contract_tbl.STATUS=3)
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				<![CDATA[  finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_FROM= #webFrom# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_AGENT= #webAgnet# ]]>
+			</isNotEqual>
+		</isNotNull>
+		GROUP BY finance_cash_record_tbl.ct_id
+	
+	</select>
+	
+	<select id="getSellWayBySubjectId" resultMap="SellWayCount_NS.SellWayResult" parameterClass="QuerySellWayCountCondition" cacheModel="SellWayCount_NS-cache">
+		select 
+		cou_sell_way_tbl.SELL_ID,
+		cou_sell_way_tbl.SELL_Name 
+		from cou_sell_way_tbl 
+		where cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		and !(cou_sell_way_tbl.SELL_NAME like '%24小时%')
+	</select>
+	
+	<select id="getSellWayCustomerContractCount" resultClass="int" parameterClass="QuerySellWayCountCondition" cacheModel="SellWayCount_NS-cache">
+		SELECT COUNT(DISTINCT cus_customer_tbl.CUS_ID) FROM
+		finance_contract_tbl LEFT JOIN cus_customer_tbl ON
+		finance_contract_tbl.CUS_ID= cus_customer_tbl.CUS_ID 
+		
+		LEFT JOIN finance_cash_record_tbl
+		ON finance_contract_tbl.`ID`=finance_cash_record_tbl.`CT_ID`
+		
+		WHERE
+		cus_customer_tbl.CUS_TYPE =0 AND
+		cus_customer_tbl.SUBJECT_ID=#subjectId# AND
+		cus_customer_tbl.CUS_TYPE!=1 AND
+		
+		finance_cash_record_tbl.`PACK_ID`=#sellWayId#
+		<isNotEqual prepend="and" property="status" compareValue="0">
+			<![CDATA[  finance_contract_tbl.STATUS = #status# ]]>
+		</isNotEqual>
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+	</select>
+	
+	<select id="getSellWayNew" resultMap="SellWayCount_NS.SellWayCountNewDTOResult" parameterClass="QuerySellWayCountCondition" cacheModel="SellWayCount_NS-cache">
+		select *,
+		(  
+			SELECT  SUM(1) AS 'allStudent' FROM cus_customer_tbl WHERE cus_type in (0,1) 
+			<isNotNull prepend="and" property="startCountTime">
+				<isNotEqual property="startCountTime" compareValue="">
+					<![CDATA[  REG_TIME >= #startCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<isNotEqual property="endCountTime" compareValue="">
+					<![CDATA[  REG_TIME <= #endCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+		) as allStudent  from
+	(select tt.*,SELL_NAME,linshi.allLinshi from 
+		(
+		select * from COU_SELL_WAY_TBL where   1=1     
+	 	<isNotNull prepend="and" property="subjectId">
+				 SUBJECT_ID=#subjectId#
+		</isNotNull>
+	) as cc left join 
+	(
+	select *,
+   SUM(1) as  allOrder,
+   SUM(CASE WHEN zon.PAY_TYPE='2' THEN 1 ELSE 0 END) AS 'dtoOrder', 
+   SUM(CASE WHEN zon.PAY_TYPE='2' AND zon.STATUS =0  THEN 1 ELSE 0 END) AS 'dtoOrderNo', 
+   SUM(CASE WHEN  zon.PAY_TYPE=1 THEN 1 ELSE 0 END) AS 'bankOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=1 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'bankOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=4 THEN 1 ELSE 0 END) AS 'quickOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=4 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'quickOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=3 THEN 1 ELSE 0 END) AS 'internetOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=3 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'internetOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=6 THEN 1 ELSE 0 END) AS 'truefriendsOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=6 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'truefriendsOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=7 THEN 1 ELSE 0 END) AS 'remittanceOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=7 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'remittanceOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=8 THEN 1 ELSE 0 END) AS 'cupOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=8 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'cupOrderNo',
+   SUM(CASE WHEN  zon.STATUS =0 THEN 1 ELSE 0 END) AS 'orderNo',
+   SUM(CASE WHEN zon.PAY_TYPE='0' THEN 1 ELSE 0 END) AS 'giftOrder', 
+   SUM(CASE WHEN zon.STATUS=1 THEN (zon.CONTRACT_CUTSUMMONEY+zon.Freight) ELSE 0 END) AS 'afterAmount',
+   SUM(CASE WHEN  zon.STATUS =3 THEN 3 ELSE 0 END) DIV 3 AS 'Refund'
+	 from 
+	 ( 
+			  SELECT finance_cash_record_tbl.CR_SUBJECT_ID, finance_contract_tbl.CREATE_TIME,finance_contract_tbl.PAY_TIME, 
+	   finance_contract_tbl.PAY_TYPE,finance_contract_tbl.STATUS ,finance_contract_tbl.CONTRACT_CUTSUMMONEY,finance_contract_tbl.Freight,finance_contract_tbl.id,finance_cash_record_tbl.PACK_ID
+	   
+	      FROM finance_contract_tbl left join  finance_cash_record_tbl on finance_cash_record_tbl.`CT_ID` = finance_contract_tbl.`ID`
+	      JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+	      where 1=1
+		   <isNotNull prepend="and" property="startCountTime">
+				<isNotEqual property="startCountTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<isNotEqual property="endCountTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+				</isNotEqual>
+			</isNotNull> 
+			<isNotNull prepend="and" property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue="">
+					 finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="webFrom">
+				<isNotEqual property="webFrom" compareValue="">
+					 finance_contract_tbl.WEB_FROM= #webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="webAgnet">
+				<isNotEqual property="webAgnet" compareValue="">
+					 finance_contract_tbl.WEB_AGENT= #webAgnet#
+				</isNotEqual>
+			</isNotNull>	
+	    )
+	     zon group by pack_id
+	)
+	as tt on tt.PACK_ID=cc.SELL_ID
+	
+	
+	left join 
+	(
+	      select linshi.PACK_ID, SUM(1 ) as  allLinshi from	
+		(
+		 SELECT finance_cash_record_tbl.pack_id FROM finance_contract_tbl 
+		left join  finance_cash_record_tbl on finance_cash_record_tbl.`CT_ID` = finance_contract_tbl.`ID`  
+		JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+		left join cus_customer_tbl cc on cc.CUS_ID=finance_contract_tbl.CUS_ID
+		where 1=1
+			<isNotNull prepend="and" property="startCountTime">
+				<isNotEqual property="startCountTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<isNotEqual property="endCountTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+				</isNotEqual>
+			</isNotNull> 
+	         <isNotNull prepend="and" property="startCountTime">
+				<isNotEqual property="startCountTime" compareValue="">
+					<![CDATA[  REG_TIME >= #startCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<isNotEqual property="endCountTime" compareValue="">
+					<![CDATA[  REG_TIME <= #endCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+	 
+			<isNotNull prepend="and" property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue="">
+					 finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="webFrom">
+				<isNotEqual property="webFrom" compareValue="">
+					 finance_contract_tbl.WEB_FROM= #webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="webAgnet">
+				<isNotEqual property="webAgnet" compareValue="">
+					 finance_contract_tbl.WEB_AGENT= #webAgnet#
+				</isNotEqual>
+			</isNotNull>	
+		)  as linshi  GROUP BY pack_id
+	)
+		as linshi on linshi.PACK_ID=cc.SELL_ID
+	) as contr 
+	</select>
+
+</sqlMap>

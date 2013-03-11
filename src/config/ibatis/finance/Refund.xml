@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Refund_NS">
+	<!--table:COMMODITY_REFUND _TBL -->
+	<typeAlias alias="Refund" type="com.shangde.edu.finance.domain.Refund" />
+	<typeAlias alias="RefundDTO" type="com.shangde.edu.finance.domain.RefundDTO"/>
+	<typeAlias alias="RefundCondition" type="com.shangde.edu.finance.condition.QueryRefundCondition"/>
+		
+		<sql id="querycondition">
+			<dynamic prepend="where">
+	       			<isGreaterThan property="status" prepend="and" compareValue="-1">
+				  		C.STATUS = #status#
+				  	</isGreaterThan>
+				  	<isNotEmpty property="bankcode" prepend="and">
+			  			C.BANK_CODE  = #bankcode#
+			  		</isNotEmpty>			  	
+			  		<isNotNull property="starttime" prepend="and">
+			  			<![CDATA[ C.CREATE_TIME  >= #starttime# ]]>
+			  		</isNotNull>
+			  		<isNotNull property="endtime" prepend="and">
+			  			<![CDATA[ C.CREATE_TIME  <= #endtime# ]]>
+			  		</isNotNull>
+			  		<isNotNull property="starttimechk" prepend="and">
+			  			<![CDATA[ C.REFUND_TIME  >= #starttimechk# ]]>
+			  		</isNotNull>
+			  		<isNotNull property="endtimechk" prepend="and">
+			  			<![CDATA[ C.REFUND_TIME  <= #endtimechk# ]]>
+			  		</isNotNull>
+				  	<isNotEmpty property="contractno" prepend="and">
+			  			C.CONTRACT_NO  = #contractno# 
+			  		</isNotEmpty>
+					<isGreaterThan property="packid" prepend="and" compareValue="0">
+					  	F.PACK_ID = #packid#
+					 </isGreaterThan>
+       				<isNotEmpty property="sellname" prepend="and">
+		  				S.SELL_NAME LIKE '%$sellname$%' 
+		  			</isNotEmpty>
+		  			<isNotEmpty property="email" prepend="and">
+		  				C.USER_EMAIL LIKE '%$email$%'
+		  			</isNotEmpty>
+			  	</dynamic>
+		</sql>
+		<!-- 客服人员写入退费信息 -->
+		<insert id="addRefund" parameterClass="Refund">
+            INSERT INTO COMMODITY_REFUND_TBL (CASH_ID,CONTRACT_NO,PRICE,REMARK,BANK_NAME,BANK_REG_NAME,BANK_CODE,CUS_BANK_NAME,OPER_USER_ID,IS_FULL,IS_ZFB,CUS_ID,USER_EMAIL,USER_MOBILE,CON_NAME,OPER_USER_NAME,CREATE_TIME) 
+            VALUES (#cashid#,#contractno#,#price#,#remark#,#bankname#,#bankregname#,#bankcode#,#cusbankname#,#operuserid#,#isfull#,#iszfb#,#cusid#,#useremail#,#usermobile#,#conname#,#operusername#,#createtime#)
+            <selectKey resultClass="java.lang.Integer" keyProperty="id"> 
+        		SELECT LAST_INSERT_ID(); 
+   			</selectKey>
+        </insert>
+         
+        <select id="getRefundList" parameterClass="RefundCondition" resultClass="RefundDTO">
+        	<include refid="public_sql.page_begin"/>
+        	SELECT 
+       			C.ID,C.STATUS, C.CASH_ID CASHID, C.CONTRACT_NO CONTRACTNO,C.PRICE,C.REMARK,C.CREATE_TIME CREATETIME,C.REFUND_TIME REFUNDTIME,C.CANCEL_TIME CANCELTIME,C.OPER_USER_NAME OPERUSERNAME,C.BANK_REG_NAME BANKREGNAME,C.BANK_NAME BANKNAME,C.BANK_CODE BANKCODE,C.CON_NAME CONNAME,C.CUS_BANK_NAME CUSBANKNAME,C.CUS_ID CUSID,C.USER_MOBILE USERMOBILE,C.CONFIRMU_ID CONFIRMUID,C.USER_EMAIL USEREMAIL,C.OPER_USER_ID OPERUSERID,C.CHECK_USER_ID CHECKUSERID,C.IS_FULL ISFULL,C.IS_ZFB ISZFB
+       			,S.SELL_NAME SELLNAME,U.USER_NAME,U2.USER_NAME CHECKNAME,U.USER_NAME OPERNAME,F.CASH_RECORD_PRICE DEALPRICE, F.SHOP_PAY_TIME PAYTIME,F.STATUS FSTATUS,F.CT_ID CTID
+       			FROM 
+       				COMMODITY_REFUND_TBL C 
+       				JOIN FINANCE_CASH_RECORD_TBL F ON C.CASH_ID = F.ID 
+       				JOIN COU_SELL_WAY_TBL S ON F.PACK_ID = S.SELL_ID
+       				JOIN SYS_USER_TBL U ON U.USER_ID = C.OPER_USER_ID 
+       				LEFT JOIN SYS_USER_TBL U2 ON U2.USER_ID = C.CONFIRMU_ID
+       			<include refid="querycondition"/>
+       				ORDER BY C.ID DESC
+       			<include refid="public_sql.page_end" />
+        </select>
+        
+        <select id="getRefundCount" parameterClass="RefundCondition" resultClass="java.lang.Integer">
+        	SELECT COUNT(1) FROM (
+        	SELECT 
+       			C.ID,C.CASH_ID CASHID, C.STATUS ,C.CONTRACT_NO CONTRACTNO,C.PRICE,C.REMARK,C.CREATE_TIME CREATETIME,C.REFUND_TIME REFUNDTIME,C.CANCEL_TIME CANCELTIME,C.OPER_USER_NAME OPERUSERNAME,C.BANK_REG_NAME BANKREGNAME,C.BANK_NAME BANKNAME,C.BANK_CODE BANKCODE,C.CON_NAME CONNAME,C.CUS_BANK_NAME CUSBANKNAME,C.CUS_ID CUSID,C.USER_MOBILE USERMOBILE,C.CONFIRMU_ID CONFIRMUID,C.USER_EMAIL USEREMAIL,C.OPER_USER_ID OPERUSERID,C.CHECK_USER_ID CHECKUSERID,C.IS_FULL ISFULL,C.IS_ZFB ISZFB
+       			,S.SELL_NAME SELLNAME,U.USER_NAME,U2.USER_NAME CHECKNAME,U.USER_NAME OPERNAME,F.CASH_RECORD_PRICE DEALPRICE, F.SHOP_PAY_TIME PAYTIME,F.STATUS FSTATUS,F.CT_ID CTID
+       			FROM 
+       				COMMODITY_REFUND_TBL C 
+       				JOIN FINANCE_CASH_RECORD_TBL F ON C.CASH_ID = F.ID 
+       				JOIN COU_SELL_WAY_TBL S ON F.PACK_ID = S.SELL_ID
+       				JOIN SYS_USER_TBL U ON U.USER_ID = C.OPER_USER_ID 
+       				LEFT JOIN SYS_USER_TBL U2 ON U2.USER_ID = C.CONFIRMU_ID
+       			<include refid="querycondition"/>) TMP
+        </select>
+        
+        <select id="getRefundById" parameterClass="java.lang.Integer" resultClass="RefundDTO">
+        	<include refid="public_sql.page_begin"/>
+        	SELECT 
+       			C.ID,C.STATUS, C.CASH_ID CASHID, C.CONTRACT_NO CONTRACTNO,C.PRICE,C.REMARK,C.CREATE_TIME CREATETIME,C.REFUND_TIME REFUNDTIME,C.CANCEL_TIME CANCELTIME,C.OPER_USER_NAME OPERUSERNAME,C.BANK_REG_NAME BANKREGNAME,C.BANK_NAME BANKNAME,C.BANK_CODE BANKCODE,C.CON_NAME CONNAME,C.CUS_BANK_NAME CUSBANKNAME,C.CUS_ID CUSID,C.USER_MOBILE USERMOBILE,C.CONFIRMU_ID CONFIRMUID,C.USER_EMAIL USEREMAIL,C.OPER_USER_ID OPERUSERID,C.CHECK_USER_ID CHECKUSERID,C.IS_FULL ISFULL,C.IS_ZFB ISZFB
+       			,S.SELL_NAME SELLNAME,U.USER_NAME,U2.USER_NAME CHECKNAME,U.USER_NAME OPERNAME,F.CASH_RECORD_PRICE DEALPRICE, F.SHOP_PAY_TIME PAYTIME,F.STATUS FSTATUS,F.CT_ID CTID
+       			FROM 
+       				COMMODITY_REFUND_TBL C 
+       				JOIN FINANCE_CASH_RECORD_TBL F ON C.CASH_ID = F.ID 
+       				JOIN COU_SELL_WAY_TBL S ON F.PACK_ID = S.SELL_ID
+       				JOIN SYS_USER_TBL U ON U.USER_ID = C.OPER_USER_ID 
+       				LEFT JOIN SYS_USER_TBL U2 ON U2.USER_ID = C.CONFIRMU_ID
+      			WHERE C.ID = #value# LIMIT 1
+        </select>
+        
+        <!-- 根据流水号查退费-->
+        <select id="getRefundBySellId" parameterClass="java.lang.Integer" resultClass="RefundDTO">
+			SELECT 
+       			C.ID,C.STATUS, C.CASH_ID CASHID, C.CONTRACT_NO CONTRACTNO,C.PRICE,C.REMARK,C.CREATE_TIME CREATETIME,C.REFUND_TIME REFUNDTIME,C.CANCEL_TIME CANCELTIME,C.OPER_USER_NAME OPERUSERNAME,C.BANK_REG_NAME BANKREGNAME,C.BANK_NAME BANKNAME,C.BANK_CODE BANKCODE,C.CON_NAME CONNAME,C.CUS_BANK_NAME CUSBANKNAME,C.CUS_ID CUSID,C.USER_MOBILE USERMOBILE,C.CONFIRMU_ID CONFIRMUID,C.USER_EMAIL USEREMAIL,C.OPER_USER_ID OPERUSERID,C.CHECK_USER_ID CHECKUSERID,C.IS_FULL ISFULL,C.IS_ZFB ISZFB
+       			,S.SELL_NAME SELLNAME,U.USER_NAME,U2.USER_NAME CHECKNAME,U.USER_NAME OPERNAME,F.CASH_RECORD_PRICE DEALPRICE, F.SHOP_PAY_TIME PAYTIME,F.STATUS FSTATUS,F.CT_ID CTID
+       			FROM 
+       				COMMODITY_REFUND_TBL C 
+       				JOIN FINANCE_CASH_RECORD_TBL F ON C.CASH_ID = F.ID 
+       				JOIN COU_SELL_WAY_TBL S ON F.PACK_ID = S.SELL_ID
+       				JOIN SYS_USER_TBL U ON U.USER_ID = C.OPER_USER_ID 
+       				LEFT JOIN SYS_USER_TBL U2 ON U2.USER_ID = C.CONFIRMU_ID
+      			WHERE C.CASH_ID = #value# LIMIT 1
+        </select>
+        
+        
+        <!-- 撤销退费 -->
+        <update id="cancelRefund" parameterClass = "Refund">
+        	UPDATE COMMODITY_REFUND_TBL SET STATUS = 2,
+        	CANCEL_TIME = NOW(),
+        	CONFIRMU_ID = #operuserid#
+        	WHERE ID = #id#
+        </update>
+        
+        <!-- 审核退费 -->
+        <update id="confirmRefund" parameterClass="Refund">
+        	UPDATE COMMODITY_REFUND_TBL SET STATUS =1,REFUND_TIME = NOW(),
+        	CONFIRMU_ID = #confirmuid#
+        	WHERE ID = #id# LIMIT 1
+        </update>
+        
+        <!-- 客服删除退费 -->
+        <delete id="delRefundByid" parameterClass="java.lang.Integer">
+        	DELETE FROM COMMODITY_REFUND_TBL WHERE ID = #value#
+        </delete>
+        
+        <!-- 客服修改退费-->
+         <update id="updateRefund" parameterClass="Refund">
+         	UPDATE COMMODITY_REFUND_TBL SET 
+         	STATUS = 0,
+         	PRICE = #price#,
+         	REMARK = #remark#,
+         	OPER_USER_NAME = #operusername#,
+         	BANK_NAME = #bankname#,
+         	BANK_REG_NAME = #bankregname#,
+         	CUS_BANK_NAME = #cusbankname#,
+         	BANK_CODE = #bankcode#,
+         	CON_NAME = #conname#,
+         	USER_MOBILE = #usermobile#,
+         	OPER_USER_ID = #operuserid#,
+         	CANCEL_TIME = NULL,
+         	REFUND_TIME = NULL,
+         	CREATE_TIME = NOW(),
+         	IS_FULL = #isfull#,
+         	IS_ZFB = #iszfb#
+         	WHERE ID = #id#
+        </update>
+        
+        <!--Yangning 后台退费  查看未更改订单数量 根据流水状态查看订单是否可标为已退费-->
+        <select id="getContractCountRefund" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+        	SELECT COUNT(1) FROM FINANCE_CASH_RECORD_TBL WHERE STATUS = 3  AND CONTRACT_ID = #value#   
+        </select>
+        <!--防止重复更新用户记录  -->
+        <select id="getRefundByStatus" parameterClass="Refund" resultClass="java.lang.Integer">
+        	SELECT COUNT(1) FROM COMMODITY_REFUND_TBL WHERE STATUS = #status#  AND ID = #id#   
+        </select>
+</sqlMap>

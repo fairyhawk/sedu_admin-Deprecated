@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="assessService" class="com.shangde.edu.ass.service.AssessImpl" parent="baseService">
+    	<property name="subjectService" ref="subjectService"></property>
+    	<property name="courseService" ref="courseService"></property>
+    	<property name="customerService" ref="customerService"></property>
+    	<property name="kpointService" ref="kpointService"></property>
+    	<property name="sellWayService" ref="sellWayService"/>
+    	<property name="videoStatisticsService" ref="videoStatisticsService"></property>
+    	<property name="qkCondition" ref="qkCondition"></property>
+    </bean>
+    <bean id="reassessService" class="com.shangde.edu.ass.service.ReassessImpl" parent="baseService"/>
+    <bean id="qkCondition" class="com.shangde.edu.cou.condition.QueryKpointCondition"/>
+</beans>

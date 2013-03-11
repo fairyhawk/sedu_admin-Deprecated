@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VideoStat_NS">
+        <!--table:STU_VIDEO_STAT_TBL-->
+        <typeAlias alias="VideoStat" type="com.shangde.edu.stu.domain.VideoStat"/>
+        <typeAlias alias="QueryVideoStatCondition" type="com.shangde.edu.stu.condition.QueryVideoStatCondition"/>
+
+        <resultMap id="VideoStatResult" class="VideoStat">
+            <result property="vStatId" column="V_STAT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="viewCode" column="VIEW_CODE"/>
+            <result property="lastviewdate" column="LASTVIEWDATE"/>
+            <result property="lastviewid" column="LASTVIEWID"/>
+            <result property="lastviewname" column="LASTVIEWNAME"/>
+        </resultMap>
+
+        <sql id="STU_VIDEO_STAT_TBL_columns">
+            STU_VIDEO_STAT_TBL.V_STAT_ID,
+            STU_VIDEO_STAT_TBL.CUS_ID,
+            STU_VIDEO_STAT_TBL.COURSE_ID,
+            STU_VIDEO_STAT_TBL.VIEW_CODE,
+            STU_VIDEO_STAT_TBL.LASTVIEWDATE,
+            STU_VIDEO_STAT_TBL.LASTVIEWID,
+            STU_VIDEO_STAT_TBL.LASTVIEWNAME
+        </sql>
+
+        <sql id="STU_VIDEO_STAT_TBL_properties">
+            #vStatId#,
+            #cusId#,
+            #courseId#,
+            #viewCode#,
+            #lastviewdate#,
+            #lastviewid#,
+            #lastviewname#
+        </sql>
+
+        <insert id="createVideoStat" parameterClass="VideoStat">
+            INSERT INTO STU_VIDEO_STAT_TBL (<include refid="VideoStat_NS.STU_VIDEO_STAT_TBL_columns"/>) VALUES (<include refid="VideoStat_NS.STU_VIDEO_STAT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="vStatId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+
+	<!-- 暂时先注释，启用的时候  再开启
+        <delete id="deleteVideoStatById" parameterClass="">
+            DELETE FROM STU_VIDEO_STAT_TBL
+            WHERE
+                
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateVideoStat" parameterClass="VideoStat">
+            UPDATE STU_VIDEO_STAT_TBL SET
+                V_STAT_ID = #vStatId#,
+                CUS_ID = #cusId#,
+                COURSE_ID = #courseId#,
+                VIEW_CODE = #viewCode#,
+                LASTVIEWDATE = #lastviewdate#,
+                LASTVIEWID = #lastviewid#,
+                LASTVIEWNAME = #lastviewname#
+            WHERE
+                
+
+
+
+
+
+
+        </update>
+
+        <select id="getVideoStatById" resultMap="VideoStat_NS.VideoStatResult" parameterClass="">
+            SELECT
+            <include refid="VideoStat_NS.STU_VIDEO_STAT_TBL_columns"/>
+            FROM STU_VIDEO_STAT_TBL
+            WHERE
+                
+
+
+
+
+
+
+        </select>
+
+        <select id="getVideoStatList" resultMap="VideoStat_NS.VideoStatResult" parameterClass="QueryVideoStatCondition">
+            SELECT
+            <include refid="VideoStat_NS.STU_VIDEO_STAT_TBL_columns"/>
+            FROM STU_VIDEO_STAT_TBL
+        </select>
+        -->
+        
+        <!--end-->
+</sqlMap>

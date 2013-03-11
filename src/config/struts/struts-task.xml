@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="task" namespace="/task" extends="edu-default">
+       <!--考试后台action -->
+       <action name="task" class="com.shangde.edu.tk.action.TaskAction">
+       	   <interceptor-ref name="eduStack"/>
+	       <result name="addTask">/back/jsp/common/success.jsp</result>
+	       <result name="toAddTask">/back/jsp/task/task_add.jsp</result>
+	       <result name="toUpdateTask">/back/jsp/task/task_update.jsp</result>
+	       <result name="updateTask">/back/jsp/common/success.jsp</result>
+	       <result name="deleteTask" type="redirect">task!toListTasks.action?queryTaskCondition.currentPage=1</result>
+	       <result name="toListTasks">/back/jsp/task/task_list.jsp</result>
+	       <result name="publishTask" type="redirect">task!toListTasks.action?queryTaskCondition.currentPage=1</result> 
+		   <param name="savePath">/task</param>
+		   <interceptor-ref name="fileUpload">  
+	              <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+	              <param name="allowedTypes">  
+	                  　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+	                  image/pjpeg
+	              </param>  
+	              <!-- 配置允许上传的文件大小，单位字节 -->  
+	              <param name="maximumSize">3072000</param>  
+	        </interceptor-ref>
+       </action>
+       
+       <action name="taskweb" class="com.shangde.edu.tk.web.TaskWebAction">
+       	   <interceptor-ref name="loginStack"/>
+	       <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+       </action>
+       
+    </package>
+</struts>

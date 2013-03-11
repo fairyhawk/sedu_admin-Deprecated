@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TopicReply_NS">
+	<!--table:DIS_TOPIC_REPLY_TBL -->
+	<typeAlias alias="TopicReply" type="com.shangde.edu.dis.domain.TopicReply" />
+	<typeAlias alias="QueryTopicReplyCondition"
+		type="com.shangde.edu.dis.condition.QueryTopicReplyCondition" />
+
+	<resultMap id="QueryTopicReplyResult" class="QueryTopicReplyCondition">
+		<result property="title" column="title" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="replyContent" column="content" />
+		<result property="replyTime" column="replytime" />
+		<result property="replyId" column="replyid" />
+		<result property="topicId" column="topicid"/>
+		<result property="photo" column="PHOTO"/>
+		<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById" />
+		<result property="targetCustomer" column="target_cus_id" select="Customer_NS.getCustomerById" />
+	</resultMap>
+
+	<resultMap id="TopicReplyResult" class="TopicReply">
+		<result property="id" column="ID" />
+		<result property="topicId" column="TOPIC_ID" />
+		<result property="disId" column="DIS_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="replyTime" column="REPLYTIME" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById" />
+		<result property="targetCustomer" column="target_cus_id" select="Customer_NS.getCustomerById" />
+		<!--目前暂时省略 
+		<result property="targetTopicReply" column="target_reply_id" select="TopicReply_NS.getTopicReplyById" />
+		 -->
+	</resultMap>
+
+	<sql id="DIS_TOPIC_REPLY_TBL_columns">
+		DIS_TOPIC_REPLY_TBL.ID,
+		DIS_TOPIC_REPLY_TBL.TOPIC_ID,
+		DIS_TOPIC_REPLY_TBL.DIS_ID,
+		DIS_TOPIC_REPLY_TBL.CONTENT,
+		DIS_TOPIC_REPLY_TBL.REPLYTIME,
+		DIS_TOPIC_REPLY_TBL.CUS_ID,
+		DIS_TOPIC_REPLY_TBL.target_cus_id,
+		DIS_TOPIC_REPLY_TBL.target_reply_id
+        </sql>
+
+	<sql id="DIS_TOPIC_REPLY_TBL_properties">
+		#id#,
+		#topicId#,
+		#disId#,
+		#content#,
+		#replyTime#,
+		#customer.cusId#,
+		#targetCustomer.cusId#,
+		#targetTopicReply.id#
+    </sql>
+
+	<insert id="createTopicReply" parameterClass="TopicReply">
+		INSERT INTO DIS_TOPIC_REPLY_TBL (
+		<include refid="TopicReply_NS.DIS_TOPIC_REPLY_TBL_columns" />
+		) VALUES (
+		<include refid="TopicReply_NS.DIS_TOPIC_REPLY_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteTopicReplyById" parameterClass="int">
+		DELETE FROM DIS_TOPIC_REPLY_TBL
+		WHERE
+		ID = #value#
+	</delete>
+	<delete id="delTopicReplyById" parameterClass="int">
+		DELETE FROM DIS_TOPIC_REPLY_TBL
+		WHERE
+		ID = #value#
+	</delete>
+
+	<update id="updateTopicReply" parameterClass="TopicReply">
+		UPDATE DIS_TOPIC_REPLY_TBL SET
+		ID = #id#,
+		TOPIC_ID = #topicId#,
+		DIS_ID = #disId#,
+		CONTENT = #content#,
+		REPLYTIME = #replyTime#
+		WHERE
+        </update>
+
+	
+	<select id="getTopicReplyList" resultMap="TopicReply_NS.QueryTopicReplyResult"
+		parameterClass="QueryTopicReplyCondition">
+		SELECT b.title,c.CUS_NAME,c.EMAIL,a.CUS_Id,a.replytime,a.content,a.id as replyid,b.id as topicid,c.PHOTO,a.target_cus_id from 
+		
+		dis_topic_reply_tbl a,dis_topic_tbl b,cus_customer_tbl c where a.Topic_id=#topicId# and 
+		
+		a.cus_id=c.CUS_ID and a.Topic_id=b.id order by REPLYTIME desc
+		<include refid="public_sql.page_end"/>
+	</select>
+
+	<select id="getTopicReplyCountByList" resultClass="int">
+		SELECT count(a.id) from 
+	
+		dis_topic_reply_tbl a,dis_topic_tbl b,cus_customer_tbl c where a.Topic_id=#topicId# and 
+		
+		a.cus_id=c.CUS_ID and a.Topic_id=b.id 
+    </select>
+    
+	<!-- 获取数据记录数 -->
+	<select id="getCount" resultClass="int">
+		SELECT COUNT(1) FROM DIS_TOPIC_REPLY_TBL
+    </select>
+    
+    
+    
+    <!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+    
+    <!-- 获取固定回复个数列表 -->
+    <select id="getReplyCountList" resultMap="TopicReply_NS.TopicReplyResult" parameterClass="int">
+		SELECT
+		<include refid="TopicReply_NS.DIS_TOPIC_REPLY_TBL_columns" />
+		FROM DIS_TOPIC_REPLY_TBL
+			WHERE TOPIC_ID = #value# order by REPLYTIME desc limit 6
+	</select>
+    
+    <!-- 根据话题ID查询话题回复 -->
+   	<select id="getFrontTopicReplyList" resultMap="TopicReply_NS.TopicReplyResult"
+		parameterClass="QueryTopicReplyCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT
+		<include refid="TopicReply_NS.DIS_TOPIC_REPLY_TBL_columns" />
+		FROM DIS_TOPIC_REPLY_TBL
+			WHERE TOPIC_ID = #topicId# order by REPLYTIME desc
+		<include refid="public_sql.page_end"/>
+	</select>
+
+	<select id="getFrontTopicReplyCountByList" resultClass="int"
+		parameterClass="QueryTopicReplyCondition">
+		SELECT COUNT(1) FROM DIS_TOPIC_REPLY_TBL
+			WHERE TOPIC_ID = #topicId#
+    </select>
+    
+    <!-- 根据id查询记录 -->
+    <select id="getTopicReplyById" resultMap="TopicReply_NS.TopicReplyResult" parameterClass="int">
+		SELECT
+		<include refid="TopicReply_NS.DIS_TOPIC_REPLY_TBL_columns" />
+		FROM DIS_TOPIC_REPLY_TBL
+		WHERE id = #value#
+	</select>
+	
+	<!-- 删除一个话题的回复 -->
+	<delete id="delTopicReply" parameterClass="Map">
+		DELETE FROM DIS_TOPIC_REPLY_TBL
+		WHERE
+		ID = #id# AND CUS_ID = #cusId#
+	</delete>
+	
+</sqlMap>

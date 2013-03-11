@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PreNode_NS">
+        <!--table:KNO_PRE_NODE_TBL-->
+        <typeAlias alias="PreNode" type="com.shangde.edu.kno.domain.PreNode"/>
+        <typeAlias alias="QueryPreNodeCondition" type="com.shangde.edu.kno.condition.QueryPreNodeCondition"/>
+
+        <resultMap id="PreNodeDtoResult" class="PreNode">
+            <result property="preNodeId" column="PRE_NODE_ID"/>
+            <result property="preNodeName" column="PRE_NODE_NAME"/>
+            <result property="preId" column="PRE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="relCount" column="RELCOUNT"/>
+        </resultMap>
+        
+        <resultMap id="PreNodeResult" class="PreNode">
+            <result property="preNodeId" column="PRE_NODE_ID"/>
+            <result property="preNodeName" column="PRE_NODE_NAME"/>
+            <result property="preId" column="PRE_ID"/>
+            <result property="sortId" column="SORT_ID"/>            
+        </resultMap>
+
+        <sql id="KNO_PRE_NODE_TBL_columns">
+            KNO_PRE_NODE_TBL.PRE_NODE_ID,
+            KNO_PRE_NODE_TBL.PRE_NODE_NAME,
+            KNO_PRE_NODE_TBL.PRE_ID,
+            KNO_PRE_NODE_TBL.SORT_ID
+        </sql>
+        <sql id="KNO_PRE_NODE_TBL_INSERT_columns">
+           
+            KNO_PRE_NODE_TBL.PRE_NODE_NAME,
+            KNO_PRE_NODE_TBL.PRE_ID,
+            KNO_PRE_NODE_TBL.SORT_ID
+        </sql>
+
+        <sql id="KNO_PRE_NODE_TBL_properties">
+            #preNodeId#,
+            #preNodeName#,
+            #preId#,
+            #sortId#
+        </sql>
+        <sql id="KNO_PRE_NODE_TBL_INSERT_properties">
+            
+            #preNodeName#,
+            #preId#,
+            #sortId#
+        </sql>
+
+        <insert id="createPreNode" parameterClass="PreNode">
+            INSERT INTO KNO_PRE_NODE_TBL (<include refid="PreNode_NS.KNO_PRE_NODE_TBL_INSERT_columns"/>) VALUES (<include refid="PreNode_NS.KNO_PRE_NODE_TBL_INSERT_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="preNodeId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deletePreNodeById" parameterClass="int">
+            DELETE FROM KNO_PRE_NODE_TBL
+            WHERE
+                PRE_NODE_ID = #value#
+
+
+
+        </delete>
+
+        <update id="updatePreNode" parameterClass="PreNode">
+            UPDATE KNO_PRE_NODE_TBL SET
+                PRE_NODE_ID = #preNodeId#,
+                PRE_NODE_NAME = #preNodeName#,
+                PRE_ID = #preId#,
+                SORT_ID = #sortId#
+            WHERE
+                PRE_NODE_ID = #preNodeId#
+
+
+
+        </update>
+
+        <select id="getPreNodeById" resultMap="PreNode_NS.PreNodeResult" parameterClass="int">
+            SELECT
+            <include refid="PreNode_NS.KNO_PRE_NODE_TBL_columns"/>
+            FROM KNO_PRE_NODE_TBL
+            WHERE
+                PRE_NODE_ID = #value#
+
+
+
+        </select>
+
+        <select id="getPreNodeList" resultMap="PreNode_NS.PreNodeResult" parameterClass="QueryPreNodeCondition">
+            SELECT
+            <include refid="PreNode_NS.KNO_PRE_NODE_TBL_columns"/>
+            FROM KNO_PRE_NODE_TBL
+        </select>
+        
+        <select id="getPreNodeListByPreItemId" resultMap="PreNode_NS.PreNodeResult" parameterClass="QueryPreNodeCondition">
+        	SELECT
+        	<include refid="PreNode_NS.KNO_PRE_NODE_TBL_columns"/>
+        	FROM KNO_PRE_NODE_TBL
+        	WHERE PRE_ID=#preItemId#
+        </select>
+        
+        <select id="getPreNodeIdsByPreItemId" resultClass="int" parameterClass="QueryPreNodeCondition">
+        	SELECT PRE_NODE_ID
+        	FROM KNO_PRE_NODE_TBL
+        	WHERE PRE_ID=#preItemId#
+        </select>
+        <select id="getPreNodePageListByPreItemId" resultMap="PreNode_NS.PreNodeDtoResult" parameterClass="QueryPreNodeCondition">
+        	SELECT
+        	<include refid="PreNode_NS.KNO_PRE_NODE_TBL_columns"/>,
+        	(SELECT COUNT(1) FROM kno_node_pre_mid_tbl 
+            WHERE kno_node_pre_mid_tbl.PRE_NODE_ID=KNO_PRE_NODE_TBL.PRE_NODE_ID) AS RELCOUNT
+        	FROM KNO_PRE_NODE_TBL
+        	WHERE PRE_ID=#preItemId#
+        	ORDER BY SORT_ID
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getPreNodeCount" resultClass="int" parameterClass="QueryPreNodeCondition">
+        	SELECT COUNT(PRE_NODE_ID)
+        	FROM KNO_PRE_NODE_TBL
+        	WHERE PRE_ID=#preItemId#
+        </select>
+        
+        <select id="preNodeRelKnowledgeCount" resultClass="int" parameterClass="int">
+        	SELECT COUNT(1) FROM kno_node_pre_mid_tbl WHERE PRE_NODE_ID=#value#
+        </select>
+        <select id="getPreNodeCountByName" resultClass="int" parameterClass="java.util.Map">
+        	SELECT COUNT(1)
+        	FROM KNO_PRE_NODE_TBL
+        	WHERE BINARY PRE_NODE_NAME=#name#
+        	AND PRE_ID=#preId#
+        	<isNotNull property="pid">
+        		<isNotEqual prepend="AND" property="pid" compareValue="0">
+        			PRE_NODE_ID!=#pid#
+        		</isNotEqual>
+        	</isNotNull>
+        </select>
+        <!--end-->
+</sqlMap>

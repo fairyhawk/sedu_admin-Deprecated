@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Model_NS">
+	<!--table:SYS_MODEL_TBL-->
+	<typeAlias alias="Model" type="com.shangde.edu.sys.domain.Model" />
+	<typeAlias alias="QueryModelCondition" type="com.shangde.edu.sys.condition.QueryModelCondition" />
+
+	<resultMap id="ModelResult" class="Model">
+		<result property="id" column="id" />
+		<result property="model_name" column="model_name" />
+		<result property="url" column="url" />
+		<result property="content" column="content" />
+		<result property="m_id" column="m_id" />
+		<result property="is_enabled" column="is_enabled" />
+		<result property="sort" column="sort" />
+		<result property="remark" column="remark" />
+		<result property="author" column="author" />
+		<result property="create_time" column="create_time" />
+	</resultMap>
+
+	<sql id="SYS_MODEL_TBL_columns">
+		sys_model_tbl.id, sys_model_tbl.model_name,
+		sys_model_tbl.remark, sys_model_tbl.create_time,
+		sys_model_tbl.url,sys_model_tbl.content,
+		sys_model_tbl.m_id,sys_model_tbl.sort,
+		sys_model_tbl.is_enabled,sys_model_tbl.author
+	</sql>
+
+	<sql id="SYS_MODEL_TBL_properties">
+		#id#, 
+		#model_name#, 
+		#remark#, 
+		#create_time#,
+		#url#,
+		#content#,
+		#m_id#,
+		#sort#,
+		#is_enabled#,
+		#author#
+		
+	</sql>
+
+	<insert id="createModel" parameterClass="Model">
+		INSERT INTO SYS_MODEL_TBL (
+		<include refid="Model_NS.SYS_MODEL_TBL_columns" />
+		) VALUES (
+		<include refid="Model_NS.SYS_MODEL_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post"
+			keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteModelById" parameterClass="int">
+		DELETE FROM SYS_MODEL_TBL WHERE id = #value#
+
+	</delete>
+
+	<update id="updateModel" parameterClass="Model">
+		UPDATE SYS_MODEL_TBL SET 
+		model_name = #model_name#, 
+		remark = #remark#,
+		url= #url#,
+		content= #content#,
+		m_id= #m_id#,
+		sort= #sort#,
+		is_enabled= #is_enabled#
+		WHERE id =#id#
+	</update>
+	
+	<select id="getModelById" resultMap="Model_NS.ModelResult" parameterClass="int">
+		SELECT 
+		<include refid="Model_NS.SYS_MODEL_TBL_columns" /> 
+		FROM SYS_MODEL_TBL 
+		WHERE id =#id#
+	</select>
+	
+	<select id="getModelList" resultMap="Model_NS.ModelResult" parameterClass="com.shangde.edu.sys.condition.QueryModelCondition">
+		SELECT 
+		<include refid="Model_NS.SYS_MODEL_TBL_columns" /> 
+		FROM SYS_MODEL_TBL 
+		WHERE model_name LIKE '%$model_name$%'
+		ORDER BY sys_model_tbl.create_time DESC 
+		LIMIT #pageSize# OFFSET #startRecord# 
+	</select>
+	
+	<select id="getModelCount" resultClass="java.lang.Integer" parameterClass="com.shangde.edu.sys.condition.QueryModelCondition">
+		SELECT COUNT(1)
+		FROM SYS_MODEL_TBL 
+		WHERE model_name LIKE '%$model_name$%'
+	</select>
+	<select id="getAllModelList" resultMap="Model_NS.ModelResult">
+		SELECT <include refid="Model_NS.SYS_MODEL_TBL_columns" /> FROM SYS_MODEL_TBL 
+		ORDER BY sys_model_tbl.create_time DESC 
+	</select>
+	<select id="getModelByMids" resultMap="Model_NS.ModelResult" parameterClass="String">
+		SELECT <include refid="Model_NS.SYS_MODEL_TBL_columns" /> FROM SYS_MODEL_TBL 
+		WHERE id in ($value$)
+	</select>
+</sqlMap>

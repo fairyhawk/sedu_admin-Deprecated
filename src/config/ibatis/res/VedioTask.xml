@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VedioTask_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="VedioTask" type="com.shangde.edu.res.domain.Vedio" />
+	<typeAlias alias="CourseTask" type="com.shangde.edu.cou.domain.Course"/>
+	<typeAlias alias="QueryVedioConditionTask"
+		type="com.shangde.edu.res.condition.QueryVedioCondition" />
+
+	<resultMap id="VedioResult" class="VedioTask">
+		<result property="voId" column="VO_ID" />
+		<result property="vgId" column="VG_ID" />
+		<result property="pointid" column="POINTID" />
+		<result property="voName" column="VO_NAME" />
+		<result property="voUrl" column="VO_URL" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="downTime" column="DOWN_TIME" />
+		<result property="lecture" column="LECTURE" />
+		<result property="content" column="CONTENT" />
+		<result property="viewNum" column="VIEW_NUM" />
+		<result property="voSize" column="VO_SIZE" />
+		<result property="isShare" column="IS_SHARE" />
+		<result property="collectionNum" column="COLLECTION_NUM" />
+		<result property="isAudition" column="IS_AUDITION" />
+		<result property="reachUrl" column="REACH_URL" />
+		<result property="voOrder" column="VO_ORDER" />
+		<result property="voInfo" column="VO_INFO" />
+		<result property="voRadOne" column="VO_RADONE" />
+		<result property="xuanXiu" column="VO_XUANXIU" />
+		<result property="tcId" column="TC_ID" />
+		<result property="kpointName" column="POINTID"/>
+		<result property="voScores" column="VO_SCORES" />
+		<result property="voBScores" column="VO_BSCORES" />
+		<result property="teacherName" column="TEACHER_NAME" />
+		<result property="auditionSize" column="AUDITION_SIZE" />
+		<result property="auditionUrl" column="AUDITION_URL" />
+		<result property="freeVedio" column="FREE_VEDIO" />
+		<result property="recommend" column="RECOMMEND" />
+		<result property="vedioPicUrl" column="VEDIO_PIC_URL" />
+		<result property="ccUrl" column="CC_URL" />
+		<result property="playType" column="PLAY_TYPE" />
+		<result property="ccSmallPic" column="CC_SMALL_PIC" />
+	</resultMap>
+	
+	   <!-- course result  -->
+        <resultMap id="CourseResultTask" class="CourseTask">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="vedioPicUrl" column="VEDIO_PIC_URL"/>
+        </resultMap>
+        
+         <sql id="COU_COURSE_TBL_columns">
+            COU_COURSE_TBL.COURSE_ID,
+            COU_COURSE_TBL.VEDIO_PIC_URL
+        </sql>
+        
+	
+	
+
+	<sql id="RES_VEDIO_TBL_columns">
+		RES_VEDIO_TBL.VO_ID, 
+		RES_VEDIO_TBL.VG_ID, 
+		RES_VEDIO_TBL.POINTID,
+		RES_VEDIO_TBL.VO_NAME, 
+		RES_VEDIO_TBL.VO_URL,
+		RES_VEDIO_TBL.CREATE_TIME, 
+		RES_VEDIO_TBL.DOWN_TIME,
+		RES_VEDIO_TBL.LECTURE, 
+		RES_VEDIO_TBL.CONTENT,
+		RES_VEDIO_TBL.VIEW_NUM, 
+		RES_VEDIO_TBL.VO_SIZE,
+		RES_VEDIO_TBL.IS_SHARE, 
+		RES_VEDIO_TBL.COLLECTION_NUM,
+		RES_VEDIO_TBL.IS_AUDITION, 
+		RES_VEDIO_TBL.REACH_URL,
+		RES_VEDIO_TBL.VO_ORDER, 
+		RES_VEDIO_TBL.VO_INFO,
+		RES_VEDIO_TBL.VO_RADONE,
+		RES_VEDIO_TBL.VO_XUANXIU,
+		RES_VEDIO_TBL.TC_ID,
+		RES_VEDIO_TBL.VO_SCORES,
+		RES_VEDIO_TBL.VO_BSCORES,
+		RES_VEDIO_TBL.TEACHER_NAME,
+		RES_VEDIO_TBL.AUDITION_SIZE,
+		RES_VEDIO_TBL.AUDITION_URL,
+		RES_VEDIO_TBL.FREE_VEDIO,
+		RES_VEDIO_TBL.RECOMMEND,
+		RES_VEDIO_TBL.VEDIO_PIC_URL,
+		RES_VEDIO_TBL.CC_URL,
+		RES_VEDIO_TBL.PLAY_TYPE,
+		RES_VEDIO_TBL.CC_SMALL_PIC
+	</sql>
+      <!-- 定时更新视频sql语句 -->
+      <update id="updateCCSmallUrlByCCId" parameterClass="VedioTask">
+      	 UPDATE RES_VEDIO_TBL SET RES_VEDIO_TBL.CC_SMALL_PIC = #ccSmallPic# WHERE CC_URL = #ccUrl#
+      </update>
+      
+      <select id="getVedioByPage4CCSmallPic" parameterClass="QueryVedioConditionTask" resultMap="VedioResult">
+      	SELECT 
+      		<include refid="VedioTask_NS.RES_VEDIO_TBL_columns" />
+      	FROM
+      		RES_VEDIO_TBL WHERE RES_VEDIO_TBL.CC_URL IS NOT NULL AND  RES_VEDIO_TBL.CC_URL != '' AND (RES_VEDIO_TBL.CC_SMALL_PIC IS NULL OR RES_VEDIO_TBL.CC_SMALL_PIC = '')
+      		<include refid="public_sql.page_end"/>
+      </select>
+      
+       <select id="getVedioByCount4CCSmallPic" parameterClass="QueryVedioConditionTask" resultClass="int">
+      	SELECT 
+      		COUNT(1)
+      	FROM
+      		RES_VEDIO_TBL WHERE RES_VEDIO_TBL.CC_URL IS NOT NULL AND  RES_VEDIO_TBL.CC_URL != '' AND (RES_VEDIO_TBL.CC_SMALL_PIC IS NULL OR RES_VEDIO_TBL.CC_SMALL_PIC = '')
+      </select>
+	<!--end-->
+	
+	<!-- 定时更新课程语句 -->
+	<update id="updateCoursePicByid" parameterClass="CourseTask">
+      	UPDATE COU_COURSE_TBL SET COU_COURSE_TBL.VEDIO_PIC_URL = #vedioPicUrl# WHERE COU_COURSE_TBL.COURSE_ID = #courseId#
+     </update>
+      
+      <select id="getCourseNotPicList"  resultMap="CourseResultTask">
+      	 SELECT 
+      	 <include refid="VedioTask_NS.COU_COURSE_TBL_columns" /> FROM 
+      	 COU_COURSE_TBL WHERE COU_COURSE_TBL.VEDIO_PIC_URL IS NULL OR COU_COURSE_TBL.VEDIO_PIC_URL = '' 
+      </select>
+      
+        <select id="getCourseFirstPicByCourseId" parameterClass="int" resultClass="string">
+      	 SELECT 
+      	 RES_VEDIO_TBL.CC_SMALL_PIC ccSmallPic FROM 
+      	 COU_COURSE_TBL,COU_KPOINT_TBL,RES_VEDIO_TBL 
+      	 	WHERE COU_COURSE_TBL.COURSE_ID = COU_KPOINT_TBL.COURSE_ID AND RES_VEDIO_TBL.POINTID = COU_KPOINT_TBL.POINT_ID 
+      	 	AND (COU_COURSE_TBL.VEDIO_PIC_URL IS NULL OR COU_COURSE_TBL.VEDIO_PIC_URL = '')
+      	 	AND RES_VEDIO_TBL.CC_SMALL_PIC IS NOT NULL AND  RES_VEDIO_TBL.CC_SMALL_PIC != '' 
+      	 	AND  COU_COURSE_TBL.COURSE_ID = #value# LIMIT 1
+      </select>
+</sqlMap>

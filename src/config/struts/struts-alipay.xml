@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="alipay" namespace="/alipay" extends="edu-default">
+        <action name="zfb" class="com.shangde.edu.alipay.action.ZfbAction">
+        	<result name="toIndex" type="dispatcher">/static/web/shop/index.jsp</result>
+        	<result name="zfbReturn" type="dispatcher">/static/web/global/payok.jsp</result>
+        	<result name="goToZFB" type="dispatcher">/static/web/global/zhifubao.jsp</result>
+        	  <result name="yesoder" type="json">
+				<param name="root">result</param>
+			</result>
+            <interceptor-ref name="loginStack" />
+		</action>
+		<action name="chinaBank" class="com.shangde.edu.alipay.action.ChinaBankAction">
+        	<result name="goToChinaBank" type="dispatcher">/static/web/global/chinaBank.jsp</result>
+        	<result name="cbReturn" type="dispatcher">/static/web/global/payok.jsp</result>
+            <interceptor-ref name="loginStack" />
+		</action>
+		<!-- 快钱接口 START -->
+		<action name="KQ" class="com.shangde.edu.alipay.action.KQAction">
+        	<result name="goToKQ" type="dispatcher">/static/web/global/kuaiQian.jsp</result>
+            <interceptor-ref name="loginStack" />
+		</action>
+    	<!-- 快钱接口 END -->
+    </package>
+</struts>

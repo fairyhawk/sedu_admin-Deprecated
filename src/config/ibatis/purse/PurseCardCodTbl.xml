@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PurseCardCodTbl_NS">
+        <!--table:PURSE_CARD_COD_TBL-->
+        <typeAlias alias="PurseCardCodTbl" type="com.shangde.edu.purse.domain.CardCod"/>
+        <typeAlias alias="QueryPurseCardCodTblCondition" type="com.shangde.edu.purse.condition.QueryCardCodCondition"/>
+
+        <resultMap id=" " class="PurseCardCodTbl">
+            <result property="id" column="ID"/>
+            <result property="email" column="EMAIL"/>
+            <result property="cusName" column="CUS_NAME"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="cardId" column="CARD_ID"/>
+            <result property="freightMoney" column="FREIGHT_MONEY"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="status" column="STATUS"/>
+            <result property="operator" column="OPERATOR"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="postcode" column="POSTCODE"/>
+            <result property="tel" column="TEL"/>
+            <result property="sendTime" column="SEND_TIME"/>
+            <result property="sendConfirm" column="SEND_CONFIRM"/>
+        </resultMap>
+
+        <sql id="PURSE_CARD_COD_TBL_columns">
+            PURSE_CARD_COD_TBL.ID,
+            PURSE_CARD_COD_TBL.EMAIL,
+            PURSE_CARD_COD_TBL.CUS_NAME,
+            PURSE_CARD_COD_TBL.MOBILE,
+            PURSE_CARD_COD_TBL.CARD_ID,
+            PURSE_CARD_COD_TBL.FREIGHT_MONEY,
+            PURSE_CARD_COD_TBL.CONTRACT_ID,
+            PURSE_CARD_COD_TBL.CREATE_TIME,
+            PURSE_CARD_COD_TBL.STATUS,
+            PURSE_CARD_COD_TBL.OPERATOR,
+            PURSE_CARD_COD_TBL.ADDRESS,
+            PURSE_CARD_COD_TBL.POSTCODE,
+            PURSE_CARD_COD_TBL.TEL,
+            PURSE_CARD_COD_TBL.SEND_TIME,
+            PURSE_CARD_COD_TBL.SEND_CONFIRM
+        </sql>
+
+        <sql id="PURSE_CARD_COD_TBL_properties">
+            #id#,
+            #email#,
+            #cusName#,
+            #mobile#,
+            #cardId#,
+            #freightMoney#,
+            #contractId#,
+            #createTime#,
+            #status#,
+            #operator#,
+            #address#,
+            #postcode#,
+            #tel#,
+            #sendTime#,
+            #sendConfirm#
+        </sql>
+
+      
+</sqlMap>

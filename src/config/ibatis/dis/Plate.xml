@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="dis_dis_area_tbl">
+
+	<!-- 备注：本模块全部去掉 -->
+
+	<resultMap id="DisDisAreaTblResult" class="com.shangde.edu.dis.dto.DisAreaDTO">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="subjectName" column="SUBJECT_NAME" jdbcType="VARCHAR" />
+		<result property="areaName" column="name" jdbcType="VARCHAR" />
+		<result property="loginName" column="LOGIN_NAME" jdbcType="VARCHAR" />
+		<result property="topicCount" column="topiccount" jdbcType="INTEGER" />
+		<result property="createTime" column="createtime" jdbcType="TIMESTAMP" />
+		<result property="subjectId" column="SUBJECT_ID" jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 查询版块 -->
+	<select id="getplate" resultMap="dis_dis_area_tbl.DisDisAreaTblResult">
+		select a.id,b.SUBJECT_NAME,a.name,c.LOGIN_NAME,count(d.dis_area_id) as
+		topiccount,a.createtime,a.SUBJECT_ID from (dis_dis_area_tbl a
+		,sys_subject_tbl b,sys_user_tbl c) left JOIN dis_topic_tbl d on
+		a.id=d.dis_area_id where a.subject_id=b.SUBJECT_ID and
+		a.user_id=c.USER_ID group by a.id 
+		<include refid="public_sql.page_end" />
+    </select>
+	<select id="getplateCounter" resultClass="int">
+		select count(a.id) from
+		(dis_dis_area_tbl a ,sys_subject_tbl b,sys_user_tbl c) where
+		a.subject_id=b.SUBJECT_ID and a.user_id=c.USER_ID  
+    </select>
+</sqlMap>
+        

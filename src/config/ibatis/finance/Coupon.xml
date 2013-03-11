@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FinanceCoupon_NS">
+	<!--table:COU_COUPON_TBL -->
+	<typeAlias alias="CouponCode" type="com.shangde.edu.finance.domain.Coupon" />
+	<typeAlias alias="CouponRecordInfo" type="com.shangde.edu.finance.domain.CouponRecordInfo" />
+	<typeAlias alias="CouponRecordInfo" type="com.shangde.edu.finance.domain.CouponRecordInfo" />
+	<typeAlias alias="QueryCouponCodeCondition"
+		type="com.shangde.edu.finance.condition.QueryCouponCondition" />
+	<!-- 配置缓存模型 -->
+		<cacheModel id="FinanceCoupon_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="FinanceCoupon_NS.addCreateCoupon" />
+ 			<flushOnExecute statement="FinanceCoupon_NS.addCouponRecordInfo" />
+			<flushOnExecute statement="FinanceCoupon_NS.updateCoupon" />
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponForState"/>
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponTypeForUseSumById"/>
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponForContractId"/>
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponForPayState"/>
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponTypeForPaySumById"/>
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponForStateReset"/>
+			<flushOnExecute statement="FinanceCoupon_NS.updateCouponTypeForUseSumByIdReset"/>
+			<flushOnExecute statement="FinanceCoupon_NS.ZFCouponByParentId"/>
+			<flushOnExecute statement="FinanceCoupon_NS.couponGQ"/>
+			<property value="1000" name="size" />
+		</cacheModel>
+	<resultMap id="FinanceCouponResult" class="CouponCode">
+		<result column="ID" jdbcType="INTEGER" property="id" />
+		<result column="TITLE" jdbcType="VARCHAR" property="title" />
+		<result column="CREATE_TIME"  property="createTime" />
+		<result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+		<result column="PARENT_ID"  property="couponType" select="CouponType_NS.getCouponTypeListByIdForDTO"/>
+		<result column="STATE" jdbcType="INTEGER" property="state" />
+		<result column="PAYSTATE" jdbcType="INTEGER" property="paystate" />
+		<result column="PIC_PATH" jdbcType="VARCHAR" property="picPath" />
+		<result column="CONTRACT_ID" jdbcType="VARCHAR"  property="contractId"/>
+		<result column="OPERATING_NAME" jdbcType="VARCHAR"  property="operatingName"/>
+	</resultMap>
+	<resultMap id="FinanceCouponResultOnly" class="CouponCode">
+		<result column="ID" jdbcType="INTEGER" property="id" />
+		<result column="TITLE" jdbcType="VARCHAR" property="title" />
+		<result column="CREATE_TIME"  property="createTime" />
+		<result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+		<result column="STATE" jdbcType="INTEGER" property="state" />
+		<result column="PAYSTATE" jdbcType="INTEGER" property="paystate" />
+		<result column="PIC_PATH" jdbcType="VARCHAR" property="picPath" />
+		<result column="CONTRACT_ID" jdbcType="VARCHAR"  property="contractId"/>
+		<result column="OPERATING_NAME" jdbcType="VARCHAR"  property="operatingName"/>
+	</resultMap>
+
+	<sql id="COU_COUPON_TBL_columns">
+		ID,TITLE,CREATE_TIME,PARENT_ID,STATE,PAYSTATE,PIC_PATH,CONTRACT_ID,OPERATING_NAME
+	</sql>
+
+	<sql id="COU_COUPON_TBL_properties">
+		#id#,
+		#title#,
+		#createTime#,
+		#parentId#,
+		#state#,
+		#paystate#,
+		#picPath#,
+		#contractId#,
+		#operatingName#
+	</sql>
+	
+	<!-- 分页查询 -->
+	<select id="getCouponList" resultMap="FinanceCoupon_NS.FinanceCouponResult" parameterClass="QueryCouponCodeCondition" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM COU_COUPON_TBL order by  CREATE_TIME DESC
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<!--end -->
+	 <!-- 创建一个编码-->
+        <insert id="addCreateCoupon" parameterClass="CouponCode">
+            INSERT INTO cou_coupon_tbl (<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns"/>) VALUES 
+				(<include refid="FinanceCoupon_NS.COU_COUPON_TBL_properties"/>)
+			 <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+         <!-- 根据type查询所对应的coding-->
+        <select id="getCouPonSinge" resultMap="FinanceCoupon_NS.FinanceCouponResultOnly" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM COU_COUPON_TBL where PARENT_ID=#parentId# order by  CREATE_TIME DESC
+	</select>
+	
+		<select id="getCouponByCode" resultMap="FinanceCoupon_NS.FinanceCouponResult" parameterClass="String"  cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM COU_COUPON_TBL where TITLE=#value#  order by  CREATE_TIME DESC
+	</select>
+	
+	<select id="getCouponByCodeById" resultMap="FinanceCoupon_NS.FinanceCouponResult" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM COU_COUPON_TBL where Id=#value# order by  CREATE_TIME DESC
+	</select>
+	
+	<select id="getCouponListCount" resultClass="int" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		count(1)
+		FROM COU_COUPON_TBL
+	
+	</select>
+	
+	<select id="getCouponById" resultMap="FinanceCoupon_NS.FinanceCouponResultOnly" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+	SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM COU_COUPON_TBL where ID=#value# order by  CREATE_TIME DESC
+	</select>
+	
+	 <update id="updateCoupon" >
+    update cou_coupon_tbl
+    <dynamic prepend="set">	
+      ID=#id#,
+      TITLE=#title#,
+      CREATE_TIME=#createTime#,
+      PARENT_ID=#parentId#,
+      STATE=#state#,
+      PAYSTATE=#paystate#,
+      PIC_PATH=#picPath#
+    </dynamic>
+      WHERE ID = #id#
+  </update>
+  <!-- 查询优惠券编码 条件 -->
+  <select id="getCouponCodeListByWhere" resultMap="FinanceCoupon_NS.FinanceCouponResult"  parameterClass="QueryCouponCodeCondition" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM cou_coupon_tbl where 1=1 
+		<isNotEqual property="state" compareValue="0">
+	        	and STATE=#state#
+	    </isNotEqual>
+	    <isNotEqual property="payState" compareValue="0">
+	        	and PAYSTATE=#payState#
+	    </isNotEqual>
+	    <isNotEqual property="cType" compareValue="0">
+	        	and PARENT_ID in (select Id from cou_coupontype_tbl where C_TYPE=#cType#)
+	    </isNotEqual>
+	   <isNotNull property="startTime" >
+				<![CDATA[  and CREATE_TIME >= #startTime# ]]>
+	   </isNotNull>
+	   <isNotNull property="endTime" >
+				<![CDATA[ and CREATE_TIME <=#endTime#  ]]>
+	   </isNotNull>
+    	<isNotEqual property="keyword" compareValue="">
+	        	<isNotEqual property="searchType" compareValue="0" >
+	        	<!-- 1为优惠编码 -->
+	        	<isEqual property="searchType" compareValue="1">
+	        	and TITLE like  CONCAT('%',#keyword#,'%')
+	        	</isEqual>
+	        	<!-- 2为优惠券名称 -->
+	        	<isEqual property="searchType" compareValue="2">
+	        	and PARENT_ID in (select Id from cou_coupontype_tbl where TITLE like  CONCAT('%',#keyword#,'%'))
+	        	</isEqual>
+	        	<!-- 3为合作商 -->
+	        	<isEqual property="searchType" compareValue="3">
+	        	and PARENT_ID in (select Id from cou_coupontype_tbl where COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%')))
+	        	</isEqual>
+	        	<!-- 4为适用范围 -->
+	        	<isEqual property="searchType" compareValue="4">
+	        	and (PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID  in (select subject.SUBJECT_ID from sys_subject_tbl as subject where subject.SUBJECT_NAME like  CONCAT('%',#keyword#,'%')))
+	        	<isEqual property="keyword" compareValue="所有项目">
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID=0)
+	        	</isEqual>
+	        	)
+	        	</isEqual>
+	        	</isNotEqual>
+	        	<isEqual property="searchType" compareValue="0">
+	        		        	and  (
+	        		        	    TITLE like  CONCAT('%',#keyword#,'%') 
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where TITLE like  CONCAT('%',#keyword#,'%')) 
+	        		        	or   PARENT_ID in (select Id from cou_coupontype_tbl where COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%'))) 
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID  in (select SUBJECT_ID from sys_subject_tbl where SUBJECT_NAME like  CONCAT('%',#keyword#,'%')))
+	        		        	<isEqual property="keyword" compareValue="所有项目">
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID=0)
+	        	                </isEqual>
+	        		        	)
+	        	
+	        	</isEqual>
+	    </isNotEqual>
+	   order by  CREATE_TIME DESC
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getCouponCodeListAll" resultMap="FinanceCoupon_NS.FinanceCouponResult" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM cou_coupon_tbl where PARENT_ID=#value# order by  CREATE_TIME DESC
+		
+	</select>
+	
+	 <select id="getCouponCodeListCountByWhere" resultClass="int"  parameterClass="QueryCouponCodeCondition" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		count(1)
+		FROM cou_coupon_tbl where 1=1 
+		<isNotEqual property="state" compareValue="0">
+	        	and STATE=#state#
+	    </isNotEqual>
+	    <isNotEqual property="payState" compareValue="0">
+	        	and PAYSTATE=#payState#
+	    </isNotEqual>
+	    <isNotEqual property="cType" compareValue="0">
+	        	and PARENT_ID in (select Id from cou_coupontype_tbl where C_TYPE=#cType#)
+	    </isNotEqual>
+	    <isNotNull property="startTime" >
+				<![CDATA[  and CREATE_TIME >= #startTime# ]]>
+	   </isNotNull>
+	   <isNotNull property="endTime" >
+				<![CDATA[ and CREATE_TIME <=#endTime#  ]]>
+	   </isNotNull>
+    	<isNotEqual property="keyword" compareValue="">
+	        	<isNotEqual property="searchType" compareValue="0" >
+	        	<!-- 1为优惠编码 -->
+	        	<isEqual property="searchType" compareValue="1">
+	        	and TITLE like  CONCAT('%',#keyword#,'%')
+	        	</isEqual>
+	        	<!-- 2为优惠券名称 -->
+	        	<isEqual property="searchType" compareValue="2">
+	        	and PARENT_ID in (select Id from cou_coupontype_tbl where TITLE like  CONCAT('%',#keyword#,'%'))
+	        	</isEqual>
+	        	<!-- 3为合作商 -->
+	        	<isEqual property="searchType" compareValue="3">
+	        	and PARENT_ID in (select Id from cou_coupontype_tbl where COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%'))) 
+	        	</isEqual>
+	        	<!-- 4为适用范围 -->
+	        	<isEqual property="searchType" compareValue="4">
+	        	and (PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID  in (select subject.SUBJECT_ID from sys_subject_tbl as subject where subject.SUBJECT_NAME like  CONCAT('%',#keyword#,'%')))
+	        	<isEqual property="keyword" compareValue="所有项目">
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID=0)
+	        	</isEqual>
+	        	)
+	        	</isEqual>
+	        	</isNotEqual>
+	        	<isEqual property="searchType" compareValue="0">
+	        		        	and (
+	        		        	    TITLE like  CONCAT('%',#keyword#,'%') 
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where TITLE like  CONCAT('%',#keyword#,'%')) 
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%'))) 
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID  in (select SUBJECT_ID from sys_subject_tbl where SUBJECT_NAME like  CONCAT('%',#keyword#,'%')))
+	        		        	<isEqual property="keyword" compareValue="所有项目">
+	        		        	or  PARENT_ID in (select Id from cou_coupontype_tbl where SUBJECT_ID=0)
+	        		        	</isEqual>
+	        		        	)
+	        	
+	        	</isEqual>	        	
+	    </isNotEqual>
+	    order by  CREATE_TIME DESC
+	</select>
+	
+	<select id="getSellWayForCode" resultClass="int" parameterClass="Map" cacheModel="FinanceCoupon_NS-cache">
+	SELECT count(1) 
+		FROM cou_sell_way_tbl where (SELL_ID=#sellId# and SUBJECT_ID=#subjectId#) or #subjectId#=0
+	</select>
+	
+	<select id="getCouponState" resultClass="int" parameterClass="String" cacheModel="FinanceCoupon_NS-cache">
+	SELECT STATE
+		FROM cou_coupon_tbl where  ID=#value# 
+	</select>
+	
+	 <update id="updateCouponForState" parameterClass="String" >
+    update cou_coupon_tbl
+    <dynamic prepend="set">	
+     STATE=2
+    </dynamic>
+      WHERE ID = #value#
+  </update>
+   <update id="updateCouponTypeForUseSumById" parameterClass="int" >
+    update cou_coupontype_tbl  set	 USE_SUM=USE_SUM+1 WHERE ID = #value#
+  </update>
+  
+  	<select id="getcontractForCouponIdById" resultClass="String" parameterClass="String" cacheModel="FinanceCoupon_NS-cache">
+	SELECT ID FROM cou_coupon_tbl where  CONTRACT_ID=#value#
+	</select>
+
+        
+         <!-- 查询售卖方式名称 -->
+        <select id="getSellWayNameById" resultClass="String"  parameterClass="String" cacheModel="FinanceCoupon_NS-cache">
+          select  SELL_NAME from  cou_sell_way_tbl ,FINANCE_CASH_RECORD_TBL where FINANCE_CASH_RECORD_TBL.PACK_ID=cou_sell_way_tbl.SELL_ID 
+          and  FINANCE_CASH_RECORD_TBL.CONTRACT_ID=#value# group by cou_sell_way_tbl.SELL_NAME
+        </select>
+          <!-- 根据项目优惠券ID查询。。 -->
+      <select id="checkConponID" resultMap="FinanceCoupon_NS.FinanceCouponResult" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns" />
+		FROM cou_coupon_tbl where PARENT_ID=#parentId#	
+	</select>
+	
+         <select id="getCouponTypeIdByCouponId" resultClass="int"  parameterClass="String" cacheModel="FinanceCoupon_NS-cache">
+            SELECT  PARENT_ID from cou_coupon_tbl where ID=#value#
+        </select>
+        
+        <!-- 插入订单 -->
+         <update id="updateCouponForContractId" parameterClass="Map" >
+    update cou_coupon_tbl  set CONTRACT_ID=#contarctId# WHERE ID = #couponId#
+  </update>
+  
+  <!-- 更改支付 状态 -->
+   <update id="updateCouponForPayState" parameterClass="String" >
+    update cou_coupon_tbl
+    <dynamic prepend="set">	
+     PAYSTATE=2
+    </dynamic>
+      WHERE ID = #value#
+  </update>
+   <update id="updateCouponTypeForPaySumById" parameterClass="int" >
+    update cou_coupontype_tbl  set	 PAY_SUM=PAY_SUM+1 WHERE ID = #value#
+  </update>
+
+ 
+ <update id="updateCouponForStateReset" parameterClass="String" >
+    update cou_coupon_tbl
+    <dynamic prepend="set">	
+     STATE=1
+    </dynamic>
+      WHERE ID = #value#
+  </update>
+   <update id="updateCouponTypeForUseSumByIdReset" parameterClass="int" >
+    update cou_coupontype_tbl  set	 USE_SUM=USE_SUM-1 WHERE ID = #value#
+  </update>
+  
+  <!--优惠券过期设置定时器 -->
+   <update id="couponGQ" >
+   <![CDATA[  update  cou_coupon_tbl set state=3 where PARENT_ID in(select distinct ID from  cou_coupontype_tbl where  STOP_TIME < now())]]>
+  </update>
+  
+  <!-- 作废父类下的所有优惠券 -->
+   <update id="ZFCouponByParentId"  parameterClass="int">
+   <![CDATA[  update  cou_coupon_tbl set state=4 where PARENT_ID=#value# and state=1]]>
+  </update>
+  
+  <!-- 根据售卖方式id获取项目id -->
+  <select id="getSubjectIdBySellId" resultClass="int" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+	SELECT SUBJECT_ID FROM cou_sell_way_tbl where  SELL_ID=#value#
+	</select>
+     <!--根据订单id 得到当前订单对应的优惠卷 --> 
+   <select id="getCouponByContractId" resultMap="FinanceCoupon_NS.FinanceCouponResult" parameterClass="int" cacheModel="FinanceCoupon_NS-cache">
+    SELECT
+    <include refid="FinanceCoupon_NS.COU_COUPON_TBL_columns"/> 
+    FROM cou_coupon_tbl 
+    WHERE cou_coupon_tbl.CONTRACT_ID=#value# 	
+    </select>
+	
+	
+	<!-- 根据项目取有订单的学员的手机号 -->
+	<select id="getCusMobileForSubId" parameterClass="int" resultClass="String" cacheModel="FinanceCoupon_NS-cache">
+	select cus.MOBILE from cus_customer_tbl as cus inner join finance_contract_tbl as contract on cus.CUS_ID=contract.CUS_ID  where cus.SUBJECT_ID=#value# and contract.PAY_TYPE!=0 and contract.status=1 and cus.MOBILE is  not null and cus.MOBILE!="" group by MOBILE order by cus.CUS_ID
+	</select>
+	<sql id="cou_coupon_recordinfo_tblcolumns">
+		ID,TITLE,MOBILE_SUM,COUPON_SUM,SUBJECT_NAME,COUPON_CATORGRLY_ID,ADD_TIME,ADD_NAME
+	</sql>
+
+	<sql id="cou_coupon_recordinfo_tbl_properties">
+		#id#,
+		#title#,
+		#mobileSum#,
+		#conponSum#,
+		#subjectName#,
+		#couponCatorgryId#,
+		#addTime#,
+		#addName#
+	</sql>
+	<resultMap id="CouponRecordInfoResult" class="CouponRecordInfo">
+		<result column="ID"  property="id" />
+		<result column="TITLE"  property="title" />
+		<result column="MOBILE_SUM"  property="mobileSum" />
+		<result column="COUPON_SUM" property="conponSum" />
+		<result column="SUBJECT_NAME"  property="subjectName" />
+		<result column="COUPON_CATORGRLY_ID"  property="couponCatorgryId" />
+		<result column="ADD_TIME"  property="addTime" />
+		<result column="ADD_NAME"   property="addName"/>
+	</resultMap>
+	 <insert id="addCouponRecordInfo" parameterClass="CouponRecordInfo">
+            INSERT INTO cou_coupon_recordinfo_tbl (<include refid="FinanceCoupon_NS.cou_coupon_recordinfo_tblcolumns"/>) VALUES 
+				(<include refid="FinanceCoupon_NS.cou_coupon_recordinfo_tbl_properties"/>)
+      </insert>
+      <!-- 查询优惠券编码 条件 -->
+  <select id="getCouponRecordInfo" resultMap="FinanceCoupon_NS.CouponRecordInfoResult"  parameterClass="QueryCouponCodeCondition" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		<include refid="FinanceCoupon_NS.cou_coupon_recordinfo_tblcolumns" />
+		FROM cou_coupon_recordinfo_tbl where 1=1 
+	   order by  ADD_TIME DESC
+		<include refid="public_sql.page_end"/>
+	</select>
+      <select id="getCouponRecordInfoCount" resultClass="int"  parameterClass="QueryCouponCodeCondition" cacheModel="FinanceCoupon_NS-cache">
+		SELECT
+		count(1)
+		FROM cou_coupon_recordinfo_tbl where 1=1 
+	    order by  ADD_TIME DESC
+	</select>
+	
+</sqlMap>

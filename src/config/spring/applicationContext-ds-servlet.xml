@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:flex="http://www.springframework.org/schema/flex"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/flex
+		http://www.springframework.org/schema/flex/spring-flex-1.0.xsd">
+
+	 <bean id="_messageBroker"
+	 	class="org.springframework.flex.core.MessageBrokerFactoryBean">
+	 	<property name="servicesConfigPath">
+	 		<value>/WEB-INF/flex/services-config.xml</value>
+	 	</property>
+	 </bean>
+
+ <!-- Maps request paths at /* to the BlazeDS MessageBroker -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>/*=_messageBroker</value>
+		</property>
+	</bean>
+	<!-- Dispatches requests mapped to a MessageBroker -->
+	<bean
+		class="org.springframework.flex.servlet.MessageBrokerHandlerAdapter" />
+	
+	<!-- 知识点 -->
+	<bean id="kpointAction" class="com.shangde.edu.cou.web.KPointWebAction">
+   		<property name="kpointService" ref="kpointService"/>
+   	</bean> 
+    <flex:remoting-destination ref="kpointAction" />  
+    
+    <!-- 登陆 -->
+	<bean id="loginAction" class="com.shangde.edu.cus.web.CustomerWebAction">
+		<property name="customerService" ref="customerService"/>
+   	</bean> 
+    <flex:remoting-destination ref="loginAction" />  
+    
+    <!-- 学习计划 -->
+	<bean id="studyPlanAction" class="com.shangde.edu.cus.web.StudyPlanWebAction">
+		<property name="studyPlanService" ref="studyPlanService"/>
+   	</bean> 
+    <flex:remoting-destination ref="studyPlanAction" /> 
+    
+    <!-- 视频笔记 -->
+	<bean id="notesAction" class="com.shangde.edu.res.web.NotesWebAction">
+		<property name="notesService" ref="notesService"/>
+		<property name="kpointService" ref="kpointService"/>
+   	</bean> 
+    <flex:remoting-destination ref="notesAction" /> 
+    
+    <!-- 听课记录 -->
+	<bean id="courseWebAction" class="com.shangde.edu.cou.web.CourseWebAction">
+		<property name="cusCouKpointService" ref="cusCouKpointService"/>
+		<property name="courseService" ref="courseService"/>
+		<property name="taskCusService" ref="taskCusService"/>
+		<property name="booksService" ref="booksService"/>
+		<property name="tjcourseService" ref="tjcourseService"/>
+		<property name="videoStatisticsService" ref="videoStatisticsService"/>
+		<property name="customerService" ref="customerService"/>
+		
+   	</bean> 
+    <flex:remoting-destination ref="courseWebAction" /> 
+    
+    <!-- 本章笔记 -->
+	<bean id="videoAction" class="com.shangde.edu.res.action.VedioAction">
+		<property name="vedioService" ref="vedioService"/>
+   	</bean> 
+    <flex:remoting-destination ref="videoAction" /> 
+    
+    <!-- 视频播放Action -->
+    <bean id="videoCommonAction" class="com.shangde.flex.action.FlexVideoAction">
+		<property name="exampaperService" ref="exampaperService"/>
+		<property name="qstService" ref="qstService"/>
+		<property name="notesService" ref="notesService"/>
+		<property name="kpointService" ref="kpointService"/>
+		<property name="vedioService" ref="vedioService"/>
+		<property name="booksService" ref="booksService"/>
+   	</bean> 
+    <flex:remoting-destination ref="videoCommonAction" /> 
+</beans>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Feed_UniqueRecord_NS">
+
+	<typeAlias alias="FeedUniqueRecord" type="com.shangde.edu.feed.domain.UniqueRecord" />
+	
+	<sql id="FEED_Unique_Record_TBL_columns">
+		FEED_Unique_Record_TBL.ID,
+		FEED_Unique_Record_TBL.email,
+		FEED_Unique_Record_TBL.encrypt_email,
+		FEED_Unique_Record_TBL.object_id, 
+		FEED_Unique_Record_TBL.type,
+		FEED_Unique_Record_TBL.pubTime
+	</sql>
+	<sql id="FEED_Unique_Record_TBL_properties">
+		#id#, #email#, #encryptEmail#, #objectId#, #type#, #pubTime#
+	</sql>
+
+	<!-- 添加标签 -->
+	<insert id="createUniqueRecord" parameterClass="FeedUniqueRecord">
+		INSERT INTO FEED_Unique_Record_TBL (
+			<include refid="Feed_UniqueRecord_NS.FEED_Unique_Record_TBL_columns" />
+		) VALUES (
+			<include refid="Feed_UniqueRecord_NS.FEED_Unique_Record_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id" >   
+        	<include refid="public_sql.increment_sql"/>
+        </selectKey>
+	</insert>
+
+	<!-- 根据用户id，记录id，类型查询 -->
+	<select id="getUniqueRecord" resultClass="int" parameterClass="Map">
+		SELECT 
+			count(1)
+		FROM FEED_Unique_Record_TBL 
+			WHERE email = #email# and encrypt_email = #encryptEmail# AND object_id = #objectId# AND type = #type#
+	</select>
+	<!-- 根据用户id，记录id，类型删除 -->
+	<delete id="delUniqueRecord" parameterClass="Map">
+		DELETE 
+			FROM 
+		FEED_Unique_Record_TBL 
+			WHERE object_id = #objectId# AND type = #objectTypeId#
+	</delete>
+	
+</sqlMap>

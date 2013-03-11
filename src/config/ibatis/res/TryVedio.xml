@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Tryvedio_NS">
+        <!--table:RES_TRYVEDIO_TBL-->
+        <typeAlias alias="Tryvedio" type="com.shangde.edu.res.domain.Tryvedio"/>
+        <typeAlias alias="QueryTryvedioCondition" type="com.shangde.edu.res.condition.QueryTryvedioCondition"/>
+
+        <resultMap id="TryvedioResult" class="Tryvedio">
+            <result property="id" column="ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="picPath" column="PIC_PATH"/>
+            <result property="title" column="TITLE"/>
+            <result property="info" column="INFO"/>
+            <result property="buyMethod" column="BUY_METHOD"/>
+            <result property="clickTimes" column="CLICK_TIMES"/>
+            <result property="url" column="URL"/>
+            <result property="tryTimes" column="TRY_TIMES"/>
+        </resultMap>
+
+        <sql id="RES_TRYVEDIO_TBL_columns">
+            RES_TRYVEDIO_TBL.ID,
+            RES_TRYVEDIO_TBL.COURSE_ID,
+            RES_TRYVEDIO_TBL.ADD_TIME,
+            RES_TRYVEDIO_TBL.PIC_PATH,
+            RES_TRYVEDIO_TBL.TITLE,
+            RES_TRYVEDIO_TBL.INFO,
+            RES_TRYVEDIO_TBL.BUY_METHOD,
+            RES_TRYVEDIO_TBL.CLICK_TIMES,
+            RES_TRYVEDIO_TBL.URL,
+            RES_TRYVEDIO_TBL.TRY_TIMES
+        </sql>
+
+        <sql id="RES_TRYVEDIO_TBL_properties">
+            #id#,
+            #courseId#,
+            #addTime#,
+            #picPath#,
+            #title#,
+            #info#,
+            #buyMethod#,
+            #clickTimes#,
+            #url#,
+            #tryTimes#
+        </sql>
+
+        <insert id="createTryvedio" parameterClass="Tryvedio">
+            INSERT INTO RES_TRYVEDIO_TBL (<include refid="Tryvedio_NS.RES_TRYVEDIO_TBL_columns"/>) VALUES (<include refid="Tryvedio_NS.RES_TRYVEDIO_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTryvedioById" parameterClass="int">
+            DELETE FROM RES_TRYVEDIO_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateTryvedio" parameterClass="Tryvedio">
+            UPDATE RES_TRYVEDIO_TBL SET
+                ID = #id#,
+                COURSE_ID = #courseId#,
+                ADD_TIME = #addTime#,
+                PIC_PATH = #picPath#,
+                TITLE = #title#,
+                INFO = #info#,
+                BUY_METHOD = #buyMethod#,
+                CLICK_TIMES = #clickTimes#,
+                URL = #url#,
+                TRY_TIMES = #tryTimes#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getTryvedioById" resultMap="Tryvedio_NS.TryvedioResult" parameterClass="int">
+            SELECT
+            <include refid="Tryvedio_NS.RES_TRYVEDIO_TBL_columns"/>
+            FROM RES_TRYVEDIO_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getTryvedioList" resultMap="Tryvedio_NS.TryvedioResult" parameterClass="QueryTryvedioCondition">
+            SELECT
+            <include refid="Tryvedio_NS.RES_TRYVEDIO_TBL_columns"/>
+            FROM RES_TRYVEDIO_TBL
+        </select>
+        <!--end-->
+</sqlMap>

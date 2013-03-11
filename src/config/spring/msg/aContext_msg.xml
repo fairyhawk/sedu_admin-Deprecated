@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="messageService" class="com.shangde.edu.msg.service.MessageImpl" parent="baseService"/>
+    <bean id="userMsgService" class="com.shangde.edu.msg.service.UserMsgImpl" parent="baseService"/>
+    <bean id="messageRemindUtil" class="com.shangde.common.util.messageRemind.MessageRemindUtil">
+    	<property name="userMsgService" ref="userMsgService"></property>
+    	<property name="messageService" ref="messageService"></property>    
+    </bean>
+</beans>

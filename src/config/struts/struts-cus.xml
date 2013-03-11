@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- org配置 START -->
+	 <!-- 
+	<package name="urlDispacher" extends="edu-default">
+		<action name="kjz" method="toKjz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toKjz">/static/web/column/5/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="rl" method="toRl" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toRl">/static/web/column/4/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="sf" method="toSf" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toSf">/static/web/column/6/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa" method="toCpa" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa">/static/web/column/2/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa1" method="toCpa1" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa1">/static/web/column/98/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="zq" method="toZq" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toZq">/static/web/column/46/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		<action name="jz" method="toJz" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toJz">/static/web/column/75/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gk" method="toGk" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGk">/static/web/column/149/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gwy" method="toGwy" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGwy">/static/web/column/150/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+	</package>
+	   -->
+	<!-- org配置 END //-->
+	
+	<!-- cn配置 START -->
+	 <!-- 
+	<package name="urlDispacher" extends="edu-default">
+		<action name="kjz" method="toKjz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toKjz">/static/web/column/56/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="rl" method="toRl" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toRl">/static/web/column/55/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="sf" method="toSf" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toSf">/static/web/column/57/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa" method="toCpa" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa">/static/web/column/54/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa1" method="toCpa1" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa1">/static/web/column/77/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="zq" method="toZq" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toZq">/static/web/column/58/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		<action name="jz" method="toJz" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toJz">/static/web/column/76/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		<action name="gk" method="toGk" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGk">/static/web/column/78/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gwy" method="toGwy" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGwy">/static/web/column/141/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		<action name="cpa2" method="toCpa2" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toCpa2">/static/web/column/102/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		<action name="sf2" method="toSf2" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toSf2">/static/web/column/101/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+	</package>
+	    -->
+	<!-- cn配置 END //-->
+	
+	
+	<!-- org_cn配置 START -->
+	
+	<package name="urlDispacher" extends="edu-default">
+		<action name="kjz" method="toKjz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toKjz">/static/web/column/83/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="rl" method="toRl" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toRl">/static/web/column/82/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="sf" method="toSf" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toSf">/static/web/column/84/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa" method="toCpa" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa">/static/web/column/81/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa1" method="toCpa1" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa1">/static/web/column/98/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="zq" method="toZq" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toZq">/static/web/column/85/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		<action name="jz" method="toJz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toJz">/static/web/column/86/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gk" method="toGk" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGk">/static/web/column/143/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gwy" method="toGwy" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGwy">/static/web/column/141/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		<action name="xl" method="toXL" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toXL">/static/web/column/159/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+	</package>
+	  
+	<!-- org_cn配置 END //-->
+	
+	<!-- com_cn配置 START -->
+	<!-- 
+	<package name="urlDispacher" extends="edu-default">
+		<action name="kjz" method="toKjz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toKjz">/static/web/column/104/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="rl" method="toRl" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toRl">/static/web/column/103/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="sf" method="toSf" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toSf">/static/web/column/105/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa" method="toCpa" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa">/static/web/column/101/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa1" method="toCpa1" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa1">/static/web/column/102/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="zq" method="toZq" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toZq">/static/web/column/106/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="jz" method="toJz" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toJz">/static/web/column/107/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gk" method="toGk" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGk">/static/web/column/145/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gwy" method="toGwy" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGwy">/static/web/column/146/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+	</package>
+	    -->
+	<!-- com_cn配置 END //-->
+	
+	<!-- net_cn配置 START -->
+	 <!-- 
+	<package name="urlDispacher" extends="edu-default">
+		<action name="kjz" method="toKjz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toKjz">/static/web/column/124/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="rl" method="toRl" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toRl">/static/web/column/123/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="sf" method="toSf" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toSf">/static/web/column/125/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa" method="toCpa" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa">/static/web/column/121/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="cpa1" method="toCpa1" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toCpa1">/static/web/column/122/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="zq" method="toZq" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toZq">/static/web/column/126/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		<action name="jz" method="toJz" class="com.shangde.edu.cus.web.CustomerWebAction">
+			<result name="toJz">/static/web/column/127/index_1.shtml</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gk" method="toGk" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGk">/static/web/column/147/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="gwy" method="toGwy" class="com.shangde.edu.cus.web.CustomerWebAction">
+				<result name="toGwy">/static/web/column/148/index_1.shtml</result>
+				<interceptor-ref name="loginStack" />
+		</action>
+	</package>
+	     -->
+	<!-- net_cn配置 END //-->
+	
+    <package name="cus" namespace="/cus" extends="edu-default">
+		<!-- customer -->
+        <action name="cus" class="com.shangde.edu.cus.action.CustomerAction">
+	        <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+     	    <result name="list">/back/jsp/cus/customer/customer_list.jsp</result>
+     	    <result name="exportExcelCus" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="AllUsers.xls"</param>
+			</result> 
+			
+     	    <result name="forgotPwdPage">/back/jsp/cus/customer/customer_forgot_pwd.jsp</result>
+     	    <result name="forgotSuccess">/back/jsp/cus/customer/customer_forgot_pwd_success.jsp</result>
+        	<result name="addPage">/back/jsp/cus/customer/customer_add.jsp</result>
+        	<result name="updatePage">/back/jsp/cus/customer/customer_update.jsp</result>
+        	<result name="importCustomer">/back/jsp/cus/customer/customer_import.jsp</result>
+        	<result name="openCusCountList">/back/jsp/cus/customer/customer_count.jsp</result>
+        	<result name="getMonthDay">/back/jsp/cus/customer/customer_month_count.jsp</result>
+        	<result name="getDay">/back/jsp/cus/customer/customer_month_day.jsp</result>
+        	<result name="updatePwd">/back/jsp/cus/customer/customer_update_pwd.jsp</result>
+        	<result name="viewCus">/back/jsp/cus/customer/customer_view.jsp</result>
+        	<result name="relist" type="redirect">/cus/cus!showCustomerList.action?queryCustomerCondition.sex=${queryCustomerCondition.sex}&amp;
+        			queryCustomerCondition.cusName=${queryCustomerCondition.cusName}&amp;queryCustomerCondition.realName=${queryCustomerCondition.realName}
+        			&amp;queryCustomerCondition.currentPage=${queryCustomerCondition.currentPage}
+            </result>
+             <result name="freeCourse" type="redirect">/cou/course!listCoursesFree.action?cusId=${customer.cusId}</result>
+            <result name="freeCourse1" type="redirect">/cou/course!listCourses1Free.action?cusId=${customer.cusId}</result>
+           	<result name="toSendSMSForCus" type="dispatcher">/back/jsp/cus/customer/customer_sendsms.jsp</result>
+           		<result name="smsLimit" type="dispatcher">/back/jsp/cus/customer/smsLimit.jsp</result>
+           	<result name="customerCountDTOList">/back/jsp/cus/customer/customer_count_list.jsp</result>
+           	 <result name="dsCustomerCountDTOList">/back/jsp/cus/customer/ds_customer_count_list.jsp</result>
+           	<result name="customerCountDTOListmonth">/back/jsp/cus/customer/customer_count_list_month.jsp</result>
+           	<!-- 李明添加 开始-->
+           	<result name="sendNoteContentList">/back/jsp/cus/customer/customer_sellContent_list.jsp</result>
+           	<result name="getSerchContentInfo">/back/jsp/cus/customer/customer_single_content.jsp</result>
+           	<result name="getSerchContentInfo">/back/jsp/cus/customer/customer_single_content.jsp</result>
+           	<result name="serchDisplayInfoAll">/back/jsp/cus/customer/customer_displayinfo.jsp</result>
+           	<!-- 李明结束 -->
+           	<result name="cusLoginCount">/back/jsp/cus/customer/cus_login_count.jsp</result>
+        </action>
+        <action name="cusweb" class="com.shangde.edu.cus.web.CustomerWebAction" >
+			<result name="loginFail" type="redirect">/static/web/login/login.html?loginMessage=loginFail&amp;back=${back}</result>
+			<result name="loginDangerWord" type="redirect">/static/web/login/login.html?loginMessage=loginDangerWord&amp;back=${back}</result>
+			<result name="emailInUsed" type="redirect">/static/web/login/login.html?registerMessage=emailInUsed&amp;back=${back}</result>
+			<result name="registerSuccess" type="redirect">/static/web/login/login_success.html</result>
+			<result name="loginBack" type="redirect">/static/web/login/login_back.html</result>
+			<result name="userCenter" type="redirect">/cus/cuslimit!toUserCenter.action</result>
+			<result name="regDangerWord" type="redirect">/static/web/login/login.html?registerMessage=regDangerWord&amp;back=${back}</result>
+        	<result name="reList" type="redirect">/iphone/sellwayiphone!getSellWayByCusId.action?customer.cusId=${customer.cusId}</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+        <action name="cuslimit" class="com.shangde.edu.cus.web.CustomerWebAction" >
+			<result name="userCenter">/static/usercenter/jsp/user_center.jsp</result>
+        	<result name="initCusInfo">/static/usercenter/jsp/userinfo/user_info.jsp</result>
+        	<result name="initStudyPlan">/static/usercenter/jsp/studyplan/study_plan.jsp</result>
+        	<result name="startStudyPlan">/static/usercenter/jsp/studyplan/study_plan.jsp</result>
+        	<result name="toInfCenter">/static/usercenter/jsp/inf/inf_center.jsp</result>
+        	<result name="toInfList">/static/usercenter/jsp/inf/inf_list.jsp</result>
+        	<result name="toStudyPlan">/static/usercenter/jsp/studyplan/study_plan.jsp</result>
+        	<result name="toDiscuss">/static/usercenter/jsp/discuss/discuss.jsp</result>
+        	<result name="toComment">/static/usercenter/jsp/comment/comment.jsp</result>
+        	<result name="toAssess" type="redirect">/ass/assweb!toAssess.action</result>
+        	<result name="toPayOk">/static/web/global/payok.jsp</result>
+        	
+         	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<!-- 上传 -->
+			<param name="savePath">upload/customer/tempPic</param>
+			
+			<interceptor-ref name="fileUpload">
+                <param name="maximumSize">2048000</param>  
+            </interceptor-ref>
+            <!-- 上传 -->
+            
+            <exception-mapping result="initCusInfo" exception="java.lang.Exception"></exception-mapping>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+		<!-- customer end -->
+		
+		<!-- studyPlan -->
+        <action name="splimit" class="com.shangde.edu.cus.web.StudyPlanWebAction" >
+        	<result name="initStudyPlan">/static/web/usercenter/studyplan/study_plan.jsp</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+        <!-- studyPlan end --> 
+		
+		<!-- areaWeb -->
+        <action name="areaWeb" class="com.shangde.edu.cus.web.AreaWebAction" >
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+        <!-- areaWeb end --> 
+		
+		<!-- addrWeb -->
+        <action name="addrWeb" class="com.shangde.edu.cus.web.AddressWebAction" >
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+        <!-- addrWeb end --> 
+		
+		<!-- addrWeb -->
+        <action name="addrlimit" class="com.shangde.edu.cus.web.AddressWebAction" >
+        	<result name="showAddressList">/static/usercenter/jsp/contract/caiwu.jsp</result>
+        	<result name="reshowAddressList" type="redirect">/cus/addrlimit!showAddressList.action?location=2</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+        <!-- addrWeb end --> 
+             <!-- problem --> 
+          <action name="pblimit" class="com.shangde.edu.cus.web.ProblemWebAction" >
+          	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="wenda">/static/usercenter/jsp/problem/wenda.jsp</result>
+			<result name="wenda_jihe">/static/usercenter/jsp/problem/wenda_jihe.jsp</result>
+			<result name="wenda_weiti">/static/usercenter/jsp/problem/wenda_weiti.jsp</result>
+			<result name="mywenda" type="redirect">
+			   pblimit!getMyProblem.action?queryProblemCondition.currentPage=1
+			</result> 
+			<result name="mwenda" type="redirect">
+			   pblimit!getHighSoProblem.action?strBug=1
+			</result>
+			<result name="errorwenda"></result>
+			<result name="wenda_detail">/static/usercenter/jsp/problem/wenda_detail.jsp</result>
+			<result name="everyonewenda" type="redirect">
+			   pblimit!getEveryOneContent.action?problem.pblId=${problem.pblId}
+			</result>
+			<result name="myansw" type="redirect">
+			   pblimit!getMyAnswerContent.action?problem.pblId=${problem.pblId}
+			</result>
+			<result name="wenda_myque">/static/usercenter/jsp/problem/wenda_myque.jsp</result>
+			<result name="myanswer">/static/usercenter/jsp/problem/wenda_huida.jsp</result>
+			<result name="myanswercontent">/static/usercenter/jsp/problem/wenda_myans.jsp</result>
+			<result name="toupdatemyans">/static/usercenter/jsp/problem/wenda_update_myans.jsp</result>
+			<result name="mywendaIsResult" type="redirect">     
+        		pblimit!getMyProblemContent.action?problem.pblId=${problem.pblId}
+			</result>
+			<result name="mwendaIsResult" type="redirect">     
+        		pblimit!getMyProblemContent.action?problem.pblId=${problem.pblId}&amp;strRes=1
+			</result>
+	      	 <result name="deletemywenda" type="redirect">     
+        		pblimit!getMyProblem.action?queryProblemCondition.currentPage=1
+			</result>
+			<result name="loginError" type="redirect">
+			pblimit!openProblem.action?course.courseId=${course.courseId}&amp;queryProblemCondition.currentPage=1&amp;randomCode=${randomCode}
+			</result>
+			<result name="reshowAdviceMsgList" type="redirect">
+        		/msg/webmsg!listReceiveMsgs.action?queryUserMsgCondition.currentPage=1
+        	</result>
+			<result name="myAdvice">/static/usercenter/jsp/advice/myAdvice.jsp</result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+        <!-- problem  end -->
+         <!-- reproblem --> 
+          <action name="repbl" class="com.shangde.edu.cus.action.ReProblemAction" >
+            <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+        	<result name="getProblemList">/back/jsp/cus/reproblem/reproblem_list.jsp</result>
+        	<result name="toReProblem">/back/jsp/cus/reproblem/reproblem_add.jsp</result>
+        	<result name="problemview">/back/jsp/cus/reproblem/problem_view.jsp</result>
+        	<result name="toeditproblem">/back/jsp/cus/reproblem/problem_edit.jsp</result>
+        	<result name="deleteProblemSuccess" type="redirect">/cus/repbl!getProblemList.action?queryProblemCondition.currentPage=1</result>
+        </action>
+      <!-- reproblem  end--> 
+        <!-- totolsScore --> 
+          <action name="totolsScore" class="com.shangde.edu.cus.action.TotolsScoreAction" >
+        	<result name="getTotolsScoreList">/back/jsp/cus/score/totolsScore_list.jsp</result>
+        	<result name="deleteSuccess" type="redirect">/cus/totolsScore!getTotolsScoreList.action?queryTotolsScoreCondition.currentPage=1</result>
+        </action>
+      <!-- totolsScore  end--> 
+       <!-- tsRecord --> 
+          <action name="tsRecord" class="com.shangde.edu.cus.action.TsRecordAction" >
+        	<result name="getTsRecordList">/back/jsp/cus/score/tsRecord_list.jsp</result>
+        </action>
+      <!-- tsRecord  end--> 
+       <!-- tsRecordweb --> 
+          <action name="tsRecordweb" class="com.shangde.edu.cus.web.TsRecordWebAction" >
+        	<result name="getTsRecordListByCus">/static/usercenter/jsp/contract/caiwu.jsp</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+      <!-- tsRecordweb  end--> 
+       <!-- totolsScore web --> 
+          <action name="totolsScoreweb" class="com.shangde.edu.cus.web.TotolsScoreWebAction" >
+        	<result name="success">/static/web/jifen/forSuccess.html</result>
+        	<result name="success">/static/web/jifen/forFail.html</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+      <!-- totolsScore web  end--> 
+        <action name="fix" class="com.shangde.edu.cus.test.FinaceFixAction" >
+        <result name="success">/static/web/jifen/forFail.html</result>
+        </action>
+        
+        <action name="cusOrder" class="com.shangde.edu.cus.action.CustomerOrderAction">
+		
+		<result name="orderList">
+		/back/jsp/cus/customer/customer_listOrder.jsp</result>
+		
+		<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+		
+		<result name="simpleStat">
+		/back/jsp/cus/customer/simpleStat.jsp</result>
+		
+		<result name="designateError">
+		/back/jsp/cus/customer/designateError.jsp</result>
+		
+		<result name="toAddDesignate">
+		/back/jsp/cus/customer/designateAdd.jsp</result>
+		
+		<result name="toUpdateDesignate">
+		/back/jsp/cus/customer/designateUpdate.jsp</result>
+		
+			<result name="toOrderList" >
+/back/jsp/cus/customer/designateSuccess.jsp</result>
+		
+		<result name="simStat">/back/jsp/cus/customer/simstat.jsp</result>
+		
+			<result name="exportExcelCus" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="AllUsers.xls"</param>
+			</result> 
+			
+			<result name="simStatExportExcelFile" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="XiaoShouZhuiHuTongJi.xls"</param>
+			</result>
+		
+		</action>
+		<action name="abnormalCus" class="com.shangde.edu.cus.action.AbnormalCustomerAction">
+			<result name="success">/back/jsp/cus/customer/abnormal_customer_list.jsp</result>
+			<result name="showLoginDetial">/back/jsp/cus/customer/showLoginDetial.jsp</result>
+			<result name="showFreezeLogDetial">/back/jsp/cus/customer/showFreezeLogDetial.jsp</result>
+		</action>
+    </package>
+</struts>

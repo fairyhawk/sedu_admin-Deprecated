@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="trolley" namespace="/trolley" extends="edu-default">
+    	<action name="trolleyManager" class="com.shangde.edu.trolley.action.trolleyAction">
+    		<result name="addsuccess" >/web/jsp/shop/shop_step1.jsp</result>
+    		<result name="delsuccess"  >/web/jsp/shop/shop_step1.jsp</result>
+    		<result name="ordersuccess" type="redirect">/web/jsp/shop/shop_step3.jsp</result>
+    		<interceptor-ref name="loginStack" />             
+    	</action>
+    	<action name="trolleyManagerLimit" class="com.shangde.edu.trolley.action.trolleyAction">
+    		<result name="chosesuccess"  >/web/jsp/shop/shop_step2.jsp</result>
+    		<result name="toOrderListForUCenter"  >/web/jsp/shop/user_shop.jsp</result>
+    		<interceptor-ref name="eduStackForWeb" />           
+    	</action>
+    </package>
+</struts>

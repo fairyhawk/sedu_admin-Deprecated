@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    	<bean id="sellrecordService" class="com.shangde.edu.crm.service.SellrecordImpl" parent="baseServiceManyDb"/>
+        <bean id="chanceService" class="com.shangde.edu.crm.service.ChanceImpl" parent="baseServiceManyDb"/>
+	    <bean id="recordService" class="com.shangde.edu.crm.service.RecordImpl" parent="baseService"/>
+	    <bean id="usersService" class="com.shangde.edu.crm.service.UsersImpl" parent="baseService"/>
+	    <bean id="chanceReadService" class="com.shangde.edu.crm.service.ChanceReadImpl" parent="baseServiceManyDb"/>
+</beans>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Plan_NS">
+        <!--table:STU_PLAN_TBL-->
+        <typeAlias alias="Plan" type="com.shangde.edu.stu.domain.Plan"/>
+        <typeAlias alias="QueryPlanCondition" type="com.shangde.edu.stu.condition.QueryPlanCondition"/>
+
+        <resultMap id="PlanResult" class="Plan">
+            <result property="planId" column="PLAN_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="opendate" column="OPENDATE"/>
+            <result property="enddate" column="ENDDATE"/>
+            <result property="pstatus" column="PSTATUS"/>
+            <result property="publish" column="PUBLISH"/>
+            <result property="handledate" column="HANDLEDATE"/>
+            <result property="picon" column="PICON"/>
+            <result property="content" column="CONTENT"/>
+            <result property="cityname" column="CITYNAME"/>
+            <result property="citypinyin" column="CITYPINYIN"/>
+            <result property="plantitle" column="PLANTITLE"/>
+            
+        </resultMap>
+        
+       <resultMap id="PlanResultBack" class="Plan">
+            <result property="planId" column="PLAN_ID"/>
+            <result property="cusId" column="STU_PLAN_TBL.CUS_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="opendate" column="OPENDATE"/>
+            <result property="enddate" column="ENDDATE"/>
+            <result property="pstatus" column="PSTATUS"/>
+            <result property="publish" column="PUBLISH"/>
+            <result property="handledate" column="HANDLEDATE"/>
+            <result property="picon" column="PICON"/>
+            <result property="content" column="CONTENT"/>
+            <result property="cityname" column="CITYNAME"/>
+            <result property="citypinyin" column="CITYPINYIN"/>
+            <result property="plantitle" column="PLANTITLE"/>
+            
+            <result property="cusName" column="CUS_NAME"/>
+            <result property="email" column="EMAIL"/>
+            
+        </resultMap>
+
+        <sql id="STU_PLAN_TBL_columns">
+            STU_PLAN_TBL.PLAN_ID, 
+            STU_PLAN_TBL.CUS_ID,
+            STU_PLAN_TBL.COURSE_ID,
+            STU_PLAN_TBL.OPENDATE,
+            STU_PLAN_TBL.ENDDATE,
+            STU_PLAN_TBL.PSTATUS,
+            STU_PLAN_TBL.PUBLISH,
+            STU_PLAN_TBL.HANDLEDATE,
+            STU_PLAN_TBL.PICON,
+            STU_PLAN_TBL.CONTENT,
+            STU_PLAN_TBL.CITYNAME,
+            STU_PLAN_TBL.CITYPINYIN,
+            STU_PLAN_TBL.PLANTITLE
+        </sql>
+        
+        <sql id="CUS_CUSTOMER_TBL_columns">
+            CUS_CUSTOMER_TBL.CUS_NAME , 
+            CUS_CUSTOMER_TBL.EMAIL
+        </sql>
+
+        <sql id="STU_PLAN_TBL_properties">
+            #planId#,
+            #cusId#,
+            #courseId#,
+            #opendate#,
+            #enddate#,
+            #pstatus#,
+            #publish#,
+            #handledate#,
+            #picon#,
+            #content#,
+            #cityname#,
+            #citypinyin#,
+            #plantitle#
+        </sql>
+
+        <insert id="createPlan" parameterClass="Plan">
+            INSERT INTO STU_PLAN_TBL (<include refid="Plan_NS.STU_PLAN_TBL_columns"/>) VALUES (<include refid="Plan_NS.STU_PLAN_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="planId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+
+        <delete id="deletePlanById" parameterClass="int">
+            DELETE FROM STU_PLAN_TBL
+            WHERE 
+                PLAN_ID = #value#
+
+        </delete>
+        
+        <select id="getPlanById" resultMap="Plan_NS.PlanResult" parameterClass="int">
+            SELECT
+            <include refid="Plan_NS.STU_PLAN_TBL_columns"/>
+            FROM STU_PLAN_TBL
+            WHERE
+            	PLAN_ID = #value#
+
+        </select>
+        
+        <!-- 按照日历导航，查询出当天的计划 -->
+        <select id="getPlanByDate" resultMap="Plan_NS.PlanResult" parameterClass="QueryPlanCondition">
+            SELECT
+            <include refid="Plan_NS.STU_PLAN_TBL_columns"/>
+            FROM STU_PLAN_TBL  
+	            WHERE CUS_ID =  #cusId# 
+	            <!-- and  COURSE_ID = #courseId# -->
+            	<isNotEmpty prepend="AND" property="calendar">
+            		( OPENDATE LIKE '%$calendar$%')
+            	</isNotEmpty>
+            	and PSTATUS != 2
+            	limit 1
+        </select>
+        
+
+        <update id="updatePlan" parameterClass="Plan">
+            UPDATE STU_PLAN_TBL SET
+                PLAN_ID = #planId#,
+                CUS_ID = #cusId#,
+                COURSE_ID = #courseId#,
+                OPENDATE = #opendate#,
+                ENDDATE = #enddate#,
+                PSTATUS = #pstatus#,
+                PUBLISH = #publish#,
+                HANDLEDATE = #handledate#,
+                PICON = #picon#,
+                CONTENT = #content#,
+                CITYNAME = #cityname#,
+                CITYPINYIN = #citypinyin#,
+                PLANTITLE = #plantitle#
+            WHERE
+     			PLAN_ID = #planId#
+        </update>
+       
+        <!-- 前台分页 查询 -->
+        <select id="getPlanListCount" resultClass="int" parameterClass="QueryPlanCondition">
+            SELECT COUNT(1)
+            FROM STU_PLAN_TBL
+            <dynamic prepend="WHERE">
+            	<isNotEmpty prepend="AND" property="cusId">
+            		CUS_ID = #cusId#
+            	</isNotEmpty>
+            	and PSTATUS != 2
+            </dynamic>
+            ORDER BY publish DESC
+        </select> 
+
+        <select id="getPlanList" resultMap="Plan_NS.PlanResult" parameterClass="QueryPlanCondition">
+            SELECT
+            <include refid="Plan_NS.STU_PLAN_TBL_columns"/>
+            FROM STU_PLAN_TBL
+              <dynamic prepend="WHERE">
+            	<isNotEmpty prepend="AND" property="cusId">
+            		CUS_ID = #cusId#
+            	</isNotEmpty>
+            	and PSTATUS != 2
+            </dynamic>
+             ORDER BY publish DESC
+             <include refid="public_sql.page_end"/>
+        </select>
+ 
+ 		<!-- 后台分页 查询 -->
+        <!-- 查询所有的计划，QueryPlanCondition为空对象 -->
+        <select id="getBackPlanList" resultMap="Plan_NS.PlanResultBack" parameterClass="QueryPlanCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT 
+            <include refid="Plan_NS.STU_PLAN_TBL_columns"/>,<include refid="Plan_NS.CUS_CUSTOMER_TBL_columns"/>
+            FROM STU_PLAN_TBL,CUS_CUSTOMER_TBL
+            where STU_PLAN_TBL.cus_id = CUS_CUSTOMER_TBL.cus_id
+            ORDER BY  STU_PLAN_TBL.PLAN_ID DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 后台分页 查询 -->
+        <select id="getBcakPlanListCount" resultClass="int" parameterClass="QueryPlanCondition">
+            SELECT COUNT(1)
+            FROM STU_PLAN_TBL,CUS_CUSTOMER_TBL
+            where STU_PLAN_TBL.cus_id = CUS_CUSTOMER_TBL.cus_id
+            ORDER BY  STU_PLAN_TBL.PLAN_ID DESC
+        </select>        
+     
+        
+        <!-- 按照日历导航，查询出该月的所有计划 -->
+        <select id="getPlanListByCalendar" resultMap="Plan_NS.PlanResult" parameterClass="QueryPlanCondition">
+            SELECT
+            <include refid="Plan_NS.STU_PLAN_TBL_columns"/>
+            FROM STU_PLAN_TBL
+             <dynamic prepend="WHERE">
+            	<isNotNull prepend="AND" property="calendar">
+            		( OPENDATE LIKE '%$calendar$%')
+            	</isNotNull>
+            	<isNotEmpty prepend="AND" property="cusId">
+            		CUS_ID = #cusId#
+            	</isNotEmpty>
+            	and PSTATUS != 2
+            </dynamic>
+        </select>
+        
+        
+         <select id="getAllCustomerCount" resultClass="int">
+            SELECT COUNT(cus_id) FROM cus_customer_tbl
+        </select> 
+        
+        <select id="getUserCustomerCount" resultClass="int">
+            select count(tbl.num) from (select cus_id as num from stu_plan_tbl group by cus_id) as tbl
+        </select>
+         
+        <select id="getCustomerUserMoreTen" resultClass="int">
+           select count(tbl_temp.num) from (select cus_id,count(cus_id) as num from stu_plan_tbl group by cus_id) as tbl_temp where tbl_temp.num>=10
+        </select> 
+
+        <!-- 按条件检索计划 -->
+        <select id="searchPlanByParam" resultMap="Plan_NS.PlanResultBack" parameterClass="QueryPlanCondition">
+        	<include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Plan_NS.STU_PLAN_TBL_columns"/>,<include refid="Plan_NS.CUS_CUSTOMER_TBL_columns"/>
+            FROM STU_PLAN_TBL,CUS_CUSTOMER_TBL
+            
+            <dynamic prepend="WHERE">
+                STU_PLAN_TBL.cus_id = CUS_CUSTOMER_TBL.cus_id   AND
+            	<!-- 
+            	<isNotNull prepend="AND" property="cusName">
+            		( CUS_CUSTOMER_TBL.CUS_NAME LIKE '%$cusName$%')
+            	</isNotNull>
+            	 -->
+            	<isNotNull prepend="AND" property="email">
+            		( CUS_CUSTOMER_TBL.EMAIL LIKE '%$email$%')
+            	</isNotNull>
+            
+            	<isNotNull prepend="AND" property="pstatus">
+            		<isNotEqual property="pstatus" compareValue="-1">
+            			PSTATUS = #pstatus#
+            		</isNotEqual>
+            	</isNotNull>
+            	
+             	<isNotEmpty prepend="AND" property="stapublish">
+            		PUBLISH >= #stapublish#
+            		<isNotEmpty prepend="AND" property="endpublish">
+	            		#endpublish# >= PUBLISH
+	            	</isNotEmpty>
+            	</isNotEmpty>
+           	
+            	<isNotEmpty prepend="AND" property="stahandledate">
+            		HANDLEDATE >= #stahandledate#
+            		<isNotEmpty prepend="AND" property="endhandledate">
+	            		#endhandledate# >= HANDLEDATE
+	            	</isNotEmpty>
+            	</isNotEmpty>
+            	 ORDER BY  STU_PLAN_TBL.PLAN_ID DESC
+            </dynamic>
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 分页 检索 -->
+        <select id="searchPlanByParamCount" resultClass="int" parameterClass="QueryPlanCondition">
+           	SELECT COUNT(1)
+            FROM STU_PLAN_TBL,CUS_CUSTOMER_TBL
+           
+            <dynamic prepend="WHERE">
+            	STU_PLAN_TBL.cus_id = CUS_CUSTOMER_TBL.cus_id  AND
+            	<!--  
+            	<isNotNull prepend="AND" property="cusName">
+            		( CUS_CUSTOMER_TBL.CUS_NAME LIKE '%$cusName$%')
+            	</isNotNull>
+            	-->
+            	<isNotNull prepend="AND" property="email">
+            		( CUS_CUSTOMER_TBL.EMAIL LIKE '%$email$%')
+            	</isNotNull>
+            
+            	<isNotNull prepend="AND" property="pstatus">
+            		<isNotEqual property="pstatus" compareValue="-1">
+            			PSTATUS = #pstatus#
+            		</isNotEqual>
+            	</isNotNull>
+            	
+             	<isNotEmpty prepend="AND" property="stapublish">
+            		PUBLISH >= #stapublish#
+            		<isNotEmpty prepend="AND" property="endpublish">
+	            		#endpublish# >= PUBLISH
+	            	</isNotEmpty>
+            	</isNotEmpty>
+           	
+            	<isNotEmpty prepend="AND" property="stahandledate">
+            		HANDLEDATE >= #stahandledate#
+            		<isNotEmpty prepend="AND" property="endhandledate">
+	            		#endhandledate# >= HANDLEDATE
+	            	</isNotEmpty>
+            	</isNotEmpty>
+            	 ORDER BY  STU_PLAN_TBL.PLAN_ID DESC
+            </dynamic>
+        </select>
+        
+        
+        <!--end-->
+</sqlMap>

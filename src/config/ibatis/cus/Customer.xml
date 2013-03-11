@@ -1,0 +1,1678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Customer_NS">
+	<!--table:CUS_CUSTOMER_TBL -->
+	<typeAlias alias="Customer" type="com.shangde.edu.cus.domain.Customer" />
+	<typeAlias alias="SimpleCustomerDTO" type="com.shangde.edu.cus.dto.SimpleCustomerDTO" />
+	<typeAlias alias="QueryCustomerCondition"
+		type="com.shangde.edu.cus.condition.QueryCustomerCondition" />
+	<typeAlias alias="QueryContractCondition"
+		type="com.shangde.edu.finance.condition.QueryContractCondition" />
+		<!-- 学员统计 -->
+	<typeAlias alias="CustomerNewDTO" type="com.shangde.edu.cus.domain.CustomerNewDTO" />	
+	<!-- 订单实收统计 -->
+	<typeAlias alias="CustomerCountNewDTO" type="com.shangde.edu.cus.dto.CustomerCountNewDTO" />	
+	<typeAlias alias="CusLoginCountDTO" type="com.shangde.edu.cus.dto.CusLoginCountDTO" />
+	<!-- 配置缓存模型 -->
+	<cacheModel id="Customer_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="Customer_NS.createCustomer" />
+			<flushOnExecute statement="Customer_NS.updateCustomer" />
+			<flushOnExecute statement="Customer_NS.updateCustomerNewerFlag" />
+			<flushOnExecute statement="Customer_NS.updateCustomerName" />
+			<flushOnExecute statement="Customer_NS.deleteCustomerById" />
+			<property value="1000" name="size" />
+	</cacheModel>
+	<resultMap id="CustomerNewDTOResult" class="CustomerNewDTO">
+		<result property="allStudent" column="allStudent" />
+		<result property="regStudent" column="regStudent" />
+		<result property="interStudent" column="interStudent" />
+		<result property="allOrder" column="allOrder" />
+		<result property="bankOrder" column="bankOrder" />
+		<result property="dtoOrder" column="dtoOrder" />
+		<result property="cancelOrder" column="cancelOrder" />
+		<result property="insideOrder" column="insideOrder" />
+		<result property="agentsOrder" column="agentsOrder" />
+		<result property="bankOrderPaid" column="bankOrderPaid" />
+		<result property="dtoOrderPaid" column="dtoOrderPaid" />
+		<result property="afterAmount" column="afterAmount" />
+		<result property="Refund" column="Refund" />
+		<result property="transferOrder" column="transferOrder" />
+		<result property="transferOrderPaid" column="transferOrderPaid" />	
+		<!-- 无效订单 -->
+<!-- 		<result property="invalidOrder" column="invalidOrder" />	 -->
+		<result property="subName" column="SUBJECT_NAME" />	
+	</resultMap>
+	
+	<resultMap id="CustomerCountNewDTOResult" class="CustomerCountNewDTO">
+		<result property="dt" column="dt" />
+		<result property="totalAmount" column="totalAmount" />
+		<result property="ordersPaid" column="ordersPaid" />
+		<result property="allOrders" column="allOrders" />
+		<result property="allStudent" column="allStudent" />
+	</resultMap>
+	
+	
+	<!-- temp -->
+	<typeAlias alias="Contract1" type="com.shangde.edu.finance.domain.Contract" />
+	<resultMap id="ContractResult" class="Contract1">
+		<result property="cusId" column="CUS_ID" />
+		<result property="id" column="ID" />
+		<result property="contractId" column="CONTRACT_ID" />
+		<result property="contractFrom" column="CONTRACT_FROM" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="status" column="STATUS" />
+		<result property="payType" column="PAY_TYPE" />
+		<result property="remark" column="REMARK" />
+		<result property="contractSumMoney" column="CONTRACT_SUMMONEY" />
+		<result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY" />
+		<result property="useCoupon" column="USECOUPON" />
+		<result property="couponMoney" column="COUPON_MONEY" />
+		<result property="payTime" column="PAY_TIME" />
+		<result property="callSum" column="CALL_SUM" />
+	</resultMap>
+
+	<sql id="FINANCE_CONTRACT_TBL_columns">
+		FINANCE_CONTRACT_TBL.CUS_ID, FINANCE_CONTRACT_TBL.ID,
+		FINANCE_CONTRACT_TBL.CONTRACT_ID,
+		FINANCE_CONTRACT_TBL.CONTRACT_FROM,
+		FINANCE_CONTRACT_TBL.CREATE_TIME, FINANCE_CONTRACT_TBL.STATUS,
+		FINANCE_CONTRACT_TBL.PAY_TYPE, FINANCE_CONTRACT_TBL.REMARK,
+		FINANCE_CONTRACT_TBL.CONTRACT_SUMMONEY,
+		FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,
+		FINANCE_CONTRACT_TBL.USECOUPON,
+		FINANCE_CONTRACT_TBL.COUPON_MONEY,
+		FINANCE_CONTRACT_TBL.PAY_TIME, FINANCE_CONTRACT_TBL.CALL_SUM
+	</sql>
+	<!-- temp end -->
+
+	<resultMap id="CustomerResult" class="Customer">
+		<result property="cusId" column="CUS_ID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="cusPwd" column="CUS_PWD" />
+		<result property="email" column="EMAIL" />
+		<result property="mobile" column="MOBILE" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="sex" column="SEX" />
+		<result property="idNum" column="ID_NUM" />
+		<result property="qq" column="QQ" />
+		<result property="photo" column="PHOTO" />
+		<result property="lastloginIP" column="LASTLOGIN_IP" />
+		<result property="lastloginTime" column="LASTLOGIN_TIME" />
+		<result property="regTime" column="REG_TIME" />
+		<result property="birthday" column="BIRTHDAY" />
+		<result property="loginTimes" column="LOGIN_TIMES" />
+		<result property="isComplete" column="IS_COMPLETE" />
+		<result property="completeTime" column="COMPLETE_TIME" />
+		<result property="MSN" column="MSN" />
+		<result property="address" column="ADDRESS" />
+		<result property="cusType" column="CUS_TYPE" />
+		<result property="studyType" column="STUDY_TYPE" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="cusFromUrl" column="CUS_FROM_URL" />
+		<result property="cusWebFrom" column="CUS_WEB_FROM" />
+		<result property="cusWebAgent" column="CUS_WEB_AGENT" />
+		<result property="fromType" column="FROMTYPE" />
+		<result property="freezeStatus" column="FREEZE_STATUS" /><!-- NEW ADDED -->
+		<result property="freezeChangedDate" column="FREEZE_CHANGED_DATE" /><!-- NEW ADDED -->
+	</resultMap>
+
+	<resultMap id="SimpleCustomerDTOResult" class="SimpleCustomerDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="cusType" column="CUS_TYPE" />
+	</resultMap>
+	<resultMap id="SubjectCustomerDTOResult" class="com.shangde.edu.cus.domain.SubjectCustomerDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="contractNumber" column="CUS_ID"
+			select="Contract_NS.getUserContractCount" />
+		<result property="contractNumberPay" column="CUS_ID"
+			select="Contract_NS.getUserContractCountPay" />
+	</resultMap>
+	<resultMap id="CustomerResultWithLoginRecord" class="Customer"
+		extends="CustomerResult">
+		<result property="loginRecordList" column="CUS_ID"
+			select="LoginRecord_NS.getLoginRecordListByCusLimit5" />
+		<result property="cusProtocalDetailList" column="CUS_ID" select="CusProtocalDetail_NS.getCusProtocalDetailByCusId" />
+	</resultMap>
+
+	<resultMap id="CustomerWithConSizeResult"
+		class="com.shangde.edu.cus.domain.CustomerWithConSizeDTO" extends="CustomerResultWithLoginRecord">
+		<result property="contractCount" column="CONTRACT_COUNT" />
+		<result property="contractStatus" column="CONTRACT_STATUS" />
+		<result property="createtime" column="CREATE_TIME" />
+		<result property="paytime" column="PAY_TIME" />
+		<result property="payStatus" column="PAY_STATUS" />
+		<result property="cancelStatus" column="CANCEL_STATUS" />
+		<result property="cusSubject" column="SUBJECT_ID"
+			select="Subject_NS.getSubjectById" />
+		<result property="sellrecord" column="CUS_ID"
+			select="Sellrecord_NS.getSellrecordByCUSId" />
+		<result property="isProtocal" column="CUS_ID" select="Customer_NS.getIsProtocal" />
+	</resultMap>
+	<resultMap class="Customer" id="CustomerEmailAndMobileResult">
+		<result property="email" column="cus_customer_tbl.EMAIL" />
+		<result property="mobile" column="cus_customer_tbl.MOBILE" />
+	</resultMap>
+
+	<sql id="CUS_CUSTOMER_TBL_columns">
+		CUS_CUSTOMER_TBL.CUS_ID, CUS_CUSTOMER_TBL.CUS_NAME,
+		CUS_CUSTOMER_TBL.CUS_PWD, CUS_CUSTOMER_TBL.EMAIL,
+		CUS_CUSTOMER_TBL.MOBILE, CUS_CUSTOMER_TBL.REAL_NAME,
+		CUS_CUSTOMER_TBL.SEX, CUS_CUSTOMER_TBL.ID_NUM,
+		CUS_CUSTOMER_TBL.QQ,
+		CUS_CUSTOMER_TBL.PHOTO,
+		CUS_CUSTOMER_TBL.LASTLOGIN_IP,
+		CUS_CUSTOMER_TBL.LASTLOGIN_TIME,
+		CUS_CUSTOMER_TBL.REG_TIME,
+		CUS_CUSTOMER_TBL.BIRTHDAY,
+		CUS_CUSTOMER_TBL.LOGIN_TIMES,
+		CUS_CUSTOMER_TBL.IS_COMPLETE,
+		CUS_CUSTOMER_TBL.COMPLETE_TIME,
+		CUS_CUSTOMER_TBL.MSN,
+		CUS_CUSTOMER_TBL.ADDRESS,
+		CUS_CUSTOMER_TBL.CUS_TYPE,
+		CUS_CUSTOMER_TBL.STUDY_TYPE,
+		CUS_CUSTOMER_TBL.SUBJECT_ID,
+		CUS_CUSTOMER_TBL.CUS_FROM_URL,
+		CUS_CUSTOMER_TBL.CUS_WEB_FROM,
+		CUS_CUSTOMER_TBL.CUS_WEB_AGENT,
+		CUS_CUSTOMER_TBL.FROMTYPE,
+		CUS_CUSTOMER_TBL.FREEZE_STATUS,
+		CUS_CUSTOMER_TBL.FREEZE_CHANGED_DATE
+	</sql>
+
+	<sql id="CUS_CUSTOMER_TBL_properties">
+		#cusId#, #cusName#, #cusPwd#, #email#, #mobile#,
+		#realName#,
+		#sex#, #idNum#, #qq#, #photo#, #lastloginIP#,
+		#lastloginTime#,
+		#regTime#, #birthday#, #loginTimes#, #isComplete#,
+		#completeTime#, #MSN#, #address#, #cusType#, #studyType#,
+		#subjectId#,
+		#cusFromUrl#,#cusWebFrom#,#cusWebAgent#, #fromType#,
+		#freezeStatus#, #freezeChangedDate#
+	</sql>
+
+	<insert id="createCustomer" parameterClass="Customer">
+		INSERT INTO CUS_CUSTOMER_TBL (
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		) VALUES (
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="cusId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteCustomerById" parameterClass="int">
+		DELETE FROM
+		CUS_CUSTOMER_TBL WHERE CUS_ID = #value#
+	</delete>
+
+	<update id="updateCustomer" parameterClass="Customer">
+		UPDATE
+		CUS_CUSTOMER_TBL SET CUS_ID = #cusId#, CUS_NAME =
+		#cusName#, CUS_PWD =
+		#cusPwd#, EMAIL = #email#, MOBILE =
+		#mobile#, REAL_NAME = #realName#,
+		SEX = #sex#, ID_NUM = #idNum#,
+		QQ = #qq#, PHOTO = #photo#, LASTLOGIN_IP
+		= #lastloginIP#,
+		LASTLOGIN_TIME = #lastloginTime#, REG_TIME =
+		#regTime#, BIRTHDAY
+		= #birthday#, LOGIN_TIMES = #loginTimes#,
+		IS_COMPLETE =
+		#isComplete#, COMPLETE_TIME = #completeTime#, MSN =
+		#MSN#,
+		ADDRESS = #address#, CUS_TYPE=#cusType#, STUDY_TYPE=#studyType#,
+		SUBJECT_ID=#subjectId#, CUS_FROM_URL=#cusFromUrl# WHERE CUS_ID =
+		#cusId#
+
+	</update>
+	<update id="updateCustomerNewerFlag" parameterClass="Customer">
+		UPDATE
+		CUS_CUSTOMER_TBL SET newerflag=#newerflag# WHERE CUS_ID =
+		#cusId#
+
+	</update>
+
+	<update id="updateCustomerName" parameterClass="Customer">
+		UPDATE
+		CUS_CUSTOMER_TBL SET CUS_NAME =#cusName# WHERE CUS_ID =#cusId#
+	</update>
+
+	<!-- ShiTing PanDuan -->
+	<select id="isComplete" resultClass="int" parameterClass="int" cacheModel="Customer_NS-cache">
+		SELECT count(*) from cus_customer_tbl where
+		cus_customer_tbl.cus_id
+		=#cusId# and
+		cus_customer_tbl.is_complete = 1 and TO_DAYS(now()) -
+		TO_DAYS(cus_customer_tbl.complete_time)
+		<![CDATA[ <= 7 ]]>
+
+	</select>
+	<!-- ShiTing PanDuan -->
+
+	<select id="getCustomerById" resultClass="Customer"
+		parameterClass="int" cacheModel="Customer_NS-cache">
+		SELECT
+		CUS_CUSTOMER_TBL.CUS_ID as cusId,
+		CUS_CUSTOMER_TBL.CUS_NAME as cusName,
+		CUS_CUSTOMER_TBL.CUS_PWD as cusPwd,
+		CUS_CUSTOMER_TBL.EMAIL as email,
+		CUS_CUSTOMER_TBL.MOBILE as mobile,
+		CUS_CUSTOMER_TBL.REAL_NAME as realName,
+		CUS_CUSTOMER_TBL.SEX as sex,
+		CUS_CUSTOMER_TBL.ID_NUM as idNum,
+		CUS_CUSTOMER_TBL.QQ as qq,
+		CUS_CUSTOMER_TBL.PHOTO as photo,
+		CUS_CUSTOMER_TBL.LASTLOGIN_IP as lastloginIP,
+		CUS_CUSTOMER_TBL.LASTLOGIN_TIME as lastloginTime,
+		CUS_CUSTOMER_TBL.REG_TIME as regTime,
+		CUS_CUSTOMER_TBL.BIRTHDAY as birthday,
+		CUS_CUSTOMER_TBL.LOGIN_TIMES as loginTimes,
+		CUS_CUSTOMER_TBL.IS_COMPLETE as isComplete,
+		CUS_CUSTOMER_TBL.COMPLETE_TIME as completeTime,
+		CUS_CUSTOMER_TBL.MSN as MSN,
+		CUS_CUSTOMER_TBL.ADDRESS as address,
+		CUS_CUSTOMER_TBL.CUS_TYPE as cusType,
+		CUS_CUSTOMER_TBL.STUDY_TYPE as studyType,
+		CUS_CUSTOMER_TBL.SUBJECT_ID as subjectId,
+		CUS_CUSTOMER_TBL.CUS_FROM_URL as cusFromUrl,
+		CUS_CUSTOMER_TBL.newerflag as newerflag,
+		CUS_CUSTOMER_TBL.CUS_WEB_FROM as cusWebFrom,
+		CUS_CUSTOMER_TBL.CUS_WEB_AGENT  as cusWebAgent 
+		FROM CUS_CUSTOMER_TBL WHERE CUS_ID = #value#
+	</select>
+
+	<select id="getCustomerCount" resultClass="int"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT COUNT(*) FROM CUS_CUSTOMER_TBL WHERE
+		SUBJECT_ID=#subjectId#
+		<isNotEqual property="cusType" compareValue="100">
+			AND
+			CUS_TYPE=#cusType#
+		</isNotEqual>
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="cusFromUrl">
+			<isNotEqual property="cusFromUrl" compareValue="">
+				CUS_FROM_URL=#cusFromUrl#
+			</isNotEqual>
+		</isNotNull>
+	</select>
+
+	<select id="getCustomerByView" resultMap="Customer_NS.CustomerResultWithLoginRecord"
+		parameterClass="int" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		FROM CUS_CUSTOMER_TBL WHERE CUS_ID = #value#
+	</select>
+	<select id="getCustomerByEmail" resultMap="Customer_NS.CustomerResult"
+		parameterClass="java.lang.String">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		FROM CUS_CUSTOMER_TBL WHERE EMAIL = #value#
+		limit 1
+	</select>
+
+	<select id="getCustomerListByMobile" resultMap="Customer_NS.CustomerResult"
+		parameterClass="QueryCustomerCondition">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		FROM CUS_CUSTOMER_TBL WHERE MOBILE = #mobile#
+	</select>
+
+	<select id="getCustomerList" resultMap="Customer_NS.CustomerResult"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		FROM CUS_CUSTOMER_TBL WHERE 1 = 1
+		<isNotNull prepend="and" property="cusType">
+			<isNotEqual property="cusType" compareValue="">
+				CUS_TYPE=#cusType#
+			</isNotEqual>
+		</isNotNull>
+
+	</select>
+
+	<select id="getSimpleCustomerDTOListByCondition" resultMap="Customer_NS.SimpleCustomerDTOResult"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT CUS_CUSTOMER_TBL.CUS_ID, CUS_CUSTOMER_TBL.CUS_NAME,
+		CUS_CUSTOMER_TBL.cus_Type FROM CUS_CUSTOMER_TBL WHERE 1=1
+		<isNotNull property="cusName">
+			<isNotEqual property="cusName" compareValue="">
+				AND CUS_NAME
+				LIKE CONCAT('%',#cusName#,'%')
+			</isNotEqual>
+		</isNotNull>
+	</select>
+	<select id="getIsProtocal" parameterClass="int" resultClass="boolean" cacheModel="Customer_NS-cache">
+	<![CDATA[ 
+		SELECT 
+  			CASE WHEN COUNT(1) > 0 THEN TRUE ELSE FALSE END AS 'is_protocal'
+		FROM
+  			CUS_CUSTOMER_TBL 
+  		LEFT JOIN FINANCE_CASH_RECORD_TBL 
+    		ON CUS_CUSTOMER_TBL.CUS_ID = FINANCE_CASH_RECORD_TBL.CUS_ID 
+    	AND FINANCE_CASH_RECORD_TBL.STATUS = 1 
+  		LEFT JOIN COU_SELL_WAY_TBL 
+    		ON COU_SELL_WAY_TBL.SELL_ID = FINANCE_CASH_RECORD_TBL.PACK_ID 
+		WHERE COU_SELL_WAY_TBL.IS_PROTOCAL = 1
+  		AND CUS_CUSTOMER_TBL.CUS_ID = #value#
+  ]]>
+	</select>
+	<!-- 分页查询 -->
+	<select id="getCustomerListByCondition" resultMap="Customer_NS.CustomerWithConSizeResult"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		, ( SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+		FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID )
+		CONTRACT_COUNT, (SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+		FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND
+		FINANCE_CONTRACT_TBL.STATUS=1) CONTRACT_STATUS,
+		
+		(SELECT CREATE_TIME  FINANCE_CONTRACT_TBL FROM FINANCE_CONTRACT_TBL  WHERE
+		FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID ORDER BY finance_contract_tbl.CREATE_TIME DESC LIMIT 1 ) CREATE_TIME,
+		 
+		(SELECT PAY_TIME  FINANCE_CONTRACT_TBL FROM FINANCE_CONTRACT_TBL  WHERE
+		FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND
+		FINANCE_CONTRACT_TBL.STATUS=1 ORDER BY finance_contract_tbl.CREATE_TIME DESC LIMIT 1 ) PAY_TIME,
+		(SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+		FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND
+		FINANCE_CONTRACT_TBL.PAY_TYPE=2)
+		 'PAY_STATUS',
+	 	(SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+		FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND
+		FINANCE_CONTRACT_TBL.PAY_TYPE=2 AND FINANCE_CONTRACT_TBL.STATUS=4)
+		 'CANCEL_STATUS'
+		 FROM
+		CUS_CUSTOMER_TBL 
+		<isNotEmpty property="isProtocal">
+		<isNotEqual property="isProtocal" compareValue="-1">
+			LEFT JOIN
+				FINANCE_CASH_RECORD_TBL
+			ON
+				CUS_CUSTOMER_TBL.CUS_ID = FINANCE_CASH_RECORD_TBL.CUS_ID
+			LEFT JOIN
+				COU_SELL_WAY_TBL
+			ON
+				COU_SELL_WAY_TBL.SELL_ID = FINANCE_CASH_RECORD_TBL.PACK_ID
+		</isNotEqual>
+		</isNotEmpty>
+		<isNotNull property="showSelf">
+			<isEqual property="showSelf" compareValue="1">
+				join crm_sellrecord_tbl on CRM_SELLRECORD_TBL.CUS_ID=  CUS_CUSTOMER_TBL.CUS_ID
+			</isEqual>
+		</isNotNull>
+		
+		
+		<isNotNull property="paixu">
+			<isNotNull property="showSelf">
+			<isNotEqual property="showSelf" compareValue="1">
+	                 <isNotEqual  property="paixu" compareValue="4">
+	                			<isNotNull property="sellNameSearch">
+									<isNotEqual property="sellNameSearch" compareValue="">
+										join crm_sellrecord_tbl on CRM_SELLRECORD_TBL.CUS_ID=  CUS_CUSTOMER_TBL.CUS_ID
+									</isNotEqual>
+								</isNotNull>
+					 </isNotEqual>
+					<isEqual  property="paixu" compareValue="4">
+	                		join crm_sellrecord_tbl on CRM_SELLRECORD_TBL.CUS_ID=  CUS_CUSTOMER_TBL.CUS_ID
+	                </isEqual>
+	        </isNotEqual>
+	        </isNotNull>        
+		</isNotNull>
+		
+		WHERE 1=1
+		
+		<isNotNull property="email">
+			<isNotEqual property="email" compareValue="">
+				AND CUS_CUSTOMER_TBL.EMAIL LIKE
+				CONCAT('%',#email#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="mobile">
+			<isNotEqual property="mobile" compareValue="">
+				AND CUS_CUSTOMER_TBL.MOBILE LIKE
+				CONCAT('%',#mobile#,'%')
+			</isNotEqual>
+		</isNotNull>
+
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  CUS_CUSTOMER_TBL.REG_TIME >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  CUS_CUSTOMER_TBL.REG_TIME <= #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="startNumber">
+			<![CDATA[  CUS_CUSTOMER_TBL.LOGIN_TIMES >= #startNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endNumber">
+			<![CDATA[  CUS_CUSTOMER_TBL.LOGIN_TIMES <= #endNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="regTime">
+			CUS_CUSTOMER_TBL.REG_TIME LIKE
+			'%$regTime$%'
+		</isNotNull>
+		<isNotNull property="cusType">
+			<isNotEqual property="cusType" compareValue="" prepend="and">
+				CUS_CUSTOMER_TBL.CUS_TYPE=#cusType#
+			</isNotEqual>
+		</isNotNull>
+		
+		<isNotNull property="showSelf">
+			<isEqual property="showSelf" compareValue="1" prepend="">
+				<isNotNull property="sysUserId" prepend="and">
+				CRM_SELLRECORD_TBL.SYS_USER_ID=#sysUserId#
+				</isNotNull>
+			</isEqual>
+			
+		</isNotNull>
+		
+		<isNotNull property="sellNameSearch" prepend="and" > 
+		<isNotEqual property="sellNameSearch" compareValue="">
+				 ( CRM_SELLRECORD_TBL.SELL_NAME like CONCAT('%',#sellNameSearch#,'%') or 
+				 CRM_SELLRECORD_TBL.SYS_USER_NAME like CONCAT('%',#sellNameSearch#,'%')
+				 ) 
+		</isNotEqual>
+		</isNotNull>
+		
+		<isNotNull prepend="and" property="dateDay">
+			REG_TIME LIKE
+			'%$dateDay$%'
+		</isNotNull>
+		<isNotEqual prepend="and" property="subjectId"
+			compareValue="-1">
+			CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId#
+		</isNotEqual>
+		<isNotNull property="cusFromUrl">
+			<isNotEqual property="cusFromUrl" compareValue="" prepend="and">
+				CUS_FROM_URL=#cusFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="cusName">
+			<isNotEmpty property="cusName" prepend="and">
+				CUS_NAME LIKE '%$cusName$%'
+			</isNotEmpty>
+		</isNotNull>
+		<isNotEmpty property="isProtocal">
+		<isNotEqual prepend="and" property="isProtocal" compareValue="-1">
+			FINANCE_CASH_RECORD_TBL.STATUS = 1
+		</isNotEqual>
+		<isNotEqual prepend="and" property="isProtocal" compareValue="-1">
+			COU_SELL_WAY_TBL.IS_PROTOCAL = #isProtocal#
+		</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty property="fromType">
+			<isNotEqual prepend="and" property="fromType" compareValue="-1">
+				CUS_CUSTOMER_TBL.FROMTYPE = #fromType#
+			</isNotEqual>
+		</isNotEmpty>
+		<isEqual property="visitType" compareValue="2" prepend="and">
+			<![CDATA[ (SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+			FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND
+			FINANCE_CONTRACT_TBL.STATUS=1)<1 AND 
+			( SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+			FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID )>0 ]]>
+		</isEqual>
+		GROUP BY CUS_CUSTOMER_TBL.CUS_ID 
+		<isNotNull property="paixu">
+					<isEqual  property="paixu" compareValue="0">
+	                		ORDER BY CUS_CUSTOMER_TBL.CUS_ID DESC
+	                </isEqual>
+	            	 <isEqual  property="paixu" compareValue="1">
+	                		ORDER BY CUS_CUSTOMER_TBL.CUS_ID DESC
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="2">
+	                		order by CREATE_TIME DESC
+	                </isEqual> 
+	                 <isEqual  property="paixu" compareValue="3">
+	                		order by PAY_TIME DESC
+	                </isEqual>  
+	                 <isEqual  property="paixu" compareValue="4">
+	                		order by CRM_SELLRECORD_TBL.sell_time DESC
+	                </isEqual>
+	                 
+	                
+	        </isNotNull>
+		
+		<isEqual property="queryFlag" compareValue="0">
+			<include refid="public_sql.page_end" />
+		</isEqual>
+	</select>
+	<select id="getCustomerCountByCondition" resultClass="int"
+		parameterClass="QueryCustomerCondition">
+		select count(TA.CUS_ID) from (SELECT CUS_CUSTOMER_TBL.CUS_ID FROM CUS_CUSTOMER_TBL
+		<isNotEmpty property="isProtocal">
+		<isNotEqual property="isProtocal" compareValue="-1">
+			LEFT JOIN
+				FINANCE_CASH_RECORD_TBL
+			ON
+				CUS_CUSTOMER_TBL.CUS_ID = FINANCE_CASH_RECORD_TBL.CUS_ID
+			LEFT JOIN
+				COU_SELL_WAY_TBL
+			ON
+				COU_SELL_WAY_TBL.SELL_ID = FINANCE_CASH_RECORD_TBL.PACK_ID
+		</isNotEqual>
+		</isNotEmpty>
+		<isNotNull property="showSelf">
+			<isEqual property="showSelf" compareValue="1">
+				join crm_sellrecord_tbl on CRM_SELLRECORD_TBL.CUS_ID=  CUS_CUSTOMER_TBL.CUS_ID
+			</isEqual>
+		</isNotNull>
+		
+		<isNotNull property="paixu">
+			<isNotNull property="showSelf">
+			<isNotEqual property="showSelf" compareValue="1">
+	                 <isNotEqual  property="paixu" compareValue="4">
+	                			<isNotNull property="sellNameSearch">
+									<isNotEqual property="sellNameSearch" compareValue="">
+										join crm_sellrecord_tbl on CRM_SELLRECORD_TBL.CUS_ID=  CUS_CUSTOMER_TBL.CUS_ID
+									</isNotEqual>
+								</isNotNull>
+					 </isNotEqual>
+					<isEqual  property="paixu" compareValue="4">
+	                		join crm_sellrecord_tbl on CRM_SELLRECORD_TBL.CUS_ID=  CUS_CUSTOMER_TBL.CUS_ID
+	                </isEqual>
+	         </isNotEqual>
+	         </isNotNull>       
+		</isNotNull>
+		
+		 WHERE 1=1
+		<isNotNull property="email">
+			<isNotEqual property="email" compareValue="">
+				AND EMAIL LIKE
+				CONCAT('%',#email#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="mobile">
+			<isNotEqual property="mobile" compareValue="">
+				AND CUS_CUSTOMER_TBL.MOBILE LIKE
+				CONCAT('%',#mobile#,'%')
+			</isNotEqual>
+		</isNotNull>
+
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  REG_TIME >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  REG_TIME <= #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="startNumber">
+			<![CDATA[  LOGIN_TIMES >= #startNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endNumber">
+			<![CDATA[  LOGIN_TIMES <= #endNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="regTime">
+			REG_TIME LIKE
+			'%$regTime$%'
+		</isNotNull>
+		<isNotNull property="cusType">
+			<isNotEqual property="cusType" compareValue="" prepend="and">
+				CUS_TYPE=#cusType#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="dateDay">
+			REG_TIME LIKE
+			'%$dateDay$%'
+		</isNotNull>
+		<isNotEqual prepend="and" property="subjectId"
+			compareValue="-1">
+			CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId#
+		</isNotEqual>
+		<isNotNull property="cusFromUrl">
+			<isNotEqual property="cusFromUrl" compareValue="" prepend="and">
+				CUS_FROM_URL=#cusFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		
+		<isNotNull property="cusName">
+			<isNotEmpty property="cusName" prepend="and">
+				CUS_NAME LIKE '%$cusName$%'
+			</isNotEmpty>
+		</isNotNull>
+		<isNotEmpty property="isProtocal">
+		<isNotEqual prepend="and" property="isProtocal" compareValue="-1">
+			FINANCE_CASH_RECORD_TBL.STATUS = 1
+		</isNotEqual>
+		<isNotEqual prepend="and" property="isProtocal" compareValue="-1">
+			COU_SELL_WAY_TBL.IS_PROTOCAL = #isProtocal#
+		</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty property="fromType">
+			<isNotEqual prepend="and" property="fromType" compareValue="-1">
+				CUS_CUSTOMER_TBL.FROMTYPE = #fromType#
+			</isNotEqual>
+		</isNotEmpty>
+		<isEqual property="visitType" compareValue="2" prepend="and">
+			<![CDATA[ (SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+			FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID AND
+			FINANCE_CONTRACT_TBL.STATUS=1)<1  AND 
+			( SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE
+			FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID )>0]]>
+		</isEqual>
+		<isNotNull property="showSelf">
+			<isEqual property="showSelf" compareValue="1" prepend="">
+				<isNotNull property="sysUserId" prepend="and">
+				CRM_SELLRECORD_TBL.SYS_USER_ID=#sysUserId#
+				</isNotNull>
+			</isEqual>
+			
+		</isNotNull>
+		
+		<isNotNull property="sellNameSearch" prepend="and" > 
+		<isNotEqual property="sellNameSearch" compareValue="">
+				 ( CRM_SELLRECORD_TBL.SELL_NAME like CONCAT('%',#sellNameSearch#,'%') or 
+				 CRM_SELLRECORD_TBL.SYS_USER_NAME like CONCAT('%',#sellNameSearch#,'%')
+				 ) 
+		</isNotEqual>
+		</isNotNull>
+		group by CUS_CUSTOMER_TBL.cus_id) as TA
+	</select>
+
+	<select id="checkEmail" resultClass="int" parameterClass="java.lang.String" cacheModel="Customer_NS-cache">
+		SELECT
+		COUNT(1) FROM CUS_CUSTOMER_TBL WHERE EMAIL = #value#
+	</select>
+	<select id="checkMobile" resultClass="int" parameterClass="java.lang.String">
+		SELECT COUNT(1) FROM CUS_CUSTOMER_TBL WHERE Mobile = #value#
+	</select>
+
+	<select id="checkOldPwd" resultClass="int" parameterClass="Customer">
+		SELECT COUNT(1) FROM CUS_CUSTOMER_TBL WHERE CUS_ID = #cusId# AND
+		CUS_PWD = #cusPwd#
+	</select>
+
+	<select id="getUIDByLogin" resultClass="java.lang.Integer"
+		parameterClass="Customer">
+		SELECT CUS_ID FROM CUS_CUSTOMER_TBL WHERE EMAIL =
+		#email# AND
+		CUS_PWD = #cusPwd#
+	</select>
+
+	<select id="getSubjectListByCus" resultMap="Subject_NS.SubjectResult"
+		parameterClass="int" cacheModel="Customer_NS-cache">
+		SELECT DISTINCT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM CUS_CUS_COU_KPOINT_TBL CCK INNER JOIN COU_COURSE_TBL COU ON
+		CCK.COURSE_ID = COU.COURSE_ID INNER JOIN SYS_SUBJECT_TBL ON
+		COU.SUBJECT_ID = SYS_SUBJECT_TBL.SUBJECT_ID INNER JOIN
+		CMS_COLUMNS_TBL
+		COL ON SYS_SUBJECT_TBL.SUBJECT_ID =
+		COL.SUBJECT_ID WHERE CCK.CUS_ID =
+		#value# ORDER BY COL.SEQUENCE
+	</select>
+	<select id="getRegistNumber" resultClass="int"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT COUNT(*) FROM CUS_CUSTOMER_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			<isNotNull property="cusType">
+				<isNotEqual property="cusType" compareValue="3" prepend="and">
+					CUS_TYPE=#cusType#
+				</isNotEqual>
+				<isEqual property="cusType" compareValue="3" prepend="and">
+					CUS_TYPE!=#cusType#
+				</isEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="email">
+				EMAIL LIKE
+				CONCAT('%',#email#,'%')
+			</isNotNull>
+			<isNotEqual property="subjectId" compareValue="0" prepend="and">
+				SUBJECT_ID=#subjectId#
+			</isNotEqual>
+		</dynamic>
+	</select>
+	<select id="getRegistNumberList" resultMap="Customer_NS.SubjectCustomerDTOResult"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		FROM CUS_CUSTOMER_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="cusType">
+				CUS_TYPE=#cusType#
+			</isNotNull>
+			<isNotNull prepend="and" property="email">
+				EMAIL LIKE
+				CONCAT('%',#email#,'%')
+			</isNotNull>
+			<isNotEqual property="subjectId" compareValue="0" prepend="and">
+				SUBJECT_ID=#subjectId#
+			</isNotEqual>
+		</dynamic>
+	</select>
+
+	<select id="getWeekRegistNumber" resultClass="java.lang.Integer"
+		parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT COUNT(*) FROM CUS_CUSTOMER_TBL WHERE
+		<![CDATA[  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(REG_TIME) ]]>
+	</select>
+	<select id="getMonthRegistNumber" resultClass="java.lang.Integer"
+		parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT COUNT(*) FROM CUS_CUSTOMER_TBL WHERE
+		<![CDATA[  DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(REG_TIME) ]]>
+	</select>
+	<select id="getThreeMonthRegistNumber" resultClass="java.lang.Integer"
+		parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT COUNT(*) FROM CUS_CUSTOMER_TBL WHERE
+		<![CDATA[  DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= date(REG_TIME) ]]>
+	</select>
+	<select id="getMonthList" resultMap="Customer_NS.CustomerResult"
+		parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT * FROM CUS_CUSTOMER_TBL GROUP BY
+		DATE_FORMAT(CUS_CUSTOMER_TBL.`REG_TIME`,'%Y-%m') ORDER BY CUS_ID
+		DESC
+	</select>
+	<select id="getMonthRegist" resultClass="int" parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT COUNT(*) FROM CUS_CUSTOMER_TBL WHERE CUS_TYPE=0 AND REG_TIME
+		LIKE '%$month$%'
+	</select>
+	<select id="getMonthDay" resultMap="Customer_NS.CustomerResult"
+		parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT * FROM CUS_CUSTOMER_TBL WHERE REG_TIME LIKE
+		'%$month$%'
+		GROUP BY
+		DATE_FORMAT(CUS_CUSTOMER_TBL.`REG_TIME`,'%Y-%m-%d')
+	</select>
+	<select id="getDay" resultMap="Customer_NS.CustomerResult"
+		parameterClass="String" cacheModel="Customer_NS-cache">
+		SELECT * FROM CUS_CUSTOMER_TBL WHERE REG_TIME LIKE
+		'%$dateDay$%'
+	</select>
+	<!--end -->
+
+	<!-- fix data -->
+	<select id="getTestCustomerList" resultMap="Customer_NS.CustomerResult"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT distinct
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		from finance_contract_tbl,cus_customer_tbl where
+		finance_contract_tbl.CUS_ID = cus_customer_tbl.CUS_ID and
+		finance_contract_tbl.CONTRACT_ID = '---'
+	</select>
+
+	<select id="getPayContractListByCusId" resultMap="Customer_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL where FINANCE_CONTRACT_TBL.cus_id =
+		#userId#
+		and FINANCE_CONTRACT_TBL.status = 1
+	</select>
+
+	<select id="getQuestionContractListByCusId" resultMap="Customer_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL where FINANCE_CONTRACT_TBL.cus_id =
+		#userId#
+		and FINANCE_CONTRACT_TBL.status = 2 and
+		FINANCE_CONTRACT_TBL.CONTRACT_ID = '---'
+	</select>
+
+	<select id="getCourseListByContractId" resultMap="Course_NS.CourseResult"
+		parameterClass="QueryContractCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Course_NS.COU_COURSE_TBL_columns" />
+		from finance_contract_tbl,cou_course_tbl,
+		finance_cash_record_tbl where
+		finance_contract_tbl.CONTRACT_ID =
+		finance_cash_record_tbl.CONTRACT_ID
+		and cou_course_tbl.COURSE_ID
+		= finance_cash_record_tbl.COURSE_ID and
+		finance_contract_tbl.CONTRACT_ID = #contractId#;
+	</select>
+
+	<select id="getCusTypeCustomerList" resultMap="Customer_NS.CustomerResult"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		from cus_customer_tbl inner join cus_cus_cou_kpoint_tbl on
+		cus_customer_tbl.cus_id = cus_cus_cou_kpoint_tbl.cus_id where
+		not
+		exists (select cus_customer_tbl.CUS_ID from
+		finance_cash_record_tbl
+		where cus_customer_tbl.cus_id =
+		finance_cash_record_tbl.cus_id and
+		cus_cus_cou_kpoint_tbl.COURSE_ID =
+		finance_cash_record_tbl.COURSE_ID )
+		group by
+		cus_customer_tbl.CUS_ID
+	</select>
+
+	<typeAlias alias="Address" type="com.shangde.edu.cus.domain.Address" />
+	<typeAlias alias="AddressDTO" type="com.shangde.edu.cus.dto.AddressDTO" />
+	<resultMap id="AddressResult" class="Address">
+		<result property="id" column="ID" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="receiver" column="RECEIVER" />
+		<result property="address" column="ADDRESS" />
+		<result property="postCode" column="POST_CODE" />
+		<result property="mobile" column="MOBILE" />
+		<result property="isFirst" column="IS_FIRST" />
+		<result property="sendTime" column="SEND_TIME" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="provinceId" column="PROVINCE_ID" />
+		<result property="cityId" column="CITY_ID" />
+		<result property="townId" column="TOWN_ID" />
+	</resultMap>
+
+	<resultMap id="AddressDTOResult" class="AddressDTO" extends="AddressResult">
+		<result property="provinceName" column="PROVINCE_NAME" />
+		<result property="cityName" column="CITY_NAME" />
+		<result property="townName" column="TOWN_NAME" />
+	</resultMap>
+	<select id="getAddrByUserId" parameterClass="Integer"
+		resultMap="Customer_NS.AddressDTOResult" cacheModel="Customer_NS-cache">
+		select *,
+		(SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID =
+		CUS_ADDRESS_TBL.PROVINCE_ID) AS PROVINCE_NAME,
+		(SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID =
+		CUS_ADDRESS_TBL.CITY_ID) AS CITY_NAME,
+		(SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID =
+		CUS_ADDRESS_TBL.TOWN_ID) AS TOWN_NAME
+		from cus_address_tbl where CUS_ID=#value#
+	</select>
+
+	<select id="getCustomerRegNum" resultClass="int"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		select count(cus_id) from cus_customer_tbl
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cusWebFrom">
+				( CUS_CUSTOMER_TBL.CUS_WEB_FROM LIKE '%$cusWebFrom$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cusWebAgent">
+				( CUS_CUSTOMER_TBL.CUS_WEB_AGENT LIKE '%$cusWebAgent$%')
+			</isNotEmpty>
+
+			<!-- <isEmpty prepend="AND" property="cusWebFrom"> ( CUS_CUSTOMER_TBL.CUS_WEB_FROM 
+				='fanxino') </isEmpty> -->
+		</dynamic>
+	</select>
+
+	<select id="getCustomerRegNumCount" resultClass="int"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		select count(cus_id) from cus_customer_tbl
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cusWebFrom">
+				( CUS_CUSTOMER_TBL.CUS_WEB_FROM LIKE '%$cusWebFrom$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cusWebAgent">
+				( CUS_CUSTOMER_TBL.CUS_WEB_AGENT LIKE '%$cusWebAgent$%')
+			</isNotEmpty>
+
+			<!-- <isEmpty prepend="AND" property="cusWebFrom"> ( CUS_CUSTOMER_TBL.CUS_WEB_FROM 
+				='fanxino') </isEmpty> -->
+
+			<isNotEmpty prepend="and" property="startTime">
+					<![CDATA[  REG_TIME >= #startTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endTime">
+					<![CDATA[  REG_TIME <= #endTime# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getContractNum" resultClass="int" parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT COUNT(DISTINCT (f.CUS_ID)) FROM finance_contract_tbl AS f,
+		(
+		SELECT CUS_CUSTOMER_TBL.CUS_ID FROM CUS_CUSTOMER_TBL
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cusWebFrom">
+				( CUS_CUSTOMER_TBL.CUS_WEB_FROM LIKE '%$cusWebFrom$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cusWebAgent">
+				( CUS_CUSTOMER_TBL.CUS_WEB_AGENT LIKE '%$cusWebAgent$%')
+			</isNotEmpty>
+			<!-- <isEmpty prepend="AND" property="cusWebFrom"> ( CUS_CUSTOMER_TBL.CUS_WEB_FROM 
+				='fanxino') </isEmpty> -->
+			<isNotEmpty prepend="and" property="startTime">
+						<![CDATA[  REG_TIME >= #startTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endTime">
+						<![CDATA[  REG_TIME <= #endTime# ]]>
+			</isNotEmpty>
+		</dynamic>
+		) as a
+		WHERE f.CUS_ID = a.CUS_ID
+	</select>
+
+	<select id="getPayNum" resultClass="int" parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT COUNT(DISTINCT (f.id)) FROM finance_contract_tbl AS f,
+		(
+		SELECT CUS_CUSTOMER_TBL.CUS_ID FROM CUS_CUSTOMER_TBL
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cusWebFrom">
+				( CUS_CUSTOMER_TBL.CUS_WEB_FROM LIKE '%$cusWebFrom$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cusWebAgent">
+				( CUS_CUSTOMER_TBL.CUS_WEB_AGENT LIKE '%$cusWebAgent$%')
+			</isNotEmpty>
+			<!-- <isEmpty prepend="AND" property="cusWebFrom"> ( CUS_CUSTOMER_TBL.CUS_WEB_FROM 
+				='fanxino') </isEmpty> -->
+			<isNotEmpty prepend="and" property="startTime">
+						<![CDATA[  REG_TIME >= #startTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endTime">
+						<![CDATA[  REG_TIME <= #endTime# ]]>
+			</isNotEmpty>
+		</dynamic>
+		) as a
+		WHERE f.CUS_ID = a.CUS_ID
+	</select>
+
+	<select id="getPaySucNum" resultClass="int" parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT COUNT(DISTINCT (f.id)) FROM finance_contract_tbl AS f,
+		(
+		SELECT CUS_CUSTOMER_TBL.CUS_ID FROM CUS_CUSTOMER_TBL
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="cusWebFrom">
+				( CUS_CUSTOMER_TBL.CUS_WEB_FROM LIKE '%$cusWebFrom$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cusWebAgent">
+				( CUS_CUSTOMER_TBL.CUS_WEB_AGENT LIKE '%$cusWebAgent$%')
+			</isNotEmpty>
+
+			<!-- <isEmpty prepend="AND" property="cusWebFrom"> ( CUS_CUSTOMER_TBL.CUS_WEB_FROM 
+				='fanxino') </isEmpty> -->
+
+			<isNotEmpty prepend="and" property="startTime">
+						<![CDATA[  REG_TIME >= #startTime# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endTime">
+						<![CDATA[  REG_TIME <= #endTime# ]]>
+			</isNotEmpty>
+		</dynamic>
+		) as a
+		WHERE f.STATUS=1 AND f.CUS_ID = a.CUS_ID
+	</select>
+	<resultMap id="CustomerResulty" class="Customer">
+		<result property="cusId" column="CUS_CUSTOMER_TBL.CUS_ID" />
+		<result property="cusName" column="CUS_CUSTOMER_TBL.CUS_NAME" />
+		<result property="cusPwd" column="CUS_CUSTOMER_TBL.CUS_PWD" />
+		<result property="email" column="CUS_CUSTOMER_TBL.EMAIL" />
+		<result property="mobile" column="CUS_CUSTOMER_TBL.MOBILE" />
+		<result property="realName" column="CUS_CUSTOMER_TBL.REAL_NAME" />
+		<result property="sex" column="CUS_CUSTOMER_TBL.SEX" />
+		<result property="idNum" column="CUS_CUSTOMER_TBL.ID_NUM" />
+		<result property="qq" column="CUS_CUSTOMER_TBL.QQ" />
+		<result property="photo" column="CUS_CUSTOMER_TBL.PHOTO" />
+		<result property="lastloginIP" column="CUS_CUSTOMER_TBL.LASTLOGIN_IP" />
+		<result property="lastloginTime" column="CUS_CUSTOMER_TBL.LASTLOGIN_TIME" />
+		<result property="regTime" column="CUS_CUSTOMER_TBL.REG_TIME" />
+		<result property="birthday" column="CUS_CUSTOMER_TBL.BIRTHDAY" />
+		<result property="loginTimes" column="CUS_CUSTOMER_TBL.LOGIN_TIMES" />
+		<result property="isComplete" column="CUS_CUSTOMER_TBL.IS_COMPLETE" />
+		<result property="completeTime" column="CUS_CUSTOMER_TBL.COMPLETE_TIME" />
+		<result property="MSN" column="CUS_CUSTOMER_TBL.MSN" />
+		<result property="address" column="CUS_CUSTOMER_TBL.ADDRESS" />
+		<result property="cusType" column="CUS_CUSTOMER_TBL.CUS_TYPE" />
+		<result property="studyType" column="CUS_CUSTOMER_TBL.STUDY_TYPE" />
+		<result property="subjectId" column="CUS_CUSTOMER_TBL.SUBJECT_ID" />
+		<result property="cusFromUrl" column="CUS_CUSTOMER_TBL.CUS_FROM_URL" />
+		<result property="cusWebFrom" column="CUS_CUSTOMER_TBL.CUS_WEB_FROM" />
+		<result property="cusWebAgent" column="CUS_CUSTOMER_TBL.CUS_WEB_AGENT" />
+	</resultMap>
+
+	<!-- 分页查询 -->
+	<select id="getCustomerListByConditionn" resultMap="Customer_NS.CustomerResulty"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		<include refid="public_sql.page_begin" />
+		select
+		<isEqual compareValue="0" property="cusType">
+			DISTINCT finance_contract_tbl.CUS_ID ,
+		</isEqual>
+		
+		 cus_customer_tbl.* from cus_customer_tbl
+		
+		<isNotNull property="sellId">
+			<isNotEqual compareValue="-1" property="sellId">
+				,finance_cash_record_tbl
+			</isNotEqual>
+		</isNotNull>
+		<isEqual compareValue="0" property="cusType">
+			,finance_contract_tbl
+		</isEqual>
+		<isEqual compareValue="1" property="cusType">
+			,finance_contract_tbl
+		</isEqual>
+		where 1=1
+		<isNotNull property="sellId">
+			<isNotEqual compareValue="-1" property="sellId">
+		and	finance_cash_record_tbl.PACK_ID=#sellId#	and cus_customer_tbl.CUS_ID=finance_cash_record_tbl.cus_id 
+			</isNotEqual>
+		</isNotNull>
+
+		<isEqual compareValue="3" property="cusType">
+
+			and CUS_CUSTOMER_TBL.CUS_TYPE=1
+		</isEqual>
+		<isEqual compareValue="0" property="cusType"><!--  已购课 -->
+	  and finance_contract_tbl.status=1 and CUS_CUSTOMER_TBL.CUS_TYPE !=1	and cus_customer_tbl.CUS_ID= finance_contract_tbl.CUS_ID 
+		</isEqual>
+		<isEqual compareValue="1" property="cusType"><!-- 注册未购课 -->
+		and  cus_customer_tbl.CUS_ID=finance_contract_tbl.CUS_ID  and CUS_CUSTOMER_TBL.CUS_TYPE !=1  
+		</isEqual>
+		<isEqual compareValue="2" property="cusType"><!-- 仅注册 -->
+		and  not EXISTS (select finance_contract_tbl.cus_id from finance_contract_tbl where  cus_customer_tbl.cus_id=finance_contract_tbl.CUS_ID) 
+		</isEqual>
+		<isNotNull prepend="and" property="dateDay">
+			CUS_CUSTOMER_TBL.REG_TIME
+			LIKE '%$dateDay$%'
+		</isNotNull>
+		<isNotEqual prepend="and" property="subjectId"
+			compareValue="-1">
+			CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId#
+		</isNotEqual>
+		<isNotNull property="cusFromUrl">
+			<isNotEqual property="cusFromUrl" compareValue="" prepend="and">
+				CUS_CUSTOMER_TBL.CUS_FROM_URL=#cusFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="email">
+			<isNotEqual property="email" compareValue="">
+				AND
+				CUS_CUSTOMER_TBL.EMAIL LIKE CONCAT('%',#email#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="mobile">
+			<isNotEqual property="mobile" compareValue="">
+				AND
+				CUS_CUSTOMER_TBL.MOBILE LIKE CONCAT('%',#mobile#,'%')
+			</isNotEqual>
+		</isNotNull>
+
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  CUS_CUSTOMER_TBL.REG_TIME >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  CUS_CUSTOMER_TBL.REG_TIME <= #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="startNumber">
+			<![CDATA[  CUS_CUSTOMER_TBL.LOGIN_TIMES >= #startNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endNumber">
+			<![CDATA[  CUS_CUSTOMER_TBL.LOGIN_TIMES <= #endNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="regTime">
+			CUS_CUSTOMER_TBL.REG_TIME
+			LIKE '%$regTime$%'
+		</isNotNull>
+        <isEqual compareValue="1" property="cusType">		
+       GROUP BY  cus_customer_tbl.CUS_ID  
+      HAVING MAX( finance_contract_tbl.`STATUS` )=0
+       </isEqual>
+		<include refid="public_sql.page_end" />
+	</select>
+	
+	<select id="getTimepaixu" parameterClass="int" resultClass="int" cacheModel="Customer_NS-cache">
+		SELECT TYPE FROM (
+		(SELECT REG_TIME diftime  ,1   TYPE FROM cus_customer_tbl ORDER BY CUS_ID DESC LIMIT 1)
+		UNION (
+		SELECT CREATE_TIME  diftime  ,2  TYPE FROM finance_contract_tbl ORDER BY CREATE_TIME DESC  LIMIT 1)
+		UNION(
+		SELECT PAY_TIME diftime   ,3  TYPE FROM finance_contract_tbl WHERE STATUS=1 AND pay_type!=0 ORDER BY PAY_TIME DESC  LIMIT 1) )a
+		ORDER BY diftime DESC LIMIT 1
+		
+		
+	</select>
+	
+	<select id="getCustomerCountByConditionn" resultClass="int"
+		parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		select count(1) from (
+		select 	cus_customer_tbl.cus_id from cus_customer_tbl
+		<isNotNull property="sellId">
+			<isNotEqual compareValue="-1" property="sellId">
+				,finance_cash_record_tbl
+			</isNotEqual>
+		</isNotNull>
+
+		<isEqual compareValue="0" property="cusType">
+			,finance_contract_tbl
+		</isEqual>
+		<isEqual compareValue="1" property="cusType">
+			,finance_contract_tbl
+		</isEqual>
+		where 1=1
+		<isNotNull property="sellId">
+			<isNotEqual compareValue="-1" property="sellId">
+			and finance_cash_record_tbl.PACK_ID=#sellId#	and cus_customer_tbl.CUS_ID=finance_cash_record_tbl.cus_id 
+			</isNotEqual>
+		</isNotNull>
+
+		<isEqual compareValue="0" property="cusType">
+	and cus_customer_tbl.CUS_ID= finance_contract_tbl.CUS_ID 	and finance_contract_tbl.status=1 and CUS_CUSTOMER_TBL.CUS_TYPE !=1	
+		</isEqual>
+		<isEqual compareValue="1" property="cusType">
+		and  cus_customer_tbl.CUS_ID=finance_contract_tbl.CUS_ID  and CUS_CUSTOMER_TBL.CUS_TYPE !=1  
+		</isEqual>
+		<isEqual compareValue="2" property="cusType"><!-- 仅注册 -->
+		and  not EXISTS (select finance_contract_tbl.cus_id from finance_contract_tbl where  cus_customer_tbl.cus_id=finance_contract_tbl.CUS_ID) 
+		</isEqual>
+		<isNotNull prepend="and" property="dateDay">
+			CUS_CUSTOMER_TBL.REG_TIME
+			LIKE '%$dateDay$%'
+		</isNotNull>
+		<isNotEqual prepend="and" property="subjectId"
+			compareValue="-1">
+			CUS_CUSTOMER_TBL.SUBJECT_ID = #subjectId#
+		</isNotEqual>
+		<isNotNull property="cusFromUrl">
+			<isNotEqual property="cusFromUrl" compareValue="" prepend="and">
+				CUS_CUSTOMER_TBL.CUS_FROM_URL=#cusFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="email">
+			<isNotEqual property="email" compareValue="">
+				AND
+				CUS_CUSTOMER_TBL.EMAIL LIKE CONCAT('%',#email#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="mobile">
+			<isNotEqual property="mobile" compareValue="">
+				AND
+				CUS_CUSTOMER_TBL.MOBILE LIKE CONCAT('%',#mobile#,'%')
+			</isNotEqual>
+		</isNotNull>
+
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  CUS_CUSTOMER_TBL.REG_TIME >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  CUS_CUSTOMER_TBL.REG_TIME <= #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="startNumber">
+			<![CDATA[  CUS_CUSTOMER_TBL.LOGIN_TIMES >= #startNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endNumber">
+			<![CDATA[  CUS_CUSTOMER_TBL.LOGIN_TIMES <= #endNumber# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="regTime">
+			CUS_CUSTOMER_TBL.REG_TIME
+			LIKE '%$regTime$%'
+		</isNotNull>
+		<isEqual compareValue="3" property="cusType">
+			and CUS_CUSTOMER_TBL.CUS_TYPE=1
+		</isEqual>
+		<isEqual compareValue="0" property="cusType">
+			group by  finance_contract_tbl.CUS_ID 
+		</isEqual>
+     <isEqual compareValue="1" property="cusType">		
+       GROUP BY  cus_customer_tbl.CUS_ID  
+      HAVING MAX( finance_contract_tbl.`STATUS` )=0
+       </isEqual>
+		) as a
+	</select>
+	<select id="getCustomerEmail" resultMap="Customer_NS.CustomerEmailAndMobileResult" parameterClass="QueryCustomerCondition" cacheModel="Customer_NS-cache">
+		SELECT
+		cus_customer_tbl.EMAIL,cus_customer_tbl.MOBILE
+		FROM CUS_CUSTOMER_TBL WHERE 1=1
+		<isNotEqual property="mobile" compareValue="">
+		  and cus_customer_tbl.MOBILE =#mobile#
+		</isNotEqual>
+	</select>
+	<!-- fix data -->
+	
+	<!--Yangning 2011/12/05 是否存在email检测 基于  in语句(email1,email2)-->
+	<select id="getCustomerExistInEmail" parameterClass="String" resultClass="java.util.HashMap">
+		SELECT CUS_CUSTOMER_TBL.EMAIL,CUS_CUSTOMER_TBL.CUS_ID CUSID FROM CUS_CUSTOMER_TBL WHERE EMAIL IN ($value$)
+	</select>
+	<!-- Yangning  2011/12/06 批量删除用户-->
+	<delete id="deleteCustomerByCusIds" parameterClass="String">
+		DELETE FROM
+		CUS_CUSTOMER_TBL WHERE CUS_ID IN ($value$)
+	</delete>
+	
+	<!-- 学员统计 -->
+	<select id="getCustomerAll" parameterClass="QueryCustomerCondition" resultMap="Customer_NS.CustomerNewDTOResult" cacheModel="Customer_NS-cache">
+		  select * from   
+		  (
+		  select subject_id,SUBJECT_NAME,contract.* from sys_subject_tbl left join
+(
+select *,
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> THEN  1 ELSE 0 END ) as  allOrder,
+   <!-- 2011/12/28 Yangning add unionPay statistics pay type is 8-->
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE in (1,3,4,6,8) THEN 1 ELSE 0 END) AS 'bankOrder',
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.PAY_TYPE in (1,3,4,6,8) AND zon.STATUS ='1' THEN 2 ELSE 0 END) DIV 2 AS 'bankOrderPaid',
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.PAY_TYPE=2 AND zon.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'dtoOrderPaid',
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='2' THEN 1 ELSE 0 END) AS 'dtoOrder', 
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='0' THEN 1 ELSE 0 END) AS 'insideOrder',
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='5' THEN 1 ELSE 0 END) AS 'agentsOrder', 
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='7' THEN 1 ELSE 0 END) AS 'transferOrder', 
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='7' AND zon.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'transferOrderPaid', 
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.STATUS =4 THEN 3 ELSE 0 END) DIV 3 AS 'cancelOrder' ,
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.STATUS =3 THEN 3 ELSE 0 END) DIV 3 AS 'Refund' ,
+   <!--
+   SUM(CASE WHEN zon.PAY_TYPE='2' AND zon.STATUS = 3 THEN 4 ELSE 0 END) DIV 4 +  SUM(CASE WHEN zon.PAY_TYPE IN(1,3,4) AND zon.STATUS = 4 THEN 5 ELSE 0 END) DIV 5 AS 'Refund',
+     -->
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> then (zon.CONTRACT_CUTSUMMONEY+zon.Freight) else 0 end) AS 'afterAmount'
+ from 
+ ( 
+		  SELECT finance_cash_record_tbl.CR_SUBJECT_ID, finance_contract_tbl.CREATE_TIME,finance_contract_tbl.PAY_TIME,    
+   finance_contract_tbl.PAY_TYPE,finance_contract_tbl.STATUS ,finance_contract_tbl.CONTRACT_CUTSUMMONEY,finance_contract_tbl.Freight
+   
+      FROM finance_contract_tbl left join  finance_cash_record_tbl on finance_cash_record_tbl.`CT_ID` = finance_contract_tbl.`ID`  
+      JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+   WHERE 
+   ( 1=1 
+   		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>  
+		) or (
+		1=1 
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>  
+		)
+
+		
+		
+		   
+   GROUP BY finance_contract_tbl.id 
+    )
+     zon group by CR_SUBJECT_ID
+    )
+     as contract on sys_subject_tbl.subject_id=contract.CR_SUBJECT_ID
+ ) 
+    as contr left join 
+
+  (SELECT subject_id,cus_customer_tbl.REG_TIME,
+                    SUM(CASE WHEN CUS_TYPE = 0 THEN 1 ELSE 0 END) AS 'regStudent',
+                      SUM(CASE WHEN CUS_TYPE = 1 THEN 1 ELSE 0 END) AS 'interStudent',
+                      SUM(1) AS 'allStudent'
+                      FROM cus_customer_tbl
+                    WHERE cus_type in (0,1)
+        <isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+                     GROUP BY subject_id
+                      ORDER BY subject_id) as cus on contr.SUBJECT_ID=cus.subject_id  
+	</select>
+	
+	
+	<!-- 学员统计ds 商品 -->
+	<select id="getDSCustomerAll" parameterClass="QueryCustomerCondition" resultMap="Customer_NS.CustomerNewDTOResult" cacheModel="Customer_NS-cache">
+			  select * from   
+		  (
+		  select subject_id,SUBJECT_NAME,contract.* from sys_subject_tbl left join
+(
+select *,
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> THEN  1 ELSE 0 END ) as  allOrder,
+   <!-- 2011/12/28 Yangning add unionPay statistics pay type is 8-->
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE in (1,3,4,6,8) THEN 1 ELSE 0 END) AS 'bankOrder',
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.PAY_TYPE in (1,3,4,6,8) AND zon.STATUS ='1' THEN 2 ELSE 0 END) DIV 2 AS 'bankOrderPaid',
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.PAY_TYPE=2 AND zon.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'dtoOrderPaid',
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='2' THEN 1 ELSE 0 END) AS 'dtoOrder', 
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='0' THEN 1 ELSE 0 END) AS 'insideOrder',
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='5' THEN 1 ELSE 0 END) AS 'agentsOrder', 
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='7' THEN 1 ELSE 0 END) AS 'transferOrder', 
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.PAY_TYPE='7' AND zon.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'transferOrderPaid', 
+   SUM(CASE WHEN <![CDATA[ zon.CREATE_TIME >= #startCountTime# and zon.CREATE_TIME <= #endCountTime# ]]> and zon.STATUS =4 THEN 3 ELSE 0 END) DIV 3 AS 'cancelOrder' ,
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> and zon.STATUS =3 THEN 3 ELSE 0 END) DIV 3 AS 'Refund' ,
+   <!--
+   SUM(CASE WHEN zon.PAY_TYPE='2' AND zon.STATUS = 3 THEN 4 ELSE 0 END) DIV 4 +  SUM(CASE WHEN zon.PAY_TYPE IN(1,3,4) AND zon.STATUS = 4 THEN 5 ELSE 0 END) DIV 5 AS 'Refund',
+     -->
+   SUM(CASE WHEN <![CDATA[ zon.PAY_TIME >= #startCountTime# and zon.PAY_TIME <= #endCountTime# ]]> then (zon.CONTRACT_CUTSUMMONEY+zon.Freight) else 0 end) AS 'afterAmount'
+ from 
+ ( 
+		  SELECT finance_cash_record_tbl.CR_SUBJECT_ID, finance_contract_tbl.CREATE_TIME,finance_contract_tbl.PAY_TIME,    
+   finance_contract_tbl.PAY_TYPE,finance_contract_tbl.STATUS ,finance_contract_tbl.CONTRACT_CUTSUMMONEY,finance_contract_tbl.Freight,cou_sell_way_tbl.SELL_TYPE
+      FROM finance_contract_tbl left join  finance_cash_record_tbl on finance_cash_record_tbl.`CT_ID` = finance_contract_tbl.`ID`  
+      JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=2 
+   WHERE 
+   ( 1=1 
+   		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>  
+		) or (
+		1=1 
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>  
+		)
+   GROUP BY finance_contract_tbl.id 
+    )
+     zon group by CR_SUBJECT_ID
+    )
+     as contract on sys_subject_tbl.subject_id=contract.CR_SUBJECT_ID
+ ) 
+    as contr left join 
+
+  (SELECT subject_id,cus_customer_tbl.REG_TIME,
+                    SUM(CASE WHEN CUS_TYPE = 0 THEN 1 ELSE 0 END) AS 'regStudent',
+                      SUM(CASE WHEN CUS_TYPE = 1 THEN 1 ELSE 0 END) AS 'interStudent',
+                      SUM(1) AS 'allStudent'
+                      FROM cus_customer_tbl
+                    WHERE cus_type in (0,1)
+        <isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+                     GROUP BY subject_id
+                      ORDER BY subject_id) as cus on contr.SUBJECT_ID=cus.subject_id   
+	</select>
+	
+	<!-- 订单实收统计 -->
+	<select id="getOrdersPaid" parameterClass="QueryCustomerCondition" resultMap="Customer_NS.CustomerCountNewDTOResult" cacheModel="Customer_NS-cache">
+		select * from 
+(
+select (#startTimeNew#-interval day(#startTimeNew#) day) + interval s day as dt
+    from ( 
+      select 1 as s union all select 2 union all  select 3  union all   select 4   union all select 5 union all select 6  union all  select 7 union all  select 8  union all select 9 union all
+      select 10 union all select 11 union all select 12 union all select 13
+      union all
+      select 14
+      union all
+      select 15
+      union all
+      select 16
+      union all
+      select 17
+      union all
+      select 18
+      union all
+      select 19
+      union all
+      select 20
+      union all
+      select 21
+      union all
+      select 22
+      union all
+      select 23
+      union all
+      select 24
+      union all
+      select 25
+      union all
+      select 26
+      union all
+      select 27
+      union all
+      select 28
+      union all
+     select 29
+     union all
+     select 30
+     union all
+      select 31
+    ) m
+	where <![CDATA[ s<=day(LAST_DAY(#startTimeNew#)) ]]>
+) as  leftzong
+	left join
+	(
+	select 
+		DATE_FORMAT(tt.CREATE_TIME,'%Y-%m-%d') as gt,
+		SUM(CASE WHEN    tt.STATUS=1 THEN (tt.CONTRACT_CUTSUMMONEY+tt.Freight) else 0 end) AS 'totalAmount',
+		SUM(CASE WHEN     tt.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'ordersPaid',
+		sum(1)  as 'allOrders'
+	   from
+	(		
+		select finance_contract_tbl.CREATE_TIME,finance_contract_tbl.pay_type,finance_contract_tbl.STATUS,finance_contract_tbl.CONTRACT_CUTSUMMONEY,finance_contract_tbl.Freight,finance_contract_tbl.id from finance_contract_tbl 
+		LEFT JOIN webfrom_agent_tbl ON FINANCE_CONTRACT_TBL.WEB_FROM IS NOT NULL AND  FINANCE_CONTRACT_TBL.WEB_FROM !="" AND FINANCE_CONTRACT_TBL.WEB_FROM = webfrom_agent_tbl.WEB_FROM
+		left join finance_cash_record_tbl on finance_cash_record_tbl.ct_id=finance_contract_tbl.id
+		JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+		where  DATE_FORMAT(finance_contract_tbl.create_time,'%Y-%m') =#monthTimeNew#
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				AND FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webType">
+			<isNotEqual property="webType" compareValue="0">
+				AND  webfrom_agent_tbl.TYPE_ID=#webType#
+			</isNotEqual>
+		</isNotNull>
+			<isNotEqual property="subjectId" compareValue="0">
+				AND finance_cash_record_tbl.CR_SUBJECT_ID=#subjectId#
+			</isNotEqual>
+		group by finance_contract_tbl.id
+	) as tt  group by  DATE_FORMAT(tt.CREATE_TIME,'%Y-%m-%d') 
+	) as zhong
+	on leftzong.dt=zhong.gt
+	
+	left join
+	(	
+	select 
+		DATE_FORMAT(tt.REG_TIME,'%Y-%m-%d') as rt,
+		sum(1)  as allStudent
+	   from
+	(
+		select * from cus_customer_tbl where  DATE_FORMAT(reg_time,'%Y-%m') = #monthTimeNew#
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				AND cus_customer_tbl.CUS_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+	) as tt  group by  DATE_FORMAT(tt.REG_TIME,'%Y-%m-%d') 
+	) as rightzong
+	on leftzong.dt=rightzong.rt
+	</select>
+	
+	<!-- 订单实收时间段统计 -->
+		<select id="getOrdersPaidTime" parameterClass="QueryCustomerCondition" resultMap="Customer_NS.CustomerCountNewDTOResult" cacheModel="Customer_NS-cache">	
+			select * from 
+			(					
+				select (#startCountTime#) + interval s day as dt
+	   			 from 
+	   			 (
+	   			 	$monthTimeNew$
+	   			 ) as m
+   			 )	as leftzong						
+				
+				left join
+				(
+				select 
+					DATE_FORMAT(tt.CREATE_TIME,'%Y-%m-%d') as gt,
+					SUM(CASE WHEN    tt.STATUS=1 THEN (tt.CONTRACT_CUTSUMMONEY+tt.Freight) else 0 end) AS 'totalAmount',
+					SUM(CASE WHEN     tt.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'ordersPaid',
+					sum(1)  as 'allOrders'
+				   from
+				(
+							select finance_contract_tbl.CREATE_TIME,finance_contract_tbl.pay_type,finance_contract_tbl.STATUS,finance_contract_tbl.CONTRACT_CUTSUMMONEY,finance_contract_tbl.Freight,finance_contract_tbl.id from finance_contract_tbl 
+							LEFT JOIN webfrom_agent_tbl ON FINANCE_CONTRACT_TBL.WEB_FROM IS NOT NULL AND  FINANCE_CONTRACT_TBL.WEB_FROM !="" AND FINANCE_CONTRACT_TBL.WEB_FROM = webfrom_agent_tbl.WEB_FROM
+							left join finance_cash_record_tbl on finance_cash_record_tbl.ct_id=finance_contract_tbl.id
+							JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+							where  1=1
+							<isNotNull prepend="and" property="startCountTime">
+								<isNotEqual property="startCountTime" compareValue="">
+									<![CDATA[  finance_contract_tbl.create_time >= #startCountTime# ]]>
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull prepend="and" property="endCountTime">
+								<isNotEqual property="endCountTime" compareValue="">
+									<![CDATA[  finance_contract_tbl.create_time <= #endCountTime# ]]>
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFromUrl">
+								<isNotEqual property="contractFromUrl" compareValue="">
+									AND FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL=#contractFromUrl#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webType">
+								<isNotEqual property="webType" compareValue="0">
+									AND  webfrom_agent_tbl.TYPE_ID=#webType#
+								</isNotEqual>
+							</isNotNull>
+								<isNotEqual property="subjectId" compareValue="0">
+									AND finance_cash_record_tbl.CR_SUBJECT_ID=#subjectId#
+								</isNotEqual>
+							group by finance_contract_tbl.id
+						
+						
+				) as tt  group by  DATE_FORMAT(tt.CREATE_TIME,'%Y-%m-%d') 
+				) as zhong
+				on leftzong.dt=zhong.gt
+				
+				left join
+				(	
+				select 
+					DATE_FORMAT(tt.REG_TIME,'%Y-%m-%d') as rt,
+					sum(1)  as allstudent
+				   from
+				(
+					select * from cus_customer_tbl where  1=1
+					    <isNotNull prepend="and" property="startCountTime">
+							<isNotEqual property="startCountTime" compareValue="">
+								<![CDATA[  cus_customer_tbl.REG_TIME >= #startCountTime# ]]>
+							</isNotEqual>
+						</isNotNull>
+						<isNotNull prepend="and" property="endCountTime">
+							<isNotEqual property="endCountTime" compareValue="">
+								<![CDATA[  cus_customer_tbl.REG_TIME <= #endCountTime# ]]>
+							</isNotEqual>
+						</isNotNull>
+						<isNotNull property="contractFromUrl">
+							<isNotEqual property="contractFromUrl" compareValue="">
+								AND cus_customer_tbl.CUS_FROM_URL=#contractFromUrl#
+							</isNotEqual>
+						</isNotNull>
+				) as tt  group by  DATE_FORMAT(tt.REG_TIME,'%Y-%m-%d') 
+				) as rightzong
+				on leftzong.dt=rightzong.rt
+		</select>
+		
+		<!-- 学员统计（按月） -->
+		<select id="getStudentMonth" parameterClass="QueryCustomerCondition" resultMap="Customer_NS.CustomerCountNewDTOResult" cacheModel="Customer_NS-cache">	
+			select * from
+			(
+			select 
+			DATE_FORMAT(qq.CREATE_TIME,'%Y-%m') as dt,
+					SUM(CASE WHEN    qq.STATUS=1 THEN (qq.CONTRACT_CUTSUMMONEY+qq.Freight) else 0 end) AS 'totalAmount',
+					SUM(CASE WHEN     qq.STATUS =1 THEN 2 ELSE 0 END) DIV 2 AS 'ordersPaid',
+					sum(1)  as 'allOrders'
+			from
+			(
+			select finance_contract_tbl.* from finance_contract_tbl 
+			 join finance_cash_record_tbl on finance_cash_record_tbl.ct_id=finance_contract_tbl.id
+			JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+			) as qq  group by  DATE_FORMAT(qq.CREATE_TIME,'%Y-%m') 
+			) as leftjoin
+				left join
+				(	
+				select 
+					DATE_FORMAT(tt.REG_TIME,'%Y-%m') as rt,
+					sum(1)  as allStudent
+				   from
+				(
+					select * from cus_customer_tbl 
+				) as tt  group by  DATE_FORMAT(tt.REG_TIME,'%Y-%m') 
+				) as rightzong
+				on leftjoin.dt=rightzong.rt
+		</select>
+		
+		<!-- 学员登录统计 -->
+		<select id="getCusLoginCount" parameterClass="hashMap" resultClass="CusLoginCountDTO" cacheModel="Customer_NS-cache">
+		select count(*) as cusCount ,date_format(cus_login_record_tbl.LOGIN_TIME,'%Y-%m-%d %H')  as loginTime
+        FROM cus_login_record_tbl where 1=1
+        <isNotEmpty property="begin" prepend="and">
+           <![CDATA[ cus_login_record_tbl.LOGIN_TIME>=#begin#  ]]>
+         </isNotEmpty>
+         <isNotEmpty property="end" prepend="and">
+       <![CDATA[ cus_login_record_tbl.LOGIN_TIME<=#end#  ]]>
+         </isNotEmpty>
+        group by loginTime limit 2400
+		</select>
+		<!-- 某区间内有多少人登录  -->
+		<select id="getCusLoginSum" parameterClass="hashMap" resultClass="CusLoginCountDTO" cacheModel="Customer_NS-cache">
+		select count(distinct cus_login_record_tbl.CUS_ID )   cusCount,date_format(cus_login_record_tbl.LOGIN_TIME,'%Y-%m-%d' )  loginTime
+         FROM cus_login_record_tbl,cus_customer_tbl
+           where 
+        cus_login_record_tbl.CUS_ID = cus_customer_tbl.CUS_ID   
+        <isNotEmpty property="begin" prepend="and">
+           <![CDATA[ cus_login_record_tbl.LOGIN_TIME>=#begin#  ]]>
+         </isNotEmpty>
+         <isNotEmpty property="end" prepend="and">
+       <![CDATA[ cus_login_record_tbl.LOGIN_TIME<=#end#  ]]>
+         </isNotEmpty>
+         group by loginTime    order by cusCount desc limit 100
+		</select>
+		
+		<select id="getCustomerNotTempCount" parameterClass="String" resultClass="int">
+			SELECT COUNT(1) FROM CUS_CUSTOMER_TBL WHERE CUS_CUSTOMER_TBL.CUS_ID IN ($value$) AND CUS_TYPE != 1 
+		</select>
+		
+			<!-- Yangning  2011/12/06 批量冻结用户-->
+	<update id="freezeCustomerByCusIds" parameterClass="String">
+		UPDATE 
+		CUS_CUSTOMER_TBL SET CUS_CUSTOMER_TBL.FREEZE_STATUS = 0 WHERE CUS_ID IN ($value$)
+	</update>
+	
+	<parameterMap id="iinsertcocMap" class="map">
+		<parameter property="icount" jdbcType="LONG" javaType="long"
+		mode="OUT" />
+	</parameterMap> 
+	      
+     <procedure id="addCusRankToTable"  parameterMap="iinsertcocMap">
+     	{call procedure_cus_rank(?)}
+     </procedure>
+</sqlMap>

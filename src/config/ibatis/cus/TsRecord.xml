@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TsRecord_NS">
+        <!--table:CUS_TS_RECORD_TBL-->
+        <typeAlias alias="TsRecord" type="com.shangde.edu.cus.domain.TsRecord"/>
+        <typeAlias alias="QueryTsRecordCondition" type="com.shangde.edu.cus.condition.QueryTsRecordCondition"/>
+
+        <resultMap id="TsRecordResult" class="TsRecord">
+            <result property="trId" column="TR_ID"/>
+            <result property="tsId" column="TS_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="trType" column="TR_TYPE"/>
+            <result property="accessType" column="ACCESS_TYPE"/>
+            <result property="useType" column="USE_TYPE"/>
+            <result property="accessTime" column="ACCESS_TIME"/>
+            <result property="useTime" column="USE_TIME"/>
+            <result property="trNum" column="TR_NUM"/>
+        </resultMap>
+
+        <sql id="CUS_TS_RECORD_TBL_columns">
+            CUS_TS_RECORD_TBL.TR_ID,
+            CUS_TS_RECORD_TBL.TS_ID,
+            CUS_TS_RECORD_TBL.CUS_ID,
+            CUS_TS_RECORD_TBL.TR_TYPE,
+            CUS_TS_RECORD_TBL.ACCESS_TYPE,
+            CUS_TS_RECORD_TBL.USE_TYPE,
+            CUS_TS_RECORD_TBL.ACCESS_TIME,
+            CUS_TS_RECORD_TBL.USE_TIME,
+            CUS_TS_RECORD_TBL.TR_NUM
+        </sql>
+
+        <sql id="CUS_TS_RECORD_TBL_properties">
+            #trId#,
+            #tsId#,
+            #cusId#,
+            #trType#,
+            #accessType#,
+            #useType#,
+            #accessTime#,
+            #useTime#,
+            #trNum#
+        </sql>
+
+        <insert id="createTsRecord" parameterClass="TsRecord">
+            INSERT INTO CUS_TS_RECORD_TBL (<include refid="TsRecord_NS.CUS_TS_RECORD_TBL_columns"/>) VALUES (<include refid="TsRecord_NS.CUS_TS_RECORD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="trId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTsRecordById" parameterClass="int">
+            DELETE FROM CUS_TS_RECORD_TBL
+            WHERE
+                TR_ID = #value#
+        </delete>
+        
+         <delete id="deleteTsRecordByCusId" parameterClass="int">
+            DELETE FROM CUS_TS_RECORD_TBL
+            WHERE
+                CUS_ID = #value#
+        </delete>
+
+        <update id="updateTsRecord" parameterClass="TsRecord">
+            UPDATE CUS_TS_RECORD_TBL SET
+                TR_ID = #trId#,
+                TS_ID = #tsId#,
+                CUS_ID = #cusId#,
+                TR_TYPE = #trType#,
+                ACCESS_TYPE = #accessType#,
+                USE_TYPE = #useType#,
+                ACCESS_TIME = #accessTime#,
+                USE_TIME = #useTime#,
+                TR_NUM = #trNum#
+            WHERE
+                TR_ID = #trId#
+        </update>
+
+        <select id="getTsRecordById" resultMap="TsRecord_NS.TsRecordResult" parameterClass="int">
+            SELECT
+            <include refid="TsRecord_NS.CUS_TS_RECORD_TBL_columns"/>
+            FROM CUS_TS_RECORD_TBL
+            WHERE
+                TR_ID = #value#
+        </select>
+
+        <select id="getTsRecordList" resultMap="TsRecord_NS.TsRecordResult" parameterClass="QueryTsRecordCondition">
+             <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="TsRecord_NS.CUS_TS_RECORD_TBL_columns"/>
+            FROM CUS_TS_RECORD_TBL
+            <dynamic prepend="WHERE"> 
+             <isNotNull property="tsId">
+            	<isNotEqual property="tsId" compareValue="0" prepend="and">
+		               TS_ID=#tsId#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+			  <include refid="public_sql.page_end"/>
+        </select>
+          <select id="getTsRecordPageList" resultMap="TsRecord_NS.TsRecordResult" parameterClass="QueryTsRecordCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="TsRecord_NS.CUS_TS_RECORD_TBL_columns"/>
+            FROM CUS_TS_RECORD_TBL
+            <dynamic prepend="WHERE"> 
+             <isNotNull property="tsId">
+            	<isNotEqual property="tsId" compareValue="0" prepend="and">
+		               TS_ID=#tsId#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+            <include refid="public_sql.page_end"/>
+        </select>
+        <select id="getTsRecordByCount" resultClass="int"  parameterClass="QueryTsRecordCondition">
+            SELECT COUNT(1) FROM CUS_TS_RECORD_TBL
+              <dynamic prepend="WHERE"> 
+             <isNotNull property="tsId">
+            	<isNotEqual property="tsId" compareValue="0" prepend="and">
+		               TS_ID=#tsId#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+        </select>
+        
+        
+          <select id="getTsRecordListByCus" resultMap="TsRecord_NS.TsRecordResult" parameterClass="QueryTsRecordCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="TsRecord_NS.CUS_TS_RECORD_TBL_columns"/>
+            FROM CUS_TS_RECORD_TBL
+            <dynamic prepend="WHERE"> 
+            	<isNotEqual property="trType" compareValue="0" prepend="and">
+		               TR_TYPE = #trType#
+			  </isNotEqual>
+              <isNotNull property="cusId">
+            	<isNotEqual property="cusId" compareValue="0" prepend="and">
+		               CUS_ID = #cusId#
+			    </isNotEqual>
+			  </isNotNull>
+			</dynamic>
+			ORDER BY TR_ID DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+        <select id="getTsRecordCountByCus" resultClass="int"  parameterClass="QueryTsRecordCondition">
+            SELECT COUNT(1) FROM CUS_TS_RECORD_TBL 
+              <dynamic prepend="WHERE"> 
+              <isNotEqual property="trType" compareValue="0" prepend="and">
+		               TR_TYPE = #trType#
+			  </isNotEqual>
+             <isNotNull property="cusId">
+            	<isNotEqual property="cusId" compareValue="0" prepend="and">
+		               CUS_ID = #cusId#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+			  ORDER BY TR_ID DESC
+        </select>
+        
+        <delete id="deleteTsRecordByCusIds" parameterClass="String">
+            DELETE FROM CUS_TS_RECORD_TBL
+            WHERE
+                CUS_ID IN ($value$)
+        </delete>
+        <!--end-->
+</sqlMap>

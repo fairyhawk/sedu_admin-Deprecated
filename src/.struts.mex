@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="edu-default" location="16,25" size="170,70" />
+  <include file="/config/struts/struts-test.xml" location="298,290" size="150,30" />
+  <include file="/config/struts/struts-sys.xml" location="546,290" size="150,30" />
+  <include file="/config/struts/struts-util.xml" location="20,395" size="150,30" />
+  <include file="/config/struts/struts-res.xml" location="266,395" size="150,30" />
+  <include file="/config/struts/struts-cms.xml" location="507,395" size="150,30" />
+  <include file="/config/struts/struts-cou.xml" location="17,500" size="150,30" />
+  <include file="/config/struts/struts-cus.xml" location="264,500" size="150,30" />
+  <include file="/config/struts/struts-exam.xml" location="257,10" size="150,30" />
+  <include file="/config/struts/struts-mail.xml" location="506,500" size="150,30" />
+  <include file="/config/struts/struts-cusmgr.xml" location="533,10" size="150,30" />
+  <include file="/config/struts/struts-alipay.xml" location="11,185" size="150,30" />
+  <include file="/config/struts/struts-trolley.xml" location="292,185" size="150,30" />
+  <include file="/config/struts/struts-finance.xml" location="567,185" size="150,30" />
+  <include file="/config/struts/struts-task.xml" location="17,605" size="150,30" />
+  <include file="/config/struts/struts-kb.xml" location="266,605" size="150,30" />
+  <include file="/config/struts/struts-msg.xml" location="506,605" size="150,30" />
+  <include file="/config/struts/struts-stu.xml" location="20,710" size="150,30" />
+  <include file="/config/struts/struts-ass.xml" location="265,710" size="150,30" />
+  <include file="/config/struts/struts-dis.xml" location="511,710" size="150,30" />
+</Struts2Diagram>
+

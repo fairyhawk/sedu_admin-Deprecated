@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Planitem_NS">
+        <!--table:STU_PLANITEM_TBL-->
+        <typeAlias alias="Planitem" type="com.shangde.edu.stu.domain.Planitem"/>
+        <typeAlias alias="QueryPlanitemCondition" type="com.shangde.edu.stu.condition.QueryPlanitemCondition"/>
+
+        <resultMap id="PlanitemResult" class="Planitem">
+            <result property="pitemId" column="PITEM_ID"/>
+            <result property="itemtitle" column="ITEMTITLE"/>
+            <result property="itemdate" column="ITEMDATE"/>
+            <result property="planId" column="PLAN_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+        </resultMap>
+
+        <sql id="STU_PLANITEM_TBL_columns">
+            STU_PLANITEM_TBL.PITEM_ID,
+            STU_PLANITEM_TBL.ITEMTITLE,
+            STU_PLANITEM_TBL.ITEMDATE,
+            STU_PLANITEM_TBL.PLAN_ID,
+            STU_PLANITEM_TBL.CUS_ID
+        </sql>
+
+        <sql id="STU_PLANITEM_TBL_properties">
+            #pitemId#,
+            #itemtitle#,
+            #itemdate#,
+            #planId#,
+            #cusId#
+        </sql>
+
+        <insert id="createPlanitem" parameterClass="Planitem">
+            INSERT INTO STU_PLANITEM_TBL (<include refid="Planitem_NS.STU_PLANITEM_TBL_columns"/>) VALUES (<include refid="Planitem_NS.STU_PLANITEM_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="pitemId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+        <select id="getPlanitemById" resultMap="Planitem_NS.PlanitemResult" parameterClass="int">
+            SELECT
+            <include refid="Planitem_NS.STU_PLANITEM_TBL_columns"/>
+            FROM STU_PLANITEM_TBL
+            WHERE
+            	PITEM_ID = #value#
+
+        </select>
+        
+        <select id="getPlanitemByPlanId" resultMap="Planitem_NS.PlanitemResult" parameterClass="int">
+            SELECT
+            <include refid="Planitem_NS.STU_PLANITEM_TBL_columns"/>
+            FROM STU_PLANITEM_TBL
+            WHERE
+            	PLAN_ID = #value#
+
+        </select>
+        
+        <update id="updatePlanitem" parameterClass="Planitem">
+            UPDATE STU_PLANITEM_TBL SET
+                PITEM_ID = #pitemId#,
+                ITEMTITLE = #itemtitle#,
+                ITEMDATE = #itemdate#,
+                PLAN_ID = #planId#,
+                CUS_ID = #cusId#
+            WHERE
+				PITEM_ID = #pitemId#
+
+        </update>
+
+        <delete id="deletePlanitemById" parameterClass="int">
+            DELETE FROM STU_PLANITEM_TBL
+            WHERE
+				PITEM_ID = #value#
+        </delete>
+        
+        
+<!-- 暂时先注释，启用的时候  再开启
+
+        <select id="getPlanitemList" resultMap="Planitem_NS.PlanitemResult" parameterClass="QueryPlanitemCondition">
+            SELECT
+            <include refid="Planitem_NS.STU_PLANITEM_TBL_columns"/>
+            FROM STU_PLANITEM_TBL
+        </select>
+        -->
+        
+        <!--end-->
+</sqlMap>

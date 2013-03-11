@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ClazzCou_NS">
+        <!--table:COU_CLAZZ_COU_TBL-->
+        <typeAlias alias="ClazzCou" type="com.shangde.edu.cou.domain.ClazzCou"/>
+        <typeAlias alias="QueryClazzCouCondition" type="com.shangde.edu.cou.condition.QueryClazzCouCondition"/>
+
+        <resultMap id="ClazzCouResult" class="ClazzCou">
+            <result property="id" column="ID"/>
+            <result property="clazzId" column="CLAZZ_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+        </resultMap>
+
+        <sql id="COU_CLAZZ_COU_TBL_columns">
+            COU_CLAZZ_COU_TBL.ID,
+            COU_CLAZZ_COU_TBL.CLAZZ_ID,
+            COU_CLAZZ_COU_TBL.COURSE_ID
+        </sql>
+
+        <sql id="COU_CLAZZ_COU_TBL_properties">
+            #id#,
+            #clazzId#,
+            #courseId#
+        </sql>
+
+        <insert id="createClazzCou" parameterClass="ClazzCou">
+            INSERT INTO COU_CLAZZ_COU_TBL (<include refid="ClazzCou_NS.COU_CLAZZ_COU_TBL_columns"/>) VALUES (<include refid="ClazzCou_NS.COU_CLAZZ_COU_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteClazzCouById" parameterClass="int">
+            DELETE FROM COU_CLAZZ_COU_TBL
+            WHERE
+                ID = #value#
+
+
+        </delete>
+
+        <update id="updateClazzCou" parameterClass="ClazzCou">
+            UPDATE COU_CLAZZ_COU_TBL SET
+                ID = #id#,
+                CLAZZ_ID = #clazzId#,
+                COURSE_ID = #courseId#
+            WHERE
+                ID = #id#
+
+
+        </update>
+
+        <select id="getClazzCouById" resultMap="ClazzCou_NS.ClazzCouResult" parameterClass="int">
+            SELECT
+            <include refid="ClazzCou_NS.COU_CLAZZ_COU_TBL_columns"/>
+            FROM COU_CLAZZ_COU_TBL
+            WHERE
+                ID = #value#
+
+        </select>
+        
+        <select id="getClazzCouByCourseId" resultMap="ClazzCou_NS.ClazzCouResult" parameterClass="int">
+            SELECT
+            <include refid="ClazzCou_NS.COU_CLAZZ_COU_TBL_columns"/>
+            FROM COU_CLAZZ_COU_TBL
+            WHERE
+                COU_CLAZZ_COU_TBL.COURSE_ID = #value#
+        </select>
+
+        <select id="getClazzCouList" resultMap="ClazzCou_NS.ClazzCouResult" parameterClass="QueryClazzCouCondition">
+            SELECT
+            <include refid="ClazzCou_NS.COU_CLAZZ_COU_TBL_columns"/>
+            FROM COU_CLAZZ_COU_TBL
+        </select>
+        
+        <!-- fen ye search  -->
+        <select id="getCourseListByClazzId" resultMap="Course_NS.CourseResult" parameterClass="QueryClazzCouCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>
+            FROM COU_COURSE_TBL,cou_clazz_cou_tbl
+              WHERE
+                COU_COURSE_TBL.course_id = cou_clazz_cou_tbl.course_id and COU_COURSE_TBL.STATUS  != 2
+                <isNotNull property="clazzId">
+	            	<isNotEqual property="clazzId" compareValue="0" prepend="and">
+			                  cou_clazz_cou_tbl.clazz_id = #clazzId#
+				    </isNotEqual>
+				    order by COU_COURSE_TBL.course_id desc
+	        	</isNotNull>
+	      
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getCourseListByClazzIdCount" resultClass="int" parameterClass="QueryClazzCouCondition">
+            SELECT COUNT(1)
+            FROM COU_COURSE_TBL,cou_clazz_cou_tbl
+              WHERE
+                COU_COURSE_TBL.course_id = cou_clazz_cou_tbl.course_id and COU_COURSE_TBL.STATUS  != 2
+                <isNotNull property="clazzId">
+	            	<isNotEqual property="clazzId" compareValue="0" prepend="and">
+			                  cou_clazz_cou_tbl.clazz_id = #clazzId#
+				    </isNotEqual>
+	        	</isNotNull>
+        </select>
+        
+         <!-- jugment is exist -->
+         <select id="isExistInClazz" resultClass="int" parameterClass="QueryClazzCouCondition">
+            select count(1) from cou_clazz_cou_tbl where cou_clazz_cou_tbl.clazz_id = #clazzId# and cou_clazz_cou_tbl.COURSE_ID = #courseId#
+        </select>
+        
+        
+        <!-- jugment is exist end -->
+        <!-- delete course from clazz  -->
+         <delete id="deleteCourseInClazz"  parameterClass="QueryClazzCouCondition">
+            delete from cou_clazz_cou_tbl where cou_clazz_cou_tbl.CLAZZ_ID = #clazzId# and cou_clazz_cou_tbl.COURSE_ID = #courseId#
+        </delete>
+        <!-- delete course from clazz end -->
+        <!--end-->
+</sqlMap>

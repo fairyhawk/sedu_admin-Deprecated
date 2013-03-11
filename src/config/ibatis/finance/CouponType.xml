@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CouponType_NS">
+	<typeAlias alias="CouponType" type="com.shangde.edu.finance.domain.Coupontype" />
+	<typeAlias alias="cooperation" type="com.shangde.edu.finance.domain.Cooperation" />
+	<typeAlias alias="QueryCouponTypeCondition" type="com.shangde.edu.finance.condition.QueryCouponTypeCondition"/>
+	<typeAlias  alias="SubjectEntity" type="com.shangde.edu.sys.domain.Subject"/>
+
+	<resultMap id="couponTypeResultDTO" class="CouponType">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="C_INFO" property="cInfo" jdbcType="VARCHAR" />
+		<result column="PIC_PATH" property="picPath" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime"  />
+		<result column="USE_TIME" property="useTime"  />
+		<result column="STOP_TIME" property="stopTime"  />
+		<result column="GENERATE_TIME" property="generateTime"
+			 />
+		<result column="LEAST_PRICE" property="leastPrice" jdbcType="REAL" />
+		<result column="PREFERENTIAL_PRICE" property="preferentialPrice" jdbcType="VARCHAR" />
+		<result column="SUBJECT_ID" property="subjectId" jdbcType="VARCHAR" />
+		<result column="C_NUM" property="cNum" jdbcType="INTEGER" />
+		<result column="C_TOSCORE" property="cToscore" jdbcType="INTEGER" />
+		<result column="C_TYPE" property="cType" jdbcType="INTEGER" />
+		<result column="COOPERATIVE_ID" property="cooperativeId"
+			jdbcType="INTEGER" />
+		<result column="CREATE_SUM" property="createSum" jdbcType="INTEGER" />
+		<result column="USE_SUM" property="useSum" jdbcType="INTEGER" />
+		<result column="PAY_SUM" property="paySum" jdbcType="INTEGER" />
+		<result column="STATE" property="state" jdbcType="INTEGER" />
+		<result column="OPERATING_NAME" property="operatingName" jdbcType="VARCHAR"/>
+		<result column="COMPANY" property="company" jdbcType="VARCHAR" />
+		<result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+		<resultMap id="couponTypeResult" class="CouponType">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="C_INFO" property="cInfo" jdbcType="VARCHAR" />
+		<result column="PIC_PATH" property="picPath" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime"  />
+		<result column="USE_TIME" property="useTime"  />
+		<result column="STOP_TIME" property="stopTime"  />
+		<result column="GENERATE_TIME" property="generateTime"
+			 />
+		<result column="LEAST_PRICE" property="leastPrice" jdbcType="REAL" />
+		<result column="PREFERENTIAL_PRICE" property="preferentialPrice" jdbcType="VARCHAR" />
+		<result column="SUBJECT_ID" property="subjectId" jdbcType="VARCHAR" />
+		<result column="C_NUM" property="cNum" jdbcType="INTEGER" />
+		<result column="C_TOSCORE" property="cToscore" jdbcType="INTEGER" />
+		<result column="C_TYPE" property="cType" jdbcType="INTEGER" />
+		<result column="COOPERATIVE_ID" property="cooperativeId"
+			jdbcType="INTEGER" />
+		<result column="CREATE_SUM" property="createSum" jdbcType="INTEGER" />
+		<result column="USE_SUM" property="useSum" jdbcType="INTEGER" />
+		<result column="PAY_SUM" property="paySum" jdbcType="INTEGER" />
+		<result column="STATE" property="state" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="COU_COUPONTYPE_TBL_columns">
+		ID,
+		TITLE,
+		C_INFO,
+		PIC_PATH,
+		CREATE_TIME,
+		USE_TIME,
+		STOP_TIME,
+		GENERATE_TIME,
+		LEAST_PRICE,
+		PREFERENTIAL_PRICE,
+		SUBJECT_ID,
+		C_NUM,
+		C_TOSCORE,
+		C_TYPE,
+		COOPERATIVE_ID,
+		CREATE_SUM,
+		USE_SUM,
+		PAY_SUM,
+		STATE,
+		OPERATING_NAME
+	</sql>
+	<sql id="COU_COOPERATION_TBL_columns">
+		ID,
+		COMPANY_NAME,
+		COMPANY_CODE
+	</sql>
+	 <sql id="COU_COOPERATION_TBL_properties">
+            #id#,
+            #companyName#,
+            #companyCode#
+     </sql>
+	<sql id="COU_COUPONTYPE_TBLl_columns">
+		ID,
+		TITLE,
+		C_INFO,
+		PIC_PATH,
+		CREATE_TIME,
+		USE_TIME,
+		STOP_TIME,
+		GENERATE_TIME,
+		LEAST_PRICE,
+		PREFERENTIAL_PRICE,
+		SUBJECT_ID,
+		C_NUM,
+		C_TOSCORE,
+		C_TYPE,
+		COOPERATIVE_ID,
+		CREATE_SUM,
+		USE_SUM,
+		PAY_SUM,
+		STATE,
+		OPERATING_NAME
+	</sql>
+	 <sql id="cou_coupontype_tbl_properties">
+            #id#,
+            #title#,
+            #cInfo#,
+            #picPath#,
+            #createTime#,
+            #useTime#,
+            #stopTime#,
+            #generateTime#,
+            #leastPrice#,
+            #preferentialPrice#,
+            #subjectId#,
+            #cNum#,
+            #cToscore#,
+            #cType#,
+            #cooperativeId#,
+            #createSum#,
+            #useSum#,
+            #paySum#,
+            #state#,
+            #operatingName#
+        </sql>
+        
+        <resultMap id="SubjectEntityResult" class="SubjectEntity">
+            <result property="subjectId" column="subject_id"/>
+            <result property="subjectName" column="subject_name"/>
+        </resultMap>
+        <sql id="sys_subject_tbl_prepoty">
+       		sys_subject_tbl.subject_id,
+			sys_subject_tbl.subject_name
+        </sql>
+	
+
+<select id="getCouponTypeList" resultMap="CouponType_NS.couponTypeResultDTO"  parameterClass="QueryCouponTypeCondition">
+		SELECT
+		<include refid="CouponType_NS.COU_COUPONTYPE_TBL_columns" />,
+		 (SELECT COMPANY_NAME from cou_cooperation_tbl WHERE cou_cooperation_tbl.ID = cou_coupontype_tbl.COOPERATIVE_ID) AS COMPANY,
+		  (select SUBJECT_NAME from sys_subject_tbl where SUBJECT_ID =cou_coupontype_tbl.SUBJECT_ID) as SUBJECT_NAME
+		FROM cou_coupontype_tbl  ORDER BY CREATE_TIME DESC
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getCouponTypeListById" resultMap="CouponType_NS.couponTypeResult"  parameterClass="int">
+		SELECT
+		<include refid="CouponType_NS.COU_COUPONTYPE_TBL_columns" />	
+		FROM cou_coupontype_tbl  where ID=#value# ORDER BY CREATE_TIME DESC
+		
+	</select>
+	
+	<select id="getCouponTypeListByIdForDTO" resultMap="CouponType_NS.couponTypeResultDTO"  parameterClass="int">
+		SELECT
+		<include refid="CouponType_NS.COU_COUPONTYPE_TBL_columns" />,
+		 (SELECT COMPANY_NAME from cou_cooperation_tbl WHERE cou_cooperation_tbl.ID = cou_coupontype_tbl.COOPERATIVE_ID) AS COMPANY,
+		 (select SUBJECT_NAME from sys_subject_tbl where SUBJECT_ID =cou_coupontype_tbl.SUBJECT_ID) as SUBJECT_NAME	
+		FROM cou_coupontype_tbl  where ID=#value# ORDER BY CREATE_TIME DESC
+		
+	</select>
+	
+	<select id="getCouponTypeListByWhere" resultMap="CouponType_NS.couponTypeResultDTO"  parameterClass="QueryCouponTypeCondition">
+		SELECT
+		<include refid="CouponType_NS.COU_COUPONTYPE_TBL_columns" />,
+		 (SELECT COMPANY_NAME from cou_cooperation_tbl WHERE cou_cooperation_tbl.ID = cou_coupontype_tbl.COOPERATIVE_ID) AS COMPANY,
+		 (select SUBJECT_NAME from sys_subject_tbl where SUBJECT_ID =cou_coupontype_tbl.SUBJECT_ID) as SUBJECT_NAME
+		FROM cou_coupontype_tbl where 1=1 
+		<isNotEqual property="state" compareValue="0">
+	        	and STATE=#state#
+	    </isNotEqual>
+	    <isNotEqual property="cType" compareValue="0">
+	        	and C_TYPE=#cType#
+	    </isNotEqual>
+	   <isNotNull property="startTime" >
+				<![CDATA[  and GENERATE_TIME >= #startTime# ]]>
+	   </isNotNull>
+	   <isNotNull property="endTime" >
+				<![CDATA[ and GENERATE_TIME < #endTime#  ]]>
+	   </isNotNull>
+    	<isNotEqual property="keyword" compareValue="">
+	        	<isNotEqual property="searchType" compareValue="0" >
+	        	<!-- 1为合作商 -->
+	        	<isEqual property="searchType" compareValue="1">
+	        	and COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%')) 
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="2">
+	        	<![CDATA[ and PRICE >=#keyword#]]>
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="3">
+	        	<![CDATA[ and C_NUM >=#keyword#]]>
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="4">
+	            and TITLE  like  CONCAT('%',#keyword#,'%')
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="5">
+	            and (SUBJECT_ID in (select SUBJECT_ID from sys_subject_tbl where SUBJECT_NAME like  CONCAT('%',#keyword#,'%'))
+	            <isEqual property="keyword" compareValue="所有项目">
+	        		        	or  SUBJECT_ID=0
+	        	</isEqual>
+	        	)
+	        	</isEqual>
+	        	</isNotEqual>
+	        	<isEqual property="searchType" compareValue="0">
+	        		        	and (
+	        		        	COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%'))
+	        		        	or  TITLE  like  CONCAT('%',#keyword#,'%') or SUBJECT_ID in (select SUBJECT_ID from sys_subject_tbl where SUBJECT_NAME like  CONCAT('%',#keyword#,'%'))
+	        		        	<isEqual property="keyword" compareValue="所有项目">
+	        		        	or  SUBJECT_ID=0
+	        	                </isEqual>
+	        		        	)
+	        	
+	        	</isEqual>
+	    </isNotEqual>
+	   ORDER BY CREATE_TIME DESC
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getCouponTypeListByWhereCount" resultClass="int"  parameterClass="QueryCouponTypeCondition">
+		SELECT
+		count(1)
+		FROM cou_coupontype_tbl where 1=1 
+		<isNotEqual property="state" compareValue="0">
+	        	and STATE=#state#
+	    </isNotEqual>
+	    <isNotEqual property="cType" compareValue="0">
+	        	and C_TYPE=#cType#
+	    </isNotEqual>
+	   <isNotNull property="startTime" >
+				<![CDATA[  and GENERATE_TIME >= #startTime# ]]>
+	   </isNotNull>
+	   <isNotNull property="endTime" >
+				<![CDATA[ and GENERATE_TIME < #endTime#  ]]>
+	   </isNotNull>
+    	<isNotEqual property="keyword" compareValue="">
+	        	<isNotEqual property="searchType" compareValue="0" >
+	        	<!-- 1为合作商 -->
+	        	<isEqual property="searchType" compareValue="1">
+	        	and COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%')) 
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="2">
+	        	<![CDATA[ and PRICE >=#keyword#]]>
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="3">
+	        	<![CDATA[ and C_NUM >=#keyword#]]>
+	        	</isEqual>
+	        	<isEqual property="searchType" compareValue="5">
+	            and (SUBJECT_ID in (select SUBJECT_ID from sys_subject_tbl where SUBJECT_NAME like  CONCAT('%',#keyword#,'%'))
+	            <isEqual property="keyword" compareValue="所有项目">
+	        		        	or  SUBJECT_ID=0
+	        	</isEqual>
+	        	)
+	        	</isEqual>
+	        	</isNotEqual>
+	        	<isEqual property="searchType" compareValue="0">
+	        		        	and (
+	        		        	COOPERATIVE_ID in (select cou_cooperation_tbl.ID from cou_cooperation_tbl where cou_cooperation_tbl.COMPANY_NAME like CONCAT('%',#keyword#,'%'))
+	        		        	or  TITLE  like  CONCAT('%',#keyword#,'%') or SUBJECT_ID in (select SUBJECT_ID from sys_subject_tbl where SUBJECT_NAME like  CONCAT('%',#keyword#,'%'))
+	        		        	<isEqual property="keyword" compareValue="所有项目">
+	        		        	or  SUBJECT_ID=0
+	        	                </isEqual>
+	        		        	)
+	        	
+	        	</isEqual>
+	    </isNotEqual>
+	    ORDER BY CREATE_TIME DESC
+	</select>
+	
+	<select id="getCouponTypeListCount" resultClass="int" >
+		SELECT
+		count(1)
+		FROM cou_coupontype_tbl
+	</select>
+	
+	 <update id="updateCouponType">
+    update cou_coupontype_tbl
+    <dynamic prepend="set">
+        ID = #id#,
+        TITLE = #title#,
+        C_INFO = #cInfo#,
+         PIC_PATH = #picPath#,
+        CREATE_TIME = #createTime#,
+        USE_TIME = #useTime#,
+        STOP_TIME = #stopTime#,
+        GENERATE_TIME = #generateTime#,
+        LEAST_PRICE = #leastPrice#,
+        PREFERENTIAL_PRICE=#preferentialPrice#,
+        SUBJECT_ID = #subjectId#,
+        C_NUM = #cNum#,
+        C_TOSCORE = #cToscore#,
+        C_TYPE = #cType#,
+        COOPERATIVE_ID = #cooperativeId#,
+        CREATE_SUM = #createSum#,
+        USE_SUM = #useSum#,
+        PAY_SUM = #paySum#,
+        STATE = #state#
+    </dynamic>
+      WHERE ID = #id#
+  </update>
+  
+   <!-- 创建一个优惠券 -->
+        <insert id="addCreateCoupon" parameterClass="CouponType">
+            INSERT INTO cou_coupontype_tbl (<include refid="CouponType_NS.COU_COUPONTYPE_TBLl_columns"/>) VALUES 
+				(<include refid="CouponType_NS.cou_coupontype_tbl_properties"/>)
+			<selectKey resultClass="int" type="post" keyProperty="id" >
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <!-- 根据ID查询单个的优惠券 -->
+        <select id="getSingleCoupon" resultMap="CouponType_NS.couponTypeResult" parameterClass="int">
+            SELECT
+            <include refid="CouponType_NS.COU_COUPONTYPE_TBLl_columns"/>
+            FROM cou_coupontype_tbl
+            WHERE
+                ID =  #id#
+        </select>
+         <!-- 创建一个合作商-->
+        <insert id="addCreateCooperation" parameterClass="cooperation">
+            INSERT INTO cou_cooperation_tbl (<include refid="CouponType_NS.COU_COOPERATION_TBL_columns"/>) VALUES 
+				(<include refid="CouponType_NS.COU_COOPERATION_TBL_properties"/>)
+			<selectKey resultClass="int" type="post" keyProperty="id" >
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+         <!-- 查询单个的项目-->
+        <select id="getsingleSubjectName" resultMap="CouponType_NS.SubjectEntityResult" parameterClass="int">
+            SELECT
+            <include refid="CouponType_NS.sys_subject_tbl_prepoty"/>
+            FROM sys_subject_tbl
+            WHERE
+                sys_subject_tbl.subject_id =  #subjectId#
+        </select>
+        <!-- 在生成编码的时候，给数据库中的编码生策划给你时间添加时间 -->
+         <update id="updateCouponTypeGenerateTime">
+    update cou_coupontype_tbl
+    <dynamic prepend="set">
+        GENERATE_TIME = #generateTime#
+    </dynamic>
+      WHERE ID = #id#
+  </update>
+  <!-- 查询过期的优惠券类别 -->
+  <update id="updateGQCouponType">
+ <![CDATA[update cou_coupontype_tbl set state=3 where STOP_TIME <now()]]>
+  </update>
+
+</sqlMap>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Vediogroup_NS">
+        <!--table:RES_VEDIOGROUP_TBL-->
+        <typeAlias alias="Vediogroup" type="com.shangde.edu.res.domain.Vediogroup"/>
+        <typeAlias alias="QueryVediogroupCondition" type="com.shangde.edu.res.condition.QueryVediogroupCondition"/>
+
+        <resultMap id="VediogroupResult" class="Vediogroup">
+            <result property="vgId" column="VG_ID"/>
+            <result property="vgName" column="VG_NAME"/>
+            <result property="vgType" column="VG_TYPE"/>
+            <result property="vgTime" column="VG_TIME"/>
+            <result property="vgNfo" column="VG_NFO"/>
+        </resultMap>
+
+        <sql id="RES_VEDIOGROUP_TBL_columns">
+            RES_VEDIOGROUP_TBL.VG_ID,
+            RES_VEDIOGROUP_TBL.VG_NAME,
+            RES_VEDIOGROUP_TBL.VG_TYPE,
+            RES_VEDIOGROUP_TBL.VG_TIME,
+            RES_VEDIOGROUP_TBL.VG_NFO
+        </sql>
+
+        <sql id="RES_VEDIOGROUP_TBL_properties">
+            #vgId#,
+            #vgName#,
+            #vgType#,
+            #vgTime#,
+            #vgNfo#
+        </sql>
+
+        <insert id="createVediogroup" parameterClass="Vediogroup">
+            INSERT INTO RES_VEDIOGROUP_TBL (<include refid="Vediogroup_NS.RES_VEDIOGROUP_TBL_columns"/>) VALUES (<include refid="Vediogroup_NS.RES_VEDIOGROUP_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="vgId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteVediogroupById" parameterClass="int">
+            DELETE FROM RES_VEDIOGROUP_TBL
+            WHERE
+                VG_ID = #value#
+		 </delete>
+
+        <update id="updateVediogroup" parameterClass="Vediogroup">
+            UPDATE RES_VEDIOGROUP_TBL SET
+                VG_ID = #vgId#,
+                VG_NAME = #vgName#,
+                VG_TYPE = #vgType#,
+                VG_TIME = #vgTime#,
+                VG_NFO = #vgNfo#
+            WHERE
+                VG_ID = #vgId#
+
+        </update>
+
+        <select id="getVediogroupById" resultMap="Vediogroup_NS.VediogroupResult" parameterClass="int">
+            SELECT
+            <include refid="Vediogroup_NS.RES_VEDIOGROUP_TBL_columns"/>
+            FROM RES_VEDIOGROUP_TBL
+            WHERE
+                VG_ID = #value#
+
+        </select>
+           <select id="getVediogroupListCount" resultClass="int" parameterClass="QueryVediogroupCondition">
+         
+            SELECT COUNT(1)
+            FROM RES_VEDIOGROUP_TBL
+            <dynamic prepend="WHERE"> 
+            <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		               VG_NAME like  CONCAT('%',#searchKey#,'%')
+		          	
+			    </isNotEqual>
+			  </isNotNull>
+           </dynamic>
+        </select>
+        <select id="getVediogroupList" resultMap="Vediogroup_NS.VediogroupResult" parameterClass="QueryVediogroupCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Vediogroup_NS.RES_VEDIOGROUP_TBL_columns"/>
+            FROM RES_VEDIOGROUP_TBL 
+            <dynamic prepend="WHERE"> 
+            <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                 VG_NAME like  CONCAT('%',#searchKey#,'%')
+		          		
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+            <include refid="public_sql.page_end"/>
+        </select>
+         <select id="getVediogroupByList" resultMap="Vediogroup_NS.VediogroupResult" parameterClass="QueryVediogroupCondition">
+            SELECT
+            <include refid="Vediogroup_NS.RES_VEDIOGROUP_TBL_columns"/>
+            FROM RES_VEDIOGROUP_TBL GROUP BY VG_NAME
+         
+        </select>
+        <!--end-->
+</sqlMap>

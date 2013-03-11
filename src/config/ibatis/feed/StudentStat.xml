@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="StudentStat_NS">
+
+   	<typeAlias alias="StudentStat" type="com.shangde.edu.feed.domain.StudentStat"/>
+   
+   	<!-- 微学习 注册人数统计  登录人数统计 条件 -->
+   	<typeAlias alias="QueryUserUseCondition" type="com.shangde.edu.feed.condition.QueryUserUseCondition" />
+   
+   	<!-- 页面流量条件 -->
+   	<typeAlias alias="QueryEntranceCondition" type="com.shangde.edu.feed.condition.QueryEntranceCondition"/>
+   
+   	<!-- 首次用户 非重复用户 重复用户  条件 -->
+   	<typeAlias alias="QueryUserStatLogCondition" type="com.shangde.edu.feed.condition.QueryUserStatLogCondition"/>
+   	
+   	<!-- 首次用户 非重复用户 重复用户  返回值 -->
+   	<typeAlias alias="StudentStatDTO" type="com.shangde.edu.feed.dto.StudentStatDTO"/>
+   	
+   	<!-- 来源 -->
+   	<typeAlias alias="From" type="com.shangde.edu.feed.domain.From"/>
+   	
+   	<!-- 统计用户浏览量 -->
+   	<typeAlias alias="UserStatLog" type="com.shangde.edu.feed.domain.UserStatLog"/>
+   	
+	<resultMap class="StudentStat" id="StudentStatResult">
+		<result property="id" column="ID"/>
+		<result property="fromId" column="FROMID" />
+		<result property="pageFlow" column="PAGEFLOW"/>
+		<result property="registerCount" column="REGISTERCOUNT"/>
+		<result property="registerIds" column="REGISTERIDS"/>
+		<result property="loginCount" column="LOGINCOUNT"/>
+		<result property="loginIds" column="LOGINIDS"/>
+		<result property="outCount" column="OUTCOUNT"/>
+		<result property="arriveWxxCount" column="ARRIVEWXXCOUNT"/>
+		<result property="arriveWxxIds" column="ARRIVEWXXIDS"/>
+		<result property="firstUserCount" column="FIRSTUSERCOUNT"/>
+		<result property="arriveWxxIds" column="FIRSTUSERIDS"/>
+		<result property="nonRepeatUserCount" column="NONREPEATUSERCOUNT"/>
+		<result property="nonRepeatUserIds" column="NONREPEATUSERIDS"/>
+		<result property="repeatUserCount" column="REPEATUSERCOUNT"/>
+		<result property="repeatUserIds" column="REPEATUSERIDS"/>
+		<result property="orderCount" column="ORDERCOUNT"/>
+		<result property="orderIds" column="ORDERIDS"/>
+		<result property="runningWaterCount" column="RUNNINGWATERCOUNT"/>
+		<result property="searchDate" column="search_date"/>
+		<result property="createTime" column="CREATETIME"/>
+	</resultMap>
+	
+	<resultMap class="StudentStatDTO" id="queryMapResult">
+		<result property="cusId" column="cus_id"/>
+	</resultMap>
+	
+	
+	<resultMap class="UserStatLog" id="UserStatLogMapResult">
+		<result property="cusId" column="cus_id"/>
+	</resultMap>
+	
+	
+	<sql id="FEED_STUDENTSTAT_TBL_columns">
+		feed_studentstat_tbl.id,
+		feed_studentstat_tbl.fromid,
+		feed_studentstat_tbl.pageflow,
+		feed_studentstat_tbl.registercount,
+		feed_studentstat_tbl.registerids,
+		feed_studentstat_tbl.logincount,
+		feed_studentstat_tbl.loginids,
+		feed_studentstat_tbl.outcount,
+		feed_studentstat_tbl.arrivewxxcount,
+		feed_studentstat_tbl.arrivewxxids,
+		feed_studentstat_tbl.firstusercount,
+		feed_studentstat_tbl.firstuserids,
+		feed_studentstat_tbl.nonrepeatusercount,
+		feed_studentstat_tbl.nonrepeatuserids,
+		feed_studentstat_tbl.repeatusercount,
+		feed_studentstat_tbl.repeatuserids,
+		feed_studentstat_tbl.ordercount,
+		feed_studentstat_tbl.orderids,
+		feed_studentstat_tbl.runningwatercount,
+		feed_studentstat_tbl.search_date,
+		feed_studentstat_tbl.createtime
+	</sql>
+	
+	<sql id="FEED_STUDENTSTAT_TBL_properties">
+		#id#,#fromId#,#pageFlow#,#registerCount#,#registerIds#,#loginCount#,#loginIds#,#outCount#,#arriveWxxCount#,#arriveWxxIds#,
+		#firstUserCount#,#firstUserIds#,#nonRepeatUserCount#,#nonRepeatUserIds#,#repeatUserCount#,#repeatUserIds#,#orderCount#,#orderIds#,#runningWaterCount#,#searchDate#,#createTime#
+	</sql>
+	
+	<!-- 插入微学习 学员统计 -->
+	<insert id="createStudentStat" parameterClass="StudentStat">
+		INSERT INTO feed_studentstat_tbl 
+		(<include refid="StudentStat_NS.FEED_STUDENTSTAT_TBL_columns"/>) 
+		values 
+		(<include refid="StudentStat_NS.FEED_STUDENTSTAT_TBL_properties"/>)
+		<selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+        </selectKey>
+	</insert>
+	
+	
+	<!-- 查询页面流量 -->
+	<select id="queryPageFlowCount"  resultClass="int" parameterClass="QueryEntranceCondition">
+		<!-- 
+		select count(1) from feed_entrance_tbl where from_id = #fromId# and pubdate like '%$pubDate$%'
+		 -->
+		select count(groupResult.ip) from (select DISTINCT ip from feed_entrance_tbl where from_id = #fromId# and date(pubdate) = #pubDate#) groupResult
+	</select>
+	
+	
+	
+	
+	<!-- 微学习 注册人数和 登录人数统 去重  -->	
+	<select id="queryStudentUseCount"  resultMap="queryMapResult" parameterClass="QueryUserUseCondition">
+		select DISTINCT cus_id from feed_user_use_tbl where from_id=#fromId# and (type=4 or type=2) and pubdate like '%$pubDate$%' and cus_id is not null
+	</select>
+	<!-- 微学习 登录人数统计  -->	
+	<select id="queryStudentUseLogin" resultMap="queryMapResult" parameterClass="QueryUserUseCondition">
+		select DISTINCT cus_id from feed_user_use_tbl where from_id=#fromId# and type=4 and pubdate like '%$pubDate$%' and cus_id is not null
+	</select>
+	<!-- 微学习  注册人数统计  -->	
+	<select id="queryStudentUseRegister" resultMap="queryMapResult" parameterClass="QueryUserUseCondition">
+		select DISTINCT cus_id from feed_user_use_tbl where from_id=#fromId# and type=2 and pubdate like '%$pubDate$%' and cus_id is not null
+	</select>
+	
+	
+	
+	
+	
+	<!-- 首次用户 
+	select cus_id from feed_user_stat_log_tbl where from_id=#fromId# 
+				<![CDATA[ and  date(pubdate) <= #pubDate# ]]>  group by cus_id HAVING count(1) = 1
+	-->
+	<select id="queryFirstUserCount" resultMap="queryMapResult" parameterClass="Map">
+				select cus_id from feed_user_stat_log_tbl where 
+				<dynamic>
+					<isNotEmpty property="fromIds">
+						from_id = $fromIds$ and
+					</isNotEmpty>
+						1 = 1 
+					<isNotEmpty property="idsMap">
+						and
+						<iterate property="idsMap" open="(" close=")" conjunction="or">
+					          cus_id=$idsMap[].cusId$
+					    </iterate>
+				    	and
+					</isNotEmpty>
+					<isEmpty property="idsMap">
+						and cus_id=0 and 
+					</isEmpty>
+				</dynamic>
+				<![CDATA[	date(pubdate) <= #pubDate#]]> group by cus_id HAVING count(1) = 1
+	</select>
+	
+	<!-- 非重复用户 
+	select cus_id from feed_user_stat_log_tbl where from_id=#fromId# 
+			 	<![CDATA[ and  date(pubdate) <= #pubDate# ]]>  group by cus_id HAVING count(1) = 2
+	-->
+	<select id="queryNonRepeatUserCount" resultMap="queryMapResult"  parameterClass="Map">
+		select cus_id from feed_user_stat_log_tbl where 
+				<dynamic>
+					<isNotEmpty property="fromIds">
+						from_id = $fromIds$ and
+					</isNotEmpty>
+						1 = 1 
+					<isNotEmpty property="idsMap">
+						and
+						<iterate property="idsMap" open="(" close=")" conjunction="or">
+					          cus_id=$idsMap[].cusId$
+					    </iterate>
+				    	and
+					</isNotEmpty>
+					<isEmpty property="idsMap">
+						and cus_id=0 and 
+					</isEmpty>
+				</dynamic>
+				<![CDATA[	date(pubdate) <= #pubDate# ]]> group by cus_id HAVING count(1) = 2
+	</select>
+	
+	<!-- 重复用户
+	select cus_id from feed_user_stat_log_tbl where from_id=#fromId# 
+			 	<![CDATA[ and  date(pubdate) <= #pubDate# ]]>  group by cus_id HAVING count(1) >= 3
+	 -->
+	<select id="queryRepeatUserCount" resultMap="queryMapResult"  parameterClass="Map">
+		select cus_id from feed_user_stat_log_tbl where 
+				<dynamic>
+					<isNotEmpty property="fromIds">
+						from_id = $fromIds$ and
+					</isNotEmpty>
+						1 = 1 
+					<isNotEmpty property="idsMap">
+						and
+						<iterate property="idsMap" open="(" close=")" conjunction="or">
+					          cus_id=$idsMap[].cusId$
+					    </iterate>
+				    	and
+					</isNotEmpty>
+					<isEmpty property="idsMap">
+						and cus_id=0 and 
+					</isEmpty>
+				</dynamic>
+				<![CDATA[	date(pubdate) <= #pubDate#]]> group by cus_id HAVING count(1) >= 3
+	</select>
+	
+	<!-- 带来订单 -->
+	<select id="queryOrderCount" resultClass="int" parameterClass="Map" >
+		select count(1) from FINANCE_CONTRACT_TBL contract where 
+			<dynamic>
+				<isNotEmpty property="idsMap">
+					<iterate property="idsMap" open="(" close=")" conjunction="or">
+				          cus_id=$idsMap[].cusId$
+				    </iterate>
+				    and
+				</isNotEmpty>
+				<!-- 当ids为空是 us_id=0 -->
+				<isEmpty property="idsMap">
+					cus_id=0 and
+				</isEmpty>
+			</dynamic>
+		  	status != 2
+	</select>
+	
+	<!-- 带来流水 -->
+	<select id="getBringWater" parameterClass="Map" resultClass="String">
+		select sum(contract.contract_cutsummoney) from FINANCE_CONTRACT_TBL contract where 
+		<dynamic>
+			<isNotEmpty property="idsMap">
+				<iterate property="idsMap" open="(" close=")" conjunction="or">
+			          cus_id=$idsMap[].cusId$
+			    </iterate>
+			    and
+			</isNotEmpty>
+			<!-- 当ids为空是 us_id=0 -->
+			<isEmpty property="idsMap">
+					cus_id=0 and
+			</isEmpty>
+		</dynamic>
+		 status = 1
+	</select>
+	
+	<!-- 查询微学习的所有信息 -->
+	<select id="queryStudentStatList"  parameterClass="String"  resultMap="StudentStatResult">
+	    select * from feed_studentstat_tbl where search_date = #searchDate#
+	</select>
+	
+	<!-- 查询微学习的所有信息    搜索条件-->
+	<select id="searchStudentStat"  parameterClass="String"  resultMap="StudentStatResult">
+	    select * from feed_studentstat_tbl where search_date like '$searchDate$'
+	</select>
+	
+	
+	
+	<!-- 根据来源查询所有的用户统计 -->
+	<select id="searchStuStatByFromIds" resultMap="StudentStatResult" parameterClass="Map">
+		select * from feed_studentstat_tbl where 
+		<dynamic>
+			<isNotEmpty property="searchDate">
+				search_date = '$searchDate$' and
+			</isNotEmpty>
+				1=1
+			<isNotEmpty property="idsList">
+				and 
+				<iterate property="idsList" open="(" close=")" conjunction="or">
+			          fromid=$idsList[].id$
+			    </iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 查询用户一天的浏览量 -->
+	<select id="queryUserStatLog" resultMap="UserStatLogMapResult" parameterClass="QueryUserStatLogCondition">
+		select cus_id from feed_user_stat_log_tbl where from_id = #fromId# and date(pubdate) = #pubDate# group by cus_id
+	</select>
+	
+	
+</sqlMap>

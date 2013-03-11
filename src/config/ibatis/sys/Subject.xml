@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Subject_NS">
+	<!--table:SYS_SUBJECT_TBL-->
+	<typeAlias alias="Subject"
+		type="com.shangde.edu.sys.domain.Subject" />
+	<typeAlias alias="QuerySubjectCondition"
+		type="com.shangde.edu.sys.condition.QuerySubjectCondition" />
+	<typeAlias alias="SubjectAgentDTO"
+		type="com.shangde.edu.sys.dto.SubjectAgentDTO" />
+
+	<resultMap id="SubjectResult" class="Subject">
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="subjectName" column="SUBJECT_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="testTime" column="TEST_TIME" />
+		<result property="freeClasses" column="FREE_CLASSES" />
+		<result property="hotline" column="HOTLINE" />
+		<result property="courseConsultNumber" column="COURSE_CONSULT_NUMBER" />
+		<result property="courseConsultName" column="COURSE_CONSULT_NAME" />
+		<result property="customerServiceNumber" column="CUSTOMER_SERVICE_NUMBER" />
+		<result property="customerServiceName" column="CUSTOMER_SERVICE_NAME" />
+		<result property="complaintServiceNumber" column="COMPLAINT_SERVICE_NUMBER" />
+		<result property="complaintServiceName" column="COMPLAINT_SERVICE_NAME" />
+	</resultMap>
+	
+	<resultMap id="SubjectResultWeb" class="Subject">
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="subjectName" column="SUBJECT_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="testTime" column="TEST_TIME" />
+		<result property="freeClasses" column="FREE_CLASSES" />
+	</resultMap>
+	
+
+	<resultMap id="SubjectDTOResult" class="SubjectAgentDTO">
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="subjectName" column="SUBJECT_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="testTime" column="TEST_TIME" />
+		<result property="freeClasses" column="FREE_CLASSES" />
+	</resultMap>	
+
+	<sql id="SYS_SUBJECT_TBL_columns">
+		SYS_SUBJECT_TBL.SUBJECT_ID, SYS_SUBJECT_TBL.SUBJECT_NAME,
+		SYS_SUBJECT_TBL.STATUS, SYS_SUBJECT_TBL.CREATE_TIME,
+		SYS_SUBJECT_TBL.UPDATE_TIME,SYS_SUBJECT_TBL.TEST_TIME,
+		SYS_SUBJECT_TBL.FREE_CLASSES,SYS_SUBJECT_TBL.HOTLINE,
+		SYS_SUBJECT_TBL.COURSE_CONSULT_NAME,SYS_SUBJECT_TBL.COURSE_CONSULT_NUMBER,
+		SYS_SUBJECT_TBL.CUSTOMER_SERVICE_NAME,SYS_SUBJECT_TBL.CUSTOMER_SERVICE_NUMBER,
+		SYS_SUBJECT_TBL.COMPLAINT_SERVICE_NAME,SYS_SUBJECT_TBL.COMPLAINT_SERVICE_NUMBER
+	</sql>
+
+	<sql id="SYS_SUBJECT_TBL_properties">
+		#subjectId#, #subjectName#, #status#, #createTime#, #updateTime# ,#testTime#,#freeClasses#,#hotline#,#courseConsultName#,#courseConsultNumber#,#customerServiceName#,#customerServiceNumber#,#complaintServiceName#,#complaintServiceNumber#
+	</sql>
+
+	<insert id="createSubject" parameterClass="Subject">
+		INSERT INTO SYS_SUBJECT_TBL (
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		) VALUES (
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post"
+			keyProperty="subjectId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteSubjectById" parameterClass="int">
+		DELETE FROM SYS_SUBJECT_TBL WHERE SUBJECT_ID = #value#
+
+	</delete>
+
+	<update id="updateSubject" parameterClass="Subject">
+		UPDATE SYS_SUBJECT_TBL SET 
+		SUBJECT_ID = #subjectId#,
+		SUBJECT_NAME = #subjectName#, 
+		STATUS = #status#, 
+		CREATE_TIME =#createTime#, 
+		UPDATE_TIME = #updateTime# ,
+		TEST_TIME = #testTime#,
+		FREE_CLASSES=#freeClasses#
+		WHERE SUBJECT_ID =
+		#subjectId#
+	</update>
+	
+	<update id="updateSubject2" parameterClass="com.shangde.edu.sys.domain.Subject">
+		UPDATE SYS_SUBJECT_TBL SET SUBJECT_NAME = #subjectName#, STATUS = #status#,FREE_CLASSES=#freeClasses#,HOTLINE=#hotline#,COURSE_CONSULT_NAME=#courseConsultName#,COURSE_CONSULT_NUMBER=#courseConsultNumber#,CUSTOMER_SERVICE_NAME=#customerServiceName#,CUSTOMER_SERVICE_NUMBER=#customerServiceNumber#,COMPLAINT_SERVICE_NAME=#complaintServiceName#,COMPLAINT_SERVICE_NUMBER=#complaintServiceNumber#  WHERE SUBJECT_ID = #subjectId#
+	</update>
+
+	<select id="getSubjectById" resultMap="Subject_NS.SubjectResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL WHERE SUBJECT_ID = #value#
+
+	</select>
+	
+	<select id="getSubjectByIdWeb" resultMap="Subject_NS.SubjectResultWeb"
+		parameterClass="int">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL WHERE SUBJECT_ID = #value#
+
+	</select>
+	
+	<select id="getAllSubject" resultMap="Subject_NS.SubjectResult">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL  where SUBJECT_ID!=6	
+	</select>
+	<!-- ID为6是迷你课程，内部用，不显示 -->
+	<select id="getUnBuySubject" resultMap="Subject_NS.SubjectResult" parameterClass="java.util.ArrayList">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL
+		<isNotNull>
+			<isNotEmpty>
+			 WHERE SUBJECT_ID NOT IN
+			 <iterate open="(" close=")" conjunction=",">
+			 #sids[]#
+			 </iterate>
+			 AND SUBJECT_ID!=6	
+			</isNotEmpty>
+		</isNotNull>
+	</select>
+	<select id="getSubjectList" resultMap="Subject_NS.SubjectResult"
+		parameterClass="QuerySubjectCondition">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL order by sys_subject_tbl.SUBJECT_ID desc;
+	</select>
+	
+	<select id="getSubjectListByStatus" resultMap="Subject_NS.SubjectResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL WHERE  SYS_SUBJECT_TBL.STATUS = #status#
+	</select>
+
+	<select id="getSubjectListByRoleId"
+		resultMap="Subject_NS.SubjectResult"
+		parameterClass="QuerySubjectCondition">
+		SELECT distinct
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL,SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE
+		SYS_SUBJECT_TBL.SUBJECT_ID =
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.SUBJECT_ID AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.ROLE_ID = #roleId# AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID = #userId#
+	</select>
+
+	<select id="getSubjectListByUserId"
+		resultMap="Subject_NS.SubjectResult" parameterClass="int">
+		SELECT distinct
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL,SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE
+		SYS_SUBJECT_TBL.SUBJECT_ID =
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.SUBJECT_ID AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID = #userId#
+
+	</select>
+	<!-- 根据用户ID查询用户所购包所属的专业list,评价中心使用 -->
+        <select id="getSubjectListForUnAss" resultMap="Subject_NS.SubjectResultWeb" parameterClass="int">
+        	SELECT <include refid="SYS_SUBJECT_TBL_columns"/> 
+        	FROM SYS_SUBJECT_TBL WHERE SUBJECT_ID IN
+        	(SELECT SUBJECT_ID FROM COU_SELL_WAY_TBL WHERE SELL_ID IN
+        	(SELECT DISTINCT PACK_ID FROM FINANCE_CASH_RECORD_TBL WHERE CUS_ID=#value# AND STATUS=1)
+        	) AND SUBJECT_ID!=6
+        </select>	
+	<!--end-->
+	
+	<select id="getAllSubjectForAgent" resultMap="Subject_NS.SubjectDTOResult" parameterClass="int">
+		SELECT
+			SYS_SUBJECT_TBL.SUBJECT_ID,
+			SYS_SUBJECT_TBL.SUBJECT_NAME,
+			SYS_SUBJECT_TBL.STATUS,
+			SYS_SUBJECT_TBL.CREATE_TIME,
+			SYS_SUBJECT_TBL.UPDATE_TIME,
+			SYS_SUBJECT_TBL.TEST_TIME,
+			sys_subject_tbl.FREE_CLASSES
+		FROM SYS_SUBJECT_TBL
+		WHERE SYS_SUBJECT_TBL.SUBJECT_ID!=6
+	</select>
+
+	<select id="querySubjectListByCondition" resultMap="Subject_NS.SubjectResult" parameterClass="com.shangde.edu.sys.condition.QuerySubjectConditionAdv">
+		SELECT
+		<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+		FROM SYS_SUBJECT_TBL
+		WHERE SUBJECT_NAME LIKE '%$subjectName$%'
+		LIMIT #pageSize# OFFSET #startRecord#
+	</select>
+	
+	<select id="querySubjectCountByCondition" resultClass="java.lang.Integer" parameterClass="com.shangde.edu.sys.condition.QuerySubjectConditionAdv">
+		SELECT COUNT(1)
+		FROM SYS_SUBJECT_TBL
+		WHERE SUBJECT_NAME LIKE '%$subjectName$%'
+	</select>
+</sqlMap>

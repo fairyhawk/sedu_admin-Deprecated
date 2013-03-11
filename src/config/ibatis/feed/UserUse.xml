@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_User_Use_NS">
+	<!--table:FEED_USER_USE_TBL-->
+	<typeAlias alias="UserUse" type="com.shangde.edu.feed.domain.UserUse" />
+	<typeAlias alias="QueryStatCommonCondition" type="com.shangde.edu.feed.condition.QueryStatCommonCondition" />
+
+	<sql id="FEED_USER_USE_TBL_columns">
+		feed_user_use_tbl.id,
+		feed_user_use_tbl.ip,
+		feed_user_use_tbl.ua,
+		feed_user_use_tbl.type,
+		feed_user_use_tbl.cus_id,
+		feed_user_use_tbl.email,
+		feed_user_use_tbl.from_id,
+		feed_user_use_tbl.utma,
+		feed_user_use_tbl.pubdate
+	</sql>
+
+	<sql id="FEED_USER_USE_TBL_properties">
+		#id#, #ip#, #ua#,#type#,#cusId#,#email#,#fromId#,#utma#, #pubDate#
+	</sql>
+
+	<insert id="createUserUse" parameterClass="UserUse">
+		INSERT INTO feed_user_use_tbl (
+		<include refid="Feed_User_Use_NS.FEED_USER_USE_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_User_Use_NS.FEED_USER_USE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+		
+	<!-- 条件，时间段查询size -->
+	<select id="getUserUseCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) FROM feed_user_use_tbl
+		where 1=1 and type = #type#
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	<!-- 某时间段分组后的数 -->
+	<select id="getUserUseGroupCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		select count(groupResult.ip) from 
+		(select DISTINCT ip from feed_user_use_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		) groupResult
+	</select>
+	<!-- 某时间段,type,fromId查询分组后的数 -->
+	<select id="getUserUseAndTypeFromIdCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		select count(1) from feed_user_use_tbl 
+		where 1=1 and type = #type# and from_id = #fromId# 
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	
+	
+	<!-- 条件，今日数据查询size -->
+	<select id="getUserUseDATECount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_user_use_tbl where type = #type# and DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()
+	</select>
+	<!-- 条件，今日数据分组size -->
+	<select id="getUserUseDATEGroupCount" resultClass="int" parameterClass="int">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_user_use_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()) groupResult
+	</select>
+	<!-- 查询某日渠道，type=2/4的情况下个数 -->
+	<select id="getUserUseDATEAndTypeFromIdCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) FROM feed_user_use_tbl where type = #type# and from_id = #fromId# and DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()
+	</select>
+	
+	
+	<!-- 条件，本周数据查询size -->
+	<select id="getUserUseWEEKCount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_user_use_tbl where type = #type# and WEEK(pubdate,1) = WEEK(CURDATE())
+	</select>
+	<select id="getUserUseWEEKGroupCount" resultClass="int" parameterClass="int">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_user_use_tbl where WEEK(pubdate,1) = WEEK(CURDATE())) groupResult
+	</select>
+	<!-- 查询周渠道，type=2/4的情况下个数 -->
+	<select id="getUserUseWEEKAndTypeFromIdCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) FROM feed_user_use_tbl where type = #type# and from_id = #fromId# and WEEK(pubdate,1) = WEEK(CURDATE())
+	</select>
+	
+	<!-- 条件，本月数据查询size -->
+	<select id="getUserUseMONTHCount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_user_use_tbl where type = #type# and MONTH(pubdate) = MONTH(CURDATE())
+	</select>
+	<select id="getUserUseMONTHGroupCount" resultClass="int" parameterClass="int">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_user_use_tbl where MONTH(pubdate) = MONTH(CURDATE())) groupResult
+	</select>
+	<!-- 查询月渠道，type=2/4的情况下个数 -->
+	<select id="getUserUseMONTHAndTypeFromIdCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) FROM feed_user_use_tbl where type = #type# and from_id = #fromId# and MONTH(pubdate) = MONTH(CURDATE())
+	</select>
+	
+	
+	<!--end-->
+</sqlMap>

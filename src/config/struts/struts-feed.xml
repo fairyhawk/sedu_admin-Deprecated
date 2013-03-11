@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="feed" namespace="/feed" extends="edu-default">
+		<interceptors>
+			<interceptor name="" class="">
+				<param name="includeMethods"></param>
+			</interceptor>
+		</interceptors>
+
+		<global-results>
+			<result name="invalid" type="redirect"></result>
+			<result name="empty"></result>
+			<!-- 提示页面 -->
+			<result name="msg">/back/jsp/feed/msg.jsp</result>
+		</global-results>
+
+		<!-- 模板 -->
+		<action name="template" class="com.shangde.edu.feed.action.TemplateAction">
+			<!-- 显示所有模板列表 -->
+		    <result name="template_list">/back/jsp/feed/template/template_list.jsp</result>
+		    <!-- 编辑 -->
+		    <result name="template_edit">/back/jsp/feed/template/template_edit.jsp</result>
+		    <!-- 预览 -->
+		    <result name="template_preview">/back/jsp/feed/template/template_preview.jsp</result>
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<!-- 用户统计 -->
+		<action name="userStat" class="com.shangde.edu.feed.action.UserStatAction">
+			<!-- 列表页面-->
+			<result name="userstat_list">/back/jsp/feed/stat/user_stat_list.jsp</result>
+			<!-- 下载详细统计数据文件地址 -->
+			<result name="downFile" type="redirect">${downFileURL}</result>
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		
+		<!-- 微学习 学员统计 -->
+		<action name="studentstat" class="com.shangde.edu.feed.action.StudentStatAction">
+			<!--  微学习 学员统计 页面-->
+			<result name="student_stat">/back/jsp/feed/studentstat/student_stat.jsp</result>
+			<!-- 下载详细统计数据文件地址 -->
+			<result name="downFile" type="redirect">${downFileURL}</result>
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+
+
+		<!-- 后台 -->
+		<action name="back" class="com.shangde.edu.feed.web.action.FeedBackAction">
+			
+			<!-- 添加任务页面 -->
+			<result name="task_add">/back/jsp/feed/task_add.jsp</result>
+			<!-- 任务列表页面 -->
+			<result name="task_list">/back/jsp/feed/task_list.jsp</result>
+			<result name="to_task_list" type="redirect">feed/back!taskList.action?queryTaskLogCondition.currentPage=1</result>
+			<result name="task_update">/back/jsp/feed/task_update.jsp</result>
+			<result name="video_log_list">/back/jsp/feed/video_log_list.jsp</result>
+			<!-- 任务详情统计页面 -->
+			<result name="task_list_v">/back/jsp/feed/task_list_v.jsp</result>
+			<!-- 下载详细统计数据文件地址 -->
+			<result name="downFile" type="redirect">${downFileURL}</result>
+			
+			<!-- 留言列表页面 -->
+			<result name="review_list">/back/jsp/feed/review/review_list.jsp</result>
+			<result name="to_review_list" type="redirect">feed/back!getReviewList.action?queryReviewCondition.currentPage=${queryReviewCondition.currentPage}</result>
+			<!-- 到修改留言页面 -->
+			<result name="review_edit">/back/jsp/feed/review/review_edit.jsp</result>
+			
+			<!-- 广告统计查询 -->
+			<result name="ad_stat_list">/back/jsp/feed/stat/ad_stat_list.jsp</result>
+			<!-- 统计页面 -->
+			<result name="page_stat_list">/back/jsp/feed/stat/page_stat_list.jsp</result>
+			<!-- 用户，注册/登录 -->
+			<result name="regLogin_stat_list">/back/jsp/feed/stat/regLogin_stat_list.jsp</result>
+			
+
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<!-- ad广告，后台 -->
+		<action name="ad" class="com.shangde.edu.feed.action.AdAction">
+			<result name="ad_list">/back/jsp/feed/ad/ad_list.jsp</result>
+			<result name="do_ad_list" type="redirect">feed/ad!doAdList.action?queryAdCondition.currentPage=1</result>
+			<result name="to_ad_update">/back/jsp/feed/ad/ad_update.jsp</result>
+			<result name="toAddPage">/back/jsp/feed/ad/ad_add.jsp</result>
+			
+			
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<!-- 添加视频地址 -->
+		<action name="video" class="com.shangde.edu.feed.web.action.FeedAddVideoAction">
+			<result name="video_add">/back/jsp/feed/micro_video_add.jsp</result>
+			<result name="video_list">/back/jsp/feed/video_list.jsp</result>
+			<result name="task_video_list">/back/jsp/feed/micro_video_list.jsp</result>
+			<result name="redirect_video" type="redirect">feed/video!goAllVideo.action?queryMicroVideoCondition.currentPage=1&amp;queryMicroVideoCondition.courseId=${courseId}</result>
+			<result name="uploadPage">/back/jsp/feed/upload.jsp</result>
+			<result name="video_stat_list">/back/jsp/feed/stat/video_stat_list.jsp</result>
+			<result name="video_watch_down_collect_details">/back/jsp/feed/stat/detailed/video_watch_down_collect_details.jsp</result>
+			 
+			<!-- 下载详细统计数据文件地址 -->
+			<result name="downFile" type="redirect">${downFileURL}</result>
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		
+		<!-- 新建任务 -->
+		<action name="cuscustomer" class="com.shangde.edu.feed.action.CusCustomerAction">
+			<result name="cuscustomer_list">/back/jsp/feed/task_detail.jsp</result>
+			<result name="email_list">/back/jsp/feed/task_email_detail.jsp</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		
+		
+		
+		
+		
+		<!-- 添加课程地址 -->
+		<action name="course" class="com.shangde.edu.feed.web.action.CourseAddAction">
+			<!-- 课程页面 -->
+			<result name="courseListPage">/back/jsp/feed/course_list.jsp</result>
+			<!-- 课程添加页面 -->
+			<result name="courseAddPage">/back/jsp/feed/course_add.jsp</result>
+			<!-- 课程&视频，树结构页面 -->
+			<result name="course_video_tree">/back/jsp/feed/course_tree.jsp</result>
+			<!-- 课程列表页面 -->
+			<result name="redirect_course" type="redirect">feed/course!courseList.action</result>
+			<!-- 框架页面 -->
+			<result name="video_add_frameset">/back/jsp/feed/video_add_index.jsp?id=${id}</result>
+			<!-- 视频添加页面 -->
+			<result name="video_add">/back/jsp/feed/micro_video_add.jsp</result>
+			<!-- 视频修改页面 -->
+			<result name="video_update">/back/jsp/feed/micro_video_update.jsp</result>
+			<!-- 进入知识树，树列表 -->
+			<result name="knowledgeTree">/back/jsp/feed/kno/knowledgeTree.jsp</result>
+			<!-- 去课程统计页面 -->
+			<result name="goStaticsPage">/back/jsp/feed/temp/statisc/course_list.jsp</result>
+			<!-- 去使用详情页面 -->
+			<result name="viewUsePerson">/back/jsp/feed/temp/statisc/viewUseCourse.jsp</result>
+			
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<result name="exportExcelAgent" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="AllCourseStatistics.xls"</param>
+			    <param name="bufferSize">1024</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="notice" class="com.shangde.edu.feed.action.NoticeAction">
+			<result name="notice_list">/back/jsp/feed/notice/notice_list.jsp</result>
+			<result name="notice_add">/back/jsp/feed/notice/notice_add.jsp</result>
+			<result name="notice_edit">/back/jsp/feed/notice/notice_edit.jsp</result>
+			
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<action name="userStatistics" class="com.shangde.edu.feed.action.UserStatisticsAction">
+			<!-- 去用户统计页面 -->
+			<result name="userStatisticsListPage">/back/jsp/feed/temp/statisc/user_list.jsp</result>
+			<!-- 去用户观看课程详情页 -->
+			<result name="watchCoursePage">/back/jsp/feed/temp/statisc/viewCourse.jsp</result>
+			<!-- 去用户操作视频详情页 -->
+			<result name="videoOptionPage">/back/jsp/feed/temp/statisc/videoOption.jsp</result>
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<result name="exportExcelUser" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFileName</param>       
+			    <param name="contentDisposition">attachment;filename="AllUserStatistics.xls"</param>
+			    <param name="bufferSize">1024</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		
+		
+		<!-- 微学习留言模块 -->
+		<action name="review" class="com.shangde.edu.feed.web.action.ReviewAction">
+		
+			<result name="test">/static/usercenter/jsp/feed/test.jsp</result>
+			<!-- 进入单项处理页面 -->
+			<result name="review_item">/static/usercenter/jsp/feed/item/review_item.jsp</result>
+			<!-- 进入列表项处理页面 -->
+			<result name="review_item_list">/static/usercenter/jsp/feed/item/review_item_list.jsp</result>
+		
+		
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+		
+		<!-- 微学习前台业务模块 -->
+		<action name="web" class="com.shangde.edu.feed.web.action.FeedWebAction">
+			
+			<!-- 试题选项列表 -->
+			<result name="questions_item">/static/usercenter/jsp/feed/item/questions_item.jsp</result>
+			<!-- 进入微学习内容页面 -->
+			<result name="toWeixuexi">/static/usercenter/jsp/feed/weixuexi.jsp</result>
+			
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+		
+		<action name="appStat" class="com.shangde.edu.feed.action.AppStatAction">
+			
+			<result name="app_list">/back/jsp/feed/stat/app_list.jsp</result>
+			<result name="downFile" type="redirect">${downFileURL}</result>
+			
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<!-- 微学习 类别管理模块 -->
+			<action name="courseCategory" class="com.shangde.edu.feed.action.CourseCategoryAction">
+					<result name="queryList_ok">
+					
+					
+					
+					
+					</result>
+				
+			
+			
+			</action>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</package>
+	
+	<!-- 统计使用,不参与登录拦截 -->
+	<package name="feed_stat" namespace="/feed/stat" extends="struts-default,json-default">
+		<!-- 统计action -->
+		<action name="statistics" class="com.shangde.edu.feed.web.action.StatisticsAction">
+			<!-- 跳转到为学习页面 -->
+			<result name="microStudy" type="redirect">/register_mg.html</result>
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+		</action>
+	</package>
+	<!-- 前台，不参与登录拦截 -->
+	<package name="feed_web" namespace="/feed/web" extends="struts-default,json-default">
+		<!-- 前台 -->
+		<action name="web" class="com.shangde.edu.feed.web.action.FeedWebAction">
+		
+			<result name="toUserRegPage">/static/usercenter/jsp/feed/test-userReg.jsp</result>
+		
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+		</action>
+	</package>
+
+</struts>

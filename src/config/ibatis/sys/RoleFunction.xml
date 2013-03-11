@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RoleFunction_NS">
+    <!--table:SYS_ROLE_FUNCTION_TBL-->
+    <typeAlias alias="RoleFunction" type="com.shangde.edu.sys.domain.RoleFunction"/>
+    <typeAlias alias="QueryRoleFunctionCondition" type="com.shangde.edu.sys.condition.QueryRoleFunctionCondition"/>
+
+    <resultMap id="RoleFunctionResult" class="RoleFunction">
+        <result property="roleId" column="ROLE_ID" nullValue="0"/>
+        <result property="functionId" column="FUNCTION_ID" nullValue="0"/>
+        <result property="status" column="STATUS" nullValue="0"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+    </resultMap>
+
+    <sql id="SYS_ROLE_FUNCTION_TBL_columns">
+        ROLE_ID,
+        FUNCTION_ID,
+        STATUS,
+        CREATE_TIME,
+        UPDATE_TIME
+    </sql>
+
+    <sql id="SYS_ROLE_FUNCTION_TBL_properties">
+        #roleId#,
+        #functionId#,
+        #status#,
+        #createTime#,
+        #updateTime#
+    </sql>
+
+    <insert id="createRoleFunction" parameterClass="RoleFunction">
+        INSERT INTO SYS_ROLE_FUNCTION_TBL (<include refid="RoleFunction_NS.SYS_ROLE_FUNCTION_TBL_columns"/>) VALUES (
+        <include refid="RoleFunction_NS.SYS_ROLE_FUNCTION_TBL_properties"/>)
+    </insert>
+
+    <delete id="deleteRoleFunctionById" parameterClass="java.util.Map">
+        DELETE FROM SYS_ROLE_FUNCTION_TBL
+        WHERE
+        ROLE_ID = #roleId#
+        AND FUNCTION_ID = #functionId#
+    </delete>
+
+    <delete id="deleteRoleFunctionByRoleId" parameterClass="int">
+        DELETE FROM SYS_ROLE_FUNCTION_TBL
+        WHERE
+        ROLE_ID = #roleId#
+    </delete>
+
+    <delete id="deleteRoleFunctionByFunctionId" parameterClass="int">
+        DELETE FROM SYS_ROLE_FUNCTION_TBL
+        WHERE
+        FUNCTION_ID = #value#
+    </delete>
+
+    <update id="updateRoleFunction" parameterClass="RoleFunction">
+        UPDATE SYS_ROLE_FUNCTION_TBL SET
+        ROLE_ID = #roleId#,
+        FUNCTION_ID = #functionId#,
+        STATUS = #status#,
+        CREATE_TIME = #createTime#,
+        UPDATE_TIME = #updateTime#
+        WHERE
+        ROLE_ID = #roleId#
+        AND FUNCTION_ID = #functionId#
+    </update>
+
+    <select id="getRoleFunctionById" resultMap="RoleFunction_NS.RoleFunctionResult" parameterClass="java.util.Map">
+        SELECT
+        <include refid="RoleFunction_NS.SYS_ROLE_FUNCTION_TBL_columns"/>
+        FROM SYS_ROLE_FUNCTION_TBL
+        WHERE
+        ROLE_ID = #roleId#
+        AND FUNCTION_ID = #functionId#
+    </select>
+
+    <select id="getRoleFunctionList" resultMap="RoleFunction_NS.RoleFunctionResult"
+            parameterClass="QueryRoleFunctionCondition">
+        SELECT
+        <include refid="RoleFunction_NS.SYS_ROLE_FUNCTION_TBL_columns"/>
+        FROM SYS_ROLE_FUNCTION_TBL
+    </select>
+    <!--end-->
+</sqlMap>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Teacher_NS">
+        <!--table:COU_TEACHER_TBL-->
+        <typeAlias alias="Teacher" type="com.shangde.edu.cou.domain.Teacher"/>
+		<typeAlias alias="Course" type="com.shangde.edu.cou.domain.Course"/>
+        <typeAlias alias="QueryTeacherCondition" type="com.shangde.edu.cou.condition.QueryTeacherCondition"/>
+		<typeAlias alias="CourseDTO" type="com.shangde.edu.cusmgr.dto.CourseDTO"/>
+		<typeAlias alias="TeacherCookieDTO" type="com.shangde.edu.cou.dto.TeacherCookieDTO"/>
+		
+		<resultMap id="CourseDTOResult" class="CourseDTO">
+            <result property="title" column="TITLE"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+            <result property="gradeName" column="GRADE_NAME"/>
+        </resultMap>
+        
+        <resultMap id="TeacherCookieDTOResult" class="TeacherCookieDTO">
+            <result property="tcId" column="TC_ID"/>
+           	<result property="name" column="NAME"/>
+            <result property="education" column="EDUCATION"/>
+            <result property="picPath" column="PIC_PATH"/>
+        </resultMap>
+
+        <resultMap id="TeacherResult" class="Teacher">
+            <result property="tcId" column="TC_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="education" column="EDUCATION"/>
+            <result property="career" column="CAREER"/>
+            <result property="isStar" column="IS_STAR"/>
+            <result property="picPath" column="PIC_PATH"/>
+        </resultMap>
+        <resultMap id="TeacherListResult" class="Teacher">
+            <result property="tcId" column="TC_ID"/>
+            <result property="name" column="NAME"/>
+        </resultMap>
+        
+         <resultMap id="CourseResult" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <!-- 临时存是否已选数据 -->
+            <result property="status" column="ELECTIVE"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectById"/>
+            <result property="grade" column="GRADE_ID" select="Grade_NS.getGradeById"/>
+        </resultMap>
+
+        <sql id="COU_TEACHER_TBL_columns">
+            COU_TEACHER_TBL.TC_ID,
+            COU_TEACHER_TBL.NAME,
+            COU_TEACHER_TBL.EDUCATION,
+            COU_TEACHER_TBL.CAREER,
+            COU_TEACHER_TBL.IS_STAR,
+            COU_TEACHER_TBL.PIC_PATH
+        </sql>
+        
+         <sql id="COU_TeacherCookieDTO_columns">
+            COU_TEACHER_TBL.TC_ID,
+            COU_TEACHER_TBL.NAME,
+            COU_TEACHER_TBL.EDUCATION,
+            COU_TEACHER_TBL.PIC_PATH
+        </sql>
+
+        <sql id="COU_TEACHER_TBL_properties">
+            #tcId#,
+            #name#,
+            #education#,
+            #career#,
+            #isStar#,
+            #picPath#
+        </sql>
+
+        <insert id="createTeacher"  parameterClass="Teacher">
+            INSERT INTO COU_TEACHER_TBL (<include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>) VALUES (<include refid="Teacher_NS.COU_TEACHER_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="tcId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <update id="deleteTeacherById" parameterClass="int">
+            UPDATE COU_TEACHER_TBL
+            SET STATUS = 1
+            WHERE
+                TC_ID = #value#
+        </update>
+
+        <update id="updateTeacher" parameterClass="Teacher">
+            UPDATE COU_TEACHER_TBL SET
+                TC_ID = #tcId#,
+                NAME = #name#,
+                EDUCATION = #education#,
+                CAREER = #career#,
+                IS_STAR = #isStar#,
+                PIC_PATH = #picPath#
+            WHERE
+                TC_ID = #tcId#
+        </update>
+
+        <select id="getTeacherById" resultMap="Teacher_NS.TeacherResult" parameterClass="int">
+            SELECT
+            <include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>
+            FROM COU_TEACHER_TBL
+            WHERE
+                TC_ID = #value# order by TC_ID desc
+        </select>
+        <!-- 查询所有的teacher -->
+        <select id="getAllTeacher" resultMap="Teacher_NS.TeacherResult">
+            SELECT
+            <include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>
+            FROM COU_TEACHER_TBL order by TC_ID desc
+        </select>
+        
+        <select id="getTeacherCookieDTOById" resultMap="Teacher_NS.TeacherCookieDTOResult" parameterClass="int">
+            SELECT
+            <include refid="Teacher_NS.COU_TeacherCookieDTO_columns"/>
+            FROM COU_TEACHER_TBL
+            WHERE
+                TC_ID = #value#
+        </select>
+
+        <select id="getTeacherList" resultMap="Teacher_NS.TeacherResult" parameterClass="QueryTeacherCondition">
+            SELECT
+            <include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>
+            FROM COU_TEACHER_TBL
+            WHERE STATUS = 0 ORDER BY CONVERT( NAME USING gbk )
+        </select>
+        
+        <select id="getTeacherListByCondition" resultMap="Teacher_NS.TeacherResult" parameterClass="QueryTeacherCondition">
+        	SELECT 
+        	<include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>
+        	FROM COU_TEACHER_TBL
+        	WHERE STATUS = 0
+        	<isNotNull property="name">
+        		<isNotEqual property="name" compareValue="">
+          			AND NAME LIKE CONCAT('%',#name#,'%')
+          		</isNotEqual>
+            </isNotNull >
+            <isNotNull property="isStar">
+	    		AND IS_STAR = #isStar#
+            </isNotNull >   
+            order by TC_ID desc          
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getTeacherCountByCondition" resultClass="int" parameterClass="QueryTeacherCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM COU_TEACHER_TBL
+        	WHERE STATUS = 0
+        	<isNotNull property="name">
+        		<isNotEqual property="name" compareValue="">
+          			AND NAME LIKE CONCAT('%',#name#,'%')
+          		</isNotEqual>
+            </isNotNull >
+			<isNotNull property="isStar">
+	    		AND IS_STAR = #isStar#
+            </isNotNull >       
+            order by TC_ID DESC      
+        </select>
+        
+        <select id="getNomalCourseListBySortId" resultMap="Teacher_NS.CourseResult" parameterClass="QueryTeacherCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT 
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>,
+					CASE
+						WHEN COURSE_ID IN (
+											SELECT COU.COURSE_ID
+											FROM COU_COURSE_TBL COU
+											LEFT JOIN COU_TC_COU_RECORD_TBL CCR
+											ON COU.COURSE_ID = CCR.COURSE_ID
+											INNER JOIN COU_TEACHER_TBL TC
+											ON CCR.TC_ID = TC.TC_ID
+											WHERE TC.STATUS = 0
+											AND TC.TC_ID = 
+											<isNotNull property="tcId">
+												#tcId#
+											</isNotNull>
+											<isNull property="tcId">
+												0
+											</isNull>
+										   ) THEN 1
+						ELSE 0
+					END AS ELECTIVE
+					FROM COU_COURSE_TBL
+					WHERE 
+            			 COU_COURSE_TBL.STATUS = 0
+		                <isNotNull property="courseName">
+			            	<isNotEqual property="courseName" compareValue="" prepend="and">
+					                  COU_COURSE_TBL.TITLE like  CONCAT('%',#courseName#,'%')
+						    </isNotEqual>
+			        	</isNotNull>
+			        	<isNotNull property="sortId">
+			            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+			                		COU_COURSE_TBL.SORT_ID=#sortId#
+			                </isGreaterThan>
+			        	</isNotNull>
+		            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getNomalCourseCountBySortId" resultClass="int" parameterClass="QueryTeacherCondition">
+            SELECT COUNT(1)
+            FROM COU_COURSE_TBL
+            WHERE
+                COU_COURSE_TBL.STATUS = 0
+                <isNotNull property="courseName">
+	            	<isNotEqual property="courseName" compareValue="" prepend="and">
+			                  COU_COURSE_TBL.TITLE like  CONCAT('%',#courseName#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	<isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		COU_COURSE_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        </select>
+		
+		<select id="getCourseListByTcId" resultMap="Teacher_NS.CourseDTOResult" parameterClass="int">
+           SELECT COU.TITLE, 
+           			GRADE.GRADE_NAME,
+           			SUB.SUBJECT_NAME
+					FROM COU_COURSE_TBL COU
+					INNER JOIN SYS_SUBJECT_TBL SUB
+					ON SUB.SUBJECT_ID = COU.SUBJECT_ID
+					INNER JOIN SYS_GRADE_TBL GRADE
+					ON GRADE.GRADE_ID = COU.GRADE_ID
+					WHERE COU.TEACHER_ID = #value#
+					AND COU.STATUS = 0
+        </select>
+        
+        <select id="getStarTeacherListBySubject" resultMap="Teacher_NS.TeacherResult" parameterClass="java.lang.Integer">
+			SELECT COU_TEACHER_TBL.TC_ID,
+		            COU_TEACHER_TBL.NAME,
+		            CONCAT(COU_TEACHER_TBL.EDUCATION, ' ', COU.TITLE) EDUCATION,
+					COU_TEACHER_TBL.CAREER,
+					COU_TEACHER_TBL.IS_STAR,
+		            COU_TEACHER_TBL.PIC_PATH
+				FROM COU_COURSE_TBL COU
+					INNER JOIN COU_TEACHER_TBL 
+					ON COU.TEACHER_ID = COU_TEACHER_TBL.TC_ID
+					INNER JOIN SYS_SUBJECT_TBL SUB
+					ON SUB.SUBJECT_ID = COU.SUBJECT_ID
+						WHERE COU_TEACHER_TBL.STATUS = 0
+						AND SUB.SUBJECT_ID = #value#
+						AND COU_TEACHER_TBL.IS_STAR = 1
+						GROUP BY COU_TEACHER_TBL.TC_ID
+						LIMIT 0,7
+        </select>
+        
+        <select id="getTcShowVedioURL" resultClass="java.lang.String" parameterClass="java.lang.Integer">
+        	SELECT VO.VO_URL
+			FROM RES_VEDIO_TBL VO
+			INNER JOIN COU_COURSE_TBL COU
+			ON VO.VO_ID = COU.TJ_VEDIO_ID
+			INNER JOIN COU_TEACHER_TBL TC
+			ON COU.TEACHER_ID = TC.TC_ID
+			WHERE COU.TEACHER_TJ_COURSE = 1
+			<isNotNull property="value">
+				AND TC.TC_ID = #value#
+			</isNotNull>
+			LIMIT 0, 1
+        </select>
+        <!--end-->
+        
+        <select id="getTeacherListForTag" resultMap="Teacher_NS.TeacherResult" parameterClass="QueryTeacherCondition">
+            SELECT
+            <include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>
+            FROM COU_TEACHER_TBL 
+            WHERE 1=1
+            <isNotNull property="isStar" >
+            	AND	COU_TEACHER_TBL.IS_STAR = #isStar# 
+            </isNotNull>
+            order by TC_ID desc
+        </select>
+
+        <!-- 根据项目ID查询老师 -->
+        <select id="getTeacherByName" resultMap="Teacher_NS.TeacherListResult" parameterClass="int">
+         select tea.NAME,tea.TC_ID  from cou_teacher_tbl as tea,cou_tc_sub_tbl as subcou where tea.tc_id =subcou.tcId 
+ 			<isNotNull property="value" >
+            and	subcou.subjectid=#value#
+            </isNotNull>
+        </select>
+
+        
+        <!-- 谢添加开始 -->
+          <select id="getTeacherListBySubjectId" resultMap="Teacher_NS.TeacherResult" parameterClass="int">
+            SELECT
+            <include refid="Teacher_NS.COU_TEACHER_TBL_columns"/>
+            from cou_teacher_tbl where TC_ID  in( select tcId from  cou_tc_sub_tbl where subjectId=#value#)
+        </select>
+        <!-- 谢添加结束 -->
+
+</sqlMap>

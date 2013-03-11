@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Videoadd_NS">
+        <typeAlias alias="MicroVideo" type="com.shangde.edu.feed.domain.MicroVideo"/>
+        <typeAlias alias="QueryMicroVideoCondition" type="com.shangde.edu.feed.condition.QueryMicroVideoCondition"/>
+        <typeAlias alias="MicroVideoDTO" type="com.shangde.edu.feed.dto.MicroVideoDTO"/>
+        
+        
+        <resultMap id="MicroVideoDTOResult" class="MicroVideoDTO">
+        	<result property="id" column="ID"/>
+        	<result property="subjectId" column="SUBJECT_ID"/>
+        	<result property="courseId" column="COURSE_ID"/>
+        	<result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectById"/>
+        	<result property="course" column="COURSE_ID" select="Feed_Course_NS.getCourseById"/>
+        	<result property="stageNum" column="STAGE_NUM"/>
+        	<result property="ksnId" column="KSN_ID"/>
+        	<result property="importance" column="IMPORTANCE"/>
+        	<result property="url" column="URL"/>
+        	<result property="lectureUrl" column="LECTURE_URL"/>
+        	<result property="orderList" column="ORDER_LIST"/>
+        	<result property="teachers" column="TEACHERS"/>
+        	<result property="content" column="CONTENT"/>
+        	<result property="name" column="NAME"/>
+        	<result property="poinId" column="POIN_ID"/>
+        	<result property="pubDate" column="PUBDATE"/>
+        	<result property="modified" column="MODIFIED"/>
+
+        </resultMap>
+        
+        <resultMap id="MicroVideoDTOResultFront" class="MicroVideoDTO">
+        	<result property="id" column="ID"/>
+        	<result property="subjectId" column="SUBJECT_ID"/>
+        	<result property="courseId" column="COURSE_ID"/>
+        	<result property="stageNum" column="STAGE_NUM"/>
+        	<result property="ksnId" column="KSN_ID"/>
+        	<result property="importance" column="IMPORTANCE"/>
+        	<result property="url" column="URL"/>
+        	<result property="lectureUrl" column="LECTURE_URL"/>
+        	<result property="orderList" column="ORDER_LIST"/>
+        	<result property="teachers" column="TEACHERS"/>
+        	<result property="content" column="CONTENT"/>
+        	<result property="name" column="NAME"/>
+        	<result property="poinId" column="POIN_ID"/>
+        	<result property="pubDate" column="PUBDATE"/>
+        	<result property="modified" column="MODIFIED"/>
+        	<result property="avCount" column="avCount"/>
+        </resultMap>
+        
+        <resultMap id="VideoAddressResult" class="MicroVideo">
+        	<result property="id" column="ID"/>
+        	<result property="subjectId" column="SUBJECT_ID"/>
+        	<result property="courseId" column="COURSE_ID"/>
+        	<result property="stageNum" column="STAGE_NUM"/>
+        	<result property="ksnId" column="KSN_ID"/>
+        	<result property="importance" column="IMPORTANCE"/>
+        	<result property="url" column="URL"/>
+        	<result property="lectureUrl" column="LECTURE_URL"/>
+        	<result property="orderList" column="ORDER_LIST"/>
+        	<result property="teachers" column="TEACHERS"/>
+        	<result property="content" column="CONTENT"/>
+        	<result property="name" column="NAME"/>
+        	<result property="poinId" column="POIN_ID"/>
+        	<result property="pubDate" column="PUBDATE"/>
+        	<result property="modified" column="MODIFIED"/>
+        	<result property="effective" column="EFFECTIVE"/>
+        	<result property="knowledge1Context" column="KNOWLEDGE1_CONTEXT"/>
+        	<result property="knowledge1Time" column="KNOWLEDGE1_TIME"/>
+        	<result property="knowledge2Context" column="KNOWLEDGE2_CONTEXT"/>
+        	<result property="knowledge2Time" column="KNOWLEDGE2_TIME"/>
+        	<result property="knowledge3Context" column="KNOWLEDGE3_CONTEXT"/>
+        	<result property="knowledge3Time" column="KNOWLEDGE3_TIME"/>
+        	<result property="isFree" column="IS_FREE"/>
+        	<result property="isRecommend" column="IS_RECOMMEND"/>
+        	<result property="supportNumber" column="support_number"/>
+        	<result property="antilogNumber" column="ANTILOG_NUMBER"/>
+        	<result property="totalWatchTime" column="TOTAL_WATCH_TIME"/>
+        	<result property="videoImgUrl" column="VIDEO_IMG_URL"/>
+        </resultMap>
+        <sql id="FEED_MICRO_VIDEO_TBL_columns">
+        	FEED_MICRO_VIDEO_TBL.ID,
+        	FEED_MICRO_VIDEO_TBL.SUBJECT_ID,
+        	FEED_MICRO_VIDEO_TBL.COURSE_ID,
+        	FEED_MICRO_VIDEO_TBL.STAGE_NUM,
+        	FEED_MICRO_VIDEO_TBL.KSN_ID,
+        	FEED_MICRO_VIDEO_TBL.IMPORTANCE,
+        	FEED_MICRO_VIDEO_TBL.URL,
+        	FEED_MICRO_VIDEO_TBL.LECTURE_URL,
+        	FEED_MICRO_VIDEO_TBL.ORDER_LIST,
+        	FEED_MICRO_VIDEO_TBL.TEACHERS,
+        	FEED_MICRO_VIDEO_TBL.CONTENT,
+        	FEED_MICRO_VIDEO_TBL.NAME,
+        	FEED_MICRO_VIDEO_TBL.POIN_ID,
+        	FEED_MICRO_VIDEO_TBL.PUBDATE,
+        	FEED_MICRO_VIDEO_TBL.MODIFIED,
+        	FEED_MICRO_VIDEO_TBL.EFFECTIVE,
+        	FEED_MICRO_VIDEO_TBL.KNOWLEDGE1_CONTEXT,
+        	FEED_MICRO_VIDEO_TBL.KNOWLEDGE1_TIME,
+        	FEED_MICRO_VIDEO_TBL.KNOWLEDGE2_CONTEXT,
+        	FEED_MICRO_VIDEO_TBL.KNOWLEDGE2_TIME,
+        	FEED_MICRO_VIDEO_TBL.KNOWLEDGE3_CONTEXT,
+        	FEED_MICRO_VIDEO_TBL.KNOWLEDGE3_TIME,
+        	FEED_MICRO_VIDEO_TBL.IS_FREE,
+        	FEED_MICRO_VIDEO_TBL.IS_RECOMMEND,
+        	FEED_MICRO_VIDEO_TBL.support_number,
+        	FEED_MICRO_VIDEO_TBL.ANTILOG_NUMBER,
+        	FEED_MICRO_VIDEO_TBL.TOTAL_WATCH_TIME,
+        	FEED_MICRO_VIDEO_TBL.VIDEO_IMG_URL
+        </sql>
+        
+        <sql id="FEED_MICRO_VIDEO_TBL_properties">
+        	#id#,
+        	#subjectId#,
+        	#courseId#,
+        	#stageNum#,
+        	#ksnId#,
+        	#importance#,
+        	#url#,
+        	#lectureUrl#,
+        	#orderList#,
+        	#teachers#,
+        	#content#,
+        	#name#,
+        	#poinId#,
+        	#pubDate#,
+        	#modified#,
+        	#effective#,
+        	#knowledge1Context#,
+        	#knowledge1Time#,
+        	#knowledge2Context#,
+        	#knowledge2Time#,
+        	#knowledge3Context#,
+        	#knowledge3Time#,
+        	#isFree#,
+        	#isRecommend#,
+        	#supportNumber#,
+        	#antilogNumber#,
+        	#totalWatchTime#,
+        	#videoImgUrl#
+        </sql>
+        
+        <!-- 添加视频 -->
+        <insert id="createVideoAddress" parameterClass="MicroVideo">
+        	INSERT INTO FEED_MICRO_VIDEO_TBL (<include refid="Videoadd_NS.FEED_MICRO_VIDEO_TBL_columns"/>) VALUES (<include refid="Videoadd_NS.FEED_MICRO_VIDEO_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+        <!-- 根据id查询数据 -->
+        <select id="selectVideoAddress" parameterClass="int" resultMap="Videoadd_NS.VideoAddressResult">
+        	SELECT   DISTINCT                   
+ 			 		 FEED_MICRO_VIDEO_TBL.ID,
+		        	 FEED_MICRO_VIDEO_TBL.SUBJECT_ID,
+		        	 FEED_MICRO_VIDEO_TBL.COURSE_ID,
+		        	 FEED_MICRO_VIDEO_TBL.STAGE_NUM,
+		        	 FEED_MICRO_VIDEO_TBL.KSN_ID,
+		        	 FEED_MICRO_VIDEO_TBL.IMPORTANCE,
+		        	 FEED_MICRO_VIDEO_TBL.URL,
+		        	 FEED_MICRO_VIDEO_TBL.LECTURE_URL,
+		        	 FEED_MICRO_VIDEO_TBL.ORDER_LIST,
+		        	 FEED_MICRO_VIDEO_TBL.TEACHERS,
+		        	 FEED_MICRO_VIDEO_TBL.CONTENT,
+		        	 FEED_MICRO_VIDEO_TBL.NAME,
+		        	 FEED_MICRO_VIDEO_TBL.POIN_ID,
+		        	 FEED_MICRO_VIDEO_TBL.PUBDATE,
+		        	 FEED_MICRO_VIDEO_TBL.MODIFIED,
+		        	 FEED_MICRO_VIDEO_TBL.EFFECTIVE,
+        			 FEED_MICRO_VIDEO_TBL.KNOWLEDGE1_CONTEXT,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE1_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE2_CONTEXT,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE2_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE3_CONTEXT,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE3_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.IS_FREE,
+		        	 FEED_MICRO_VIDEO_TBL.IS_RECOMMEND,
+		        	 FEED_MICRO_VIDEO_TBL.support_number,
+		        	 FEED_MICRO_VIDEO_TBL.ANTILOG_NUMBER,
+		        	 FEED_MICRO_VIDEO_TBL.TOTAL_WATCH_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.VIDEO_IMG_URL
+             FROM FEED_MICRO_VIDEO_TBL  
+        	 WHERE FEED_MICRO_VIDEO_TBL.ID = #value#
+        </select>
+        
+        <!-- 删除视频 -->
+        <delete id="deleteVideoAddress" parameterClass="int">
+        	DELETE FROM FEED_MICRO_VIDEO_TBL
+        	WHERE ID = #id#
+        </delete>
+        
+        <!-- 修改视频 -->
+        <update id="updateVideoAddress" parameterClass="MicroVideo">
+        	UPDATE FEED_MICRO_VIDEO_TBL SET
+        		ID = #id#,
+				SUBJECT_ID = #subjectId#,
+				COURSE_ID = #courseId#,
+				STAGE_NUM = #stageNum#,
+				KSN_ID = #ksnId#,
+				IMPORTANCE = #importance#,
+				URL = #url#,
+				LECTURE_URL = #lectureUrl#,
+				ORDER_LIST = #orderList#,
+				TEACHERS = #teachers#,
+				CONTENT = #content#,
+				NAME = #name#,
+				POIN_ID = #poinId#,
+				MODIFIED = #modified#,
+				EFFECTIVE= #effective#,
+				KNOWLEDGE1_CONTEXT= #knowledge1Context#,
+				KNOWLEDGE1_TIME= #knowledge1Time#,
+				KNOWLEDGE2_CONTEXT= #knowledge2Context#,
+				KNOWLEDGE2_TIME= #knowledge2Time#,
+				KNOWLEDGE3_CONTEXT= #knowledge3Context#,
+				KNOWLEDGE3_TIME= #knowledge3Time#,
+				IS_FREE = #isFree#,
+				IS_RECOMMEND =#isRecommend#,
+				VIDEO_IMG_URL = #videoImgUrl#
+        	WHERE ID = #id#
+        </update>
+        
+        <!-- 视频列表查询+分页 by 课程id -->
+        <select id="selectAllVideoAddress" parameterClass="QueryMicroVideoCondition" resultMap="Videoadd_NS.MicroVideoDTOResult">
+       	  <include refid="public_sql.page_begin"/>
+        	 SELECT  DISTINCT                   
+		 			 FEED_MICRO_VIDEO_TBL.ID,
+		        	 FEED_MICRO_VIDEO_TBL.SUBJECT_ID,
+		        	 FEED_MICRO_VIDEO_TBL.COURSE_ID,
+		        	 FEED_MICRO_VIDEO_TBL.STAGE_NUM,
+		        	 FEED_MICRO_VIDEO_TBL.KSN_ID,
+		        	 FEED_MICRO_VIDEO_TBL.IMPORTANCE,
+		        	 FEED_MICRO_VIDEO_TBL.URL,
+		        	 FEED_MICRO_VIDEO_TBL.LECTURE_URL,
+		        	 FEED_MICRO_VIDEO_TBL.ORDER_LIST,
+		        	 FEED_MICRO_VIDEO_TBL.TEACHERS,
+		        	 FEED_MICRO_VIDEO_TBL.CONTENT,
+		        	 FEED_MICRO_VIDEO_TBL.NAME,
+		        	 FEED_MICRO_VIDEO_TBL.POIN_ID,
+		        	 FEED_MICRO_VIDEO_TBL.PUBDATE,
+		        	 FEED_MICRO_VIDEO_TBL.MODIFIED
+             FROM FEED_MICRO_VIDEO_TBL
+             WHERE COURSE_ID = #courseId# 
+             ORDER BY FEED_MICRO_VIDEO_TBL.PUBDATE DESC 
+           <include refid="public_sql.page_end"/>
+        </select>
+        <!-- 视频列表查询count -->
+        <select id="videoCount" resultClass="int" parameterClass="QueryMicroVideoCondition">
+        	SELECT COUNT(1) FROM FEED_MICRO_VIDEO_TBL 
+        	WHERE COURSE_ID = #courseId# 
+        </select>
+        
+        <!-- 根据专业查询，再添加任务时使用 -->
+        <select id="selectVideoAddressBySubjectIdBack" parameterClass="QueryMicroVideoCondition" resultMap="Videoadd_NS.MicroVideoDTOResult">
+         	<include refid="public_sql.page_begin"/>
+	        	 SELECT  
+	        	 	mv.*
+             	FROM FEED_MICRO_VIDEO_TBL mv
+             	inner join feed_course_tbl course on course.id = mv.course_id
+	        	 WHERE course.status = 1
+	        	  <isNotNull property="subjectId" prepend="and">
+           			 mv.SUBJECT_ID = #subjectId#
+          		  </isNotNull>
+	        	 ORDER BY mv.stage_num desc
+	        <include refid="public_sql.page_end"/>
+        </select>
+        <select id="videoCountBySubjectIdBack" resultClass="int" parameterClass="QueryMicroVideoCondition">
+        	SELECT COUNT(1)
+        	FROM FEED_MICRO_VIDEO_TBL mv
+        	inner join feed_course_tbl course on course.id = mv.course_id
+        	WHERE course.status = 1
+       	    <isNotNull property="subjectId" prepend="and">
+           		mv.SUBJECT_ID = #subjectId#
+            </isNotNull>
+        </select>
+        
+        <!-- 
+        	前台调用,视频列表查询
+        	参数：Map key=email,subjectId
+        -->
+        <select id="selectVideoAddressBySubjectId" parameterClass="Map" resultMap="Videoadd_NS.MicroVideoDTOResultFront">
+         	select 
+         		mv.*,
+	       		(select count(1) from feed_unique_record_tbl ur where ur.type = 2 and ur.object_id = mv.id and ur.email = #email#) as avCount
+	       		from feed_micro_video_tbl mv       
+	       		inner join feed_course_tbl course on course.id = mv.course_id
+	       		where course.status = 1 and mv.subject_id = #subjectId#
+	       		order by mv.order_list
+        </select>
+        <!-- 
+        <select id="selectVideoAddressBySubjectId" parameterClass="QueryMicroVideoCondition" resultMap="Videoadd_NS.VideoAddressResult">
+         	<include refid="public_sql.page_begin"/>
+	        	 SELECT  mv.*
+             	FROM FEED_MICRO_VIDEO_TBL mv
+             	inner join feed_course_tbl course on course.id = mv.course_id
+	        	 WHERE course.status = 1
+	        	  <isNotNull property="subjectId" prepend="and">
+           			 mv.SUBJECT_ID = #subjectId#
+          		  </isNotNull>
+	        	 ORDER BY mv.PUBDATE DESC,stage_num
+	        <include refid="public_sql.page_end"/>
+        </select>
+        <select id="videoCountBySubjectId" resultClass="int" parameterClass="QueryMicroVideoCondition">
+        	SELECT COUNT(1)
+        	FROM FEED_MICRO_VIDEO_TBL mv
+        	inner join feed_course_tbl course on course.id = mv.course_id
+        	WHERE course.status = 1
+       	    <isNotNull property="subjectId" prepend="and">
+           		mv.SUBJECT_ID= #subjectId#
+            </isNotNull>
+        </select>
+        -->
+       <!-- 
+       		根据课程id查询视频列表
+       		在添加视频框架页面中，左边树节点数据业务查询使用
+        -->
+       <select id="getVideoListByCourseId" parameterClass="int" resultMap="Videoadd_NS.VideoAddressResult">
+       		SELECT   FEED_MICRO_VIDEO_TBL.ID,
+		        	 FEED_MICRO_VIDEO_TBL.SUBJECT_ID,
+		        	 FEED_MICRO_VIDEO_TBL.COURSE_ID,
+		        	 FEED_MICRO_VIDEO_TBL.STAGE_NUM,
+		        	 FEED_MICRO_VIDEO_TBL.KSN_ID,
+		        	 FEED_MICRO_VIDEO_TBL.IMPORTANCE,
+		        	 FEED_MICRO_VIDEO_TBL.URL,
+		        	 FEED_MICRO_VIDEO_TBL.LECTURE_URL,
+		        	 FEED_MICRO_VIDEO_TBL.ORDER_LIST,
+		        	 FEED_MICRO_VIDEO_TBL.TEACHERS,
+		        	 FEED_MICRO_VIDEO_TBL.CONTENT,
+		        	 FEED_MICRO_VIDEO_TBL.NAME,
+		        	 FEED_MICRO_VIDEO_TBL.POIN_ID,
+		        	 FEED_MICRO_VIDEO_TBL.PUBDATE,
+		        	 FEED_MICRO_VIDEO_TBL.MODIFIED,
+		        	 FEED_MICRO_VIDEO_TBL.EFFECTIVE,
+        			 FEED_MICRO_VIDEO_TBL.KNOWLEDGE1_CONTEXT,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE1_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE2_CONTEXT,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE2_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE3_CONTEXT,
+		        	 FEED_MICRO_VIDEO_TBL.KNOWLEDGE3_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.IS_FREE,
+		        	 FEED_MICRO_VIDEO_TBL.IS_RECOMMEND,
+		        	 FEED_MICRO_VIDEO_TBL.support_number,
+		        	 FEED_MICRO_VIDEO_TBL.ANTILOG_NUMBER,
+		        	 FEED_MICRO_VIDEO_TBL.TOTAL_WATCH_TIME,
+		        	 FEED_MICRO_VIDEO_TBL.VIDEO_IMG_URL
+             FROM FEED_MICRO_VIDEO_TBL  
+	         WHERE FEED_MICRO_VIDEO_TBL.COURSE_ID = #value#
+	         ORDER BY STAGE_NUM DESC
+        </select>
+        
+</sqlMap>

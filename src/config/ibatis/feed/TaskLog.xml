@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TaskLog_NS">
+        <!--table:FEED_TASK_LOG_TBL-->
+        <typeAlias alias="TaskLog" type="com.shangde.edu.feed.domain.TaskLog"/>
+        <typeAlias alias="QueryTaskLogCondition" type="com.shangde.edu.feed.condition.QueryTaskLogCondition"/>
+
+        <resultMap id="TaskLogResult" class="TaskLog">
+            <result property="id" column="ID"/>
+            <result property="taskListId" column="TASK_LIST_ID"/>
+            <result property="taskList" column="TASK_LIST_ID" select="TaskList_NS.getTaskListById"/>
+            <result property="urlClickNum" column="URL_CLICK_NUM"/>
+            <result property="total" column="TOTAL"/>
+            <result property="sendCount" column="SEND_COUNT"/>
+            <result property="sendErrorCount" column="SEND_ERROR_COUNT"/>
+            <result property="sendNum" column="send_num"/>
+            <result property="status" column="STATUS"/>
+            <result property="pubdate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+        </resultMap>
+
+        <sql id="FEED_TASK_LOG_TBL_columns">
+            FEED_TASK_LOG_TBL.ID,
+            FEED_TASK_LOG_TBL.TASK_LIST_ID,
+            FEED_TASK_LOG_TBL.URL_CLICK_NUM,
+            FEED_TASK_LOG_TBL.TOTAL,
+            FEED_TASK_LOG_TBL.SEND_COUNT,
+            FEED_TASK_LOG_TBL.SEND_ERROR_COUNT,
+            FEED_TASK_LOG_TBL.SEND_NUM,
+            FEED_TASK_LOG_TBL.STATUS,
+            FEED_TASK_LOG_TBL.PUBDATE,
+            FEED_TASK_LOG_TBL.MODIFIED
+        </sql>
+
+        <sql id="FEED_TASK_LOG_TBL_properties">
+            #id#,
+            #taskListId#,
+            #urlClickNum#,
+            #total#,
+            #sendCount#,
+            #sendErrorCount#,
+            #sendNum#,
+            #status#,
+            #pubdate#,
+            #modified#
+        </sql>
+
+        <insert id="createTaskLog" parameterClass="TaskLog">
+            INSERT INTO FEED_TASK_LOG_TBL (<include refid="TaskLog_NS.FEED_TASK_LOG_TBL_columns"/>) VALUES (<include refid="TaskLog_NS.FEED_TASK_LOG_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTaskLogById" parameterClass="int">
+            DELETE FROM FEED_TASK_LOG_TBL
+            WHERE ID = #id#
+        </delete>
+
+        <update id="updateTaskLog" parameterClass="TaskLog">
+            UPDATE FEED_TASK_LOG_TBL SET
+                ID = #id#,
+                TASK_LIST_ID = #taskListId#,
+                URL_CLICK_NUM = #urlClickNum#,
+                TOTAL = #total#,
+                SEND_COUNT = #sendCount#,
+                SEND_ERROR_COUNT = #sendErrorCount#,
+                STATUS = #status#,
+                PUBDATE = #pubdate#,
+                MODIFIED = #modified#
+            WHERE ID = #id#
+        </update>
+
+        <select id="getTaskLogById" resultMap="TaskLog_NS.TaskLogResult" parameterClass="int">
+            SELECT
+            <include refid="TaskLog_NS.FEED_TASK_LOG_TBL_columns"/>
+            FROM FEED_TASK_LOG_TBL
+            WHERE ID = #id#
+        </select>
+
+		<!-- 后台任务列表查询,分页 -->
+        <select id="getTaskLogList" resultMap="TaskLog_NS.TaskLogResult" parameterClass="QueryTaskLogCondition">
+            <include refid="public_sql.page_begin" />
+            SELECT 
+            	taskLog.id,taskLog.task_list_id,taskLog.url_click_num,taskLog.total,taskLog.send_count,taskLog.send_error_count,taskLog.send_num,taskLog.status,taskLog.pubdate,taskLog.modified 
+            FROM 
+            	FEED_TASK_LOG_TBL taskLog inner join feed_task_list_tbl task on taskLog.task_list_id = task.id 
+            where task.status != 3 order by pubdate desc
+            <include refid="public_sql.page_end" />
+        </select>
+        <select id="getTaskLogCount" resultClass="int" parameterClass="QueryTaskLogCondition">
+            SELECT count(1) FROM FEED_TASK_LOG_TBL taskLog inner join feed_task_list_tbl task on taskLog.task_list_id = task.id where task.status != 3
+        </select>
+        
+        <!-- 后台任务列表条件查询,分页 -->
+        <select id="getTaskLogConditionList" resultMap="TaskLog_NS.TaskLogResult" parameterClass="QueryTaskLogCondition">
+            <include refid="public_sql.page_begin" />
+            SELECT 
+            	taskLog.id,taskLog.task_list_id,taskLog.url_click_num,taskLog.total,taskLog.send_count,taskLog.send_error_count,taskLog.send_num,taskLog.status,taskLog.pubdate,taskLog.modified 
+            FROM 
+            	FEED_TASK_LOG_TBL taskLog inner join feed_task_list_tbl task on taskLog.task_list_id = task.id 
+            where 1=1
+            	<isNotNull property="subjectId" prepend="and">
+            		task.subject_id = #subjectId#
+            	</isNotNull>
+            	<isNotNull prepend="and" property="startTime">
+            		<![CDATA[  task.pubdate >= #startTime# ]]>
+            	</isNotNull>
+            	<isNotNull prepend="and" property="endTime">
+            		<![CDATA[  task.pubdate <= #endTime# ]]>
+            	</isNotNull>
+            order by pubdate desc
+            <include refid="public_sql.page_end" />
+        </select>
+        <select id="getTaskLogConditionCount" resultClass="int" parameterClass="QueryTaskLogCondition">
+            SELECT count(1) FROM FEED_TASK_LOG_TBL taskLog inner join feed_task_list_tbl task on taskLog.task_list_id = task.id 
+            where 1=1
+            	<isNotNull property="subjectId" prepend="and">
+            		task.subject_id = #subjectId#
+            	</isNotNull>
+            	<isNotNull prepend="and" property="startTime">
+            		<![CDATA[  task.pubdate >= #startTime# ]]>
+            	</isNotNull>
+            	<isNotNull prepend="and" property="endTime">
+            		<![CDATA[  task.pubdate <= #endTime# ]]>
+            	</isNotNull>
+        </select>
+        
+        <!-- 修改激活字段++ -->
+	   	<update id="updateTaskLogUrlClickNum" parameterClass="Map">
+			UPDATE FEED_TASK_LOG_TBL SET
+			url_click_num = url_click_num + #incremental#
+			WHERE task_list_id = #taskListId#
+	   	</update>
+	   	
+	   	<!-- 修改当前发送次数 -->
+	   	<update id="updateTaskLogSendNum" parameterClass="int">
+			UPDATE FEED_TASK_LOG_TBL SET
+			send_num = send_num + 1
+			WHERE task_list_id = #value#
+	   	</update>
+	   	<!-- 修改当前发送成功次数 -->
+	   	<update id="updateTaskLogSendCount" parameterClass="int">
+			UPDATE FEED_TASK_LOG_TBL SET
+			send_count = send_count + 1
+			WHERE task_list_id = #value#
+	   	</update>
+	   	<!-- 修改当前发送失败次数 -->
+	   	<update id="updateTaskLogSendErrorCount" parameterClass="int">
+			UPDATE FEED_TASK_LOG_TBL SET
+			send_error_count = send_error_count + 1
+			WHERE task_list_id = #value#
+	   	</update>
+        <!--end-->
+</sqlMap>

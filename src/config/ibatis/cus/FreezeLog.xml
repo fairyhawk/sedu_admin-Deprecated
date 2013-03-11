@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FreezeLog_NS">
+	<typeAlias alias="FreezeLog" type="com.shangde.edu.cus.domain.FreezeLog" />
+	<typeAlias alias="QueryAbnormalCustomerCondition" type="com.shangde.edu.cus.condition.QueryAbnormalCustomerCondition" />
+	<typeAlias alias="CustomerFreezeStatusDTO" type="com.shangde.edu.cus.dto.CustomerFreezeStatusDTO" />
+
+	<resultMap id="AbnormalCustomerDTOResult" class="com.shangde.edu.cus.dto.AbnormalCustomerDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="mobile" column="MOBILE" />
+		<result property="freezeStatus" column="FREEZE_STATUS" />
+		<result property="freezeChangedDate" column="FREEZE_CHANGED_DATE" />
+		<result property="abnormalLoginTimes" column="ABNORMAL_LOGIN_TIMES" />
+	</resultMap>
+
+	<resultMap id="FreezeLogDetialDTOResult" class="com.shangde.edu.cus.dto.FreezeLogDetialDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="loginName" column="LOGIN_NAME" />
+		<result property="userName" column="USER_NAME" />
+		<result property="operationType" column="OPERATION_TYPE" />
+		<result property="operationDate" column="OPERATION_DATE" />
+		<result property="operator" column="OPERATOR" />
+	</resultMap>
+	
+	<resultMap id="LoginRecordDetailDTOResult" class="com.shangde.edu.cus.dto.LoginRecordDetailDTO">
+		<result property="loginTime" column="LOGIN_TIME" />
+		<result property="address" column="ADDRESS" />
+	</resultMap>
+
+	<insert id="saveFreeLog" parameterClass="FreezeLog">
+		INSERT INTO CUS_FREEZE_LOG_TBL (CUS_ID, OPERATION_TYPE, OPERATION_DATE, OPERATOR) VALUES (#cusId#, #operationType#, NOW(), #operator#)
+	</insert>
+
+	<update id="updateCustomerFreezeStatus" parameterClass="CustomerFreezeStatusDTO">
+	<![CDATA[
+		UPDATE CUS_CUSTOMER_TBL SET FREEZE_STATUS = #freezeStatus#, FREEZE_CHANGED_DATE = NOW() WHERE CUS_ID = #cusId#
+	]]>
+	</update>
+
+	<select id="searchAbnormalCustomer" parameterClass="QueryAbnormalCustomerCondition" resultMap="AbnormalCustomerDTOResult">
+		SELECT 
+		    A.CUS_ID,
+		    CUS_CUSTOMER_TBL.CUS_NAME,
+		    CUS_CUSTOMER_TBL.EMAIL,
+		    CUS_CUSTOMER_TBL.MOBILE,
+		    CUS_CUSTOMER_TBL.FREEZE_CHANGED_DATE,
+		    CUS_CUSTOMER_TBL.FREEZE_STATUS,
+		    A.LOG_COUNT AS ABNORMAL_LOGIN_TIMES
+		FROM
+		    (SELECT 
+		        COUNT(CUS_ID) LOG_COUNT,
+		        CUS_ID 
+		    FROM
+		        (SELECT 
+		            T.CUS_ID,
+		            T.ADDRESS 
+		        FROM
+		            (SELECT 
+		                * 
+		            FROM
+		                CUS_LOGIN_RECORD_TBL 
+		            <![CDATA[ 
+		            WHERE CUS_LOGIN_RECORD_TBL.LOGIN_TIME <= #endTime# 
+		                AND CUS_LOGIN_RECORD_TBL.LOGIN_TIME >= #startTime#
+		            ]]> 
+		                AND CUS_LOGIN_RECORD_TBL.ADDRESS IS NOT NULL 
+		                AND TRIM(CUS_LOGIN_RECORD_TBL.ADDRESS) != '' 
+		                AND CUS_LOGIN_RECORD_TBL.ADDRESS != 'null') T 
+		        GROUP BY T.CUS_ID,
+		            LEFT(ADDRESS, 2)) S 
+		    GROUP BY CUS_ID 
+		    HAVING LOG_COUNT >= #abnormalTimes#) A 
+		    LEFT JOIN CUS_CUSTOMER_TBL 
+		        ON A.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID 
+		<isNotEmpty prepend="WHERE" property="email">
+		CUS_CUSTOMER_TBL.EMAIL = #email#
+		</isNotEmpty>
+		LIMIT #startRecord#, #pageSize#
+	</select>
+	<select id="searchAbnormalCustomerCount" parameterClass="QueryAbnormalCustomerCondition" resultClass="int">
+		select count(TA.CUS_ID) from (SELECT 
+		    A.CUS_ID,
+		    CUS_CUSTOMER_TBL.CUS_NAME,
+		    CUS_CUSTOMER_TBL.EMAIL,
+		    CUS_CUSTOMER_TBL.MOBILE,
+		    CUS_CUSTOMER_TBL.FREEZE_CHANGED_DATE,
+		    CUS_CUSTOMER_TBL.FREEZE_STATUS,
+		    A.LOG_COUNT AS ABNORMAL_LOGIN_TIMES
+		FROM
+		    (SELECT 
+		        COUNT(CUS_ID) LOG_COUNT,
+		        CUS_ID 
+		    FROM
+		        (SELECT 
+		            T.CUS_ID,
+		            T.ADDRESS 
+		        FROM
+		            (SELECT 
+		                * 
+		            FROM
+		                CUS_LOGIN_RECORD_TBL 
+		            <![CDATA[ 
+		            WHERE CUS_LOGIN_RECORD_TBL.LOGIN_TIME <= #endTime#
+		                AND CUS_LOGIN_RECORD_TBL.LOGIN_TIME >= #startTime#
+		            ]]> 
+		                AND CUS_LOGIN_RECORD_TBL.ADDRESS IS NOT NULL 
+		                AND TRIM(CUS_LOGIN_RECORD_TBL.ADDRESS) != '' 
+		                AND CUS_LOGIN_RECORD_TBL.ADDRESS != 'null') T 
+		        GROUP BY T.CUS_ID,
+		            LEFT(ADDRESS, 2)) S 
+		    GROUP BY CUS_ID 
+		    HAVING LOG_COUNT >= #abnormalTimes#) A 
+		    LEFT JOIN CUS_CUSTOMER_TBL 
+		        ON A.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID 
+		<isNotEmpty prepend="WHERE" property="email">
+		CUS_CUSTOMER_TBL.EMAIL = #email#
+		</isNotEmpty>) TA
+	</select>
+	<select id="searchLoginRecordDetail" parameterClass="com.shangde.edu.cus.condition.QueryLoginRecordCondition" resultMap="LoginRecordDetailDTOResult">
+	<![CDATA[
+		SELECT 
+		    LOGIN_TIME,
+		    ADDRESS 
+		FROM
+		    CUS_LOGIN_RECORD_TBL 
+		WHERE CUS_ID = #cusId# 
+		    AND ADDRESS IS NOT NULL 
+		    AND ADDRESS != '' 
+		    AND ADDRESS != 'null' 
+		    AND LOGIN_TIME >= #startTime# 
+		    AND LOGIN_TIME <= #endTime#
+	]]>
+	</select>
+	<select id="searchFreezeLogDetail" parameterClass="int" resultMap="FreezeLogDetialDTOResult">
+		SELECT 
+		    CUS_FREEZE_LOG_TBL.CUS_ID,
+		    (SELECT 
+		        SYS_USER_TBL.LOGIN_NAME 
+		    FROM
+		        SYS_USER_TBL 
+		    WHERE CUS_FREEZE_LOG_TBL.OPERATOR = SYS_USER_TBL.USER_ID) LOGIN_NAME,
+		    (SELECT 
+		        SYS_USER_TBL.USER_NAME 
+		    FROM
+		        SYS_USER_TBL 
+		    WHERE CUS_FREEZE_LOG_TBL.OPERATOR = SYS_USER_TBL.USER_ID) USER_NAME,
+		    CUS_FREEZE_LOG_TBL.OPERATION_TYPE,
+		    CUS_FREEZE_LOG_TBL.OPERATION_DATE,
+		    CUS_FREEZE_LOG_TBL.OPERATOR 
+		FROM
+		    CUS_FREEZE_LOG_TBL
+		WHERE CUS_FREEZE_LOG_TBL.CUS_ID = #value#
+	</select>
+</sqlMap>

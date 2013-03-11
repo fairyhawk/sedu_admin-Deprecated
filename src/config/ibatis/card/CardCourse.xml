@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CardCourse_NS">
+        <!--table:PURSE_RECORD_TBL-->
+        <typeAlias alias="CardCourse" type="com.shangde.edu.card.domain.CardCourse"/>
+        <typeAlias alias="CardCourseModel" type="com.shangde.edu.card.domain.CardCourseModel"/>
+        <typeAlias alias="CardCourseDTO" type="com.shangde.edu.card.dto.CardCourseDTO"/>
+        <typeAlias alias="QueryCardCourseCondition" type="com.shangde.edu.card.condition.QueryCardCourseCondition"/>
+        <resultMap id="cardCourseResult" class="CardCourse">
+            <result property="cardCourseId" column="CARD_COURSE_ID"/>
+            <result property="sellIds" column="SELL_IDS"/>
+            <result property="cardCourseCode" column="CARD_COURSE_CODE"/>
+            <result property="cardCoursePassword" column="CARD_COURSE_PASSWORD"/>
+            <result property="cardMainId" column="CARD_MAIN_ID"/>
+            <result property="cardCourseStatus" column="CARD_COURSE_STATUS"/>
+            <result property="userAccount" column="USER_ACCOUNT"/>
+            <result property="creator" column="CREATOR"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+        	<result property="updateTime" column="UPDATE_TIME"/>
+        	<result property="cardCourseUseStatus" column="CARD_COURSE_USE_STATUS"/>
+        </resultMap>
+        <resultMap class="CardCourseDTO" id="cardCourseDTOResult" extends="cardCourseResult">
+        	<result property="cardName" column="CARD_NAME"/>
+        	<result property="cardCourseStatusContent" column="CARD_COURSE_STATUS_CONTENT"/>
+        	<result property="cardMoney" column="CARD_MONEY"/>
+        	<result property="agentMoney" column="AGENT_MONEY"/>
+        	<result property="validBeginTime" column="VALID_BEGIN_TIME"/>
+        	<result property="validEndTime" column="VALID_END_TIME"/>
+        	<result property="remark" column="REMARK"/>
+        	<result property="cardCourseUseStatusContent" column="CARD_COURSE_USE_STATUS_CONTENT"/>
+        	<result property="activateUser" column="ACTIVATE_USER"/>
+        </resultMap>
+         <resultMap class="CardCourseModel" id="CardCourseModelResult" extends="cardCourseResult">
+        	<result property="cardName" column="CARD_NAME"/>
+        	<result property="cardCourseStatusContent" column="CARD_COURSE_STATUS_CONTENT"/>
+        	<result property="cardMoney" column="CARD_MONEY"/>
+        	<result property="agentMoney" column="AGENT_MONEY"/>
+        	<result property="validBeginTime" column="VALID_BEGIN_TIME"/>
+        	<result property="validEndTime" column="VALID_END_TIME"/>
+        	<result property="remark" column="REMARK"/>
+        	<result property="activateRemark" column="ACTIVATE_REMARK"/>
+        	<result property="imageUrl" column="IMAGE_URL"/>
+        </resultMap>
+        <sql id="CARD_COURSE_TBL_columns">
+            CARD_COURSE_TBL.CARD_COURSE_ID,
+            CARD_COURSE_TBL.SELL_IDS,
+            CARD_COURSE_TBL.CARD_COURSE_CODE,
+            CARD_COURSE_TBL.CARD_COURSE_PASSWORD,
+            CARD_COURSE_TBL.CARD_MAIN_ID,
+            CARD_COURSE_TBL.CARD_COURSE_STATUS,
+            CARD_COURSE_TBL.USER_ACCOUNT,
+            CARD_COURSE_TBL.CREATOR,
+            CARD_COURSE_TBL.CREATE_TIME,
+            CARD_COURSE_TBL.UPDATE_USER,
+            CARD_COURSE_TBL.UPDATE_TIME,
+            CARD_COURSE_TBL.CARD_COURSE_USE_STATUS
+        </sql>
+        <sql id="CARD_COURSE_TBL_properties">
+            #cardCourseId#,
+            #sellIds#,
+            #cardCourseCode#,
+            #cardCoursePassword#,
+            #cardMainId#,
+            #cardCourseStatus#,
+            #userAccount#,
+            #creator#,
+            #createTime#,
+            #updateUser#,
+            #updateTime#,
+            #cardCourseUseStatus#
+        </sql>
+        <insert id="insert" parameterClass="CardCourse" >
+			INSERT INTO CARD_COURSE_TBL (
+			<include refid="CardCourse_NS.CARD_COURSE_TBL_columns" />
+			) values (
+			<include refid="CardCourse_NS.CARD_COURSE_TBL_properties" />
+			)
+			<selectKey resultClass="int" type="post" keyProperty="cardCourseId">
+				<include refid="public_sql.increment_sql" />
+			</selectKey>
+		</insert>
+		<select id="getLastInsertId" resultClass="int">
+			SELECT IFNULL(MAX(CARD_COURSE_ID),0) FROM CARD_COURSE_TBL 
+		</select>
+		<update id="abolishCardCourse">
+			UPDATE CARD_COURSE_TBL SET 
+			<isNotEmpty property="cardCourseId">
+				CARD_COURSE_ID=#cardCourseId#,
+			</isNotEmpty>
+			<isNotEmpty  property="cardCourseStatus">
+				CARD_COURSE_STATUS=#cardCourseStatus#
+			</isNotEmpty>
+			WHERE 1=1 
+			<isNotEmpty prepend="AND" property="cardCourseId">
+				CARD_COURSE_ID=#cardCourseId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardMainId">
+				CARD_MAIN_ID=#cardMainId#
+			</isNotEmpty>
+		</update>
+		<select id="getCardCourseList" parameterClass="QueryCardCourseCondition" resultMap="cardCourseDTOResult">
+			SELECT
+				<include refid="CardCourse_NS.CARD_COURSE_TBL_columns" />,
+				CARD_MAIN_TBL.CARD_NAME,
+				CARD_MAIN_TBL.CARD_MONEY,
+				CARD_MAIN_TBL.AGENT_MONEY,
+				CARD_MAIN_TBL.VALID_BEGIN_TIME,
+				CARD_MAIN_TBL.VALID_END_TIME,
+				CARD_MAIN_TBL.REMARK,
+				CARD_MAIN_TBL.ACTIVATE_USER,
+				(
+					SELECT
+						SYS_DICTIONARY_TBL.DIC_CONTENT
+					FROM
+						SYS_DICTIONARY_TBL
+					WHERE
+						SYS_DICTIONARY_TBL.DIC_CODE = CARD_COURSE_TBL.CARD_COURSE_STATUS
+					AND SYS_DICTIONARY_TBL.DIC_TYPE = 'CARD_COURSE_STATUS'
+				) AS CARD_COURSE_STATUS_CONTENT ,
+				(
+					SELECT
+						SYS_DICTIONARY_TBL.DIC_CONTENT
+					FROM
+						SYS_DICTIONARY_TBL
+					WHERE
+						SYS_DICTIONARY_TBL.DIC_CODE = CARD_COURSE_TBL.CARD_COURSE_USE_STATUS
+					AND SYS_DICTIONARY_TBL.DIC_TYPE = 'CARD_COURSE_USE_STATUS'
+				) AS CARD_COURSE_USE_STATUS_CONTENT
+			FROM
+				CARD_COURSE_TBL
+			JOIN CARD_MAIN_TBL ON CARD_COURSE_TBL.CARD_MAIN_ID = CARD_MAIN_TBL.CARD_MAIN_ID
+			WHERE 1=1
+			<isNotEmpty prepend="AND" property="cardMainId">
+				CARD_MAIN_TBL.CARD_MAIN_ID=#cardMainId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardMoney">
+				CARD_MAIN_TBL.CARD_MONEY=#cardMoney#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCodeBegin">
+				CARD_COURSE_TBL.CARD_COURSE_CODE>=#cardCodeBegin#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCodeEnd">
+				<![CDATA[CARD_COURSE_TBL.CARD_COURSE_CODE<=#cardCodeEnd#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sellIds">
+				CARD_COURSE_TBL.SELL_IDS  like CONCAT('%',#sellIds#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCourseStatus">
+				CARD_COURSE_TBL.CARD_COURSE_STATUS=#cardCourseStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCourseUseStatus">
+				CARD_COURSE_TBL.CARD_COURSE_USE_STATUS=#cardCourseUseStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardName">
+				CARD_MAIN_TBL.CARD_NAME  like CONCAT('%',#cardName#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="updateUser">
+				CARD_COURSE_TBL.UPDATE_USER  like CONCAT('%',#updateUser#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createBeginTime">
+				DATE(DATE_FORMAT(CARD_COURSE_TBL.CREATE_TIME,'%Y-%m-%d'))>=DATE(DATE_FORMAT(#createBeginTime#,'%Y-%m-%d'))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEndTime">
+				<![CDATA[DATE(DATE_FORMAT(CARD_COURSE_TBL.CREATE_TIME,'%Y-%m-%d'))<=DATE(DATE_FORMAT(#createEndTime#,'%Y-%m-%d'))]]>
+			</isNotEmpty>
+			ORDER BY CARD_COURSE_TBL.UPDATE_TIME DESC
+			<include refid="public_sql.page_end"/>
+		</select>
+		<select id="getCardCourseCount" parameterClass="QueryCardCourseCondition" resultClass="int">
+			SELECT
+				COUNT(1)
+			FROM
+				CARD_COURSE_TBL
+			JOIN CARD_MAIN_TBL ON CARD_COURSE_TBL.CARD_MAIN_ID = CARD_MAIN_TBL.CARD_MAIN_ID
+			WHERE 1=1  
+			<isNotEmpty prepend="AND" property="cardMainId">
+				CARD_MAIN_TBL.CARD_MAIN_ID=#cardMainId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardMoney">
+				CARD_MAIN_TBL.CARD_MONEY=#cardMoney#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCodeBegin">
+				CARD_COURSE_TBL.CARD_COURSE_CODE>=#cardCodeBegin#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCodeEnd">
+				<![CDATA[CARD_COURSE_TBL.CARD_COURSE_CODE<=#cardCodeEnd#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sellIds">
+				CARD_COURSE_TBL.SELL_IDS  like CONCAT('%',#sellIds#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCourseStatus">
+				CARD_COURSE_TBL.CARD_COURSE_STATUS=#cardCourseStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardCourseUseStatus">
+				CARD_COURSE_TBL.CARD_COURSE_USE_STATUS=#cardCourseUseStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardName">
+				CARD_MAIN_TBL.CARD_NAME  like CONCAT('%',#cardName#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="updateUser">
+				CARD_COURSE_TBL.UPDATE_USER  like CONCAT('%',#updateUser#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createBeginTime">
+				DATE(DATE_FORMAT(CARD_COURSE_TBL.CREATE_TIME,'%Y-%m-%d'))>=DATE(DATE_FORMAT(#createBeginTime#,'%Y-%m-%d'))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEndTime">
+				<![CDATA[DATE(DATE_FORMAT(CARD_COURSE_TBL.CREATE_TIME,'%Y-%m-%d'))>=DATE(DATE_FORMAT(#createEndTime#,'%Y-%m-%d'))]]>
+			</isNotEmpty>
+			ORDER BY CARD_COURSE_TBL.UPDATE_TIME DESC
+			
+		</select>
+		<select id="getCardCourseDetail" parameterClass="CardCourse" resultMap="CardCourseModelResult">
+			SELECT
+				<include refid="CardCourse_NS.CARD_COURSE_TBL_columns" />,
+				CARD_MAIN_TBL.CARD_NAME,
+				CARD_MAIN_TBL.CARD_MONEY,
+				CARD_MAIN_TBL.AGENT_MONEY,
+				CARD_MAIN_TBL.VALID_BEGIN_TIME,
+				CARD_MAIN_TBL.VALID_END_TIME,
+				CARD_MAIN_TBL.REMARK,
+				CARD_MAIN_TBL.ACTIVATE_REMARK,
+				CARD_MAIN_TBL.IMAGE_URL,
+				(
+					SELECT
+						SYS_DICTIONARY_TBL.DIC_CONTENT
+					FROM
+						SYS_DICTIONARY_TBL
+					WHERE
+						SYS_DICTIONARY_TBL.DIC_CODE = CARD_COURSE_TBL.CARD_COURSE_STATUS
+					AND SYS_DICTIONARY_TBL.DIC_TYPE = 'CARD_COURSE_STATUS'
+				) AS CARD_COURSE_STATUS_CONTENT 
+			FROM
+				CARD_COURSE_TBL
+			JOIN CARD_MAIN_TBL ON CARD_COURSE_TBL.CARD_MAIN_ID = CARD_MAIN_TBL.CARD_MAIN_ID
+			WHERE 1=1 AND CARD_COURSE_TBL.CARD_COURSE_ID=#cardCourseId#
+		</select>
+		<update id="updateCardCourseStatus" parameterClass="CardCourse">
+			UPDATE CARD_COURSE_TBL SET CARD_COURSE_STATUS=#cardCourseStatus# WHERE CARD_MAIN_ID=#cardMainId#
+		</update>
+		<select id="getOrderCodeList" parameterClass="CardCourse" resultClass="string">
+			SELECT CARD_COURSE_TBL.ORDER_CODE FROM CARD_COURSE_TBL
+				WHERE CARD_COURSE_TBL.ORDER_CODE IS NOT NULL  
+			<isNotEmpty prepend="AND" property="cardCourseId">
+				CARD_COURSE_ID=#cardCourseId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardMainId">
+				CARD_MAIN_ID=#cardMainId#
+			</isNotEmpty>
+		</select>
+		<update id="updateOrderStauts" parameterClass="Map">
+			UPDATE  FINANCE_CASH_RECORD_TBL SET SHOP_STATUS=3 WHERE CONTRACT_ID IN 
+			<iterate property="orderCodeList" open="(" close=")" conjunction=",">
+		        	#orderCodeList[]#
+		    </iterate>
+		</update>
+</sqlMap>

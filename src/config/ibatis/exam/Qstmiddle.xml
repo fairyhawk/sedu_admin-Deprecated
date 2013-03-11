@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Qstmiddle_NS">
+        <!--table:EXAM_QSTMIDDLE_TBL-->
+        <typeAlias alias="Qstmiddle" type="com.shangde.edu.exam.domain.Qstmiddle"/>
+        <typeAlias alias="QueryQstmiddleCondition" type="com.shangde.edu.exam.condition.QueryQstmiddleCondition"/>
+
+        <resultMap id="QstmiddleResult" class="Qstmiddle">
+            <result property="eqId" column="EQ_ID"/>
+            <result property="epId" column="EP_ID"/>
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstScore" column="QST_SCORE"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="qst" column="QST_ID" select="Qst_NS.getQstById"/>
+            <result property="exam" column="EP_ID" select="Exampaper_NS.getExampaperById"/>
+        </resultMap>
+        
+        <resultMap id="QstmiddleById" class="Qstmiddle">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstScore" column="SCORE"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+        </resultMap>
+        
+        <!-- 跳转到试题添加页面时，查询试题信息 -->
+        <resultMap id="QstmiddleToAddQstResult" class="Qstmiddle">
+            <result property="epId" column="EP_ID"/>
+            <result property="eqId" column="EQ_ID"/>
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstScore" column="QST_SCORE"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+        </resultMap>
+        
+        <resultMap id="QstmiddleResultExam" class="Qstmiddle">
+            <result property="exam" column="EP_ID" select="Exampaper_NS.getExampaperById"/>
+        </resultMap>
+
+        <sql id="EXAM_QSTMIDDLE_TBL_columns">
+            EXAM_QSTMIDDLE_TBL.EQ_ID,
+            EXAM_QSTMIDDLE_TBL.EP_ID,
+            EXAM_QSTMIDDLE_TBL.QST_ID,
+            EXAM_QSTMIDDLE_TBL.QST_SCORE,
+            EXAM_QSTMIDDLE_TBL.QST_TYPE
+        </sql>
+
+        <sql id="EXAM_QSTMIDDLE_TBL_properties">
+            #eqId#,
+            #epId#,
+            #qstId#,
+            #qstScore#,
+            #qstType#
+        </sql>
+
+        <insert id="createQstmiddle" parameterClass="Qstmiddle">
+            INSERT INTO EXAM_QSTMIDDLE_TBL (<include refid="Qstmiddle_NS.EXAM_QSTMIDDLE_TBL_columns"/>) VALUES (<include refid="Qstmiddle_NS.EXAM_QSTMIDDLE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="eqId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteQstmiddleById" parameterClass="int">
+            DELETE FROM EXAM_QSTMIDDLE_TBL
+            WHERE
+                EQ_ID = #value#
+        </delete>
+        
+        
+        <select id="getQstmiddleByEpId" resultMap="Qstmiddle_NS.QstmiddleResult" parameterClass="int">
+            SELECT
+            <include refid="Qstmiddle_NS.EXAM_QSTMIDDLE_TBL_columns"/>
+            FROM EXAM_QSTMIDDLE_TBL
+            WHERE
+                EP_ID = #value#
+
+			ORDER BY QST_TYPE,QST_ID ASC
+
+        </select>
+        
+       	<select id="getQstmiddleByEpIdcount" resultClass="int" parameterClass="int">
+            SELECT
+           	COUNT(1)
+            FROM EXAM_QSTMIDDLE_TBL
+            WHERE
+                EP_ID = #value#
+        </select>
+		
+        <select id="getQstmiddleList" resultMap="Qstmiddle_NS.QstmiddleResult" parameterClass="QueryQstmiddleCondition">
+            SELECT
+            <include refid="Qstmiddle_NS.EXAM_QSTMIDDLE_TBL_columns"/>
+            FROM EXAM_QSTMIDDLE_TBL
+            WHERE EXAM_QSTMIDDLE_TBL.EQ_ID!=0
+            	<isNotNull property="epId">
+	            	 <isGreaterThan prepend="and" property="epId" compareValue="0">
+	                		EXAM_QSTMIDDLE_TBL.EP_ID=#epId#
+	                </isGreaterThan>
+	        	</isNotNull>
+            	
+            	<isNotNull property="qstType">
+	            	 <isGreaterThan prepend="and" property="qstType" compareValue="0">
+	                		EXAM_QSTMIDDLE_TBL.QST_TYPE=#qstType#
+	                </isGreaterThan>
+	        	</isNotNull>
+	        	
+	        	<isNotNull property="qstId">
+	            	 <isGreaterThan prepend="and" property="qstId" compareValue="0">
+	                		EXAM_QSTMIDDLE_TBL.QST_ID=#qstId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        </select>
+        
+        <!-- 跳转到试题添加页面时，查询试题信息 -->
+        <select id="getQstmiddleToAddQstList" resultMap="Qstmiddle_NS.QstmiddleToAddQstResult" parameterClass="QueryQstmiddleCondition">
+            SELECT
+            	EXAM_QSTMIDDLE_TBL.EQ_ID,
+				EXAM_QSTMIDDLE_TBL.QST_ID,
+				EXAM_QSTMIDDLE_TBL.QST_SCORE,
+				EXAM_QSTMIDDLE_TBL.EP_ID,
+				EXAM_QST_TBL.QST_CONTENT
+            FROM EXAM_QSTMIDDLE_TBL, EXAM_QST_TBL
+            WHERE EXAM_QSTMIDDLE_TBL.EQ_ID!=0 AND EXAM_QSTMIDDLE_TBL.QST_ID = EXAM_QST_TBL.QST_ID
+            	<isNotNull property="epId">
+	            	 <isGreaterThan prepend="and" property="epId" compareValue="0">
+	                		EXAM_QSTMIDDLE_TBL.EP_ID=#epId#
+	                </isGreaterThan>
+	        	</isNotNull>
+            	
+            	<isNotNull property="qstType">
+	            	 <isGreaterThan prepend="and" property="qstType" compareValue="0">
+	                		EXAM_QSTMIDDLE_TBL.QST_TYPE=#qstType#
+	                </isGreaterThan>
+	        	</isNotNull>
+	        	
+	        	<isNotNull property="qstId">
+	            	 <isGreaterThan prepend="and" property="qstId" compareValue="0">
+	                		EXAM_QSTMIDDLE_TBL.QST_ID=#qstId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        </select>
+        
+        <select id="getQstbyidCount" resultClass="int" parameterClass="int">
+        	SELECT  COUNT(1) 
+        	FROM EXAM_QSTMIDDLE_TBL
+            WHERE QST_ID = #value#
+        </select>
+        
+        <select id="getQstbyQstid" resultMap="Qstmiddle_NS.QstmiddleResultExam" parameterClass="int">
+        	SELECT   
+        	<include refid="Qstmiddle_NS.EXAM_QSTMIDDLE_TBL_columns"/>
+        	FROM EXAM_QSTMIDDLE_TBL
+            WHERE QST_ID = #value#
+        </select>
+        
+        <!-- add by yanghaibo -->
+        <select id="getQstmiddleById" resultMap="Qstmiddle_NS.QstmiddleById" parameterClass="java.util.ArrayList">
+            SELECT t.qst_id,t.qst_content,t.score FROM exam_qst_tbl t 
+			<isNotNull>
+					<isNotEmpty>
+					 WHERE t.qst_id IN
+					 <iterate open="(" close=")" conjunction=",">
+					 #idList[]#
+					 </iterate>
+					</isNotEmpty>
+			</isNotNull>
+        </select>
+        <!--end-->
+</sqlMap>

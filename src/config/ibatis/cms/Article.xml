@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Article_NS">
+        <!--table:CMS_ARTICLE_TBL-->
+        <typeAlias alias="Article" type="com.shangde.edu.cms.domain.Article"/>
+        <typeAlias alias="QueryArticleCondition" type="com.shangde.edu.cms.condition.QueryArticleCondition"/>
+
+        <resultMap id="ArticleResult" class="Article">
+            <result property="articleId" column="ARTICLE_ID"/>
+            <result property="columnId" column="COLUMN_ID"/>
+            <result property="title" column="TITLE"/>
+            <result property="meta" column="META"/>
+            <result property="articleDesc" column="ARTICLE_DESC"/>
+            <result property="content" column="CONTENT"/>
+            <result property="picture" column="PICTURE"/>
+            <result property="articleUrl" column="ARTICLE_URL"/>
+            <result property="sequence" column="SEQUENCE"/>
+            <result property="createDate" column="CREATE_DATE"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="titleFont" column="TITLE_FONT"/>
+            <result property="titleSize" column="TITLE_SIZE"/>
+            <result property="titleColor" column="TITLE_COLOR"/>
+            <result property="clickTimes" column="CLICK_TIMES"/>
+            <result property="aticleType" column="ATICLE_TYPE"/>
+        </resultMap>
+
+        <sql id="CMS_ARTICLE_TBL_columns">
+            CMS_ARTICLE_TBL.ARTICLE_ID,
+            CMS_ARTICLE_TBL.COLUMN_ID,
+            CMS_ARTICLE_TBL.TITLE,
+            CMS_ARTICLE_TBL.META,
+            CMS_ARTICLE_TBL.ARTICLE_DESC,
+            CMS_ARTICLE_TBL.CONTENT,
+            CMS_ARTICLE_TBL.PICTURE,
+            CMS_ARTICLE_TBL.ARTICLE_URL,
+            CMS_ARTICLE_TBL.SEQUENCE,
+            CMS_ARTICLE_TBL.CREATE_DATE,
+            CMS_ARTICLE_TBL.AUTHOR,
+            CMS_ARTICLE_TBL.TITLE_FONT,
+            CMS_ARTICLE_TBL.TITLE_SIZE,
+            CMS_ARTICLE_TBL.TITLE_COLOR,
+            CMS_ARTICLE_TBL.CLICK_TIMES,
+            CMS_ARTICLE_TBL.ATICLE_TYPE,
+            CMS_ARTICLE_TBL.FUNCTION_TYPE
+        </sql>
+
+        <sql id="CMS_ARTICLE_TBL_properties">
+            #articleId#,
+            #columnId#,
+            #title#,
+            #meta#,
+            #articleDesc#,
+            #content#,
+            #picture#,
+            #articleUrl#,
+            #sequence#,
+            #createDate#,
+            #author#,
+            #titleFont#,
+            #titleSize#,
+            #titleColor#,
+            #clickTimes#,
+            #aticleType#,
+            #functionType#
+        </sql>
+
+        <insert id="createArticle" parameterClass="Article">
+            INSERT INTO CMS_ARTICLE_TBL (<include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>) VALUES (<include refid="Article_NS.CMS_ARTICLE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="articleId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteArticleById" parameterClass="int">
+            DELETE FROM CMS_ARTICLE_TBL
+            WHERE
+                ARTICLE_ID = #value#
+        </delete>
+
+        <update id="updateArticle" parameterClass="Article">
+            UPDATE CMS_ARTICLE_TBL SET
+                ARTICLE_ID = #articleId#,
+                COLUMN_ID = #columnId#,
+                TITLE = #title#,
+                META = #meta#,
+                ARTICLE_DESC = #articleDesc#,
+                CONTENT = #content#,
+                PICTURE = #picture#,
+                ARTICLE_URL = #articleUrl#,
+                SEQUENCE = #sequence#,
+                CREATE_DATE = #createDate#,
+                AUTHOR = #author#,
+                TITLE_FONT = #titleFont#,
+                TITLE_SIZE = #titleSize#,
+                TITLE_COLOR = #titleColor#,
+                CLICK_TIMES = #clickTimes#,
+                ATICLE_TYPE = #aticleType#
+            WHERE
+                ARTICLE_ID = #articleId#
+        </update>
+		
+        <update id="updateArticleType" parameterClass="Article">
+            UPDATE CMS_ARTICLE_TBL SET
+            	ATICLE_TYPE = #aticleType#
+              WHERE
+                ARTICLE_ID = #articleId#
+        </update>
+        <select id="getArticleById" resultMap="Article_NS.ArticleResult" parameterClass="int">
+            SELECT
+            <include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>
+            FROM CMS_ARTICLE_TBL
+            WHERE
+                ARTICLE_ID = #value#
+        </select>
+
+        <select id="getArticleList" resultMap="Article_NS.ArticleResult" parameterClass="QueryArticleCondition">
+            SELECT
+            <include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>
+            FROM CMS_ARTICLE_TBL
+        </select>
+        
+
+        <!-- 按栏目id查询文章 -->
+
+        <select id="getArticleListByColumnId" resultMap="Article_NS.ArticleResult" parameterClass="int">
+            SELECT
+            <include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>
+            FROM CMS_ARTICLE_TBL
+            WHERE COLUMN_ID = #value#
+            ORDER BY ATICLE_TYPE DESC, CREATE_DATE DESC   
+        </select>
+        
+        <!-- 分页查询 -->
+        <select id="getArticleListByCondition" resultMap="Article_NS.ArticleResult" parameterClass="QueryArticleCondition">
+        	SELECT 
+        	<include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>
+        	FROM CMS_ARTICLE_TBL
+        	WHERE 1=1
+        	<isNotNull property="columnId">
+        		<isNotEqual property="columnId" compareValue="0">
+          		AND COLUMN_ID = #columnId#
+            	</isNotEqual>
+            </isNotNull >
+            <isNotNull property="title">
+           	 	<isNotEqual property="title" compareValue="">
+          		AND TITLE LIKE '%$title$%'
+            	</isNotEqual>
+            </isNotNull >     
+             ORDER BY CREATE_DATE DESC        
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getArticleCountByCondition" resultClass="int" parameterClass="QueryArticleCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM CMS_ARTICLE_TBL
+        	WHERE 1=1
+        	<isNotNull property="columnId">
+        		<isNotEqual property="columnId" compareValue="0">
+          		AND COLUMN_ID = #columnId#
+            	</isNotEqual>
+            </isNotNull >
+            <isNotNull property="title">
+           	 	<isNotEqual property="title" compareValue="">
+          		AND TITLE LIKE '%$title$%'
+            	</isNotEqual>
+            </isNotNull > 
+            ORDER BY CREATE_DATE DESC             
+        </select>
+        
+       	<select id="getArticleListForTag" resultMap="Article_NS.ArticleResult" parameterClass="QueryArticleCondition">
+            SELECT <include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>
+            FROM CMS_ARTICLE_TBL
+            <dynamic prepend="WHERE">
+            	<isNotEqual property="columnId" compareValue="0">
+            		COLUMN_ID = #columnId#
+            	</isNotEqual>
+            </dynamic>
+            ORDER BY COLUMN_ID DESC, ATICLE_TYPE DESC, CREATE_DATE DESC
+        </select>
+        	<select id="getArticleListForTagSingle" resultMap="Article_NS.ArticleResult" parameterClass="QueryArticleCondition">
+            SELECT <include refid="Article_NS.CMS_ARTICLE_TBL_columns"/>
+            FROM CMS_ARTICLE_TBL
+            <dynamic prepend="WHERE">
+            	<isNotEqual property="articleId" compareValue="0">
+            		ARTICLE_ID = #articleId#
+            	</isNotEqual>
+            </dynamic>
+            ORDER BY COLUMN_ID DESC, ATICLE_TYPE DESC, CREATE_DATE DESC
+        </select>
+        <!--end-->
+</sqlMap>

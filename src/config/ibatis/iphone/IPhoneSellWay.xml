@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ContractIPhone_NS">
+	<typeAlias alias="QuerySellWayIPhoneCondition" type="com.shangde.edu.iphone.condition.QuerySellWayIPhoneCondition"/>
+	<typeAlias alias="Teacher" type="com.shangde.edu.cou.domain.Teacher" />
+
+	<typeAlias alias="IphoneModel" type="com.shangde.edu.iphone.dto.IphoneModel" />
+
+	<!-- 为张栋提供iphone端数据 -->
+	<resultMap id="ContractSellWayResult" class="IphoneModel">
+		<result property="videoId" column="SELL_ID" />
+		<result property="videoName" column="SELL_NAME" />
+	</resultMap>
+
+	<resultMap id="TeacherResult" class="Teacher">
+		<result property="tcId" column="TC_ID" />
+		<result property="name" column="NAME" />
+	</resultMap>
+	<!-- 为张栋提供iphone端数据 -->
+	<!-- 给张栋提供iphone端数据 或得当前用户所购买的售卖方式-->
+	<select id="getContractAndSellWayByCusId" resultMap="ContractIPhone_NS.ContractSellWayResult"
+		parameterClass="QuerySellWayIPhoneCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT COU_SELL_WAY_TBL.SELL_ID,COU_SELL_WAY_TBL.SELL_NAME
+		FROM
+		FINANCE_CASH_RECORD_TBL
+		INNER JOIN FINANCE_CONTRACT_TBL INNER JOIN
+		COU_SELL_WAY_TBL
+		WHERE FINANCE_CONTRACT_TBL.CUS_ID=#userId#
+		AND
+		(FINANCE_CONTRACT_TBL.STATUS =1 OR FINANCE_CONTRACT_TBL.STATUS =2 OR
+		FINANCE_CONTRACT_TBL.STATUS =4)
+		AND
+		FINANCE_CONTRACT_TBL.ID=FINANCE_CASH_RECORD_TBL.CT_ID
+		AND
+		FINANCE_CASH_RECORD_TBL.PACK_ID=COU_SELL_WAY_TBL.SELL_ID
+		GROUP BY
+		FINANCE_CASH_RECORD_TBL.PACK_ID
+		<include refid="public_sql.page_end" />
+	</select>
+	<!-- 给张栋提供iphone端数据 -->
+
+	<!-- 给张栋提供iphone端数据 -->
+	<select id="getContractAndSellWayCount" resultClass="int"
+		parameterClass="QuerySellWayIPhoneCondition">
+		SELECT COUNT(1)
+		FROM
+		( SELECT FINANCE_CASH_RECORD_TBL.PACK_ID
+		FROM FINANCE_CASH_RECORD_TBL
+		INNER JOIN FINANCE_CONTRACT_TBL INNER JOIN COU_SELL_WAY_TBL
+		WHERE FINANCE_CONTRACT_TBL.CUS_ID=#userId#
+		AND (FINANCE_CONTRACT_TBL.STATUS =1 OR FINANCE_CONTRACT_TBL.STATUS =2 OR
+		FINANCE_CONTRACT_TBL.STATUS =4)
+		AND FINANCE_CONTRACT_TBL.ID=FINANCE_CASH_RECORD_TBL.CT_ID
+		AND FINANCE_CASH_RECORD_TBL.PACK_ID=COU_SELL_WAY_TBL.SELL_ID
+		GROUP BY FINANCE_CASH_RECORD_TBL.PACK_ID)
+		AS T
+		</select>
+	<!-- 给张栋提供iphone端数据 -->
+	<!-- 给张栋提供iphone端数据 或得当前售卖方式的老师-->
+	<select id="getTeacherBySellWayId" resultMap="ContractIPhone_NS.TeacherResult"
+		parameterClass="int">
+		SELECT COU_TEACHER_TBL.TC_ID,COU_TEACHER_TBL.NAME
+		FROM
+		COU_COURSE_TBL
+		INNER JOIN COU_SELL_COU_TBL
+		INNER JOIN COU_TEACHER_TBL
+		WHERE
+		COU_COURSE_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+		AND COU_COURSE_TBL.TEACHER_ID= COU_TEACHER_TBL.TC_ID
+		AND
+		COU_SELL_COU_TBL.SELL_ID=#VALUE#
+		GROUP BY COU_COURSE_TBL.TEACHER_ID
+	</select>
+	<!-- 给张栋提供iphone端数据 -->
+	
+</sqlMap>

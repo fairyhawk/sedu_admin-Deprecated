@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SurveyQst_NS">
+        <!--table:CMS_SURVEY_QST_TBL-->
+        <typeAlias alias="SurveyQst" type="com.shangde.edu.cms.domain.SurveyQst"/>
+        <typeAlias alias="QuerySurveyQstCondition" type="com.shangde.edu.cms.condition.QuerySurveyQstCondition"/>
+
+        <resultMap id="SurveyQstResult" class="SurveyQst">
+            <result property="sqId" column="SQ_ID"/>
+            <result property="sqContent" column="SQ_CONTENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="surveyName" column="SURVEY_NAME"/>
+            <result property="sqType" column="SQ_TYPE"/>
+            <result property="sqOptions" column="SQ_OPTIONS"/>
+        </resultMap>
+
+        <sql id="CMS_SURVEY_QST_TBL_columns">
+            CMS_SURVEY_QST_TBL.SQ_ID,
+            CMS_SURVEY_QST_TBL.SQ_CONTENT,
+            CMS_SURVEY_QST_TBL.CREATE_TIME,
+            CMS_SURVEY_QST_TBL.SURVEY_NAME,
+            CMS_SURVEY_QST_TBL.SQ_TYPE,
+            CMS_SURVEY_QST_TBL.SQ_OPTIONS
+        </sql>
+
+        <sql id="CMS_SURVEY_QST_TBL_properties">
+            #sqId#,
+            #sqContent#,
+            #createTime#,
+            #surveyName#,
+            #sqType#,
+            #sqOptions#
+        </sql>
+
+        <insert id="createSurveyQst" parameterClass="SurveyQst">
+            INSERT INTO CMS_SURVEY_QST_TBL (<include refid="SurveyQst_NS.CMS_SURVEY_QST_TBL_columns"/>) VALUES (<include refid="SurveyQst_NS.CMS_SURVEY_QST_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="sqId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSurveyQstById" parameterClass="int">
+            DELETE FROM CMS_SURVEY_QST_TBL
+            WHERE
+                SQ_ID = #value#
+
+
+
+        </delete>
+
+        <update id="updateSurveyQst" parameterClass="SurveyQst">
+            UPDATE CMS_SURVEY_QST_TBL SET
+                SQ_ID = #sqId#,
+                SQ_CONTENT = #sqContent#,
+                CREATE_TIME = #createTime#,
+                SURVEY_NAME = #surveyName#,
+                SQ_TYPE = #sqType#,
+                SQ_OPTIONS = #sqOptions#
+            WHERE
+                SQ_ID = #sqId#
+
+
+
+        </update>
+
+        <select id="getSurveyQstById" resultMap="SurveyQst_NS.SurveyQstResult" parameterClass="int">
+            SELECT
+            <include refid="SurveyQst_NS.CMS_SURVEY_QST_TBL_columns"/>
+            FROM CMS_SURVEY_QST_TBL
+            WHERE
+                SQ_ID = #value#
+
+
+
+        </select>
+
+        <select id="getSurveyQstList" resultMap="SurveyQst_NS.SurveyQstResult" parameterClass="QuerySurveyQstCondition">
+        	 
+            SELECT
+            <include refid="SurveyQst_NS.CMS_SURVEY_QST_TBL_columns"/>
+            FROM CMS_SURVEY_QST_TBL
+            WHERE 1=1
+            <isNotNull property="createTime">
+            AND	CREATE_TIME=#createTime#
+            </isNotNull>
+        </select>
+        
+        <select id="getSurveyListByCondition" resultMap="SurveyQst_NS.SurveyQstResult" parameterClass="QuerySurveyQstCondition">
+            SELECT 
+            <include refid="SurveyQst_NS.CMS_SURVEY_QST_TBL_columns"/>
+            FROM CMS_SURVEY_QST_TBL
+            WHERE 1= 1
+            <isNotNull property="surveyName">
+            	<isNotEqual property="surveyName" compareValue="">
+            		AND SURVEY_NAME LIKE CONCAT('%', ## ,'%');
+            	</isNotEqual>
+            </isNotNull>
+            GROUP BY SURVEY_NAME
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getSurveyCountByCondition" resultClass="int" parameterClass="QuerySurveyQstCondition">
+            SELECT COUNT(1) FROM (SELECT COUNT(1)
+            FROM CMS_SURVEY_QST_TBL
+            WHERE 1 = 1
+            <isNotNull property="surveyName">
+            	<isNotEqual property="surveyName" compareValue="">
+            		AND SURVEY_NAME LIKE CONCAT('%', ## ,'%');
+            	</isNotEqual>
+            </isNotNull>
+            GROUP BY SURVEY_NAME
+            ) t
+        </select>
+        
+        
+        
+        <select id="getSurveyQstListForTag" resultMap="SurveyQst_NS.SurveyQstResult" parameterClass="QuerySurveyQstCondition">
+            SELECT 
+            <include refid="SurveyQst_NS.CMS_SURVEY_QST_TBL_columns"/>
+            FROM CMS_SURVEY_QST_TBL
+            WHERE 1= 1
+            <isNotNull property="createTime">
+            	<isNotEqual property="createTime" compareValue="">
+            		AND	CREATE_TIME=#createTime#
+            	</isNotEqual>
+            </isNotNull>
+        </select>
+        <!--end-->
+</sqlMap>

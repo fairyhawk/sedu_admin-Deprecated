@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <description>ssi</description>
+  <display-name>ssi</display-name>
+  <filter>
+    <filter-name>Set Character Encoding</filter-name>
+    <filter-class>filters.SetCharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Set Character Encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>struts2</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>struts2</filter-name>
+    <url-pattern>*.action</url-pattern>
+    <url-pattern>*.jsp</url-pattern>
+    <url-pattern>/kjz</url-pattern>
+    <url-pattern>/rl</url-pattern>
+    <url-pattern>/sf</url-pattern>
+    <url-pattern>/cpa</url-pattern>
+    <url-pattern>/cpa1</url-pattern>
+    <url-pattern>/zq</url-pattern>
+    <url-pattern>/jz</url-pattern>
+    <url-pattern>/gk</url-pattern>
+    <url-pattern>/sf2</url-pattern>
+    <url-pattern>/cpa2</url-pattern>
+    <url-pattern>/gwy</url-pattern>
+    <url-pattern>/xl</url-pattern>
+  </filter-mapping>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath*:/config/spring/applicationContext.xml,classpath:org/codehaus/xfire/spring/xfire.xml</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <session-config>
+    <session-timeout>540</session-timeout>
+  </session-config>
+  <display-name>BlazeDS</display-name>
+  <description>BlazeDS Application</description>
+  <listener>
+    <listener-class>flex.messaging.HttpFlexSession</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.shangde.common.listener.InitFieldListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>BlazeDS Servlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+	        	classpath*:/config/spring/applicationContext-ds-servlet.xml
+	        </param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BlazeDS Servlet</servlet-name>
+    <url-pattern>/messagebroker/*</url-pattern>
+  </servlet-mapping>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>xfire</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>xfire</servlet-name>
+    <url-pattern>*.ws</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>/static/web/column/80/index_1.shtml</welcome-file>
+    <welcome-file>/static/web/column/10/index_1.shtml</welcome-file>
+    <welcome-file>/static/web/column/120/index_1.shtml</welcome-file>
+    <welcome-file>/static/web/column/100/index_1.shtml</welcome-file>
+    <welcome-file>/static/web/column/52/index_1.shtml</welcome-file>
+  </welcome-file-list>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/static/web/global/error.html</location>
+  </error-page>
+</web-app>

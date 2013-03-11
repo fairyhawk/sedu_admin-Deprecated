@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="StudyCourse_NS">
+	<!--table:KB_STUDY_COURSE_TBL-->
+	<typeAlias alias="StudyCourse"
+		type="com.shangde.edu.kb.domain.StudyCourse" />
+	<typeAlias alias="QueryStudyCourseCondition"
+		type="com.shangde.edu.kb.condition.QueryStudyCourseCondition" />
+
+	<resultMap id="StudyCourseResult" class="StudyCourse">
+		<result property="cId" column="C_ID" />
+		<result property="cIndex" column="C_INDEX" />
+		<result property="cName" column="C_NAME" />
+		<result property="pId" column="P_ID" />
+		<result property="cVersion" column="C_VERSION" />
+		<result property="cCtSubject" column="C_CT_SUBJECT" />
+		<result property="cCreatetime" column="C_CREATETIME" />
+		<result property="cUpdatetime" column="C_UPDATETIME" />
+		<result property="cStatus" column="C_STATUS"/>
+		<result property="cNote" column="C_NOTE" />
+	</resultMap>
+
+	<sql id="KB_STUDY_COURSE_TBL_columns">
+		KB_STUDY_COURSE_TBL.C_ID, KB_STUDY_COURSE_TBL.C_INDEX,
+		KB_STUDY_COURSE_TBL.C_NAME, KB_STUDY_COURSE_TBL.P_ID,
+		KB_STUDY_COURSE_TBL.C_VERSION, KB_STUDY_COURSE_TBL.C_CT_SUBJECT,
+		KB_STUDY_COURSE_TBL.C_CREATETIME,KB_STUDY_COURSE_TBL.C_UPDATETIME,
+		KB_STUDY_COURSE_TBL.C_STATUS,KB_STUDY_COURSE_TBL.C_NOTE
+
+	</sql>
+
+	<sql id="KB_STUDY_COURSE_TBL_properties">
+		#cId#, #cIndex#, #cName#, #pId#, #cVersion#, #cCtSubject#,
+		#cCreatetime#, #cUpdatetime#, #cStatus#, #cNote#
+
+	</sql>
+
+	<insert id="createStudyCourse" parameterClass="StudyCourse">
+		INSERT INTO KB_STUDY_COURSE_TBL (
+		<include refid="StudyCourse_NS.KB_STUDY_COURSE_TBL_columns" />
+		) VALUES (
+		<include refid="StudyCourse_NS.KB_STUDY_COURSE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="cId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+        <select id="getStudyCourseById" resultMap="StudyCourse_NS.StudyCourseResult" parameterClass="int">
+            SELECT
+            <include refid="StudyCourse_NS.KB_STUDY_COURSE_TBL_columns"/>
+            FROM KB_STUDY_COURSE_TBL
+            WHERE
+                C_ID = #value#
+        </select>
+         <select id="getStudyCourseLast" resultMap="StudyCourse_NS.StudyCourseResult" parameterClass="int">
+            SELECT
+            <include refid="StudyCourse_NS.KB_STUDY_COURSE_TBL_columns"/>
+            FROM KB_STUDY_COURSE_TBL  WHERE  P_ID = #value#  ORDER BY C_ID DESC LIMIT 1
+        </select>
+        <select id="getStudyCourseList" resultMap="StudyCourse_NS.StudyCourseResult" parameterClass="QueryStudyCourseCondition">
+            SELECT
+            <include refid="StudyCourse_NS.KB_STUDY_COURSE_TBL_columns"/>
+            FROM KB_STUDY_COURSE_TBL
+        </select>
+         <select id="getStudyCourseByList" resultMap="StudyCourse_NS.StudyCourseResult" parameterClass="QueryStudyCourseCondition">
+            SELECT
+            <include refid="StudyCourse_NS.KB_STUDY_COURSE_TBL_columns"/>
+            FROM KB_STUDY_COURSE_TBL
+            <dynamic prepend="WHERE">
+	            <isNotEqual property="pId" compareValue="0" prepend="and">
+	            P_ID = #pId#
+	            </isNotEqual>
+            </dynamic>
+        </select>
+        <!--end-->
+	<delete id="deleteStudyCourseById" parameterClass="int">
+		DELETE FROM KB_STUDY_COURSE_TBL WHERE C_ID = #value#
+	</delete>
+
+	<update id="updateStudyCourse" parameterClass="StudyCourse">
+		UPDATE KB_STUDY_COURSE_TBL SET C_ID = #cId#, C_INDEX = #cIndex#,
+		C_NAME = #cName#, P_ID = #pId#, C_VERSION = #cVersion#,
+		C_CT_SUBJECT = #cCtSubject#, C_CREATETIME = #cCreatetime#,
+		C_UPDATETIME = #cUpdatetime#, C_STATUS= #cStatus#,C_NOTE=#cNote# WHERE C_ID = #cId#
+	</update>
+	
+	<!--end-->
+</sqlMap>

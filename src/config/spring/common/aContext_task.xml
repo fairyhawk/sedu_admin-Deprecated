@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" default-autowire="byName">
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no"> 
+		<property name="triggers"> 
+		<list> 
+		<!-- <ref bean="dayInfoTime"/>
+		<ref bean="GQCouponTime"/>
+		学习计划发送邮件and短信
+		<ref  bean="dayPlanclockNoteMail"/> -->
+		<!-- <ref  bean="freshNewsTime"/> -->
+		<!-- 用户统计信息 -->
+		 <ref  bean="cusDataRankDay"/>
+		<ref  bean="cusVideoDataRankDay"/>
+		<ref  bean="cusExampaperDataRankDay"/>
+		<ref  bean="cusSellDay"/>
+			<!-- 每天更新 最近学习和购买的信息 生成文件-->
+	<!-- 勿动  
+			<ref bean="learnBuyInfoDay"/>
+			<ref bean="everyDaycheckHTCustomerTime"/>			  
+			<ref bean="IP2addressTime"/>
+			<ref bean="messageRemindTime"/>					
+			
+			
+			<ref bean="everyHourTime"/>
+			<ref bean="everyWeakTime"/>
+			<ref bean="everyDayTime"/>	 			
+	-->
+	<!-- 	<ref bean="everyDayUpdateCustomerTime"/> -->
+		</list> 
+		</property> 
+	</bean>
+	
+	<!-- 用户统计数据 -->
+	<bean id="cusDataRankQuartz"
+		class="com.shangde.common.task.CusDataRankTask">
+	</bean>
+	
+	<bean id="cusDataRankEtl"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cusDataRankQuartz" />
+		<property name="targetMethod" value="addCusRankToTable" />
+	</bean> 
+	
+	<bean id="cusDataRankDay" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="cusDataRankEtl"/>
+        <property name="cronExpression" value="0 0/2 * * * ?"/>
+	</bean>	
+	
+	<!-- 用户视频统计数据 -->
+	<bean id="cusVideoDataRankQuartz"
+		class="com.shangde.common.task.CusVideoDataRankTask">
+	</bean>
+	
+	<bean id="cusVideoDataRankEtl"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cusVideoDataRankQuartz" />
+		<property name="targetMethod" value="addCusRankToTable" />
+	</bean> 
+	
+	<bean id="cusVideoDataRankDay" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="cusVideoDataRankEtl"/>
+        <property name="cronExpression" value="0 0/2 * * * ?"/>
+	</bean>	
+	
+	<!-- 用户试卷统计数据 -->
+	<bean id="cusExampaperDataRankQuartz"
+		class="com.shangde.common.task.CusExampaperDataRankTask">
+	</bean>
+	
+	<bean id="cusExampaperDataRankEtl"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cusExampaperDataRankQuartz" />
+		<property name="targetMethod" value="addCusRankToTable" />
+	</bean> 
+	
+	<bean id="cusExampaperDataRankDay" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="cusExampaperDataRankEtl"/>
+        <property name="cronExpression" value="0 0/2 * * * ?"/>
+	</bean>	
+	
+	<!-- 用户商品数据生成文件 -->
+	<bean id="cusSellQuartz"
+		class="com.shangde.common.task.CusPackAgeInfoTask">
+	</bean>
+	
+	<bean id="cusSellEtl"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cusSellQuartz" />
+		<property name="targetMethod" value="getSellBuyInfo" />
+	</bean> 
+	
+	<bean id="cusSellDay" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="cusSellEtl"/>
+        <property name="cronExpression" value="0 0/2 * * * ?"/>
+	</bean>	
+	
+</beans>

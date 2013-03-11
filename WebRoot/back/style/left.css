@@ -1,0 +1,129 @@
+/* manage */
+.manage {
+	background:#eaeaea;
+	}
+/* �м���� */
+.main_left {
+	width:224px;
+	height:auto;
+	margin-left:2px;
+	text-align:left;
+	float:left;
+	display:inline;
+	}
+.main_left h2 {
+	float:left;	
+	}
+.main_left h2 a, .main_left h2 a:visited {
+	width:247px;
+	height:29px;
+	line-height:29px;
+	text-indent:32px;
+	background:url(../images/left_nav_title.gif) no-repeat;
+	float:left;
+	}
+.main_left h2 a:hover, .main_left h2  .main_left_on, .main_left h2  .main_left_on:visited, .main_left h2  .main_left_on:hover {
+	color:#a05700;
+	background:url(../images/left_nav_title_on.gif) no-repeat;
+	}
+.main_left ul {
+	display:none;
+	}
+.main_left ul.show {
+	display:block;
+	}
+.main_left span {
+	clear:both;
+	display:block;
+	border-bottom:1px #adadad solid;
+	}
+.main_left ul li a, .main_left ul li a:visited {
+	width:247px;
+	height:29px;
+	line-height:29px;
+	text-indent:52px;
+	background:url(../images/left_btn.gif) no-repeat;
+	float:left;	
+	}
+.main_left ul li a:hover, .main_left .main_left_on, .main_left .main_left_on:visited, .main_left .main_left_on:hover {
+	background:url(../images/left_btn_on.gif) no-repeat;
+	}
+/* �м���� --*/
+/* manage --*/
+
+
+#CategoryTree
+{
+	float:left;
+	width:224px;
+	border:1px solid #FFF;
+	background:#FFF;
+	color:inherit;
+	font-size: 12px;
+	padding: 0px 1px;
+}
+	dt{
+		line-height: 26px;
+		background: url(../images/left_nav_title_on.gif) repeat-x;
+		margin: 1px 0;
+	}
+	dt a{
+		display: block;
+		color: #111;
+		text-indent: 10px;
+		font-weight: bold;
+		text-indent:32px;
+	}
+.TreeMenu{
+	margin: 0;
+	padding: 0;
+}
+.TreeMenu img.s
+{
+	cursor:hand;
+	vertical-align:middle;
+}
+.TreeMenu ul
+{
+	padding:0 20px;
+}
+.TreeMenu li
+{
+	list-style:none;
+	padding:0;
+}
+.TreeMenu li a{
+	color: #111;
+	line-height: 26px;
+}
+.Closed ul
+{
+	display:none;
+}
+.Child img.s
+{
+	background:none;
+	cursor:default;
+}
+
+#CategoryTree ul
+{
+	margin:0 0 0 0px;
+}
+#CategoryTree img.s
+{
+	width:34px;
+	height:18px;
+}
+#CategoryTree .Opened img.s
+{
+	background: url(../images/opened.gif) no-repeat 0 1px;
+}
+#CategoryTree .Closed img.s
+{
+	background:url(../images/closed.gif) no-repeat 0 1px;
+}
+#CategoryTree .Child img.s
+{
+	background:url(../images/child.gif) no-repeat 13px 2px;
+}

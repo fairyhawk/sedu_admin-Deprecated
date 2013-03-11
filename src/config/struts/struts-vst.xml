@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <!-- video VideoStatisticsAction  -->
+     <package name="vst" namespace="/vst" extends="edu-default">
+        <action name="vido" class="com.shangde.edu.vst.action.VideoStatisticsAction">
+			<result name="vsCount">/back/jsp/vst/vst_count_list.jsp</result>
+			<result name="vsuserCount">/back/jsp/vst/vst_user_count_list.jsp</result>
+			<result name="vsSingle">/back/jsp/vst/vst_single_list.jsp</result>
+			<result name="vrPage">/back/jsp/vst/vst_record_list.jsp</result>
+			
+			<result name="createExcel" type="streamx">
+				<param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${fileName}"</param>
+			</result> 
+			 
+			 <result name="json" type="json">
+			 	<param name="root">result</param>
+			 </result>
+			
+        </action>
+        
+        <action name="vidoTeacher" class="com.shangde.edu.vst.action.VideoTeacherStatisticsAction">
+        	<result name="vsCount">/back/jsp/vst/vst_teacher_count_list.jsp</result>
+        </action>
+        
+        <!-- video level -->
+        <action name="level" class="com.shangde.edu.vst.action.VideoLevelStasticsAction">
+			<result name="vlevelPage">/back/jsp/vst/vst_level_list.jsp</result>
+			<result name="invalid">/back/jsp/common/invalid.jsp?message=${message}</result>
+			<result name="excel" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportname}"</param>
+			 </result>
+			<!-- 
+			<result name="createExcel" type="streamx">
+				<param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${fileName}"</param>
+			</result> 
+			  -->
+			 <result name="json" type="json">
+			 	<param name="root">json</param>
+			 </result>
+			
+        </action>
+    </package>
+</struts>

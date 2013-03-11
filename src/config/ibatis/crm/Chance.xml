@@ -1,0 +1,3642 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Chance_NS">
+        <!--table:CRM_CHANCE_TBL-->
+        <typeAlias alias="Chance" type="com.shangde.edu.crm.domain.Chance"/>
+        <typeAlias alias="QueryChanceCondition" type="com.shangde.edu.crm.condition.QueryChanceCondition"/>
+        <typeAlias alias="QueryStatCondition" type="com.shangde.edu.crm.condition.QueryStatCondition"/>
+        <typeAlias alias="ChanceDTO" type="com.shangde.edu.crm.dto.ChanceDTO"/>
+        <typeAlias alias="UserDTO" type="com.shangde.edu.crm.domain.UserDTO"/>
+        <typeAlias alias="ContractCrmDTO" type="com.shangde.edu.crm.dto.ContractCrmDTO"/>
+        <typeAlias alias="ChanceRecordDTO" type="com.shangde.edu.crm.dto.ChanceRecordDTO"/>
+        <typeAlias alias="PageQuery" type="com.shangde.common.vo.PageQuery"/>
+        <typeAlias alias="SalesStatDTO" type="com.shangde.edu.crm.dto.SalesStatDTO"/>
+
+		<resultMap id="UserResult" class="UserDTO">
+            <result property="userId" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+            <result property="groupId" column="GROUP_ID"/>
+        </resultMap>
+        
+        <resultMap id="SalesStatResult" class="SalesStatDTO">
+      	 	<result property="userId" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="origin" column="ORIGIN"/>
+            <result property="consultStatus" column="CONSULT_STATUS"/>
+            <result property="hours" column="HOURS"/>
+            <result property="sellCount" column="SELL_COUNT"/>
+            <result property="payCount" column="PAY_COUNT"/>
+            <result property="intBankTotelPrice" column="INT_BANK_TOTEL_PRICE"/>
+            <result property="sendCount" column="SEND_COUNT"/>
+            <result property="callCount" column="CALL_COUNT"/>
+            <result property="successCount" column="SUCCESS_COUNT"/>
+            <result property="groupName" column="GROUP_NAME"/>
+            <result property="sendTotelPrice" column="SEND_TOTEL_PRICE"/>
+            <result property="sendSuccessCount" column="SEND_SUCCESS_COUNT"/>
+            <result property="cancelCount" column="CANCEL_COUNT"/>
+            <result property="backCancelCount" column="BACK_CANCEL_COUNT"/>
+            <result property="effSendTotelPrice" column="EFF_SEND_TOTEL_PRICE"/>
+            <result property="difCancelCount" column="DIF_CANCEL_COUNT"/>
+            <result property="difBackCancelCount" column="DIF_BACK_CANCEL_COUNT"/>
+        </resultMap>
+
+        <resultMap id="UndesignedInfoResult" class="SalesStatDTO">
+            <result property="origin" column="ORIGIN"/>
+            <result property="consultStatus" column="CONSULT_STATUS"/>
+            <result property="hours" column="HOURS"/>
+            <result property="sellCount" column="SELL_COUNT"/>
+            <result property="payCount" column="PAY_COUNT"/>
+            <result property="intBankTotelPrice" column="INT_BANK_TOTEL_PRICE"/>
+            <result property="sendCount" column="SEND_COUNT"/>
+            <result property="sendTotelPrice" column="SEND_TOTEL_PRICE"/>
+            <result property="sendSuccessCount" column="SEND_SUCCESS_COUNT"/>
+            <result property="cancelCount" column="CANCEL_COUNT"/>
+            <result property="backCancelCount" column="BACK_CANCEL_COUNT"/>
+            <result property="effSendTotelPrice" column="EFF_SEND_TOTEL_PRICE"/>
+            <result property="difCancelCount" column="DIF_CANCEL_COUNT"/>
+            <result property="difBackCancelCount" column="DIF_BACK_CANCEL_COUNT"/>
+        </resultMap>
+        
+        <resultMap id="UserMobileResult" class="UserDTO">
+            <result property="userId" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="followStatus" column="FOLLOW_STATUS"/>
+            <result property="email" column="EMAIL"/>
+            <result property="chanceId" column="ID"/>
+            <result property="payCount" column="PAY_COUNT"/>
+        </resultMap>
+
+        <resultMap id="ChanceResult" class="Chance">
+            <result property="id" column="ID"/>
+            <result property="crmUserId" column="CRM_USER_ID"/>
+            <result property="origin" column="ORIGIN"/>
+            <result property="webName" column="WEB_NAME"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="followStatus" column="FOLLOW_STATUS"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="chanceStime" column="CHANCE_STIME"/>
+            <result property="chanceUtime" column="CHANCE_UTIME"/>
+            <result property="chanceNumber" column="CHANCE_NUMBER"/>
+            <result property="consultStatus" column="CONSULT_STATUS"/>
+            <result property="endCommStatus" column="ENDCOMM_STATUS"/>
+            <result property="endCommTime" column="ENDCOMM_TIME"/>
+            <result property="drawStatus" column="DRAW_STATUS"/>
+            <result property="autoGiveup" column="auto_giveup"/>
+        </resultMap>
+        
+        <resultMap id="ChanceRecordDTO" class="ChanceRecordDTO">
+            <result property="id" column="ID"/>
+            <result property="origin" column="ORIGIN"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="followStatus" column="FOLLOW_STATUS"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="chanceStime" column="CHANCE_STIME"/>
+            <result property="chanceUtime" column="CHANCE_UTIME"/>
+        </resultMap>
+        
+        <resultMap class="ChanceDTO" id="ChanceDTORestList">
+        	<result property="id" column="ID"/>
+        	<result property="userId" column="USER_ID"/>
+        	<result property="cusId" column="CUS_ID"/>
+        	<result property="mobile" column="MOBILE"/>
+        	<result property="email" column="EMAIL"/>
+        	<result property="subjectName" column="SUBJECT_NAME"/>
+        	<result property="webName" column="WEB_NAME"/>
+        	<result property="origin" column="ORIGIN"/>
+        	<result property="userName" column="USER_NAME"/>
+        	<result property="followStatus" column="FOLLOW_STATUS"/>
+        	<result property="chanceSTime" column="CHANCE_STIME"/>
+        	<result property="chanceUTime" column="CHANCE_UTIME"/>
+        	<result property="fcount1" column="fcount1"/>
+        	<result property="fcount2" column="fcount2"/>
+        	<result property="fcount3" column="fcount3"/>
+        	<result property="fcount4" column="fcount4"/>
+        	<result property="endCommTime" column="ENDCOMM_TIME"/>
+        	<result property="endCommStatus" column="ENDCOMM_STATUS"/>
+        	<result property="consultStatus" column="CONSULT_STATUS"/>
+        	<result property="cusWebFrom" column="CUS_WEB_FROM"/>
+        	<result property="loginTimes" column="LOGIN_TIMES"/>
+        </resultMap>
+        
+        <resultMap class="ChanceDTO" id="chancelistDTO" extends="ChanceDTORestList">
+        	<result property="autoGiveup" column="auto_giveup"/>
+        	<result property="record" column="ID" select="Record_NS.getEndRecord" />
+        </resultMap>
+        
+        <resultMap class="ChanceDTO" id="ChanceChkOutList">
+        	<result property="id" column="ID"/>
+        	<result property="userId" column="USER_ID"/>
+        	<result property="cusId" column="CUS_ID"/>
+        	<result property="mobile" column="MOBILE"/>
+        	<result property="email" column="EMAIL"/>
+        	<result property="subjectName" column="SUBJECT_NAME"/>
+        	<result property="webName" column="WEB_NAME"/>
+        	<result property="origin" column="ORIGIN"/>
+        	<result property="userName" column="USER_NAME"/>
+        	<result property="followStatus" column="FOLLOW_STATUS"/>
+        	<result property="chanceSTime" column="CHANCE_STIME"/>
+        	<result property="chanceUTime" column="CHANCE_UTIME"/>
+        	<result property="fcount1" column="fcount1"/>
+        	<result property="fcount2" column="fcount2"/>
+        	<result property="fcount3" column="fcount3"/>
+        	<result property="fcount4" column="fcount4"/>
+        	<result property="endCommTime" column="ENDCOMM_TIME"/>
+        	<result property="endCommStatus" column="ENDCOMM_STATUS"/>
+        	<result property="consultStatus" column="CONSULT_STATUS"/>
+        	<result property="loginTimes" column="LOGIN_TIMES"/>
+        	<result property="sendCount" column="SEND_COUNT"/>
+        	<result property="sendPrice" column="SEND_PRICE"/>
+        	<result property="intBankCount" column="INT_BANK_COUNT"/>
+        	<result property="intBankPrice" column="INT_BANK_PRICE"/>
+        	<result property="bankCount" column="BANK_COUNT"/>
+        	<result property="bankPrice" column="BANK_PRICE"/>
+        	<result property="firstUserName" column="FIRST_USER_NAME"/>
+        	<result property="autoGiveup" column="auto_giveup"/>
+        	<result property="cusWebFrom" column="CUS_WEB_FROM"/>
+        	<result property="record" column="ID" select="Record_NS.getEndRecord" />
+        </resultMap>
+
+        <resultMap class="ChanceDTO" id="SalesChanceDTORestList">
+        	<result property="id" column="ID"/>
+        	<result property="userId" column="USER_ID"/>
+        	<result property="cusId" column="CUS_ID"/>
+        	<result property="mobile" column="MOBILE"/>
+        	<result property="email" column="EMAIL"/>
+        	<result property="subjectName" column="SUBJECT_NAME"/>
+        	<result property="webName" column="WEB_NAME"/>
+        	<result property="origin" column="ORIGIN"/>
+        	<result property="followStatus" column="FOLLOW_STATUS"/>
+        	<result property="chanceSTime" column="CHANCE_STIME"/>
+        	<result property="chanceUTime" column="CHANCE_UTIME"/>
+        	<result property="fcount1" column="fcount1"/>
+        	<result property="fcount2" column="fcount2"/>
+        	<result property="fcount3" column="fcount3"/>
+        	<result property="fcount4" column="fcount4"/>
+        	<result property="endCommTime" column="ENDCOMM_TIME"/>
+        	<result property="endCommStatus" column="ENDCOMM_STATUS"/>
+        	<result property="consultStatus" column="CONSULT_STATUS"/>
+        	<result property="cusWebFrom" column="CUS_WEB_FROM"/>
+        	<result property="loginTimes" column="LOGIN_TIMES"/>
+        	<result property="record" column="ID" select="Record_NS.getEndRecord" />
+        	<result property="endRecordRemarks" column="ID" select="Chance_NS.getEndRecord" />
+        </resultMap>
+        
+        <sql id="STAT_columns">
+        	c.user_id,u.USER_NAME,
+    c.origin,
+    c.consult_status,
+    HOUR(c.CHANCE_UTIME) HOURS,
+    g.GROUP_NAME,
+    SUM(
+        IFNULL(
+          (SELECT 
+            COUNT(DISTINCT cc.ID) 
+          FROM
+            crm_chance_tbl cc 
+          WHERE cc.ID = c.ID   AND c.FOLLOW_STATUS!=1
+           <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  c.CHANCE_UTIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  c.CHANCE_UTIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull> ),
+          0
+        )
+      ) AS SELL_COUNT, 
+      SUM(
+        IFNULL(
+          (SELECT 
+            COUNT(r.id) 
+          FROM
+            crm_record_tbl r 
+          WHERE r.crm_chance_id = c.id AND c.USER_ID = r.USER_ID AND c.FOLLOW_STATUS!=1
+       <isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  r.CREATE_TIME >= #startTime# ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  r.CREATE_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+            AND r.COMM_STATUS !=0),
+          0
+        )
+      ) AS CALL_COUNT, 
+      SUM(
+        IFNULL(
+          (SELECT 
+            COUNT(r.id) 
+          FROM
+            crm_record_tbl r 
+          WHERE r.crm_chance_id = c.id AND c.USER_ID = r.USER_ID AND c.FOLLOW_STATUS!=1
+    		   <isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  r.CREATE_TIME >= #startTime# ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  r.CREATE_TIME <= #endTime#  ]]>
+					</isNotEqual>
+				</isNotNull>
+            AND r.COMM_STATUS IN (3, 5, 8)),
+          0
+        )
+      ) AS SUCCESS_COUNT,  
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.PAY_TYPE NOT IN (0, 2, 5) AND c.FOLLOW_STATUS!=1
+          AND fc.STATUS = 1 
+         <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+		  ),
+        0
+      )
+    ) AS PAY_COUNT, 
+    SUM(
+      IFNULL(
+        (SELECT SUM(DISTINCT 
+          fc.CONTRACT_CUTSUMMONEY )
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.PAY_TYPE NOT IN (0, 2, 5) AND c.FOLLOW_STATUS!=1
+          AND fc.STATUS = 1 
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS INT_BANK_TOTEL_PRICE, 
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.PAY_TYPE = 2 AND c.FOLLOW_STATUS!=1
+          AND fc.STATUS != 4 
+         <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.CREATE_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.CREATE_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS SEND_COUNT, 
+   SUM(
+      IFNULL(
+        (SELECT SUM(DISTINCT 
+          fc.CONTRACT_CUTSUMMONEY )
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.PAY_TYPE = 2 AND c.FOLLOW_STATUS!=1
+          AND fc.STATUS != 4 
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.CREATE_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.CREATE_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS EFF_SEND_TOTEL_PRICE,
+    SUM(
+      IFNULL(
+        (SELECT SUM( 
+          fc.CONTRACT_CUTSUMMONEY )
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.PAY_TYPE = 2 AND c.FOLLOW_STATUS!=1
+          AND fc.STATUS = 1 
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS SEND_TOTEL_PRICE, 
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.PAY_TYPE = 2 
+          AND fc.STATUS = 1 AND c.FOLLOW_STATUS!=1
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.PAY_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS SEND_SUCCESS_COUNT, 
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.status = 4 AND c.FOLLOW_STATUS!=1
+          AND fc.CANCEL_FROM = 0 
+          AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME) 
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS CANCEL_COUNT, 
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.status = 4 AND c.FOLLOW_STATUS!=1
+          AND fc.CANCEL_FROM = 1 
+          AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME) 
+         <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS BACK_CANCEL_COUNT, 
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.status = 4 AND c.FOLLOW_STATUS!=1
+          AND fc.CANCEL_FROM = 0 
+          AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME) 
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS DIF_CANCEL_COUNT, 
+    SUM(
+      IFNULL(
+        (SELECT 
+          COUNT(DISTINCT fc.id) 
+        FROM
+          finance_contract_tbl fc 
+        WHERE fc.cus_id = cu.CUS_ID
+          AND fc.status = 4 AND c.FOLLOW_STATUS!=1
+          AND fc.CANCEL_FROM = 1 
+          AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME) 
+          <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME >= #startTime#  ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  fc.CANCEL_TIME <= #endTime#  ]]>
+			</isNotEqual>
+			</isNotNull>),
+        0
+      )
+    ) AS DIF_BACK_CANCEL_COUNT 
+        </sql>
+        
+        <sql id="CHANCE_CHK_OUT_columns">
+			c.ID,
+			u.ID AS USER_ID,
+			u.CUS_ID,
+			u.MOBILE,
+			u.EMAIL,
+			s.SUBJECT_NAME,
+			c.WEB_NAME,
+			c.ORIGIN,
+			c.FOLLOW_STATUS,
+			c.CHANCE_STIME,
+			c.CHANCE_UTIME,
+			c.ENDCOMM_STATUS,
+			c.ENDCOMM_TIME,
+			c.CONSULT_STATUS,
+			SUM( CASE WHEN f.STATUS=1 THEN 1 ELSE 0 END )fcount1,
+			COUNT(DISTINCT f.ID)fcount2,
+			SUM( CASE WHEN f.PAY_TYPE=2 THEN 1 ELSE 0 END )fcount3,
+			SUM( CASE WHEN f.PAY_TYPE=2 AND f.STATUS=4 THEN 1 ELSE 0 END )fcount4,
+			SUM( CASE WHEN f.STATUS!=4 AND f.PAY_TYPE=2 THEN 1 ELSE 0 END )SEND_COUNT,
+			SUM( CASE WHEN f.STATUS!=4 AND f.PAY_TYPE=2 THEN f.CONTRACT_CUTSUMMONEY ELSE 0 END )SEND_PRICE,
+			SUM( CASE WHEN f.PAY_TYPE NOT IN (0,2,5,7) AND f.STATUS=1 THEN 1 ELSE 0 END )INT_BANK_COUNT,
+			SUM( CASE WHEN f.PAY_TYPE NOT IN (0,2,5,7) AND f.STATUS=1 THEN f.CONTRACT_CUTSUMMONEY ELSE 0 END )INT_BANK_PRICE,
+			SUM( CASE WHEN f.PAY_TYPE =7 AND f.STATUS=1 THEN 1 ELSE 0 END )BANK_COUNT,
+			SUM( CASE WHEN f.PAY_TYPE =7 AND f.STATUS=1 THEN f.CONTRACT_CUTSUMMONEY ELSE 0 END )BANK_PRICE,
+			sut.user_name  FIRST_USER_NAME,
+			c.auto_giveup,
+			IFNULL(cus_customer_tbl.CUS_WEB_FROM,'') CUS_WEB_FROM 
+		</sql>
+
+		<sql id="CHANCE_DTO_columns">
+			c.ID,
+			u.ID AS USER_ID,
+			u.CUS_ID,
+			u.MOBILE,
+			u.EMAIL,
+			s.SUBJECT_NAME,
+			c.WEB_NAME,
+			c.ORIGIN,
+			c.FOLLOW_STATUS,
+			c.CHANCE_STIME,
+			c.CHANCE_UTIME,
+			c.ENDCOMM_STATUS,
+			c.ENDCOMM_TIME,
+			c.CONSULT_STATUS,
+			IFNULL(cus_customer_tbl.CUS_WEB_FROM,'') CUS_WEB_FROM,
+			SUM( CASE WHEN f.STATUS=1 THEN 1 ELSE 0 END )fcount1,
+			COUNT(DISTINCT f.ID)fcount2,
+			SUM( CASE WHEN f.PAY_TYPE=2 THEN 1 ELSE 0 END )fcount3,
+			SUM( CASE WHEN f.PAY_TYPE=2 AND f.STATUS=4 THEN 1 ELSE 0 END )fcount4
+		</sql>
+
+		<sql id="QUERY_CHANCE_columns">
+		
+			<isNotNull prepend="and" property="startTime">
+				c.CHANCE_STIME >= #startTime#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="email">
+				u.EMAIL LIKE '%$email$%'
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				c.CHANCE_NUMBER >= #chanceNum1#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+			
+			
+			
+		</sql>
+
+        <sql id="CRM_CHANCE_TBL_columns">
+            CRM_CHANCE_TBL.ID,
+            CRM_CHANCE_TBL.CRM_USER_ID,
+            CRM_CHANCE_TBL.ORIGIN,
+            CRM_CHANCE_TBL.WEB_NAME,
+            CRM_CHANCE_TBL.SUBJECT_ID,
+            CRM_CHANCE_TBL.FOLLOW_STATUS,
+            CRM_CHANCE_TBL.USER_ID,
+            CRM_CHANCE_TBL.CHANCE_STIME,
+            CRM_CHANCE_TBL.CHANCE_UTIME,
+            CRM_CHANCE_TBL.CHANCE_NUMBER,
+            CRM_CHANCE_TBL.CONSULT_STATUS,
+            CRM_CHANCE_TBL.ENDCOMM_STATUS,
+            CRM_CHANCE_TBL.ENDCOMM_TIME,
+            CRM_CHANCE_TBL.DRAW_STATUS,
+            CRM_CHANCE_TBL.BACK_USER_ID,
+            CRM_CHANCE_TBL.auto_giveup 
+        </sql>
+
+        <sql id="CRM_CHANCE_TBL_properties">
+            #id#,
+            #crmUserId#,
+            #origin#,
+            #webName#,
+            #subjectId#,
+            #followStatus#,
+            #userId#,
+            #chanceStime#,
+            #chanceUtime#,
+            #chanceNumber#,
+            #consultStatus#,
+            #endCommStatus#,
+            #endCommTime#,
+            #drawStatus#,
+            #backUserId#,
+            #autoGiveup# 
+        </sql>
+
+        <insert id="createChance" parameterClass="Chance">
+            INSERT INTO CRM_CHANCE_TBL (<include refid="Chance_NS.CRM_CHANCE_TBL_columns"/>,CRM_CHANCE_TBL.create_user_id) VALUES (<include refid="Chance_NS.CRM_CHANCE_TBL_properties"/>,#createUserId#)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteChanceById" parameterClass="int">
+            DELETE FROM CRM_CHANCE_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateChance" parameterClass="Chance">
+            UPDATE CRM_CHANCE_TBL SET
+                ID = #id#,
+                CRM_USER_ID = #crmUserId#,
+                ORIGIN = #origin#,
+                WEB_NAME = #webName#,
+                SUBJECT_ID = #subjectId#,
+                FOLLOW_STATUS = #followStatus#,
+                USER_ID = #userId#,
+                CHANCE_STIME = #chanceStime#,
+                CHANCE_UTIME = #chanceUtime#,
+                CHANCE_NUMBER = #chanceNumber#,
+                CONSULT_STATUS = #consultStatus#,
+                ENDCOMM_STATUS=#endCommStatus#,
+                ENDCOMM_TIME=#endCommTime#,
+                DRAW_STATUS=#drawStatus#,
+                BACK_USER_ID=#backUserId#,
+                auto_giveup=#autoGiveup# 
+            WHERE
+                ID = #id#
+        </update>
+        
+         <update id="seatsDefine" parameterClass="map">
+                UPDATE sys_user_tbl SET 
+		        sys_user_tbl.USER_TYPE=2 ,
+		        sys_user_tbl.UPDATE_TIME= NOW(),
+		        sys_user_tbl.GROUP_ID=#groupId#
+		        WHERE sys_user_tbl.USER_ID IN ($seats$)
+	            and EXISTS(select group_id from sys_group_tbl where group_id=#groupId# and PARENT_GROUP_ID=40 )
+        </update>
+        
+        <update id="seatsEmpty" parameterClass="int">
+		        UPDATE sys_user_tbl SET 
+		        sys_user_tbl.USER_TYPE=0 
+		        WHERE GROUP_ID=#value#
+                and EXISTS(select group_id from sys_group_tbl where group_id=#value# and PARENT_GROUP_ID=40 )
+				 
+        </update>
+
+        <select id="getChanceById" resultMap="Chance_NS.ChanceResult" parameterClass="int">
+            SELECT
+            <include refid="Chance_NS.CRM_CHANCE_TBL_columns"/>
+            FROM CRM_CHANCE_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getChanceByCrmUserId" resultMap="Chance_NS.ChanceResult" parameterClass="int">
+            SELECT
+            <include refid="Chance_NS.CRM_CHANCE_TBL_columns"/>
+            FROM CRM_CHANCE_TBL
+            WHERE
+                CRM_USER_ID = #value#
+        </select>
+        
+        <!-- 查询所有的销售机会 -->
+        <select id="getAllChance" resultMap="ChanceDTORestList" parameterClass="PageQuery">
+        	SELECT 
+			  <include refid="CHANCE_DTO_columns"/>,
+			  su.USER_NAME,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID AND c.FOLLOW_STATUS!=1 and c.CHANCE_STIME>=DATE(NOW())
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			     GROUP BY c.ID
+			     ORDER BY c.id DESC
+			     <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 查询所有的销售机会 -->
+        <select id="getAllChanceCheckOut" resultMap="ChanceChkOutList" parameterClass="PageQuery">
+        	SELECT 
+			  <include refid="CHANCE_CHK_OUT_columns"/>,
+			  su.USER_NAME,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID AND c.FOLLOW_STATUS!=1  and c.CHANCE_STIME>=DATE(NOW())
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN sys_user_tbl AS sut
+			    ON c.create_USER_ID = sut.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    GROUP BY c.ID
+			    <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getAllChanceCount" resultClass="int">
+        	SELECT COUNT(1) FROM  crm_chance_tbl AS c  JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID  and  c.FOLLOW_STATUS!=1 and c.CHANCE_STIME>=DATE(NOW())
+        </select>
+        
+        <select id="getChanceByMobile" resultMap="UserMobileResult" parameterClass="String">
+        	SELECT c.USER_ID,s.USER_NAME,c.FOLLOW_STATUS,
+        	u.EMAIL,c.ID,IFNULL(COUNT(DISTINCT f.id),0) PAY_COUNT
+        	FROM crm_chance_tbl c JOIN crm_user_tbl u
+        	ON u.ID=c.CRM_USER_ID   AND  u.MOBILE=#value# 
+        	LEFT JOIN sys_user_tbl s ON s.USER_ID=c.USER_ID
+        	LEFT JOIN finance_contract_tbl f ON f.cus_id=u.cus_id
+        	AND ((f.status=1 AND        f.PAY_TYPE!=2 AND f.PAY_TYPE!=0 AND f.PAY_TYPE!=5) OR(f.PAY_TYPE=2  AND 		f.status!=3))
+		GROUP BY c.id
+		ORDER BY c.follow_status DESC limit 30
+        </select>
+        
+         <!-- 搜索销售机会 -->
+        <select id="searchChanceCheckOut" resultMap="ChanceChkOutList" parameterClass="queryChanceCondition">
+    		SELECT 
+			  <include refid="CHANCE_CHK_OUT_columns"/>,
+			  su.USER_NAME,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID 
+			    <isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				<![CDATA[ c.CHANCE_NUMBER >= #chanceNum1# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="userName">
+				<isEqual prepend="and" property="userName" compareValue="未指派">
+					c.USER_ID = 0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[ c.CHANCE_STIME >= #startTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			 <isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+				</isNotNull>
+				
+				<isNotNull prepend="and" property="email">
+					u.EMAIL LIKE '%$email$%'
+				</isNotNull>
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN sys_user_tbl AS sut
+			    ON c.create_USER_ID = sut.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    <isNotNull  property="mesStatus">
+			<isNotEqual  property="mesStatus" compareValue="0">
+				JOIN (     SELECT MOBILE,ID FROM crm_user_tbl WHERE MES_STATUS=1     )m on m.MOBILE=u.MOBILE and m.ID=u.ID
+			</isNotEqual>
+			</isNotNull>
+			
+			WHERE 1=1
+			<isNotNull property="userName">
+				<isNotEqual prepend="and" property="userName" compareValue="未指派">
+					su.USER_NAME LIKE '%$userName$%'
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual prepend="and" property="orderType" compareValue="1">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+								
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual  prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+			</isNotNull>
+			  GROUP BY c.ID
+			<isNotNull property="salesStatus">
+				
+				<!-- 已注册 -->
+				<isEqual   property="salesStatus" compareValue="2">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+						
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual  property="orderType" compareValue="1">
+					HAVING fcount2 = 0
+					ORDER BY c.id DESC
+				</isEqual>
+				<!-- 下单未支付机会 -->
+				<isEqual  property="orderType" compareValue="2">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 最新支付机会 -->
+				<isEqual property="orderType" compareValue="3">
+					HAVING fcount1 > 0
+				</isEqual>
+				<!-- 最新指派机会 -->
+				<isEqual  property="orderType" compareValue="4">
+					ORDER BY CHANCE_UTIME DESC
+				</isEqual>
+				<!-- 按照创建时间倒序 -->
+				<isNotNull property="salesStatus">
+					<isEqual prepend="" property="salesStatus" compareValue="0">
+						<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+						</isEqual>
+					</isEqual>
+				</isNotNull>
+				<isNull property="salesStatus">
+					<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+					</isEqual>
+				</isNull>
+			</isNotNull>
+			  <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="searchChanceCheckOutCount" resultClass="int" parameterClass="queryChanceCondition">
+    		SELECT COUNT(1) FROM
+    		(SELECT 
+			  c.ID,
+			u.ID AS USER_ID,
+			SUM( CASE WHEN f.STATUS=1 THEN 1 ELSE 0 END )fcount1,
+			COUNT(DISTINCT f.ID)fcount2,
+			SUM( CASE WHEN f.PAY_TYPE=2 THEN 1 ELSE 0 END )fcount3,
+			SUM( CASE WHEN f.PAY_TYPE=2 AND f.STATUS=4 THEN 1 ELSE 0 END )fcount4 
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID 
+			    <isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				<![CDATA[ c.CHANCE_NUMBER >= #chanceNum1# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="userName">
+				<isEqual prepend="and" property="userName" compareValue="未指派">
+					c.USER_ID = 0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[ c.CHANCE_STIME >= #startTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			 <isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+				</isNotNull>
+				
+				<isNotNull prepend="and" property="email">
+					u.EMAIL LIKE '%$email$%'
+				</isNotNull>
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    <isNotNull  property="mesStatus">
+			<isNotEqual  property="mesStatus" compareValue="0">
+				JOIN (     SELECT MOBILE,ID FROM crm_user_tbl WHERE MES_STATUS=1     )m on m.MOBILE=u.MOBILE and m.ID=u.ID
+			</isNotEqual>
+			</isNotNull>
+			
+			WHERE 1=1
+			<isNotNull property="userName">
+				<isNotEqual prepend="and" property="userName" compareValue="未指派">
+					su.USER_NAME LIKE '%$userName$%'
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual prepend="and" property="orderType" compareValue="1">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+								
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual  prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+			</isNotNull>
+			  GROUP BY c.ID
+			<isNotNull property="salesStatus">
+				
+				<!-- 已注册 -->
+				<isEqual   property="salesStatus" compareValue="2">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+						
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual  property="orderType" compareValue="1">
+					HAVING fcount2 = 0
+					ORDER BY c.id DESC
+				</isEqual>
+				<!-- 下单未支付机会 -->
+				<isEqual  property="orderType" compareValue="2">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 最新支付机会 -->
+				<isEqual property="orderType" compareValue="3">
+					HAVING fcount1 > 0
+				</isEqual>
+				<!-- 最新指派机会 -->
+				<isEqual  property="orderType" compareValue="4">
+					ORDER BY CHANCE_UTIME DESC
+				</isEqual>
+				<!-- 按照创建时间倒序 -->
+				<isNotNull property="salesStatus">
+					<isEqual prepend="" property="salesStatus" compareValue="0">
+						<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+						</isEqual>
+					</isEqual>
+				</isNotNull>
+				<isNull property="salesStatus">
+					<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+					</isEqual>
+				</isNull>
+			</isNotNull>
+			) AS chance
+			
+        </select>
+        
+        <!-- 搜索销售机会 -->
+        <select id="searchChance" resultMap="chancelistDTO" parameterClass="queryChanceCondition">
+    		SELECT 
+			  <include refid="CHANCE_DTO_columns"/>,
+			  su.USER_NAME,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES,
+			  c.auto_giveup
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID 
+			    <isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				<![CDATA[ c.CHANCE_NUMBER >= #chanceNum1# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="userName">
+				<isEqual prepend="and" property="userName" compareValue="未指派">
+					c.USER_ID = 0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[ c.CHANCE_STIME >= #startTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			 <isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+				</isNotNull>
+				
+				<isNotNull prepend="and" property="email">
+					u.EMAIL LIKE '%$email$%'
+				</isNotNull>
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    <isNotNull  property="mesStatus">
+			<isNotEqual  property="mesStatus" compareValue="0">
+				JOIN (     SELECT MOBILE,ID FROM crm_user_tbl WHERE MES_STATUS=1     )m on m.MOBILE=u.MOBILE and m.ID=u.ID
+			</isNotEqual>
+			</isNotNull>
+			
+			WHERE 1=1
+			<isNotNull property="userName">
+				<isNotEqual prepend="and" property="userName" compareValue="未指派">
+					su.USER_NAME LIKE '%$userName$%'
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual prepend="and" property="orderType" compareValue="1">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+								
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual  prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+			</isNotNull>
+			  GROUP BY c.ID
+			<isNotNull property="salesStatus">
+				
+				<!-- 已注册 -->
+				<isEqual   property="salesStatus" compareValue="2">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+						
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual  property="orderType" compareValue="1">
+					HAVING fcount2 = 0
+					ORDER BY c.id DESC
+				</isEqual>
+				<!-- 下单未支付机会 -->
+				<isEqual  property="orderType" compareValue="2">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 最新支付机会 -->
+				<isEqual property="orderType" compareValue="3">
+					HAVING fcount1 > 0
+				</isEqual>
+				<!-- 最新指派机会 -->
+				<isEqual  property="orderType" compareValue="4">
+					ORDER BY CHANCE_UTIME DESC
+				</isEqual>
+				<!-- 按照创建时间倒序 -->
+				<isNotNull property="salesStatus">
+					<isEqual prepend="" property="salesStatus" compareValue="0">
+						<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+						</isEqual>
+					</isEqual>
+				</isNotNull>
+				<isNull property="salesStatus">
+					<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+					</isEqual>
+				</isNull>
+			</isNotNull>
+			  <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="searchChanceCount" resultClass="int" parameterClass="queryChanceCondition">
+    		SELECT COUNT(1) FROM
+    		(SELECT 
+			  c.ID,
+			u.ID AS USER_ID,
+			SUM( CASE WHEN f.STATUS=1 THEN 1 ELSE 0 END )fcount1,
+			COUNT(DISTINCT f.ID)fcount2,
+			SUM( CASE WHEN f.PAY_TYPE=2 THEN 1 ELSE 0 END )fcount3,
+			SUM( CASE WHEN f.PAY_TYPE=2 AND f.STATUS=4 THEN 1 ELSE 0 END )fcount4 
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID 
+			    <isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				<![CDATA[ c.CHANCE_NUMBER >= #chanceNum1# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="userName">
+				<isEqual prepend="and" property="userName" compareValue="未指派">
+					c.USER_ID = 0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[ c.CHANCE_STIME >= #startTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			 <isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+				</isNotNull>
+				
+				<isNotNull prepend="and" property="email">
+					u.EMAIL LIKE '%$email$%'
+				</isNotNull>
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    <isNotNull  property="mesStatus">
+			<isNotEqual  property="mesStatus" compareValue="0">
+				JOIN (     SELECT MOBILE,ID FROM crm_user_tbl WHERE MES_STATUS=1     )m on m.MOBILE=u.MOBILE and m.ID=u.ID
+			</isNotEqual>
+			</isNotNull>
+			
+			WHERE 1=1
+			<isNotNull property="userName">
+				<isNotEqual prepend="and" property="userName" compareValue="未指派">
+					su.USER_NAME LIKE '%$userName$%'
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual prepend="and" property="orderType" compareValue="1">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+								
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual  prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+			</isNotNull>
+			  GROUP BY c.ID
+			<isNotNull property="salesStatus">
+				
+				<!-- 已注册 -->
+				<isEqual   property="salesStatus" compareValue="2">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+						
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual  property="orderType" compareValue="1">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 下单未支付机会 -->
+				<isEqual  property="orderType" compareValue="2">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 最新支付机会 -->
+				<isEqual property="orderType" compareValue="3">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+			) AS chance
+			
+        </select>
+        
+        <select id="getChanceRecordDTO" resultMap="ChanceRecordDTO" parameterClass="int">
+        	SELECT 
+        	crm_chance_tbl.ID,
+        	crm_chance_tbl.ORIGIN,
+        	crm_chance_tbl.SUBJECT_ID,
+        	crm_chance_tbl.FOLLOW_STATUS,
+        	crm_chance_tbl.USER_ID,
+        	crm_chance_tbl.CHANCE_STIME,
+        	crm_chance_tbl.CHANCE_UTIME
+        	FROM crm_chance_tbl 
+        	WHERE crm_chance_tbl.ID=#value#
+        </select>
+        
+        <!-- 获取销售人员列表 -->
+        <select id="getSoldUserList" resultMap="UserResult">
+            SELECT
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME,
+            SYS_USER_TBL.GROUP_ID
+            FROM SYS_USER_TBL LEFT JOIN sys_group_tbl 
+            on sys_group_tbl.group_id=SYS_USER_TBL.group_id
+			WHERE sys_group_tbl.PARENT_GROUP_ID=40  and SYS_USER_TBL.STATUS=0
+        </select>
+        
+        <!--通过groupId获取非自然注册指派销售人员列表 -->
+        <select id="getSeatsListByGroupId" resultMap="UserResult" parameterClass="int">
+           SELECT	    
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME,
+            GROUP_ID
+            FROM SYS_USER_TBL
+            WHERE SYS_USER_TBL.GROUP_ID=#groupId# and SYS_USER_TBL.STATUS=0 AND SYS_USER_TBL.USER_TYPE!=2
+        </select>
+        
+        <!-- 通过groupId获取自然注册指派销售人员列表 -->
+        <select id="getSignSeatsListByGroupId" resultMap="UserResult" parameterClass="int">
+            SELECT	    
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME,
+            GROUP_ID
+            FROM SYS_USER_TBL
+            WHERE  SYS_USER_TBL.USER_TYPE=2 AND  SYS_USER_TBL.STATUS=0 SYS_USER_TBL.GROUP_ID=#groupId#
+        </select>
+        
+        <!-- 获取自然注册指派销售人员列表 -->
+        <select id="getSignSeatsList" resultMap="UserResult" >
+            SELECT	    
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME,
+            GROUP_ID
+            FROM SYS_USER_TBL
+            WHERE  SYS_USER_TBL.USER_TYPE=2 and SYS_USER_TBL.STATUS=0 ORDER BY SYS_USER_TBL.GROUP_ID ASC
+        </select>
+        
+        <!-- 获取自然注册非指派销售人员列表 -->
+        <select id="getUnsignSeatsList" resultMap="UserResult" >
+            SELECT
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME,
+            SYS_USER_TBL.GROUP_ID
+            FROM SYS_USER_TBL LEFT JOIN sys_group_tbl 
+            on sys_group_tbl.group_id=SYS_USER_TBL.group_id
+			WHERE sys_group_tbl.PARENT_GROUP_ID=40
+            AND  SYS_USER_TBL.USER_TYPE!=2 and SYS_USER_TBL.STATUS=0 ORDER BY SYS_USER_TBL.GROUP_ID ASC
+        </select>
+        <!-- 快捷筛获取自然注册非指派销售人员列表 -->
+        <select id="getSearchUnsignSeats" resultMap="UserResult" parameterClass="String">
+            SELECT
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME,
+            SYS_USER_TBL.GROUP_ID
+            FROM SYS_USER_TBL LEFT JOIN sys_group_tbl 
+            on sys_group_tbl.group_id=SYS_USER_TBL.group_id
+			WHERE sys_group_tbl.PARENT_GROUP_ID=40
+			AND  USER_NAME like CONCAT('%',#value#,'%')
+            AND  SYS_USER_TBL.USER_TYPE!=2 and SYS_USER_TBL.STATUS=0 ORDER BY SYS_USER_TBL.GROUP_ID ASC
+        </select>
+        <!-- 查询某个销售人员的机会列表 -->
+        <select id="getSalesChanceList" resultMap="SalesChanceDTORestList" parameterClass="queryChanceCondition">
+        	SELECT 
+			  <include refid="CHANCE_DTO_columns"/>,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES
+			FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID AND c.FOLLOW_STATUS!=1 and USER_ID = #userId#
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    GROUP BY c.ID 
+			    ORDER BY c.id DESC
+			  <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getSalesChanceListCount" resultClass="int" parameterClass="queryChanceCondition">
+        	SELECT 
+			  COUNT(1)
+			FROM
+			  crm_chance_tbl AS c 
+			   JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID
+			  and c.USER_ID = #userId#
+			  AND c.FOLLOW_STATUS != 1 
+        </select>
+        
+        <!-- 销售人员搜索销售机会 -->
+        <select id="searchSalesChance" resultMap="SalesChanceDTORestList" parameterClass="queryChanceCondition">
+           SELECT 
+			  <include refid="CHANCE_DTO_columns"/>,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID and c.USER_ID = #userId#
+			    <isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				<![CDATA[ c.CHANCE_NUMBER >= #chanceNum1# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="userName">
+				<isEqual prepend="and" property="userName" compareValue="未指派">
+					c.USER_ID = 0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[ c.CHANCE_STIME >= #startTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			 <isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+				</isNotNull>
+				
+				<isNotNull prepend="and" property="email">
+					u.EMAIL LIKE '%$email$%'
+				</isNotNull>
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    <isNotNull  property="mesStatus">
+			<isNotEqual  property="mesStatus" compareValue="0">
+				JOIN (     SELECT MOBILE,ID FROM crm_user_tbl WHERE MES_STATUS=1     )m on m.MOBILE=u.MOBILE and m.ID=u.ID
+			</isNotEqual>
+			</isNotNull>
+			
+			WHERE 1=1
+			<isNotNull property="userName">
+				<isNotEqual prepend="and" property="userName" compareValue="未指派">
+					su.USER_NAME LIKE '%$userName$%'
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual prepend="and" property="orderType" compareValue="1">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+								
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual  prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+			</isNotNull>
+			  GROUP BY c.ID
+			<isNotNull property="salesStatus">
+				
+				<!-- 已注册 -->
+				<isEqual   property="salesStatus" compareValue="2">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+						
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual  property="orderType" compareValue="1">
+					HAVING fcount2 = 0
+					ORDER BY c.id DESC
+				</isEqual>
+				<!-- 下单未支付机会 -->
+				<isEqual  property="orderType" compareValue="2">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 最新支付机会 -->
+				<isEqual property="orderType" compareValue="3">
+					HAVING fcount1 > 0
+				</isEqual>
+				<!-- 最新指派机会 -->
+				<isEqual  property="orderType" compareValue="4">
+					ORDER BY CHANCE_UTIME DESC
+				</isEqual>
+				<!-- 按照创建时间倒序 -->
+				<isNotNull property="salesStatus">
+					<isEqual prepend="" property="salesStatus" compareValue="0">
+						<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+						</isEqual>
+					</isEqual>
+				</isNotNull>
+				<isNull property="salesStatus">
+					<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+					</isEqual>
+				</isNull>
+			</isNotNull>
+			  <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="searchSalesChanceCount" resultClass="int" parameterClass="queryChanceCondition">
+    		SELECT COUNT(1) FROM
+    		( SELECT 
+			  c.ID,
+			u.ID AS USER_ID,
+			SUM( CASE WHEN f.STATUS=1 THEN 1 ELSE 0 END )fcount1,
+			COUNT(DISTINCT f.ID)fcount2,
+			SUM( CASE WHEN f.PAY_TYPE=2 THEN 1 ELSE 0 END )fcount3,
+			SUM( CASE WHEN f.PAY_TYPE=2 AND f.STATUS=4 THEN 1 ELSE 0 END )fcount4 
+			  FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID and c.USER_ID = #userId#
+			    <isNotNull prepend="and" property="webName">
+				c.WEB_NAME = #webName#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="origin">
+				c.ORIGIN = #origin#
+			</isNotNull>
+			
+			
+			<isNotNull property="followStatus">
+				<isEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus#
+				</isEqual>
+				<isNotEqual prepend="and" property="followStatus" compareValue="1">
+					c.FOLLOW_STATUS = #followStatus# AND c.FOLLOW_STATUS!=1
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNull prepend="and" property="followStatus">
+					 c.FOLLOW_STATUS!=1
+			</isNull>
+			
+			<isNotNull prepend="and" property="subjectId">
+				c.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull prepend="and" property="consultStatus">
+				c.CONSULT_STATUS = #consultStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endCommStatus">
+				c.ENDCOMM_STATUS = #endCommStatus#
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum1">
+				<![CDATA[ c.CHANCE_NUMBER >= #chanceNum1# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="chanceNum2">
+				<![CDATA[ c.CHANCE_NUMBER <= #chanceNum2# ]]>
+			</isNotNull>
+			
+			<isNotNull property="userName">
+				<isEqual prepend="and" property="userName" compareValue="未指派">
+					c.USER_ID = 0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[ c.CHANCE_STIME >= #startTime# ]]>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[ c.CHANCE_STIME <= #endTime# ]]>
+			</isNotNull>
+			
+			 <isNotNull prepend="and" property="mobile">
+				u.MOBILE LIKE '%$mobile$%'
+				</isNotNull>
+				
+				<isNotNull prepend="and" property="email">
+					u.EMAIL LIKE '%$email$%'
+				</isNotNull>
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    <isNotNull  property="mesStatus">
+			<isNotEqual  property="mesStatus" compareValue="0">
+				JOIN (     SELECT MOBILE,ID FROM crm_user_tbl WHERE MES_STATUS=1     )m on m.MOBILE=u.MOBILE and m.ID=u.ID
+			</isNotEqual>
+			</isNotNull>
+			
+			WHERE 1=1
+			<isNotNull property="userName">
+				<isNotEqual prepend="and" property="userName" compareValue="未指派">
+					su.USER_NAME LIKE '%$userName$%'
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual prepend="and" property="orderType" compareValue="1">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+								
+			</isNotNull>
+			
+			<isNotNull property="salesStatus">
+				<!-- 未注册 -->
+				<isEqual prepend="and" property="salesStatus" compareValue="1">
+					u.EMAIL IS NULL
+				</isEqual>
+				<!-- 已注册 -->
+				<isEqual  prepend="and" property="salesStatus" compareValue="2">
+					u.EMAIL IS NOT NULL 
+				</isEqual>
+			</isNotNull>
+			  GROUP BY c.ID
+			<isNotNull property="salesStatus">
+				
+				<!-- 已注册 -->
+				<isEqual   property="salesStatus" compareValue="2">
+					HAVING fcount2 = 0
+				</isEqual>
+				<!-- 已下单 -->
+				<isEqual prepend="" property="salesStatus" compareValue="3">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 已购买 -->
+				<isEqual prepend="" property="salesStatus" compareValue="4">
+					HAVING fcount1 > 0
+				</isEqual>
+			</isNotNull>
+						
+			<isNotNull property="orderType">
+				<!-- 注册未下单机会 -->
+				<isEqual  property="orderType" compareValue="1">
+					HAVING fcount2 = 0
+					ORDER BY c.id DESC
+				</isEqual>
+				<!-- 下单未支付机会 -->
+				<isEqual  property="orderType" compareValue="2">
+					HAVING fcount1 = 0 AND fcount2 > 0
+				</isEqual>
+				<!-- 最新支付机会 -->
+				<isEqual property="orderType" compareValue="3">
+					HAVING fcount1 > 0
+				</isEqual>
+				<!-- 最新指派机会 -->
+				<isEqual  property="orderType" compareValue="4">
+					ORDER BY CHANCE_UTIME DESC
+				</isEqual>
+				<!-- 按照创建时间倒序 -->
+				<isNotNull property="salesStatus">
+					<isEqual prepend="" property="salesStatus" compareValue="0">
+						<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+						</isEqual>
+					</isEqual>
+				</isNotNull>
+				<isNull property="salesStatus">
+					<isEqual  property="orderType" compareValue="0">
+							ORDER BY c.id DESC
+					</isEqual>
+				</isNull>
+			</isNotNull>
+			) AS chance
+			
+        </select>
+        
+        <resultMap class="ContractCrmDTO" id="ContractDTOBackResult">
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+            <result property="payType" column="PAY_TYPE"/>
+            <result property="status" column="STATUS"/>
+            <result property="payTime" column="PAY_TIME"/>
+            <result property="email" column="EMAIL"/>
+        	<result property="crInfo" column="CR_Info"/>
+        </resultMap>        
+        
+        <!-- fanxin 用户卡查询 -->
+        
+        <select id="getBackContractByCusId" resultMap="Chance_NS.ContractDTOBackResult" parameterClass="int">
+            SELECT  FINANCE_CONTRACT_TBL.CONTRACT_ID ,FINANCE_CONTRACT_TBL.CREATE_TIME ,FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY ,FINANCE_CONTRACT_TBL.PAY_TYPE ,
+       			   FINANCE_CONTRACT_TBL.STATUS ,FINANCE_CONTRACT_TBL.PAY_TIME, cus_customer_tbl.email, finance_cash_record_tbl.CR_INFo 
+       	    FROM
+              cus_customer_tbl JOIN  FINANCE_CONTRACT_TBL ON  cus_customer_tbl.CUS_ID =   FINANCE_CONTRACT_TBL.CUS_ID   
+              JOIN finance_cash_record_tbl ON 
+              FINANCE_CONTRACT_TBL.id=finance_cash_record_tbl.ct_id 
+		    WHERE cus_customer_tbl.CUS_ID = #cusId#
+	        ORDER BY FINANCE_CONTRACT_TBL.ID
+        </select> 
+          
+        <select id="getContractNum" resultClass="int" parameterClass="int">
+           SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE FINANCE_CONTRACT_TBL.cus_id = #cusId#
+        </select>   
+        
+        <select id="getContractNumPay" resultClass="int" parameterClass="int">
+            SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL where CUS_ID = #cusId#  AND  FINANCE_CONTRACT_TBL.STATUS = 1 
+        </select> 
+        
+        <!-- 查询销售机会库列表 -->
+        <select id="getChanceList" resultMap="chancelistDTO" parameterClass="PageQuery">
+			SELECT 
+			  <include refid="CHANCE_DTO_columns"/>,
+			  su.USER_NAME,
+			  IFNULL(cus_customer_tbl.LOGIN_TIMES,0) LOGIN_TIMES,
+			  c.auto_giveup
+			FROM crm_chance_tbl c JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID AND c.FOLLOW_STATUS=1 and c.CHANCE_STIME>=DATE(NOW())
+			 LEFT   JOIN sys_subject_tbl AS s 
+			    ON c.SUBJECT_ID = s.SUBJECT_ID 
+			  LEFT JOIN sys_user_tbl AS su
+			    ON c.USER_ID = su.USER_ID
+			    LEFT JOIN cus_customer_tbl 
+			    ON cus_customer_tbl.CUS_ID=u.CUS_ID
+			    LEFT JOIN FINANCE_CONTRACT_TBL f ON f.CUS_ID= u.CUS_ID 
+			    GROUP BY c.ID 		
+			    ORDER BY c.id DESC
+			  <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getChanceListCount" resultClass="int" parameterClass="PageQuery">
+        	SELECT 
+			  COUNT(1)
+		  FROM 
+			  crm_chance_tbl AS c   JOIN crm_user_tbl AS u 
+			    ON c.CRM_USER_ID = u.ID 
+			  WHERE c.FOLLOW_STATUS = 1 and c.CHANCE_STIME>=DATE(NOW())
+
+        </select>      
+        
+		<!-- 批量领取销售机会  -->
+        <update id="getBatchChance" parameterClass="Map">
+        	UPDATE  
+			  crm_chance_tbl 
+			SET
+			  crm_chance_tbl.USER_ID = #userId#,
+			  crm_chance_tbl.DRAW_STATUS = 1,
+			  crm_chance_tbl.FOLLOW_STATUS = 2,
+			  crm_chance_tbl.CONSULT_STATUS = 4,
+			  crm_chance_tbl.CHANCE_UTIME = NOW(),
+			  crm_chance_tbl.auto_giveup=0 
+			WHERE crm_chance_tbl.ID IN ($ids$)
+        </update>
+        
+        <!-- 查询已领取的销售机会数量（除去已购买的销售机会） -->
+        <select id="getDrawChanceCount" resultClass="int" parameterClass="int">
+        	SELECT 
+			  COUNT(1) 
+			FROM
+			  (SELECT 
+			    (SELECT 
+			      COUNT(1) 
+			    FROM
+			      FINANCE_CONTRACT_TBL 
+			    WHERE FINANCE_CONTRACT_TBL.STATUS = 1 
+			      AND FINANCE_CONTRACT_TBL.CUS_ID = u.CUS_ID) AS fcount1 
+			  FROM
+			    crm_chance_tbl AS c 
+			    LEFT JOIN crm_user_tbl AS u 
+			      ON c.CRM_USER_ID = u.id 
+			  WHERE c.USER_ID = #userId#
+			    AND c.DRAW_STATUS = 1 
+			    AND c.FOLLOW_STATUS != 1
+			  HAVING fcount1 = 0) AS draw 
+        </select>
+        
+        <!-- 获取简单统计列表 -->
+       <select id="getSalesStatList" resultMap="Chance_NS.SalesStatResult" parameterClass="queryStatCondition">
+       		SELECT  new_tbl.user_id,new_tbl.user_name,new_tbl.ORIGIN, new_tbl.CONSULT_STATUS, HOUR(new_tbl.CHANCE_UTIME) AS hours,
+					new_tbl.GROUP_NAME,new_tbl.sell_count, call_count_tbl.CALL_COUNT, call_count_tbl.SUCCESS_COUNT, new_tbl.PAY_COUNT, new_tbl.INT_BANK_TOTEL_PRICE,
+				        new_tbl.SEND_COUNT, new_tbl.EFF_SEND_TOTEL_PRICE,new_tbl.SEND_TOTEL_PRICE, new_tbl.SEND_SUCCESS_COUNT, new_tbl.CANCEL_COUNT, new_tbl.BACK_CANCEL_COUNT,
+				        new_tbl.DIF_CANCEL_COUNT, new_tbl.DIF_BACK_CANCEL_COUNT     
+				  FROM  
+					(SELECT 
+					    cc.USER_ID,
+					    su.USER_NAME,
+					    cc.ORIGIN,
+					    cc.CONSULT_STATUS,
+					    HOUR(cc.chance_utime) hours,
+					    sg.GROUP_NAME,
+					    cc.CHANCE_UTIME,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN 1 = 1 
+					        AND cc.CHANCE_UTIME >= DATE(NOW()) 
+					        THEN cc.id 
+					        ELSE NULL 
+					      END
+					    ) AS sell_count,
+					    SUM(
+					      CASE
+					        WHEN fc.PAY_TYPE NOT IN (0, 2, 5) 
+					        AND fc.STATUS = 1 
+					        AND fc.PAY_TIME >= DATE(NOW()) 
+					        THEN fc.CONTRACT_CUTSUMMONEY 
+					        ELSE 0 
+					      END
+					    ) AS INT_BANK_TOTEL_PRICE,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.PAY_TYPE NOT IN (0, 2, 5) 
+					        AND fc.status = 1 
+					        AND fc.PAY_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS PAY_COUNT,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.PAY_TYPE = 2 
+					        AND fc.status != 4 
+					        AND fc.CREATE_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS SEND_COUNT,
+					    SUM(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.PAY_TYPE = 2 
+					        AND fc.status != 4 
+					        AND fc.CREATE_TIME >= DATE(NOW()) 
+					        THEN fc.CONTRACT_CUTSUMMONEY 
+					        ELSE 0 
+					      END
+					    ) AS EFF_SEND_TOTEL_PRICE,
+					    SUM(
+					      CASE
+					        WHEN fc.PAY_TYPE = 2 
+					        AND fc.status = 1 
+					        AND fc.PAY_TIME >= DATE(NOW()) 
+					        THEN fc.CONTRACT_CUTSUMMONEY 
+					        ELSE 0 
+					      END
+					    ) AS SEND_TOTEL_PRICE,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.PAY_TYPE = 2 
+					        AND fc.status = 1 
+					        AND fc.PAY_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS SEND_SUCCESS_COUNT,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.status = 4 
+					        AND fc.CANCEL_FROM = 0 
+					        AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME) 
+					        AND fc.CANCEL_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS CANCEL_COUNT,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.status = 4 
+					        AND fc.CANCEL_FROM = 1 
+					        AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME) 
+					        AND fc.CANCEL_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS BACK_CANCEL_COUNT,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.status = 4 
+					        AND fc.CANCEL_FROM = 0 
+					        AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME) 
+					        AND fc.CANCEL_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS DIF_CANCEL_COUNT,
+					    COUNT(
+					      DISTINCT 
+					      CASE
+					        WHEN fc.status = 4 
+					        AND fc.CANCEL_FROM = 1 
+					        AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME) 
+					        AND fc.CANCEL_TIME >= DATE(NOW()) 
+					        THEN fc.id 
+					        ELSE NULL 
+					      END
+					    ) AS DIF_BACK_CANCEL_COUNT 
+				FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID 
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+				WHERE  cc.FOLLOW_STATUS != 1  
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+				GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS
+				) AS new_tbl LEFT JOIN (
+				 SELECT   cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS,COUNT(DISTINCT CASE WHEN cr.COMM_STATUS !=0  THEN cr.id ELSE NULL END) AS CALL_COUNT, 
+				  COUNT(DISTINCT CASE WHEN cr.COMM_STATUS IN (3, 5, 8)  THEN cr.id ELSE NULL END) AS SUCCESS_COUNT
+				  FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					 AND fc.CREATE_TIME >= DATE(NOW()) 
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+					LEFT JOIN crm_record_tbl cr ON cr.CRM_CHANCE_ID = cc.ID AND cc.USER_ID = cr.USER_ID  
+					AND cr.CREATE_TIME >= DATE(NOW()) 
+				WHERE cc.FOLLOW_STATUS!=1
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+				GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS)AS call_count_tbl ON call_count_tbl.user_id = new_tbl.user_id AND call_count_tbl.ORIGIN =new_tbl.ORIGIN AND call_count_tbl.CONSULT_STATUS = new_tbl.CONSULT_STATUS
+				HAVING CALL_COUNT>0 OR SELL_COUNT>0 OR DIF_BACK_CANCEL_COUNT>0 OR DIF_CANCEL_COUNT>0 OR BACK_CANCEL_COUNT>0 OR CANCEL_COUNT>0 OR SEND_SUCCESS_COUNT>0 OR SEND_COUNT>0 OR PAY_COUNT>0
+			 </select>
+        
+        <!-- 获取简单统计列表 -->
+       <select id="getSalesStat" resultMap="Chance_NS.SalesStatResult" parameterClass="queryStatCondition">
+       		 <include refid="public_sql.page_begin"/>
+       		SELECT  
+       				 <include refid="STAT_columns"/>
+			FROM 
+		    crm_chance_tbl c 
+		    JOIN sys_user_tbl u 
+		      ON u.USER_ID = c.USER_ID  AND c.FOLLOW_STATUS != 1 
+		    LEFT JOIN sys_group_tbl g 
+		      ON g.GROUP_ID = u.GROUP_ID 
+		      AND g.PARENT_GROUP_ID = 40 
+		    JOIN crm_user_tbl cu 
+		      ON cu.ID = c.CRM_USER_ID
+		   		<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+					cu.SUBJECT_ID=#subjectId#
+					</isNotEqual>
+				</isNotNull>
+			  WHERE 1 = 1 
+		    <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+					u.GROUP_ID=#groupId#
+					</isNotEqual>
+					</isNotNull>
+			<isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+					c.USER_ID=#userId#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+					c.ORIGIN=#origin#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+					c.CONSULT_STATUS=#consultStatus#
+					</isNotEqual>
+					</isNotNull>
+  		 GROUP BY c.USER_ID,
+   		 c.ORIGIN,
+   		 c.CONSULT_STATUS
+			 HAVING CALL_COUNT>0 OR SELL_COUNT>0 OR DIF_BACK_CANCEL_COUNT>0 OR DIF_CANCEL_COUNT>0 OR BACK_CANCEL_COUNT>0 OR CANCEL_COUNT>0 OR SEND_SUCCESS_COUNT>0 OR SEND_COUNT>0 OR PAY_COUNT>0	
+				<include refid="public_sql.page_end"/>
+		       </select>
+		       
+		       
+		        <!-- 获取简单统计列表数量 -->
+       <select id="getSalesStatCount" resultClass="int" parameterClass="queryStatCondition">
+       		SELECT  
+			count(1)
+		 	FROM (
+			SELECT  
+       				 <include refid="STAT_columns"/>
+			FROM 
+		    crm_chance_tbl c 
+		    JOIN sys_user_tbl u 
+		      ON u.USER_ID = c.USER_ID  AND c.FOLLOW_STATUS != 1 
+		    LEFT JOIN sys_group_tbl g 
+		      ON g.GROUP_ID = u.GROUP_ID 
+		      AND g.PARENT_GROUP_ID = 40 
+		    JOIN crm_user_tbl cu 
+		      ON cu.ID = c.CRM_USER_ID
+		   		<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+					cu.SUBJECT_ID=#subjectId#
+					</isNotEqual>
+				</isNotNull>
+			  WHERE 1 = 1 
+		    <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+					u.GROUP_ID=#groupId#
+					</isNotEqual>
+					</isNotNull>
+			<isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+					c.USER_ID=#userId#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+					c.ORIGIN=#origin#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+					c.CONSULT_STATUS=#consultStatus#
+					</isNotEqual>
+					</isNotNull>
+  		 GROUP BY c.USER_ID,
+   		 c.ORIGIN,
+   		 c.CONSULT_STATUS
+   		  HAVING CALL_COUNT>0 OR SELL_COUNT>0 OR DIF_BACK_CANCEL_COUNT>0 OR DIF_CANCEL_COUNT>0 OR BACK_CANCEL_COUNT>0 OR CANCEL_COUNT>0 OR SEND_SUCCESS_COUNT>0 OR SEND_COUNT>0 OR PAY_COUNT>0
+					) AS C
+		       </select>
+		       
+		       <select id="getSalesStatByHour" resultMap="SalesStatResult" parameterClass="queryStatCondition" >
+		       	SELECT  
+       				 <include refid="STAT_columns"/>
+			FROM 
+		    crm_chance_tbl c 
+		    JOIN sys_user_tbl u 
+		      ON u.USER_ID = c.USER_ID  AND c.FOLLOW_STATUS != 1 
+		    LEFT JOIN sys_group_tbl g 
+		      ON g.GROUP_ID = u.GROUP_ID 
+		      AND g.PARENT_GROUP_ID = 40 
+		    JOIN crm_user_tbl cu 
+		      ON cu.ID = c.CRM_USER_ID
+		   		<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+					cu.SUBJECT_ID=#subjectId#
+					</isNotEqual>
+				</isNotNull>
+			  WHERE 1 = 1 
+		    <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+					u.GROUP_ID=#groupId#
+					</isNotEqual>
+					</isNotNull>
+			<isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+					c.USER_ID=#userId#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+					c.ORIGIN=#origin#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+					c.CONSULT_STATUS=#consultStatus#
+					</isNotEqual>
+					</isNotNull>
+		  		 GROUP BY c.USER_ID,
+		   		 c.ORIGIN,
+		   		 c.CONSULT_STATUS,HOUR(c.CHANCE_UTIME)
+		   		 <!-- HAVING CALL_COUNT>0 OR SELL_COUNT>0 OR DIF_BACK_CANCEL_COUNT>0 OR DIF_CANCEL_COUNT>0 OR BACK_CANCEL_COUNT>0 OR CANCEL_COUNT>0 OR SEND_SUCCESS_COUNT>0 OR SEND_COUNT>0 OR PAY_COUNT>0
+		       --></select>
+		       
+		       
+		       <update id="checkChance" parameterClass="queryChanceCondition">
+			       		UPDATE crm_chance_tbl 
+			       		SET crm_chance_tbl.FOLLOW_STATUS=1 
+						WHERE crm_chance_tbl.FOLLOW_STATUS!=1 
+			       		AND crm_chance_tbl.CRM_USER_ID IN (SELECT crm_user_tbl.ID FROM crm_user_tbl WHERE  crm_user_tbl.IS_BUY=0)
+						<isNotNull  property="drawStatus">
+							<isEqual prepend="and" property="drawStatus" compareValue="0">
+								crm_chance_tbl.DRAW_STATUS=#drawStatus#
+								<isNotNull  property="endTime">
+								<isNotEqual prepend="and" property="endTime" compareValue="">
+									<![CDATA[  crm_chance_tbl.CHANCE_STIME <= #endTime#  and  crm_chance_tbl.ENDCOMM_TIME <= DATE_ADD(now(), Interval -4 day)]]>
+								</isNotEqual>
+								</isNotNull>
+							</isEqual>
+							
+							<isEqual prepend="and" property="drawStatus" compareValue="1">
+								crm_chance_tbl.DRAW_STATUS=#drawStatus#
+									<![CDATA[  and crm_chance_tbl.ENDCOMM_TIME <= DATE_ADD(now(), Interval -4 day) ]]>
+							</isEqual>
+							</isNotNull>
+							
+		       </update>
+		       
+		       <update id="checkIsBuy" parameterClass="queryChanceCondition">
+			       		UPDATE   crm_user_tbl,   
+						(
+						  SELECT COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) paycount,finance_contract_tbl.CUS_ID        
+						  FROM  finance_contract_tbl        
+						  WHERE ((finance_contract_tbl.status=1 AND        finance_contract_tbl.PAY_TYPE!=2 AND finance_contract_tbl.PAY_TYPE!=0 AND
+						          finance_contract_tbl.PAY_TYPE!=5) OR(finance_contract_tbl.PAY_TYPE=2 
+						          AND finance_contract_tbl.status!=3))       GROUP BY finance_contract_tbl.CUS_ID       
+						 ) ss
+					    SET crm_user_tbl.IS_BUY=1
+					    WHERE
+					     ss.paycount >0      AND  crm_user_tbl.CUS_ID=ss.CUS_ID 
+												
+		       </update>
+		       
+		<!-- 修改定时延迟时间 -->
+        <update id="updateTiming" parameterClass="int">
+        	UPDATE crm_timing_tbl SET crm_timing_tbl.timing_num = #value#
+        </update>
+        
+        <!-- 获取定时延迟时间 -->
+        <select id="getTiming" resultClass="int">
+        	SELECT crm_timing_tbl.timing_num FROM crm_timing_tbl LIMIT 1
+        </select>
+        
+        <select id="getUndesignedInfo" resultMap="Chance_NS.UndesignedInfoResult" parameterClass="queryStatCondition">
+        	SELECT  
+					sc.ORIGIN ORIGIN,
+					sc.CONSULT_STATUS CONSULT_STATUS,
+					0 HOURS,
+					IFNULL(sb.SELL_COUNT,0) SELL_COUNT,
+					IFNULL(sd.paycount,0) PAY_COUNT,
+					IFNULL(sd.CONTRACT_CUTSUMMONEY,0) INT_BANK_TOTEL_PRICE,
+					IFNULL(se.sendcount,0) SEND_COUNT,
+					IFNULL(si.CUTSUMMONEY,0) SEND_TOTEL_PRICE,
+					IFNULL(si.sendsuccesscount,0) SEND_SUCCESS_COUNT,
+					IFNULL(sj.canclecount,0) CANCEL_COUNT,
+					IFNULL(sk.backcanclecount,0) BACK_CANCEL_COUNT,
+					IFNULL(sl.CUTSUMMONEY,0) EFF_SEND_TOTEL_PRICE,
+					IFNULL(sm.canclecount,0) DIF_CANCEL_COUNT,
+					IFNULL(sn.backcanclecount,0) DIF_BACK_CANCEL_COUNT
+		
+		 	FROM (
+			SELECT ORIGIN,CONSULT_STATUS,COUNT(crm_chance_tbl.CRM_USER_ID) SELL_COUNT
+			FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+			LEFT JOIN finance_contract_tbl ON finance_contract_tbl.CUS_ID=crm_user_tbl.CUS_ID
+			<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  ((finance_contract_tbl.PAY_TIME >= #startTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME >= #startTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2) ) ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  ((finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2) ) ]]>
+					</isNotEqual>
+					</isNotNull>
+		 	WHERE 1=1 AND crm_chance_tbl.FOLLOW_STATUS!=1  AND crm_chance_tbl.USER_ID=0
+					<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+					crm_user_tbl.SUBJECT_ID=#subjectId#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+					crm_chance_tbl.ORIGIN=#origin#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+					crm_chance_tbl.CONSULT_STATUS=#consultStatus#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="startTime">
+					<isNotEqual  property="startTime" compareValue="">
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  ((finance_contract_tbl.PAY_TIME >= #startTime# and finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME >= #startTime# and  finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2)  ) ]]>
+						</isNotEqual>
+						</isNotNull> 
+						<isNotNull  property="endTime">
+						<isEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  ((finance_contract_tbl.PAY_TIME >= #startTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME >= #startTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2) ) ]]>
+						</isEqual>
+						</isNotNull> 
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="startTime">
+					<isEqual property="startTime" compareValue="">
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  ((finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2)  ) ]]>
+						</isNotEqual>
+						</isNotNull> 
+					</isEqual>
+					</isNotNull>
+					
+			 GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+			) sc 
+			
+			LEFT JOIN(
+			SELECT ORIGIN,CONSULT_STATUS,COUNT(crm_chance_tbl.CRM_USER_ID) SELL_COUNT
+			FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+		 	WHERE 1=1 AND crm_chance_tbl.FOLLOW_STATUS!=1 AND crm_chance_tbl.USER_ID=0
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  crm_chance_tbl.CHANCE_STIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  crm_chance_tbl.CHANCE_STIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+			 GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+			) sb ON  sb.ORIGIN=sc.ORIGIN AND sb.CONSULT_STATUS=sc.CONSULT_STATUS 
+			
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CONTRACT_CUTSUMMONEY,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) paycount
+				FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID JOIN finance_contract_tbl
+				ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID AND crm_chance_tbl.USER_ID=0
+				AND finance_contract_tbl.status=1 AND crm_chance_tbl.USER_ID=0 AND 
+				finance_contract_tbl.PAY_TYPE NOT IN (0,2,5) AND crm_chance_tbl.FOLLOW_STATUS!=1 
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+			 GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+			) sd ON  sd.ORIGIN=sc.ORIGIN AND sd.CONSULT_STATUS=sc.CONSULT_STATUS 
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendcount
+				FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID JOIN finance_contract_tbl
+				ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID AND crm_chance_tbl.USER_ID=0
+				AND finance_contract_tbl.PAY_TYPE=2 AND finance_contract_tbl.status!=4 AND crm_chance_tbl.FOLLOW_STATUS!=1 
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+				GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+			) se ON  se.ORIGIN=sc.ORIGIN AND se.CONSULT_STATUS=sc.CONSULT_STATUS 
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,COUNT(crm_record_tbl.ID) callcount 
+				FROM crm_chance_tbl JOIN crm_record_tbl 
+				ON crm_record_tbl.CRM_CHANCE_ID= crm_chance_tbl.ID AND crm_chance_tbl.USER_ID=0
+				AND crm_record_tbl.COMM_STATUS!=0	AND crm_record_tbl.USER_ID=crm_chance_tbl.USER_ID 
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  crm_record_tbl.CREATE_TIME >= #startTime# ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  crm_record_tbl.CREATE_TIME <= #endTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+				GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+			) sf ON  sf.ORIGIN=sc.ORIGIN AND sf.CONSULT_STATUS=sc.CONSULT_STATUS
+	
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,COUNT(crm_record_tbl.ID) successcount 
+				FROM crm_chance_tbl JOIN crm_record_tbl 
+				ON crm_record_tbl.CRM_CHANCE_ID= crm_chance_tbl.ID AND crm_record_tbl.USER_ID=crm_chance_tbl.USER_ID
+				AND  crm_record_tbl.COMM_STATUS IN(3,5,8) AND crm_chance_tbl.USER_ID=0
+				AND crm_chance_tbl.FOLLOW_STATUS!=1 
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  crm_record_tbl.CREATE_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  crm_record_tbl.CREATE_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+				GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+			)sg ON  sg.ORIGIN=sc.ORIGIN AND sg.CONSULT_STATUS=sc.CONSULT_STATUS	
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY  ,  
+				COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendsuccesscount
+				FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID 
+						JOIN finance_contract_tbl    
+						ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND crm_chance_tbl.USER_ID=0
+						AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS=1 AND crm_chance_tbl.FOLLOW_STATUS!=1
+						
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+				) si ON  si.ORIGIN=sc.ORIGIN AND si.CONSULT_STATUS=sc.CONSULT_STATUS	
+				
+				LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) canclecount 
+					FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+					JOIN finance_contract_tbl    
+					ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID  AND crm_chance_tbl.USER_ID=0   AND
+					 finance_contract_tbl.status=4 AND finance_contract_tbl.CANCEL_FROM=0
+					AND DATE(finance_contract_tbl.CANCEL_TIME)=DATE(finance_contract_tbl.CREATE_TIME)
+					AND crm_chance_tbl.FOLLOW_STATUS!=1 
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+				) sj ON  sj.ORIGIN=sc.ORIGIN AND sj.CONSULT_STATUS=sc.CONSULT_STATUS	
+
+
+				LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) backcanclecount 
+		 			FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+					JOIN finance_contract_tbl    
+					ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND  finance_contract_tbl.status=4  AND finance_contract_tbl.CANCEL_FROM=1
+					AND DATE(finance_contract_tbl.CANCEL_TIME)=DATE(finance_contract_tbl.CREATE_TIME) AND crm_chance_tbl.FOLLOW_STATUS!=1 AND crm_chance_tbl.USER_ID=0
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+				) sk ON  sk.ORIGIN=sc.ORIGIN AND sk.CONSULT_STATUS=sc.CONSULT_STATUS	
+
+				LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY 
+						 	FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+							JOIN finance_contract_tbl    
+							ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND crm_chance_tbl.USER_ID=0
+							AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS!=4
+							AND crm_chance_tbl.FOLLOW_STATUS!=1 
+							<isNotNull  property="startTime">
+							<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime#  ]]>
+							</isNotEqual>
+							</isNotNull>
+							<isNotNull  property="endTime">
+							<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+							</isNotEqual>
+							</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+					) sl ON  sl.ORIGIN=sc.ORIGIN AND sl.CONSULT_STATUS=sc.CONSULT_STATUS	
+					
+					LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) canclecount 
+					FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+					JOIN finance_contract_tbl    
+					ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND
+					 finance_contract_tbl.status=4 AND finance_contract_tbl.CANCEL_FROM=0
+					AND DATE(finance_contract_tbl.CANCEL_TIME)!=DATE(finance_contract_tbl.CREATE_TIME)
+					AND crm_chance_tbl.FOLLOW_STATUS!=1 AND crm_chance_tbl.USER_ID=0
+					<isNotNull  property="startTime"> 
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+				) sm ON  sm.ORIGIN=sc.ORIGIN AND sm.CONSULT_STATUS=sc.CONSULT_STATUS	
+			
+			
+				LEFT JOIN (
+						SELECT ORIGIN,CONSULT_STATUS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) backcanclecount 
+						FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+						JOIN finance_contract_tbl    
+						ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND  finance_contract_tbl.status=4 AND crm_chance_tbl.USER_ID=0
+						 AND finance_contract_tbl.CANCEL_FROM=1 AND DATE(finance_contract_tbl.CANCEL_TIME)!=DATE(finance_contract_tbl.CREATE_TIME)
+						AND crm_chance_tbl.FOLLOW_STATUS!=1 
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS
+					) sn ON  sn.ORIGIN=sc.ORIGIN AND sn.CONSULT_STATUS=sc.CONSULT_STATUS
+        </select>
+        
+        <select id="getUndesignedInfoBuyHour" resultMap="Chance_NS.UndesignedInfoResult" parameterClass="queryStatCondition">
+        	SELECT  
+					sc.ORIGIN ORIGIN,
+					sc.CONSULT_STATUS CONSULT_STATUS,
+					IFNULL(sc.HOURS,0) HOURS,
+					IFNULL(sb.SELL_COUNT,0) SELL_COUNT,
+					IFNULL(sd.paycount,0) PAY_COUNT,
+					IFNULL(sd.CONTRACT_CUTSUMMONEY,0) INT_BANK_TOTEL_PRICE,
+					IFNULL(se.sendcount,0) SEND_COUNT,
+					IFNULL(si.CUTSUMMONEY,0) SEND_TOTEL_PRICE,
+					IFNULL(si.sendsuccesscount,0) SEND_SUCCESS_COUNT,
+					IFNULL(sj.canclecount,0) CANCEL_COUNT,
+					IFNULL(sk.backcanclecount,0) BACK_CANCEL_COUNT,
+					IFNULL(sl.CUTSUMMONEY,0) EFF_SEND_TOTEL_PRICE,
+					IFNULL(sm.canclecount,0) DIF_CANCEL_COUNT,
+					IFNULL(sn.backcanclecount,0) DIF_BACK_CANCEL_COUNT
+		
+		 	FROM (
+			SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(crm_chance_tbl.CRM_USER_ID) SELL_COUNT
+			FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+			LEFT JOIN finance_contract_tbl ON finance_contract_tbl.CUS_ID=crm_user_tbl.CUS_ID
+			<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  ((finance_contract_tbl.PAY_TIME >= #startTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME >= #startTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2)  ) ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  ((finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2)  ) ]]>
+					</isNotEqual>
+					</isNotNull>
+		 	WHERE 1=1 AND crm_chance_tbl.FOLLOW_STATUS!=1  AND crm_chance_tbl.USER_ID=0
+					<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+					crm_user_tbl.SUBJECT_ID=#subjectId#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+					crm_chance_tbl.ORIGIN=#origin#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+					crm_chance_tbl.CONSULT_STATUS=#consultStatus#
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="startTime">
+					<isNotEqual  property="startTime" compareValue="">
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  ((finance_contract_tbl.PAY_TIME >= #startTime# and finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME >= #startTime# and  finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2) ) ]]>
+						</isNotEqual>
+						</isNotNull> 
+						<isNotNull  property="endTime">
+						<isEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  ((finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2)  ) ]]>
+						</isEqual>
+						</isNotNull> 
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="startTime">
+					<isEqual property="startTime" compareValue="">
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  ((finance_contract_tbl.PAY_TIME <= #endTime# and finance_contract_tbl.STATUS=1 and finance_contract_tbl.PAY_TYPE in (1,3,4,6,7)) or (finance_contract_tbl.CREATE_TIME <= #endTime# and finance_contract_tbl.STATUS!=4 and finance_contract_tbl.PAY_TYPE=2) ) ]]>
+						</isNotEqual>
+						</isNotNull> 
+					</isEqual>
+					</isNotNull>
+					
+			 GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+			) sc 
+			
+			LEFT JOIN(
+			SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(crm_chance_tbl.CRM_USER_ID) SELL_COUNT
+			FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+		 	WHERE 1=1 AND crm_chance_tbl.FOLLOW_STATUS!=1 AND crm_chance_tbl.USER_ID=0
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  crm_chance_tbl.CHANCE_STIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  crm_chance_tbl.CHANCE_STIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+			 GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+			) sb ON  sb.ORIGIN=sc.ORIGIN AND sb.CONSULT_STATUS=sc.CONSULT_STATUS  AND sc.HOURS=sb.HOURS
+			
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CONTRACT_CUTSUMMONEY,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) paycount
+				FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID JOIN finance_contract_tbl
+				ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID AND crm_chance_tbl.USER_ID=0
+				AND finance_contract_tbl.status=1 AND crm_chance_tbl.USER_ID=0 AND 
+				finance_contract_tbl.PAY_TYPE NOT IN (0,2,5) AND crm_chance_tbl.FOLLOW_STATUS!=1 
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+			 GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+			) sd ON  sd.ORIGIN=sc.ORIGIN AND sd.CONSULT_STATUS=sc.CONSULT_STATUS  AND sc.HOURS=sd.HOURS
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendcount
+				FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID JOIN finance_contract_tbl
+				ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID AND crm_chance_tbl.USER_ID=0
+				AND finance_contract_tbl.PAY_TYPE=2 AND finance_contract_tbl.status!=4 AND crm_chance_tbl.FOLLOW_STATUS!=1 
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+					</isNotEqual>
+					</isNotNull>
+				GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+			) se ON  se.ORIGIN=sc.ORIGIN AND se.CONSULT_STATUS=sc.CONSULT_STATUS  AND sc.HOURS=se.HOURS
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(crm_record_tbl.ID) callcount 
+				FROM crm_chance_tbl JOIN crm_record_tbl 
+				ON crm_record_tbl.CRM_CHANCE_ID= crm_chance_tbl.ID AND crm_chance_tbl.USER_ID=0
+				AND crm_record_tbl.COMM_STATUS!=0	AND crm_record_tbl.USER_ID=crm_chance_tbl.USER_ID 
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  crm_record_tbl.CREATE_TIME >= #startTime# ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  crm_record_tbl.CREATE_TIME <= #endTime# ]]>
+						</isNotEqual>
+						</isNotNull>
+				GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+			) sf ON  sf.ORIGIN=sc.ORIGIN AND sf.CONSULT_STATUS=sc.CONSULT_STATUS AND sc.HOURS=sf.HOURS
+	
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(crm_record_tbl.ID) successcount 
+				FROM crm_chance_tbl JOIN crm_record_tbl 
+				ON crm_record_tbl.CRM_CHANCE_ID= crm_chance_tbl.ID AND crm_record_tbl.USER_ID=crm_chance_tbl.USER_ID
+				AND  crm_record_tbl.COMM_STATUS IN(3,5,8) AND crm_chance_tbl.USER_ID=0
+				AND crm_chance_tbl.FOLLOW_STATUS!=1 
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  crm_record_tbl.CREATE_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  crm_record_tbl.CREATE_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+				GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+			)sg ON  sg.ORIGIN=sc.ORIGIN AND sg.CONSULT_STATUS=sc.CONSULT_STATUS	 AND sc.HOURS=sg.HOURS
+
+			LEFT JOIN (
+				SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY  ,  
+				COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendsuccesscount
+				FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID 
+						JOIN finance_contract_tbl    
+						ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND crm_chance_tbl.USER_ID=0
+						AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS=1 AND crm_chance_tbl.FOLLOW_STATUS!=1
+						
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+				) si ON  si.ORIGIN=sc.ORIGIN AND si.CONSULT_STATUS=sc.CONSULT_STATUS	 AND sc.HOURS=si.HOURS
+				
+				LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) canclecount 
+					FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+					JOIN finance_contract_tbl    
+					ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID  AND crm_chance_tbl.USER_ID=0   AND
+					 finance_contract_tbl.status=4 AND finance_contract_tbl.CANCEL_FROM=0
+					AND DATE(finance_contract_tbl.CANCEL_TIME)=DATE(finance_contract_tbl.CREATE_TIME)
+					AND crm_chance_tbl.FOLLOW_STATUS!=1 
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime# ]]>
+						</isNotEqual>
+						</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+				) sj ON  sj.ORIGIN=sc.ORIGIN AND sj.CONSULT_STATUS=sc.CONSULT_STATUS	 AND sc.HOURS=sj.HOURS
+
+
+				LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) backcanclecount 
+		 			FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+					JOIN finance_contract_tbl    
+					ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND  finance_contract_tbl.status=4  AND finance_contract_tbl.CANCEL_FROM=1
+					AND DATE(finance_contract_tbl.CANCEL_TIME)=DATE(finance_contract_tbl.CREATE_TIME) AND crm_chance_tbl.FOLLOW_STATUS!=1 AND crm_chance_tbl.USER_ID=0
+					<isNotNull  property="startTime">
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+				) sk ON  sk.ORIGIN=sc.ORIGIN AND sk.CONSULT_STATUS=sc.CONSULT_STATUS	 AND sc.HOURS=sk.HOURS
+
+				LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY 
+						 	FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+							JOIN finance_contract_tbl    
+							ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND crm_chance_tbl.USER_ID=0
+							AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS!=4
+							AND crm_chance_tbl.FOLLOW_STATUS!=1 
+							<isNotNull  property="startTime">
+							<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+							</isNotEqual>
+							</isNotNull>
+							<isNotNull  property="endTime">
+							<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime#]]>
+							</isNotEqual>
+							</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+					) sl ON  sl.ORIGIN=sc.ORIGIN AND sl.CONSULT_STATUS=sc.CONSULT_STATUS	 AND sc.HOURS=sl.HOURS
+					
+					LEFT JOIN (
+					SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) canclecount 
+					FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+					JOIN finance_contract_tbl    
+					ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND
+					 finance_contract_tbl.status=4 AND finance_contract_tbl.CANCEL_FROM=0
+					AND DATE(finance_contract_tbl.CANCEL_TIME)!=DATE(finance_contract_tbl.CREATE_TIME)
+					AND crm_chance_tbl.FOLLOW_STATUS!=1 AND crm_chance_tbl.USER_ID=0
+					<isNotNull  property="startTime"> 
+					<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+					<isNotEqual prepend="and" property="endTime" compareValue="">
+					<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+					</isNotEqual>
+					</isNotNull>
+					GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+				) sm ON  sm.ORIGIN=sc.ORIGIN AND sm.CONSULT_STATUS=sc.CONSULT_STATUS	 AND sc.HOURS=sm.HOURS
+			
+			
+				LEFT JOIN (
+						SELECT ORIGIN,CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME) HOURS,COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) backcanclecount 
+						FROM crm_chance_tbl LEFT JOIN crm_user_tbl ON crm_user_tbl.ID=crm_chance_tbl.CRM_USER_ID
+						JOIN finance_contract_tbl    
+						ON crm_user_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND  finance_contract_tbl.status=4 AND crm_chance_tbl.USER_ID=0
+						 AND finance_contract_tbl.CANCEL_FROM=1 AND DATE(finance_contract_tbl.CANCEL_TIME)!=DATE(finance_contract_tbl.CREATE_TIME)
+						AND crm_chance_tbl.FOLLOW_STATUS!=1 
+						<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME >= #startTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  finance_contract_tbl.CANCEL_TIME <= #endTime#  ]]>
+						</isNotEqual>
+						</isNotNull>
+						GROUP BY crm_chance_tbl.ORIGIN,crm_chance_tbl.CONSULT_STATUS,HOUR(crm_chance_tbl.CHANCE_STIME)
+					) sn ON  sn.ORIGIN=sc.ORIGIN AND sn.CONSULT_STATUS=sc.CONSULT_STATUS AND sc.HOURS=sn.HOURS
+					 <include refid="public_sql.page_end"/>
+        </select>
+        
+        
+        
+        
+        
+        
+           <!-- 优化后获取简单统计列表 -->
+       <select id="getSalesStatNew" resultMap="Chance_NS.SalesStatResult" parameterClass="queryStatCondition">
+       		 <include refid="public_sql.page_begin"/>
+       		 	SELECT  new_tbl.user_id,new_tbl.user_name,new_tbl.ORIGIN, new_tbl.CONSULT_STATUS, HOUR(new_tbl.CHANCE_UTIME) AS hours,
+					new_tbl.GROUP_NAME,new_tbl.sell_count, call_count_tbl.CALL_COUNT, call_count_tbl.SUCCESS_COUNT, new_tbl.PAY_COUNT, new_tbl.INT_BANK_TOTEL_PRICE,
+				        new_tbl.SEND_COUNT, new_tbl.EFF_SEND_TOTEL_PRICE,new_tbl.SEND_TOTEL_PRICE, new_tbl.SEND_SUCCESS_COUNT, new_tbl.CANCEL_COUNT, new_tbl.BACK_CANCEL_COUNT,
+				        new_tbl.DIF_CANCEL_COUNT, new_tbl.DIF_BACK_CANCEL_COUNT     
+				  FROM  (
+				  SELECT cc.USER_ID,
+				       su.USER_NAME,
+				       cc.ORIGIN,
+				       cc.CONSULT_STATUS,
+				       HOUR(cc.chance_utime) hours,
+				       sg.GROUP_NAME,
+				       cc.CHANCE_UTIME,
+				      COUNT(DISTINCT CASE WHEN 1=1 
+				     <isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  cc.CHANCE_UTIME >= #startTime#  ]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  cc.CHANCE_UTIME <= #endTime#  ]]>
+						</isNotEqual>
+					</isNotNull>
+				      THEN cc.id ELSE NULL END) AS sell_count,
+					
+					SUM( CASE WHEN fc.PAY_TYPE NOT IN(0,2,5) AND fc.STATUS =1 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END ) AS INT_BANK_TOTEL_PRICE,
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE NOT IN (0, 2, 5)  AND fc.status = 1  
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.id  ELSE NULL END)  AS PAY_COUNT,
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status != 4 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS SEND_COUNT,
+					SUM(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status != 4 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END)AS EFF_SEND_TOTEL_PRICE ,
+					SUM( CASE WHEN fc.PAY_TYPE = 2 AND fc.status = 1 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END)AS SEND_TOTEL_PRICE, 
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status = 1
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS SEND_SUCCESS_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 0 AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS CANCEL_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 1 AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS BACK_CANCEL_COUNT ,
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 0 AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.id ELSE NULL END) AS DIF_CANCEL_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 1 AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS DIF_BACK_CANCEL_COUNT 
+				FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID 
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+				WHERE  cc.FOLLOW_STATUS != 1  
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+				GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS
+				) AS new_tbl LEFT JOIN (
+				 SELECT   cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS,COUNT(DISTINCT CASE WHEN cr.COMM_STATUS !=0  THEN cr.id ELSE NULL END) AS CALL_COUNT, 
+				  COUNT(DISTINCT CASE WHEN cr.COMM_STATUS IN (3, 5, 8)  THEN cr.id ELSE NULL END) AS SUCCESS_COUNT
+				  FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+					LEFT JOIN crm_record_tbl cr ON cr.CRM_CHANCE_ID = cc.ID AND cc.USER_ID = cr.USER_ID  
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[cr.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[cr.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				WHERE cc.FOLLOW_STATUS!=1
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+				GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS)AS call_count_tbl ON call_count_tbl.user_id = new_tbl.user_id AND call_count_tbl.ORIGIN =new_tbl.ORIGIN AND call_count_tbl.CONSULT_STATUS = new_tbl.CONSULT_STATUS
+				HAVING CALL_COUNT>0 OR SELL_COUNT>0 OR DIF_BACK_CANCEL_COUNT>0 OR DIF_CANCEL_COUNT>0 OR BACK_CANCEL_COUNT>0 OR CANCEL_COUNT>0 OR SEND_SUCCESS_COUNT>0 OR SEND_COUNT>0 OR PAY_COUNT>0
+			 <include refid="public_sql.page_end"/>
+		</select>
+		
+		
+		<select id="getSalesStatNewCount" resultClass="int" parameterClass="queryStatCondition">
+       		 	 SELECT COUNT(1)    
+				  FROM  (
+				  SELECT cc.USER_ID,
+				       su.USER_NAME,
+				       cc.ORIGIN,
+				       cc.CONSULT_STATUS,
+				       HOUR(cc.chance_utime) hours,
+				       sg.GROUP_NAME,
+				       cc.CHANCE_UTIME,
+				      COUNT(DISTINCT CASE WHEN 1=1 
+				     <isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  cc.CHANCE_UTIME >= #startTime#  ]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  cc.CHANCE_UTIME <= #endTime#  ]]>
+						</isNotEqual>
+					</isNotNull>
+				      THEN cc.id ELSE NULL END) AS sell_count,
+					
+					SUM( CASE WHEN fc.PAY_TYPE NOT IN(0,2,5) AND fc.STATUS =1 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END ) AS INT_BANK_TOTEL_PRICE,
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE NOT IN (0, 2, 5)  AND fc.status = 1  
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.id  ELSE NULL END)  AS PAY_COUNT,
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status != 4 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS SEND_COUNT,
+					SUM(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status != 4 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END)AS EFF_SEND_TOTEL_PRICE ,
+					SUM(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status = 1 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END)AS SEND_TOTEL_PRICE, 
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status = 1
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS SEND_SUCCESS_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 0 AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS CANCEL_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 1 AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS BACK_CANCEL_COUNT ,
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 0 AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.id ELSE NULL END) AS DIF_CANCEL_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 1 AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS DIF_BACK_CANCEL_COUNT 
+				FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID 
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+				WHERE  cc.FOLLOW_STATUS != 1  
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+				GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS
+				) AS new_tbl LEFT JOIN (
+				 SELECT   cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS,COUNT(DISTINCT CASE WHEN cr.COMM_STATUS !=0  THEN cr.id ELSE NULL END) AS CALL_COUNT, 
+				  COUNT(DISTINCT CASE WHEN cr.COMM_STATUS IN (3, 5, 8)  THEN cr.id ELSE NULL END) AS SUCCESS_COUNT
+				  FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+					LEFT JOIN crm_record_tbl cr ON cr.CRM_CHANCE_ID = cc.ID AND cc.USER_ID = cr.USER_ID  
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[cr.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[cr.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				WHERE cc.FOLLOW_STATUS!=1
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+				GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS
+				HAVING CALL_COUNT>0 )AS call_count_tbl ON call_count_tbl.user_id = new_tbl.user_id AND call_count_tbl.ORIGIN =new_tbl.ORIGIN AND call_count_tbl.CONSULT_STATUS = new_tbl.CONSULT_STATUS
+				
+			 </select>
+        
+        <select id="getSalesStatByHourNew" resultMap="Chance_NS.SalesStatResult" parameterClass="queryStatCondition" >
+		          SELECT  new_tbl.user_id,new_tbl.user_name,new_tbl.ORIGIN, new_tbl.CONSULT_STATUS, HOUR(new_tbl.CHANCE_UTIME) AS hours,
+					new_tbl.GROUP_NAME,new_tbl.sell_count, call_count_tbl.CALL_COUNT, call_count_tbl.SUCCESS_COUNT, new_tbl.PAY_COUNT, new_tbl.INT_BANK_TOTEL_PRICE,
+				        new_tbl.SEND_COUNT, new_tbl.EFF_SEND_TOTEL_PRICE,new_tbl.SEND_TOTEL_PRICE, new_tbl.SEND_SUCCESS_COUNT, new_tbl.CANCEL_COUNT, new_tbl.BACK_CANCEL_COUNT,
+				        new_tbl.DIF_CANCEL_COUNT, new_tbl.DIF_BACK_CANCEL_COUNT     
+				  FROM  (
+				  SELECT cc.USER_ID,
+				       su.USER_NAME,
+				       cc.ORIGIN,
+				       cc.CONSULT_STATUS,
+				       HOUR(cc.chance_utime) hours,
+				       sg.GROUP_NAME,
+				       cc.CHANCE_UTIME,
+				      COUNT(DISTINCT CASE WHEN 1=1 
+				     				     <isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[  cc.CHANCE_UTIME >= #startTime#  ]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[  cc.CHANCE_UTIME <= #endTime#  ]]>
+						</isNotEqual>
+					</isNotNull>
+				      THEN cc.id ELSE NULL END) AS sell_count,
+					
+					SUM( CASE WHEN fc.PAY_TYPE NOT IN(0,2,5) AND fc.STATUS =1 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END ) AS INT_BANK_TOTEL_PRICE,
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE NOT IN (0, 2, 5)  AND fc.status = 1  
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.id  ELSE NULL END)  AS PAY_COUNT,
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status != 4 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS SEND_COUNT,
+					SUM(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status != 4 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END)AS EFF_SEND_TOTEL_PRICE ,
+					SUM(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status = 1 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.CONTRACT_CUTSUMMONEY ELSE 0 END)AS SEND_TOTEL_PRICE, 
+					COUNT(DISTINCT CASE WHEN fc.PAY_TYPE = 2 AND fc.status = 1
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.PAY_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.PAY_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS SEND_SUCCESS_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 0 AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS CANCEL_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 1 AND DATE(fc.CANCEL_TIME) = DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS BACK_CANCEL_COUNT ,
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 0 AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					THEN fc.id ELSE NULL END) AS DIF_CANCEL_COUNT, 
+					COUNT(DISTINCT CASE WHEN fc.status = 4 AND fc.CANCEL_FROM = 1 AND DATE(fc.CANCEL_TIME) != DATE(fc.CREATE_TIME)
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+							<![CDATA[fc.CANCEL_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[fc.CANCEL_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				    THEN fc.id ELSE NULL END) AS DIF_BACK_CANCEL_COUNT 
+				FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID 
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+				WHERE  cc.FOLLOW_STATUS != 1  
+			 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+					GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS<!-- ,HOUR(cc.CHANCE_UTIME) -->) AS new_tbl LEFT JOIN (
+				 SELECT   cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS,HOUR(cc.chance_utime) call_hours,
+				          COUNT(DISTINCT CASE WHEN cr.COMM_STATUS !=0  THEN cr.id ELSE NULL END) AS CALL_COUNT, 
+				          COUNT(DISTINCT CASE WHEN cr.COMM_STATUS IN (3, 5, 8)  THEN cr.id ELSE NULL END) AS SUCCESS_COUNT
+				  FROM  crm_chance_tbl cc 
+					LEFT JOIN crm_user_tbl cu ON cc.CRM_USER_ID = cu.ID
+					LEFT JOIN finance_contract_tbl fc ON fc.CUS_ID = cu.CUS_ID 
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+						<![CDATA[fc.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime">
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+							<![CDATA[fc.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					JOIN sys_user_tbl su ON cc.USER_ID = su.USER_ID
+					LEFT JOIN sys_group_tbl sg ON su.GROUP_ID = sg.GROUP_ID AND sg.PARENT_GROUP_ID = 40 
+					LEFT JOIN crm_record_tbl cr ON cr.CRM_CHANCE_ID = cc.ID AND cc.USER_ID = cr.USER_ID  
+					<isNotNull  property="startTime">
+						<isNotEqual prepend="and" property="startTime" compareValue="">
+					<![CDATA[cr.CREATE_TIME >= #startTime#]]>
+						</isNotEqual>
+					</isNotNull>
+					<isNotNull  property="endTime"> 
+						<isNotEqual prepend="and" property="endTime" compareValue="">
+						<![CDATA[cr.CREATE_TIME <= #endTime#]]>
+						</isNotEqual>
+					</isNotNull>
+				WHERE cc.FOLLOW_STATUS!=1
+				 <isNotNull property="groupId">
+					<isNotEqual prepend="and" property="groupId" compareValue="0">
+						su.GROUP_ID = #groupId#
+					</isNotEqual>
+				</isNotNull>
+				 <isNotNull property="userId">
+					<isNotEqual prepend="and" property="userId" compareValue="0">
+						cc.USER_ID = #userId#
+					</isNotEqual>
+				</isNotNull>
+ 				<isNotNull property="subjectId">
+					<isNotEqual prepend="and" property="subjectId" compareValue="0">
+						cu.SUBJECT_ID = #subjectId#
+					</isNotEqual>
+				</isNotNull>
+				
+				<isNotNull property="origin">
+					<isNotEqual prepend="and" property="origin" compareValue="0">
+						cc.ORIGIN = #origin#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="consultStatus">
+					<isNotEqual prepend="and" property="consultStatus" compareValue="0">
+							cc.CONSULT_STATUS = #consultStatus#
+					</isNotEqual>
+				</isNotNull>
+							GROUP BY cc.USER_ID,cc.ORIGIN,cc.CONSULT_STATUS<!-- ,HOUR(cc.CHANCE_UTIME) -->)AS call_count_tbl ON call_count_tbl.user_id = new_tbl.user_id AND call_count_tbl.ORIGIN =new_tbl.ORIGIN AND call_count_tbl.CONSULT_STATUS = new_tbl.CONSULT_STATUS AND call_count_tbl.call_hours= new_tbl.hours
+							HAVING call_count_tbl.CALL_COUNT>0 OR new_tbl.sell_count>0 OR  new_tbl.DIF_BACK_CANCEL_COUNT >0 OR  new_tbl.DIF_CANCEL_COUNT>0 OR new_tbl.BACK_CANCEL_COUNT>0 OR new_tbl.CANCEL_COUNT>0 OR new_tbl.SEND_SUCCESS_COUNT>0 OR new_tbl.SEND_COUNT>0 OR new_tbl.PAY_COUNT>0
+				</select>
+        
+		       
+        <!--end-->
+        <!-- 获取机会的最后一条沟通记录 -->
+        <select id="getEndRecord" parameterClass="int" resultClass="String">
+        select remarks from crm_record_tbl where CRM_CHANCE_ID=#value# order by id desc limit 1
+        </select>
+</sqlMap>

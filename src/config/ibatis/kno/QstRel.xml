@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="QstRel_NS">
+        <!--table:KNO_QST_REL_TBL-->
+        <typeAlias alias="QstRel" type="com.shangde.edu.kno.domain.QstRel"/>
+        <typeAlias alias="QstRelDTO" type="com.shangde.edu.kno.dto.QstRelDTO"/>
+        <typeAlias alias="QueryQstRelCondition" type="com.shangde.edu.kno.condition.QueryQstRelCondition"/>
+
+        <resultMap id="QstRelResult" class="QstRel">
+            <result property="qrId" column="QR_ID"/>
+            <result property="ksnId" column="KSN_ID"/>
+            <result property="nodeId" column="NODE_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="qstId" column="QST_ID"/>
+        </resultMap>
+        
+         <resultMap id="QstRelDTO" class="QstRelDTO">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="isAsr" column="IS_ASR"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="level" column="LEVEL"/>
+            <result property="wrongJude" column="WRONG_JUDE"/>
+            <result property="options" column="QST_ID" select="Options_NS.getOptionsListByQstId"/>
+        </resultMap>
+
+        <sql id="KNO_QST_REL_TBL_columns">
+            KNO_QST_REL_TBL.QR_ID,
+            KNO_QST_REL_TBL.KSN_ID,
+            KNO_QST_REL_TBL.NODE_ID,
+            KNO_QST_REL_TBL.QST_CONTENT,
+            KNO_QST_REL_TBL.QST_TYPE,
+            KNO_QST_REL_TBL.QST_ID
+        </sql>
+
+        <sql id="KNO_QST_REL_TBL_properties">
+            #qrId#,
+            #ksnId#,
+            #nodeId#,
+            #qstContent#,
+            #qstType#,
+            #qstId#
+        </sql>
+
+        <insert id="createQstRel" parameterClass="QstRel">
+            INSERT INTO KNO_QST_REL_TBL (<include refid="QstRel_NS.KNO_QST_REL_TBL_columns"/>) VALUES (<include refid="QstRel_NS.KNO_QST_REL_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="qrId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteQstRelById" parameterClass="int">
+            DELETE FROM KNO_QST_REL_TBL
+            WHERE
+                QR_ID = #value#
+
+
+
+
+        </delete>
+
+        <update id="updateQstRel" parameterClass="QstRel">
+            UPDATE KNO_QST_REL_TBL SET
+                QR_ID = #qrId#,
+                KSN_ID = #ksnId#,
+                NODE_ID = #nodeId#,
+                QST_CONTENT = #qstContent#,
+                QST_TYPE = #qstType#,
+                QST_ID=#qstId#
+            WHERE
+                QR_ID = #qrId#
+
+
+
+
+        </update>
+
+        <select id="getQstRelById" resultMap="QstRel_NS.QstRelResult" parameterClass="int">
+            SELECT
+            <include refid="QstRel_NS.KNO_QST_REL_TBL_columns"/>
+            FROM KNO_QST_REL_TBL
+            WHERE
+                QR_ID = #value#
+
+
+
+
+        </select>
+
+        <select id="getQstRelList" resultMap="QstRel_NS.QstRelResult" parameterClass="QueryQstRelCondition">
+            SELECT
+            <include refid="QstRel_NS.KNO_QST_REL_TBL_columns"/>
+            FROM KNO_QST_REL_TBL
+        </select>
+        
+        <select id="getQstRelListByKsnId" resultMap="QstRel_NS.QstRelResult" parameterClass="int">
+            SELECT
+            <include refid="QstRel_NS.KNO_QST_REL_TBL_columns"/>
+            FROM KNO_QST_REL_TBL
+            WHERE KSN_ID=#value#
+        </select>
+        <!-- 知识点对应试题列表 -->
+        <select id="getQstListByKsnId" resultMap="QstRel_NS.QstRelDTO" parameterClass="QueryQstRelCondition">
+            SELECT
+            exam_qst_tbl.QST_ID,
+            exam_qst_tbl.QST_CONTENT,
+            exam_qst_tbl.IS_ASR,
+            exam_qst_tbl.QST_TYPE,
+            exam_qst_tbl.LEVEL,
+            exam_qst_tbl.WRONG_JUDE
+            FROM
+            kno_qst_rel_tbl LEFT JOIN exam_qst_tbl ON  kno_qst_rel_tbl.QST_ID=exam_qst_tbl.QST_ID 
+            WHERE kno_qst_rel_tbl.KSN_ID=#ksnId# and (exam_qst_tbl.QST_TYPE=1 or exam_qst_tbl.QST_TYPE=2 or exam_qst_tbl.QST_TYPE=3)
+            ORDER BY exam_qst_tbl.level ASC
+			<isGreaterThan compareValue="0" property="limitNumber">
+			limit #limitNumber#
+			</isGreaterThan>
+        </select>
+		
+		 <!-- 根据试题ID获取试题信息 -->
+        <select id="getQstRelByQstId" resultMap="QstRel_NS.QstRelResult" parameterClass="int">
+	        SELECT 
+            <include refid="QstRel_NS.KNO_QST_REL_TBL_columns"/>
+			FROM
+			  kno_qst_rel_tbl 
+			WHERE kno_qst_rel_tbl.QST_ID = #value# 
+        </select>
+        
+        <delete id="deleteRelByQstId" parameterClass="int">
+        	DELETE FROM 
+        		kno_qst_rel_tbl
+            WHERE
+                kno_qst_rel_tbl.QST_ID = #value#
+        </delete>
+        <!--end-->
+</sqlMap>

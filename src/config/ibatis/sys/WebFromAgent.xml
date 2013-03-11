@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="WebFromAgent_NS">
+	<typeAlias alias="WebFromAgent" type="com.shangde.edu.sys.domain.WebFromAgent" />
+	<typeAlias alias="QueryWebFromAgentCondition" type="com.shangde.edu.sys.condition.QueryWebFromAgentCondition" />
+	<resultMap id="WebFromAgentResult" class="WebFromAgent">
+		<result property="id" column="Id" />
+		<result property="webFrom" column="WEB_FROM" />
+		<result property="webFromInfo" column="WEBFROM_INFO" />
+		<result property="webAgent" column="WEB_AGENT" />
+		<result property="webAgentInfo" column="WEBAGENT_INFO" />
+		<result property="typeId" column="TYPE_ID" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="loginName" column="LOGIN_NAME" />
+	</resultMap>
+
+	<sql id="WEBFROM_AGENT_TBL_columns">
+		WEBFROM_AGENT_TBL.Id,
+		WEBFROM_AGENT_TBL.WEB_FROM,
+		WEBFROM_AGENT_TBL.WEB_AGENT,
+		WEBFROM_AGENT_TBL.TYPE_ID,
+		WEBFROM_AGENT_TBL.WEBFROM_INFO,
+		WEBFROM_AGENT_TBL.WEBAGENT_INFO,
+		WEBFROM_AGENT_TBL.CREATE_TIME,
+		WEBFROM_AGENT_TBL.UPDATE_TIME,
+		WEBFROM_AGENT_TBL.LOGIN_NAME
+        </sql>
+
+	<sql id="WEBFROM_AGENT_TBL_properties">
+		#id#,
+		#webFrom#,
+		#webAgent#,
+		#typeId#,
+		#webFromInfo#,
+		#webAgentInfo#,
+		#createTime#,
+		#updateTime#,
+		#loginName#
+        </sql>
+	<!-- 添加webFromAgent -->
+	<insert id="createWebFromAgent" parameterClass="WebFromAgent">
+		INSERT INTO WEBFROM_AGENT_TBL (
+		<include refid="WEBFROM_AGENT_TBL_columns" />
+		) VALUES (
+		<include refid="WEBFROM_AGENT_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+	<!-- 根据id删除webfromAgent信息 -->
+	<delete id="deleteWebFromById" parameterClass="int">
+		DELETE FROM WEBFROM_AGENT_TBL
+		WHERE
+		Id = #id#
+        </delete>
+    <!-- 根据id查询单个webFromAgent信息 -->
+    <select id="getWebFromAgentById" resultMap="WebFromAgent_NS.WebFromAgentResult" parameterClass="int">
+    	SELECT
+		<include refid="WEBFROM_AGENT_TBL_columns" />
+		FROM WEBFROM_AGENT_TBL WHERE Id=#value#
+    </select>
+    <!-- 根据id修改webfromAgent信息 -->
+        <update id="updateWebFromAgentById" parameterClass="WebFromAgent">
+        	UPDATE WEBFROM_AGENT_TBL SET
+        			WEB_FROM = #webFrom#,
+        			WEBFROM_INFO = #webFromInfo#,
+        			WEB_AGENT=#webAgent#,
+        			WEBAGENT_INFO=#webAgentInfo#,
+		            TYPE_ID = #typeId#,
+		            UPDATE_TIME =#updateTime#
+		       WHERE Id=#id#
+        </update>
+    <!-- 查询全部的webFrom信息 -->
+	<select id="getAllWebFromAgentList" resultMap="WebFromAgent_NS.WebFromAgentResult" parameterClass="QueryWebFromAgentCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="WebFromAgent_NS.WEBFROM_AGENT_TBL_columns" />
+		FROM WEBFROM_AGENT_TBL 
+			<isNotNull prepend="WHERE" property="id">
+			<isNotEqual property="id" prepend="AND" compareValue="0">
+				Id = #id#
+			</isNotEqual>	
+            </isNotNull>
+            ORDER BY WEBFROM_AGENT_TBL.CREATE_TIME DESC
+		<include refid="public_sql.page_end" />
+	</select>
+	<!-- 统计全部WebFromAgent信息 -->
+        <select id="getAllWebFromAgentCount" resultClass="int" parameterClass="QueryWebFromAgentCondition" >
+        	SELECT COUNT(1)
+            FROM WEBFROM_AGENT_TBL 
+			<isNotNull prepend="WHERE" property="id">
+			<isNotEqual property="id" prepend="AND" compareValue="0">
+				Id = #id#
+			</isNotEqual>	
+            </isNotNull>
+            ORDER BY WEBFROM_AGENT_TBL.CREATE_TIME DESC
+        </select>
+    <!-- 根据webFrom和webAgent查询判断 -->
+    	<select id="getWebFromAgentByFromAndAgent" resultMap="WebFromAgent_NS.WebFromAgentResult" parameterClass="QueryWebFromAgentCondition">
+    		SELECT
+			<include refid="WebFromAgent_NS.WEBFROM_AGENT_TBL_columns" />
+			FROM WEBFROM_AGENT_TBL
+			WHERE WEB_FROM = #webFrom# AND WEB_AGENT = #webAgent#
+    	</select>
+    <!-- 和查询的id不相同 -->
+    <select id="getWebFromAgentByFromAndAgentNotid" resultMap="WebFromAgent_NS.WebFromAgentResult" parameterClass="QueryWebFromAgentCondition">
+    		SELECT
+			<include refid="WebFromAgent_NS.WEBFROM_AGENT_TBL_columns" />
+			FROM WEBFROM_AGENT_TBL
+			WHERE WEB_FROM = #webFrom# AND WEB_AGENT = #webAgent#
+				AND Id != #id#
+	</select>
+    <!-- 组合条件查询 -->	
+    <select id="getWebFromAgentByTiaoJian" resultMap="WebFromAgent_NS.WebFromAgentResult" parameterClass="QueryWebFromAgentCondition">
+    		<include refid="public_sql.page_begin" />
+    		SELECT
+			<include refid="WebFromAgent_NS.WEBFROM_AGENT_TBL_columns" />
+			FROM WEBFROM_AGENT_TBL where 1=1
+				<isNotEmpty property="webFrom" prepend="AND">
+					<![CDATA[  WEB_FROM LIKE CONCAT('%',#webFrom#,'%')  ]]>
+				</isNotEmpty>
+				<isNotEmpty  property="webAgent" prepend="AND">
+					<![CDATA[  WEB_AGENT LIKE CONCAT('%',#webAgent#,'%')  ]]>
+				</isNotEmpty>
+				<isNotNull 	 property="typeId">
+					<isNotEqual property="typeId" prepend="AND" compareValue="0" >
+						TYPE_ID = #typeId#
+					</isNotEqual>
+			    </isNotNull>
+				ORDER BY WEBFROM_AGENT_TBL.CREATE_TIME DESC
+			<include refid="public_sql.page_end" />
+     </select>
+     <!--统计组合条件查询信息 -->	
+    <select id="getWebFromAgentCountByTiaoJian" resultClass="int" parameterClass="QueryWebFromAgentCondition">
+    		SELECT COUNT(1)
+			FROM WEBFROM_AGENT_TBL where 1=1
+				<isNotEmpty property="webFrom" prepend="AND">
+					<![CDATA[  WEB_FROM LIKE CONCAT('%',#webFrom#,'%')  ]]>
+				</isNotEmpty>
+				<isNotEmpty property="webAgent" prepend="AND">
+					<![CDATA[  WEB_AGENT LIKE CONCAT('%',#webAgent#,'%')  ]]>
+				</isNotEmpty>
+				<isNotNull 	 property="typeId">
+					<isNotEqual property="typeId" prepend="AND" compareValue="0" >
+						TYPE_ID = #typeId#
+					</isNotEqual>
+			    </isNotNull>
+     </select>
+
+</sqlMap>
+	 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="test_ssi">
+    <typeAlias alias="testSsiVO" type="exp.vo.TestSsiVO"/>
+    <resultMap id="testSsiResult" class="testSsiVO">
+        <result property="id" column="id" nullValue="-1"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="getTestSsiById" parameterClass="int" resultMap="test_ssi.testSsiResult">
+        select * from t1 ts where ts.id = #value#
+    </select>
+
+    <select id="getTestSsis" resultMap="test_ssi.testSsiResult" parameterClass="pageQueryConditon">
+        <include refid="public_sql.page_begin"/>
+        select * from t1 ts order by ts.id
+        <include refid="public_sql.page_end"/>
+    </select>
+
+    <select id="getTestSsisCount" resultClass="int">
+        select count(*) from t1
+    </select>
+
+    <insert id="createTestSsi" parameterClass="testSsiVO">
+        insert into t1 (name) values (#name#)
+    </insert>
+</sqlMap>

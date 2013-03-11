@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CardCourseQuartz_NS">
+        <!--table:PURSE_RECORD_TBL-->
+        <typeAlias alias="CardCourseQuartz" type="com.shangde.edu.card.domain.CardCourseQuartz"/>
+        <resultMap id="CardCourseQuartzResult" class="CardCourseQuartz">
+            <result property="cardCourseId" column="CARD_COURSE_ID"/>
+            <result property="cardCourseCode" column="CARD_COURSE_CODE"/>
+            <result property="cardCoursePassword" column="CARD_COURSE_PASSWORD"/>
+            <result property="cardMainId" column="CARD_MAIN_ID"/>
+            <result property="cardCourseStatus" column="CARD_COURSE_STATUS"/>
+            <result property="userAccount" column="USER_ACCOUNT"/>
+            <result property="creator" column="CREATOR"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+        	<result property="updateTime" column="UPDATE_TIME"/>
+        	<result property="cardCourseUseStatus" column="CARD_COURSE_USE_STATUS"/>
+        	<result property="orderCode" column="ORDER_CODE"/>
+        </resultMap>
+       
+        <sql id="CARD_COURSE_TBL_columns">
+            CARD_COURSE_TBL.CARD_COURSE_ID,
+            CARD_COURSE_TBL.CARD_COURSE_CODE,
+            CARD_COURSE_TBL.CARD_COURSE_PASSWORD,
+            CARD_COURSE_TBL.CARD_MAIN_ID,
+            CARD_COURSE_TBL.CARD_COURSE_STATUS,
+            CARD_COURSE_TBL.USER_ACCOUNT,
+            CARD_COURSE_TBL.CREATOR,
+            CARD_COURSE_TBL.CREATE_TIME,
+            CARD_COURSE_TBL.UPDATE_USER,
+            CARD_COURSE_TBL.UPDATE_TIME,
+            CARD_COURSE_TBL.CARD_COURSE_USE_STATUS,
+            CARD_COURSE_TBL.ORDER_CODE
+        </sql>
+        <sql id="CARD_COURSE_TBL_properties">
+            #cardCourseId#,
+            #cardCourseCode#,
+            #cardCoursePassword#,
+            #cardMainId#,
+            #cardCourseStatus#,
+            #userAccount#,
+            #creator#,
+            #createTime#,
+            #updateUser#,
+            #updateTime#,
+            #cardCourseUseStatus#,
+            #orderCode#
+        </sql>
+      
+		<select id="selectCardCourse" parameterClass="Map" resultMap="CardCourseQuartzResult">
+			SELECT <include refid="CARD_COURSE_TBL_columns"/> FROM 
+				CARD_MAIN_TBL, CARD_COURSE_TBL WHERE CARD_MAIN_TBL.CARD_MAIN_ID=CARD_COURSE_TBL.CARD_MAIN_ID
+				<![CDATA[AND CARD_MAIN_TBL.VALID_END_TIME<=#currentDate#]]> AND CARD_COURSE_TBL.CARD_COURSE_STATUS!=3
+				
+		</select>
+		<update id="updateOutDate" parameterClass="Map">
+			UPDATE  CARD_COURSE_TBL SET CARD_COURSE_STATUS=3 WHERE CARD_COURSE_ID IN 
+			<iterate property="cardCourseIdList" open="(" close=")" conjunction=",">
+		        	#cardCourseIdList[]#
+		    </iterate>
+		</update>
+		<update id="updateOrder" parameterClass="Map">
+			UPDATE  FINANCE_CASH_RECORD_TBL SET SHOP_STATUS=3 WHERE CONTRACT_ID IN 
+			<iterate property="orderCodeList" open="(" close=")" conjunction=",">
+		        	#orderCodeList[]#
+		    </iterate>
+		</update>
+</sqlMap>

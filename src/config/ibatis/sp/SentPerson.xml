@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SentPerson_NS">
+        <!--table:SP_SENTPERSON_TBL-->
+        <typeAlias alias="SentPerson" type="com.shangde.edu.sp.domain.SentPerson"/>
+        <typeAlias alias="QuerySentPersonCondition" type="com.shangde.edu.sp.condition.QuerySentPersonCondition"/>
+
+        <resultMap id="SentPersonResult" class="SentPerson">
+            <result property="Id" column="ID"/>
+            <result property="personName" column="PERSON_NAME"/>
+            <result property="personPhone" column="PERSON_PHONE"/>
+        </resultMap>
+
+        <sql id="SP_SENTPERSON_TBL_columns">
+            SP_SENTPERSON_TBL.ID,
+            SP_SENTPERSON_TBL.PERSON_NAME,
+            SP_SENTPERSON_TBL.PERSON_PHONE
+           
+        </sql>
+
+        <sql id="SP_SENTPERSON_TBL_properties">
+            #Id#,
+            #personName#,
+            #personPhone#
+        </sql>
+
+        <insert id="createSentPerson" parameterClass="SentPerson">
+            INSERT INTO SP_SENTPERSON_TBL (<include refid="SentPerson_NS.SP_SENTPERSON_TBL_columns"/>) VALUES (<include refid="SentPerson_NS.SP_SENTPERSON_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="Id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+
+		<!-- 后台分页 查询 -->
+        <!-- 查询所有的计划，QuerySentPersonCondition为空对象 -->
+        <select id="getBackSentPersonList" resultMap="SentPerson_NS.SentPersonResult" parameterClass="QuerySentPersonCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT 
+           <include refid="SentPerson_NS.SP_SENTPERSON_TBL_columns"/>
+             FROM SP_SENTPERSON_TBL
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getBackSentPersonListAll" resultMap="SentPerson_NS.SentPersonResult" parameterClass="QuerySentPersonCondition">
+            SELECT 
+           <include refid="SentPerson_NS.SP_SENTPERSON_TBL_columns"/>
+             FROM SP_SENTPERSON_TBL
+        </select>
+        
+        <!-- 后台分页 查询 -->
+        <select id="getBcakSentPersonListCount" resultClass="int" parameterClass="QuerySentPersonCondition">
+            SELECT COUNT(1) FROM SP_SENTPERSON_TBL
+        </select> 
+
+
+        <!-- 按条件检索计划 -->
+        <select id="searchSentPersonByParam" resultMap="SentPerson_NS.SentPersonResult" parameterClass="QuerySentPersonCondition">
+        	<include refid="public_sql.page_begin"/>
+            SELECT  <include refid="SentPerson_NS.SP_SENTPERSON_TBL_columns"/>
+            FROM SP_SENTPERSON_TBL
+            	where 1 = 1
+           	   <isNotEmpty  prepend="AND" property="personName">
+            		<isNotEqual property="personName" compareValue=" ">
+            			PERSON_NAME  LIKE '%$personName$%'
+            		</isNotEqual>
+            	</isNotEmpty >
+            	
+            	<isNotEmpty  prepend="AND" property="personPhone">
+            		<isNotEqual property="personPhone" compareValue=" ">
+            			PERSON_PHONE LIKE '%$personPhone$%'
+            		</isNotEqual>
+            	</isNotEmpty >
+            
+            	ORDER BY  SP_SENTPERSON_TBL.ID DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 分页 检索 -->
+        <select id="searchSentPersonByParamCount" resultClass="int" parameterClass="QuerySentPersonCondition">
+           	SELECT COUNT(1)
+            FROM SP_SENTPERSON_TBL
+            	where 1 = 1
+           	   <isNotEmpty  prepend="AND" property="personName">
+            		<isNotEqual property="personName" compareValue=" ">
+            			PERSON_NAME  LIKE '%$personName$%'
+            		</isNotEqual>
+            	</isNotEmpty >
+            	
+            	<isNotEmpty  prepend="AND" property="personPhone">
+            		<isNotEqual property="personPhone" compareValue=" ">
+            			PERSON_PHONE LIKE '%$personPhone$%'
+            		</isNotEqual>
+            	</isNotEmpty >
+            
+            ORDER BY  SP_SENTPERSON_TBL.ID DESC
+        </select>
+
+
+ 		<select id="getSentPersonById" resultMap="SentPerson_NS.SentPersonResult" parameterClass="int">
+            SELECT
+            <include refid="SentPerson_NS.SP_SENTPERSON_TBL_columns"/>
+            FROM SP_SENTPERSON_TBL
+            WHERE ID = #id#
+        </select>
+        
+        
+        <update id="updateSentPerson" parameterClass="SentPerson">
+            UPDATE SP_SENTPERSON_TBL SET
+                ID = #Id#,
+                PERSON_NAME = #personName#,
+                PERSON_PHONE = #personPhone#
+            WHERE
+				ID = #Id#
+        </update>
+        
+
+        <delete id="deleteSentPersonById" parameterClass="int">
+            DELETE FROM SP_SENTPERSON_TBL WHERE ID = #Id#
+        </delete>
+
+        <!--end-->
+</sqlMap>

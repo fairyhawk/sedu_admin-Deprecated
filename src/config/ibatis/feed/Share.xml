@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Share_NS">
+
+	<typeAlias alias="Share" type="com.shangde.edu.feed.domain.Share"/>
+	<typeAlias alias="QueryShareCondition" type="com.shangde.edu.feed.condition.QueryShareCondition"/>
+	<typeAlias alias="QueryAppStatCondition" type="com.shangde.edu.feed.condition.QueryAppStatCondition"/>
+	
+	<resultMap class="Share" id="ShareResult">
+		<result property="id" column="ID"/>
+		<result property="videoId" column="VIDEO_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="courseId" column="COURSE_ID"/>
+		<result property="shareTime" column="share_time"/>
+	</resultMap>
+	<sql id="FEED_SHARE_TBL_columns">
+		feed_download_tbl.ID,
+		feed_download_tbl.VIDEO_ID,
+		feed_download_tbl.USER_ID,
+		feed_download_tbl.COURSE_ID,
+		feed_download_tbl.share_time
+	</sql>
+	
+	<sql id="FEED_SHARE_TBL_properties">
+		#id#,
+		#videoId#,
+		#userId#,
+		#courseId#,
+		#shareTime#
+	</sql>
+	
+	<insert id="createShare" parameterClass="Share">
+		INSERT INTO feed_download_tbl(<include refid="FEED_SHARE_TBL_columns"/>)
+		VALUES(<include refid="FEED_SHARE_TBL_properties"/>)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql"/>
+		</selectKey>
+	</insert>
+	<!-- 下载总次数，根据时间段 -->
+	<select id="getShareCount" resultClass="int" parameterClass="QueryAppStatCondition">
+		select count(1) from feed_share_tbl where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  share_time >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  share_time <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	<!-- 下载user分组总次数，根据时间段 -->
+	<select id="getShareUserGroupCount" resultClass="int" parameterClass="QueryAppStatCondition">
+		select count(result.user_id) from (select DISTINCT user_id from feed_share_tbl where 1=1
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  share_time >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  share_time <= #endTime# ]]>
+			</isNotNull>
+		) result
+	</select>
+
+</sqlMap>

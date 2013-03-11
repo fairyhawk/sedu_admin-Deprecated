@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="KnowledgeSystem_NS">
+	<!--table:KB_KNOWLEDGE_SYSTEM_TBL-->
+	<typeAlias alias="KnowledgeSystem"
+		type="com.shangde.edu.kb.domain.KnowledgeSystem" />
+	<typeAlias alias="QueryKnowledgeSystemCondition"
+		type="com.shangde.edu.kb.condition.QueryKnowledgeSystemCondition" />
+
+	<resultMap id="KnowledgeSystemResult" class="KnowledgeSystem">
+		<result property="sId" column="S_ID" />
+		<result property="sLevel" column="S_LEVEL" />
+		<result property="sName" column="S_NAME" />
+		<result property="note" column="NOTE" />
+	</resultMap>
+
+	<sql id="KB_KNOWLEDGE_SYSTEM_TBL_columns">
+		KB_KNOWLEDGE_SYSTEM_TBL.S_ID, KB_KNOWLEDGE_SYSTEM_TBL.S_LEVEL,
+		KB_KNOWLEDGE_SYSTEM_TBL.S_NAME, KB_KNOWLEDGE_SYSTEM_TBL.NOTE
+	</sql>
+
+	<sql id="KB_KNOWLEDGE_SYSTEM_TBL_properties">
+		#sId#, #sLevel#, #sName#, #note#
+	</sql>
+
+	<insert id="createKnowledgeSystem"
+		parameterClass="KnowledgeSystem">
+		INSERT INTO KB_KNOWLEDGE_SYSTEM_TBL (
+		<include
+			refid="KnowledgeSystem_NS.KB_KNOWLEDGE_SYSTEM_TBL_columns" />
+		) VALUES (
+		<include
+			refid="KnowledgeSystem_NS.KB_KNOWLEDGE_SYSTEM_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="sId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteKnowledgeSystemById" parameterClass="int">
+		DELETE FROM KB_KNOWLEDGE_SYSTEM_TBL WHERE S_ID = #value#
+
+
+
+	</delete>
+
+	<select id="getKnowledgeSystem" parameterClass="KnowledgeSystem"
+		resultMap="KnowledgeSystem_NS.KnowledgeSystemResult">
+		SELECT * FROM KB_KNOWLEDGE_SYSTEM_TBL WHERE S_LEVEL=(SELECT MAX(S_LEVEL)FROM  KB_KNOWLEDGE_SYSTEM_TBL)
+	</select>
+
+	<update id="updateKnowledgeSystem"
+		parameterClass="KnowledgeSystem">
+		UPDATE KB_KNOWLEDGE_SYSTEM_TBL SET S_ID = #sId#, S_LEVEL =
+		#sLevel#, S_NAME = #sName#, NOTE = #note# WHERE S_ID = #sId#
+
+
+
+	</update>
+
+	<select id="getKnowledgeSystemById"
+		resultMap="KnowledgeSystem_NS.KnowledgeSystemResult"
+		parameterClass="int">
+		SELECT
+		<include
+			refid="KnowledgeSystem_NS.KB_KNOWLEDGE_SYSTEM_TBL_columns" />
+		FROM KB_KNOWLEDGE_SYSTEM_TBL WHERE S_ID = #value#
+
+
+
+	</select>
+
+	<select id="getKnowledgeSystemList"
+		resultMap="KnowledgeSystem_NS.KnowledgeSystemResult"
+		parameterClass="QueryKnowledgeSystemCondition">
+		SELECT
+		<include
+			refid="KnowledgeSystem_NS.KB_KNOWLEDGE_SYSTEM_TBL_columns" />
+		FROM KB_KNOWLEDGE_SYSTEM_TBL
+	</select>
+	<!--end-->
+</sqlMap>

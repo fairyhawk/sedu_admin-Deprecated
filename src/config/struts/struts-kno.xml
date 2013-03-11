@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="kno" namespace="/kno" extends="edu-default">
+	
+		<action name="knowledgeSystem"
+			class="com.shangde.edu.kno.action.KnowledgeSystemAction">
+			<interceptor-ref name="eduStack"/>
+			<result name="knowledgeSystemList">
+				/back/jsp/kno/knowLedgeSystemList.jsp
+			</result>
+			
+			<result name="knowledgeMain">
+				/back/jsp/kno/knowledge_manage.jsp
+			</result>
+			
+			<result name="knowledgeSystemAdd">
+				/back/jsp/kno/knowledgeSystemAdd.jsp
+			</result>
+			
+			<result name="knowledgeSystemUpdate">
+				/back/jsp/kno/knowledgeSystemUpdate.jsp
+			</result>
+			<result name="toKnowledgeSystemRes">
+				/back/jsp/kno/knowledgeSystemRes.jsp
+			</result>
+			<result name="knowledgeTree">
+				/back/jsp/kno/knowledgeTree.jsp
+			</result>
+			
+			<result name="toAddSysNode">
+				/back/jsp/kno/sysNodeAdd.jsp
+			</result>
+			
+			<result name="toUpdateSysNode">
+				/back/jsp/kno/sysNodeUpdate.jsp
+			</result>
+			
+			<result name="knowledgeTreeZi">
+				/back/jsp/kno/knoledgeSystemZiList.jsp
+			</result>
+			
+			<result name="knowledgeSystemListRes">
+				/back/jsp/kno/knowledgeSystemListRes.jsp
+			</result>
+			
+			<result name="knowledgeTreeRes">
+				/back/jsp/kno/knowledgeTreeRes.jsp
+			</result>
+			
+			<result name="knowledgeTreeZiRes">
+				/back/jsp/kno/knoledgeSystemZiListRes.jsp
+			</result>
+			
+			
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="success">
+				/back/jsp/kno/success.jsp
+			</result>
+			 <result name="getKInfoJson" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="preItem" class="com.shangde.edu.kno.action.PreItemAction">
+			<interceptor-ref name="eduStack"/>
+			<result name="preItemList">
+				/back/jsp/kno/preItemList.jsp
+			</result>
+			<result name="rePreItemList" type="redirect">
+				/kno/preItem!showPreItemList.action?piCondition.currentPage=1
+			</result>
+			<result name="preItemDetail">
+				/back/jsp/kno/preItemDetail.jsp
+			</result>
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+	
+		<action name="preNode" class="com.shangde.edu.kno.action.PreNodeAction">
+			<result name="preNodeList">
+				/back/jsp/kno/preItemDetail.jsp
+			</result>
+			<result name="rePreNodeList" type="redirect">
+				/kno/preItem!showPreItemDetail.action?pnCondition.currentPage=1&amp;preItem.preId=${preNode.preId}
+			</result>
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="resolve" class="com.shangde.edu.kno.action.ResolveAction">
+			<result name="resolveList">
+				/back/jsp/kno/knoResolveList.jsp
+			</result>
+			
+			<result name="resolveListRes">
+				/back/jsp/kno/knoResolveListRes.jsp
+			</result>
+			
+			<result name="toResolveAdd">
+				/back/jsp/kno/resolveAdd.jsp
+			</result>
+			
+			<result name="toResolveUpdate">
+				/back/jsp/kno/resolveUpdate.jsp
+			</result>
+			
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+		</action>
+		
+		<action name="videoRel" class="com.shangde.edu.kno.action.VideoRelAction">
+		
+			<result name="toVideoRelList">
+				/back/jsp/kno/videoRelList.jsp
+			</result>
+			
+			<result name="videoPreview">
+				/back/jsp/kno/videoPreview.jsp
+			</result>
+			
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+		</action>
+		
+		<action name="qstRel" class="com.shangde.edu.kno.action.QstRelAction">
+		
+			<result name="toQstRelList">
+				/back/jsp/kno/qstRelList.jsp
+			</result>
+			
+			<result name="qstPreview">
+				/back/jsp/kno/qstPreview.jsp
+			</result>
+			
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+		</action>
+	
+	</package>
+</struts>
+

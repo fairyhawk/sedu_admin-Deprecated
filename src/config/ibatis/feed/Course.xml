@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Course_NS">
+
+        <!--table:FEED_COURSE_TBL-->
+        <typeAlias alias="FeedCourse" type="com.shangde.edu.feed.domain.Course"/>
+        <typeAlias alias="FeedQueryCourseCondition" type="com.shangde.edu.feed.condition.QueryCourseCondition"/>
+
+        <resultMap id="FeedCourseResult" class="FeedCourse">
+            <result property="id" column="ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="stageNum" column="STAGE_NUM"/>
+            <result property="name" column="NAME"/>
+            <result property="introduction" column="INTRODUCTION"/>
+            <result property="hours" column="HOURS"/>
+            <result property="status" column="STATUS"/>
+            <result property="pubDate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+            <result property="courseImgUrl" column="course_img_url"/>
+            <result property="courseCategoryId" column="course_category_id"/>
+            <result property="effective" column="effective"/>
+            <result property="isExclusive" column="is_exclusive"/>
+        </resultMap>
+        
+        <resultMap id="FeedCourseDTOResult" class="com.shangde.edu.feed.dto.CourseDTO">
+            <result property="id" column="ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="stageNum" column="STAGE_NUM"/>
+            <result property="name" column="NAME"/>
+            <result property="introduction" column="INTRODUCTION"/>
+            <result property="hours" column="HOURS"/>
+            <result property="status" column="STATUS"/>
+            <result property="pubDate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+            <result property="videoCount" column="VIDEOCOUNT"/>
+            <result property="courseCategoryName" column="COURSECATEGORYNAME"/>
+            <result property="usePersonNumber" column="id" select="Feed_Course_NS.userPersonNum"/>
+            <result property="isExclusive" column="IS_EXCLUSIVE"/>
+        </resultMap>
+
+        <sql id="FEED_COURSE_TBL_columns">
+            FEED_COURSE_TBL.ID,
+            FEED_COURSE_TBL.SUBJECT_ID,
+            FEED_COURSE_TBL.STAGE_NUM,
+            FEED_COURSE_TBL.NAME,
+            FEED_COURSE_TBL.INTRODUCTION,
+            FEED_COURSE_TBL.HOURS,
+            FEED_COURSE_TBL.STATUS,
+            FEED_COURSE_TBL.PUBDATE,
+            FEED_COURSE_TBL.MODIFIED,
+            FEED_COURSE_TBL.IS_EXCLUSIVE,
+            FEED_COURSE_TBL.COURSE_CATEGORY_ID,
+            FEED_COURSE_TBL.EFFECTIVE,
+            FEED_COURSE_TBL.COURSE_IMG_URL
+        </sql>
+
+        <sql id="FEED_COURSE_TBL_properties">
+            #id#,
+            #subjectId#,
+           	#stageNum#,
+           	#name#,
+           	#introduction#,
+           	#hours#,
+            #status#,
+            #pubDate#,
+            #modified#,
+            #isExclusive#,
+            #courseCategoryId#,
+            #effective#,
+            #courseImgUrl#
+        </sql>
+
+        <insert id="createCourse" parameterClass="FeedCourse">
+            INSERT INTO FEED_COURSE_TBL (<include refid="Feed_Course_NS.FEED_COURSE_TBL_columns"/>) VALUES (<include refid="Feed_Course_NS.FEED_COURSE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <update id="updateCourse" parameterClass="FeedCourse">
+        	UPDATE FEED_COURSE_TBL SET 
+		        	ID = #id#,
+		        	SUBJECT_ID = #subjectId#,
+		        	STAGE_NUM = #stageNum#,
+		        	NAME = #name#,
+		        	INTRODUCTION = #introduction#,
+		        	HOURS = #hours#,
+		        	STATUS = #status#,
+		        	PUBDATE = #pubDate#,
+		        	MODIFIED = #modified#,
+		        	IS_EXCLUSIVE = #isExclusive#,
+		        	COURSE_CATEGORY_ID = #courseCategoryId#,
+		        	EFFECTIVE = #effective#,
+		        	COURSE_IMG_URL = #courseImgUrl#
+        	WHERE ID = #id#
+        </update>
+
+        <select id="getCourseById" resultMap="Feed_Course_NS.FeedCourseResult" parameterClass="int">
+            SELECT
+            <include refid="Feed_Course_NS.FEED_COURSE_TBL_columns"/>
+            FROM FEED_COURSE_TBL
+            WHERE id = #id#
+        </select>
+																	
+        <select id="getCoursePageList" resultMap="Feed_Course_NS.FeedCourseDTOResult" parameterClass="FeedQueryCourseCondition">
+        	 <include refid="public_sql.page_begin"/>                  
+ 				SELECT  DISTINCT
+ 						FEED_COURSE_TBL.ID,
+			            FEED_COURSE_TBL.SUBJECT_ID,
+			            FEED_COURSE_TBL.STAGE_NUM,
+			            FEED_COURSE_TBL.NAME,
+			            FEED_COURSE_TBL.INTRODUCTION,
+			            FEED_COURSE_TBL.HOURS,
+			            FEED_COURSE_TBL.STATUS,
+			            FEED_COURSE_TBL.PUBDATE,
+			            FEED_COURSE_TBL.MODIFIED,
+			            FEED_COURSE_TBL.IS_EXCLUSIVE,
+         			    FEED_COURSE_TBL.COURSE_CATEGORY_ID,
+            			FEED_COURSE_TBL.EFFECTIVE,
+           				FEED_COURSE_TBL.COURSE_IMG_URL,
+           				(SELECT category_name FROM FEED_COURSE_CATEGORY_TBL WHERE FEED_COURSE_TBL.COURSE_CATEGORY_ID = FEED_COURSE_CATEGORY_TBL.ID) AS  COURSECATEGORYNAME,
+			            (SELECT COUNT(1) FROM FEED_MICRO_VIDEO_TBL WHERE FEED_MICRO_VIDEO_TBL.COURSE_ID = FEED_COURSE_TBL.ID ) AS VIDEOCOUNT
+			      FROM  FEED_COURSE_TBL
+			     WHERE  FEED_COURSE_TBL.STATUS != 3
+			  ORDER BY  FEED_COURSE_TBL.PUBDATE DESC
+             <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="userPersonNum" resultClass="int" parameterClass="int">
+        	SELECT COUNT(groupresult.user_id) FROM (SELECT DISTINCT feed_course_statics_tbl.`user_id` FROM feed_course_statics_tbl,feed_course_tbl WHERE COURSE_ID =#value#) groupresult 
+        </select>       
+        
+        <select id="getCourseListByTerm" resultMap="Feed_Course_NS.FeedCourseDTOResult" parameterClass="FeedQueryCourseCondition">
+        	<include refid="public_sql.page_begin"/>                  
+ 				SELECT  DISTINCT
+ 						FEED_COURSE_TBL.ID,
+			            FEED_COURSE_TBL.SUBJECT_ID,
+			            FEED_COURSE_TBL.STAGE_NUM,
+			            FEED_COURSE_TBL.NAME,
+			            FEED_COURSE_TBL.INTRODUCTION,
+			            FEED_COURSE_TBL.HOURS,
+			            FEED_COURSE_TBL.STATUS,
+			            FEED_COURSE_TBL.PUBDATE,
+			            FEED_COURSE_TBL.MODIFIED,
+			            FEED_COURSE_TBL.IS_EXCLUSIVE,
+         			    FEED_COURSE_TBL.COURSE_CATEGORY_ID,
+            			FEED_COURSE_TBL.EFFECTIVE,
+           				FEED_COURSE_TBL.COURSE_IMG_URL,
+			            (SELECT category_name FROM FEED_COURSE_CATEGORY_TBL WHERE FEED_COURSE_TBL.COURSE_CATEGORY_ID = FEED_COURSE_CATEGORY_TBL.ID) AS  COURSECATEGORYNAME,
+			            (SELECT COUNT(1) FROM FEED_MICRO_VIDEO_TBL WHERE FEED_MICRO_VIDEO_TBL.COURSE_ID = FEED_COURSE_TBL.ID ) AS VIDEOCOUNT
+			      FROM  FEED_COURSE_TBL
+			     WHERE  FEED_COURSE_TBL.STATUS != 3
+			     <isNotNull property="courseCategoryId" prepend="and">
+			     		 FEED_COURSE_TBL.COURSE_CATEGORY_ID = #courseCategoryId#
+			     </isNotNull>
+			     <isNotNull prepend="and" property="startTime">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			     </isNotNull>
+			     <isNotNull prepend="and" property="endTime">
+				    <![CDATA[  PUBDATE <= #endTime# ]]>
+			     </isNotNull>
+			  ORDER BY  FEED_COURSE_TBL.PUBDATE DESC
+             <include refid="public_sql.page_end"/>
+        </select>
+        
+        
+        <select id="getCourseCount" resultClass="int" parameterClass="FeedQueryCourseCondition">
+        	SELECT COUNT(1) FROM FEED_COURSE_TBL where status != 3
+        </select>
+        
+        <select id="getCourseCountByTerm" resultClass="int" parameterClass="FeedQueryCourseCondition">
+        	SELECT COUNT(1) FROM FEED_COURSE_TBL WHERE 1=1 and status != 3
+        	 	<isNotNull property="courseCategoryId" prepend="and">
+			     		 FEED_COURSE_TBL.COURSE_CATEGORY_ID = #courseCategoryId#
+			     </isNotNull>
+			     <isNotNull prepend="and" property="startTime">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			     </isNotNull>
+			     <isNotNull prepend="and" property="endTime">
+				    <![CDATA[  PUBDATE <= #endTime# ]]>
+			     </isNotNull>
+        </select>
+        
+        <!-- 根据专业id获取一个课程id -->
+        <select id="getCourseIdBySubjectId" parameterClass="int" resultClass="int">
+      		select id from feed_course_tbl where subject_id = #value# limit 1
+        </select>
+        
+        <!-- 查询所有状态正常的数据 -->
+        <select id="getAllCourse" resultClass="FeedCourse">
+        	select * from feed_course_tbl where status = 1
+        </select>
+        
+        
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Template_NS">
+        <!--table:FEED_TEMPLATE_TBL-->
+        
+        
+        <typeAlias alias="Template_" type="com.shangde.edu.feed.domain.Template"/>
+        <typeAlias alias="QueryTemplateCondition_" type="com.shangde.edu.feed.condition.QueryTemplateCondition"/>
+        
+
+        <resultMap id="TemplateResult_" class="Template_">
+            <result property="id" column="ID"/>
+            <result property="name" column="NAME"/>
+            <result property="fileName" column="FILE_NAME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="remark" column="REMARK"/>
+            <result property="pubdate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+        </resultMap>
+
+        <sql id="FEED_TEMPLATE_TBL_columns">
+            FEED_TEMPLATE_TBL.ID,
+            FEED_TEMPLATE_TBL.NAME,
+            FEED_TEMPLATE_TBL.FILE_NAME,
+            FEED_TEMPLATE_TBL.CONTENT,
+            FEED_TEMPLATE_TBL.REMARK,
+            FEED_TEMPLATE_TBL.PUBDATE,
+            FEED_TEMPLATE_TBL.MODIFIED
+        </sql>
+
+        <sql id="FEED_TEMPLATE_TBL_properties">
+            #id#,
+            #name#,
+            #fileName#,
+            #content#,
+            #remark#,
+            #pubdate#,
+            #modified#
+        </sql>
+
+        <insert id="createTemplate" parameterClass="Template_">
+            INSERT INTO FEED_TEMPLATE_TBL (<include refid="Feed_Template_NS.FEED_TEMPLATE_TBL_columns"/>) VALUES (<include refid="Feed_Template_NS.FEED_TEMPLATE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTemplateById" parameterClass="int">
+            DELETE FROM FEED_TEMPLATE_TBL
+            WHERE ID = #id#
+        </delete>
+
+        <update id="updateTemplate" parameterClass="Template_">
+            UPDATE FEED_TEMPLATE_TBL SET
+                ID = #id#,
+                NAME = #name#,
+                FILE_NAME = #fileName#,
+                CONTENT = #content#,
+                REMARK = #remark#,
+                PUBDATE = #pubdate#,
+                MODIFIED = #modified#
+            WHERE ID = #id#
+        </update>
+
+        <select id="getTemplateById" resultMap="Feed_Template_NS.TemplateResult_" parameterClass="int">
+            SELECT
+            <include refid="Feed_Template_NS.FEED_TEMPLATE_TBL_columns"/>
+            FROM FEED_TEMPLATE_TBL
+            WHERE ID = #id#
+        </select>
+
+        <select id="getTemplateList" resultMap="Feed_Template_NS.TemplateResult_">
+            SELECT
+            <include refid="Feed_Template_NS.FEED_TEMPLATE_TBL_columns"/>
+            FROM FEED_TEMPLATE_TBL
+        </select>
+        
+        
+        <!-- 分页 -->
+        <select id="getTemplatePageList" resultMap="Feed_Template_NS.TemplateResult_" parameterClass="QueryTemplateCondition_">
+        	<include refid="public_sql.page_begin"/>
+         	 SELECT 
+				<include refid="Feed_Template_NS.FEED_TEMPLATE_TBL_columns"/>
+			 	FROM FEED_TEMPLATE_TBL order by PUBDATE desc
+			 <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getTemplateListPageCount" resultClass="int" parameterClass="QueryTemplateCondition_">
+          SELECT COUNT(1) FROM FEED_TEMPLATE_TBL
+        </select>
+        
+        
+        <!--end-->
+</sqlMap>

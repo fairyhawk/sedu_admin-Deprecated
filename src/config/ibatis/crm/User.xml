@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Users_NS">
+        <!--table:CRM_USER_TBL-->
+        <typeAlias alias="Users" type="com.shangde.edu.crm.domain.Users"/>
+        <typeAlias alias="QueryUsersCondition" type="com.shangde.edu.crm.condition.QueryUsersCondition"/>
+		<typeAlias alias="QueryCustomerCondition" type="com.shangde.edu.cus.condition.QueryCustomerCondition" />
+        <typeAlias alias="CustomerNewDTO" type="com.shangde.edu.cus.domain.CustomerNewDTO" />	
+        <resultMap id="UserResult" class="Users">
+            <result property="id" column="ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="email" column="EMAIL"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="realName" column="REAL_NAME"/>
+            <result property="sex" column="SEX"/>
+            <result property="regTime" column="REG_TIME"/>
+            <result property="qq" column="QQ"/>
+            <result property="userType" column="USER_TYPE"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="age" column="AGE"/>
+            <result property="profession" column="PROFESSION"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="birthday" column="BIRTHDAY"/>
+            <result property="remarks" column="REMARKS"/>
+        </resultMap>
+        
+        <resultMap id="MsgResult" class="Users">
+        	<result property="realName" column="REAL_NAME"/>
+            <result property="email" column="EMAIL"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="regTime" column="REG_TIME"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+        </resultMap>
+        
+
+        <sql id="CRM_USER_TBL_columns">
+            CRM_USER_TBL.ID,
+            CRM_USER_TBL.CUS_ID,
+            CRM_USER_TBL.EMAIL,
+            CRM_USER_TBL.MOBILE,
+            CRM_USER_TBL.REAL_NAME,
+            CRM_USER_TBL.SEX,
+            CRM_USER_TBL.REG_TIME,
+            CRM_USER_TBL.QQ,
+            CRM_USER_TBL.USER_TYPE,
+            CRM_USER_TBL.SUBJECT_ID,
+            CRM_USER_TBL.AGE,
+            CRM_USER_TBL.PROFESSION,
+            CRM_USER_TBL.ADDRESS,
+            CRM_USER_TBL.BIRTHDAY,
+            CRM_USER_TBL.REMARKS
+        </sql>
+
+        <sql id="CRM_USER_TBL_properties">
+            #id#,
+            #cusId#,
+            #email#,
+            #mobile#,
+            #realName#,
+            #sex#,
+            #regTime#,
+            #qq#,
+            #userType#,
+            #subjectId#,
+            #age#,
+            #profession#,
+            #address#,
+            #birthday#,
+            #remarks#
+        </sql>
+
+        <insert id="createUser" parameterClass="Users">
+            INSERT INTO CRM_USER_TBL (<include refid="Users_NS.CRM_USER_TBL_columns"/>) VALUES (<include refid="Users_NS.CRM_USER_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteUserById" parameterClass="int">
+            DELETE FROM CRM_USER_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateUser" parameterClass="Users">
+            UPDATE CRM_USER_TBL SET
+                ID = #id#,
+                CUS_ID = #cusId#,
+                EMAIL = #email#,
+                MOBILE = #mobile#,
+                REAL_NAME = #realName#,
+                SEX = #sex#,
+                REG_TIME = #regTime#,
+                QQ = #qq#,
+                USER_TYPE = #userType#,
+                SUBJECT_ID = #subjectId#,
+                AGE = #age#,
+                PROFESSION=#profession#,
+	            ADDRESS=#address#,
+	            BIRTHDAY=#birthday#,
+	            REMARKS=#remarks#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getUserById" resultMap="Users_NS.UserResult" parameterClass="int">
+            SELECT
+            <include refid="Users_NS.CRM_USER_TBL_columns"/>
+            FROM CRM_USER_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getUserList" resultMap="Users_NS.UserResult" parameterClass="QueryUsersCondition">
+            SELECT
+            <include refid="Users_NS.CRM_USER_TBL_columns"/>
+            FROM CRM_USER_TBL
+        </select>
+        
+ 		<!-- 后台分页 查询 -->
+        <!-- 查询所有的计划，QueryUsersCondition为空对象 -->
+        <select id="getBackUserList" resultMap="Users_NS.UserResult" parameterClass="QueryUsersCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT 
+           <include refid="Users_NS.CRM_USER_TBL_columns"/>
+            FROM CRM_USER_TBL 
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 后台分页 查询 -->
+        <select id="getBcakUserListCount" resultClass="int" parameterClass="QueryUsersCondition">
+            SELECT COUNT(1)FROM CRM_USER_TBL 
+        </select>          
+
+        <!-- 按条件检索计划 -->
+        <select id="searchUserByParam" resultMap="Users_NS.UserResult" parameterClass="QueryUsersCondition">
+        	<include refid="public_sql.page_begin"/>
+            SELECT  <include refid="Users_NS.CRM_USER_TBL_columns"/>
+            FROM CRM_USER_TBL
+            	where 1 = 1
+           	   <isNotEmpty  prepend="AND" property="mobile">
+            		<isNotEqual property="mobile" compareValue="-1">
+            			MOBILE = #mobile#
+            		</isNotEqual>
+            	</isNotEmpty >
+            	
+            	<isNotEmpty  prepend="AND" property="userType">
+            		<isNotEqual property="userType" compareValue="-1">
+            			USER_TYPE = #userType#
+            		</isNotEqual>
+            	</isNotEmpty >
+            	 
+             	<isNotEmpty prepend="AND" property="staregTime">
+            		REG_TIME >= #staregTime#
+            		<isNotEmpty prepend="AND" property="endregTime">
+	            		#endregTime# >= REG_TIME
+	            	</isNotEmpty>
+            	</isNotEmpty>
+            
+            	ORDER BY  CRM_USER_TBL.ID DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 分页 检索 -->
+        <select id="searchUserByParamCount" resultClass="int" parameterClass="QueryUsersCondition">
+           	SELECT COUNT(1)
+            FROM CRM_USER_TBL
+            	where 1 = 1
+           	   <isNotEmpty  prepend="AND" property="mobile">
+            		<isNotEqual property="mobile" compareValue="-1">
+            			MOBILE = #mobile#
+            		</isNotEqual>
+            	</isNotEmpty >
+            	
+            	<isNotEmpty  prepend="AND" property="userType">
+            		<isNotEqual property="userType" compareValue="-1">
+            			USER_TYPE = #userType#
+            		</isNotEqual>
+            	</isNotEmpty >
+            	
+             	<isNotEmpty prepend="AND" property="staregTime">
+            		REG_TIME >= #staregTime#
+            		<isNotEmpty prepend="AND" property="endregTime">
+	            		#endregTime# >= REG_TIME
+	            	</isNotEmpty>
+            	</isNotEmpty>
+            
+            ORDER BY  CRM_USER_TBL.ID DESC
+        </select>
+        
+        <select id="getUserByMobile" resultMap="Users_NS.UserResult" parameterClass="String">
+            SELECT
+            <include refid="Users_NS.CRM_USER_TBL_columns"/>
+            FROM CRM_USER_TBL
+            WHERE
+                MOBILE = #value#
+            ORDER BY CRM_USER_TBL.reg_time ASC 
+        </select>
+        
+        <select id="getAllMsgList" resultMap="Users_NS.MsgResult"  parameterClass="QueryUsersCondition">
+      	    <include refid="public_sql.page_begin"/>
+            SELECT
+            REAL_NAME,EMAIL,MOBILE,CRM_USER_TBL.SUBJECT_ID,sys_subject_tbl.SUBJECT_NAME as SUBJECT_NAME,REG_TIME
+            FROM CRM_USER_TBL LEFT  JOIN sys_subject_tbl ON CRM_USER_TBL.`SUBJECT_ID`=sys_subject_tbl.`SUBJECT_ID`
+            WHERE (CRM_USER_TBL.MES_STATUS=1 OR CRM_USER_TBL.USER_TYPE in(4,5))
+            and REG_TIME>'2011-12-14' 
+             <isNotEmpty   property="realName">
+             <isNotEqual property="realName" compareValue="">
+            and  REAL_NAME like  CONCAT('%',#realName#,'%')
+            </isNotEqual>
+             </isNotEmpty>
+              <isNotEmpty   property="subjectId">
+             <isNotEqual property="subjectId" compareValue="0">
+            and  CRM_USER_TBL.SUBJECT_ID =#subjectId#
+            </isNotEqual>
+             </isNotEmpty>
+            ORDER BY CRM_USER_TBL.reg_time DESC  
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+         <select id="getAllMsgListCount" resultClass="int"  parameterClass="QueryUsersCondition">
+            SELECT
+            count(1)
+            FROM CRM_USER_TBL LEFT  JOIN sys_subject_tbl ON CRM_USER_TBL.`SUBJECT_ID`=sys_subject_tbl.`SUBJECT_ID`
+            WHERE (CRM_USER_TBL.MES_STATUS=1 OR CRM_USER_TBL.USER_TYPE in(4,5))
+            and REG_TIME>'2011-12-14' 
+             <isNotEmpty   property="realName">
+             <isNotEqual property="realName" compareValue="">
+            and  REAL_NAME like  CONCAT('%',#realName#,'%')
+            </isNotEqual>
+             </isNotEmpty>
+              <isNotEmpty   property="subjectId">
+             <isNotEqual property="subjectId" compareValue="0">
+            and  CRM_USER_TBL.SUBJECT_ID =#subjectId#
+            </isNotEqual>
+             </isNotEmpty>
+            ORDER BY CRM_USER_TBL.reg_time DESC  
+        </select>
+        
+                
+        <!--end-->
+        
+        <select id="getUserBySubjectGroup" parameterClass="QueryCustomerCondition" resultClass="CustomerNewDTO">
+             SELECT SYS_SUBJECT_TBL.SUBJECT_ID as subjectId,SYS_SUBJECT_TBL.SUBJECT_NAME as subName,
+             SUM(CASE WHEN CRM_USER_TBL.USER_TYPE=2 or CRM_USER_TBL.USER_TYPE=3 THEN 1 ELSE 0 END) AS 'leyuStudent',     
+        	 SUM(CASE WHEN CRM_USER_TBL.USER_TYPE=4 or CRM_USER_TBL.USER_TYPE=5 THEN 1 ELSE 0 END) AS 'liuyanStudent',        
+     		 SUM(CASE WHEN CRM_USER_TBL.USER_TYPE=6 or CRM_USER_TBL.USER_TYPE=7 THEN 1 ELSE 0 END) AS 'callInStudent'  
+             from  SYS_SUBJECT_TBL LEFT JOIN (
+             select SUBJECT_ID,USER_TYPE from  CRM_USER_TBL WHERE  
+             <isNotEmpty property="startCountTime">
+             <isNotEqual property="startCountTime" compareValue="">
+               REG_TIME>= #startCountTime#   
+              </isNotEqual>
+              </isNotEmpty>
+              <isEmpty property="startCountTime">
+             <isEqual property="startCountTime" compareValue="">
+               REG_TIME>= curdate()   
+              </isEqual>
+              </isEmpty>
+               <isNotEmpty property="endCountTime">
+             <isNotEqual property="endCountTime" compareValue="">
+             <![CDATA[  and REG_TIME<= #endCountTime#   ]]>
+              </isNotEqual>
+              </isNotEmpty>
+               ) as  CRM_USER_TBL
+              ON SYS_SUBJECT_TBL.SUBJECT_ID=CRM_USER_TBL.SUBJECT_ID 
+              GROUP BY  SYS_SUBJECT_TBL.SUBJECT_ID ORDER BY SYS_SUBJECT_TBL.SUBJECT_ID
+        </select>
+</sqlMap>

@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Kpoint_NS">
+        <!--table:COU_KPOINT_TBL-->
+        <typeAlias alias="Kpoint" type="com.shangde.edu.cou.domain.Kpoint"/>
+          <typeAlias alias="Kpointdto" type="com.shangde.edu.cou.dto.JilianKpointDTO"/>
+        <typeAlias alias="QueryKpointCondition" type="com.shangde.edu.cou.condition.QueryKpointCondition"/>
+		<typeAlias alias="QueryCourKpJSONCondition" type="com.shangde.edu.cou.condition.QueryCourKpJSONCondition"/>
+		<typeAlias alias="KeyValueDTO" type="com.shangde.edu.cou.dto.KeyValueDTO"/>
+		<typeAlias alias="UserKpointDTO" type="com.shangde.edu.cou.dto.UserKpointDTO"/>
+		<typeAlias alias="LeafKpointUrlDTO" type="com.shangde.edu.cou.dto.LeafKpointUrlDTO" />
+		
+		<resultMap id="LeafKpointUrlDTO" class="LeafKpointUrlDTO">
+            <result property="id" column="POINT_ID"/>
+            <result property="sortNum" column="SORT_NUM"/>
+            <result property="vedioUrl" column="RES_VEDIO_TBL.VO_URL"/>
+        </resultMap>
+		
+		<resultMap id="UserKpoointDTOWebResult" class="UserKpointDTO">
+            <result property="id" column="COU_KPOINT_TBL.POINT_ID"/>
+            <result property="pId" column="COU_KPOINT_TBL.P_ID"/>
+            <result property="name" column="COU_KPOINT_TBL.NAME"/>
+            <result property="sortNum" column="COU_KPOINT_TBL.SORT_NUM"/>
+            <result property="vedioUrl" column="RES_VEDIO_TBL.VO_URL"/>
+            <result property="isAudition" column="IS_AUDITION"/>
+            <result property="type" column="TYPE"/>
+            <result property="lecture" column="LECTURE"/>
+            <result property="level" column="LEVEL"/>
+            <result property="leaf" column="LEAF"/>
+        </resultMap>
+		
+		<resultMap id="KeyDTOResult" class="KeyValueDTO">
+            <result property="id" column="POINT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="sortNum" column="SORT_NUM"/>
+        </resultMap>
+        
+        <resultMap id="VideoKeyDTOResult" class="KeyValueDTO">
+            <result property="id" column="POINT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="sortNum" column="SORT_NUM"/>
+        </resultMap>
+        
+        <resultMap id="KeyDTOWebResult" class="KeyValueDTO">
+            <result property="id" column="POINT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="sortNum" column="SORT_NUM"/>
+            <result property="vedioUrl" column="RES_VEDIO_TBL.VO_URL"/>
+            <result property="isAudition" column="RES_VEDIO_TBL.VO_URL"/>
+        </resultMap>
+        
+        <resultMap id="KpointResult" class="Kpoint">
+            <result property="pointId" column="POINT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="leaf" column="LEAF"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="sort" column="SORT"/>
+            <result property="status" column="STATUS"/>
+            <result property="level" column="LEVEL"/>
+            <result property="sortNum" column="SORT_NUM"/>
+            <result property="lecture" column="LECTURE"/>
+        </resultMap>
+        
+        <resultMap class="Kpoint" id="KpointForAssResult">
+        	<result property="pointId" column="POINT_ID"/>
+        	<result property="sellWayId" column="COU_SELL_COU_TBL.SELL_ID"/>
+        	<result property="subId" column="COU_SELL_WAY_TBL.SUBJECT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="leaf" column="LEAF"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="sort" column="SORT"/>
+            <result property="status" column="STATUS"/>
+            <result property="level" column="LEVEL"/>
+            <result property="sortNum" column="SORT_NUM"/>
+            <result property="lecture" column="LECTURE"/>
+        </resultMap>
+        
+        
+           <resultMap id="KpointResultDTO" class="Kpointdto">
+            <result property="pointId" column="POINT_ID"/>       
+            <result property="name" column="NAME"/>
+       	 </resultMap>
+		
+		 <sql id="COU_JILIANKPOINT_TBL_DTO_columns">
+            COU_KPOINT_TBL.POINT_ID,
+            COU_KPOINT_TBL.NAME,
+            EXAM_EXAMPAPER_TBL.EP_ID,
+            EXAM_EXAMPAPER_TBL.EP_NAME
+        </sql>
+        
+		<sql id="COU_KPOINT_TBL_DTO_columns">
+            COU_KPOINT_TBL.POINT_ID,
+            COU_KPOINT_TBL.P_ID,
+            COU_KPOINT_TBL.NAME,
+            COU_KPOINT_TBL.SORT_NUM
+        </sql>
+        
+        <sql id="COU_KeyDTOWebResult_DTO_columns">
+            COU_KPOINT_TBL.POINT_ID,
+            COU_KPOINT_TBL.P_ID,
+            COU_KPOINT_TBL.NAME,
+            COU_KPOINT_TBL.SORT_NUM,
+            RES_VEDIO_TBL.VO_URL,
+            RES_VEDIO_TBL.IS_AUDITION
+        </sql>
+		
+        <sql id="COU_KPOINT_TBL_columns">
+            COU_KPOINT_TBL.POINT_ID,
+            COU_KPOINT_TBL.P_ID,
+            COU_KPOINT_TBL.COURSE_ID,
+            COU_KPOINT_TBL.NAME,
+            COU_KPOINT_TBL.INTRODUCE,
+            COU_KPOINT_TBL.LEAF,
+            COU_KPOINT_TBL.ADD_TIME,
+            COU_KPOINT_TBL.SORT,
+            COU_KPOINT_TBL.STATUS,
+            COU_KPOINT_TBL.LEVEL,
+            COU_KPOINT_TBL.SORT_NUM,
+            COU_KPOINT_TBL.LECTURE
+        </sql>
+        
+        <sql id="COU_KPOINT_TBL_properties">
+            #pointId#,
+            #pId#,
+            #courseId#,
+            #name#,
+            #introduce#,
+            #leaf#,
+            #addTime#,
+            #sort#,
+            #status#,
+            #level#,
+            #sortNum#,
+            #lecture#
+        </sql>
+
+		<select id="getKpointListjilian" resultMap="Kpoint_NS.KpointResultDTO" parameterClass="QueryCourKpJSONCondition">
+            SELECT
+            <include refid="Kpoint_NS.COU_JILIANKPOINT_TBL_DTO_columns"/>
+            FROM COU_KPOINT_TBL , EXAM_EXAMPAPER_TBL ,cou_course_tbl WHERE COU_KPOINT_TBL.COURSE_ID = #cousid# 
+            AND COU_KPOINT_TBL.STATUS=0 
+            AND  EXAM_EXAMPAPER_TBL.EP_STATE=0
+            AND COU_KPOINT_TBL.POINT_ID=EXAM_EXAMPAPER_TBL.K_OR_COU_ID 
+            AND  EXAM_EXAMPAPER_TBL.TYPE=2 
+            AND  EXAM_EXAMPAPER_TBL.EP_TYPE=#eptye#
+            and cou_course_tbl.COURSE_ID=COU_KPOINT_TBL.COURSE_ID
+			and cou_course_tbl.SUBJECT_ID=EXAM_EXAMPAPER_TBL.SUBJECT_ID
+			group by COU_KPOINT_TBL.name
+            order by  COU_KPOINT_TBL.sort_num
+        </select>
+
+        <insert id="createKpoint" parameterClass="Kpoint">
+            INSERT INTO COU_KPOINT_TBL (<include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>) VALUES (<include refid="Kpoint_NS.COU_KPOINT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="pointId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteKpointById" parameterClass="int">
+            DELETE FROM COU_KPOINT_TBL
+            WHERE
+                POINT_ID = #value#
+        </delete>
+        
+        <delete id="deleteKpointByCourseId" parameterClass="int">
+            DELETE FROM COU_KPOINT_TBL
+            WHERE
+                course_id = #value#
+        </delete>
+
+        <update id="updateKpoint" parameterClass="Kpoint">
+            UPDATE COU_KPOINT_TBL SET
+                POINT_ID = #pointId#,
+                P_ID = #pId#,
+                COURSE_ID = #courseId#,
+                NAME = #name#,
+                INTRODUCE = #introduce#,
+                LEAF = #leaf#,
+                ADD_TIME = #addTime#,
+                SORT = #sort#,
+                STATUS = #status#,
+                LEVEL = #level#,
+                SORT_NUM = #sortNum#,
+                LECTURE = #lecture#
+            WHERE
+                POINT_ID = #pointId#
+        </update>
+
+        <select id="getKpointById" resultMap="Kpoint_NS.KpointResult" parameterClass="int">
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL
+            WHERE
+                POINT_ID = #value# AND POINT_ID != -2;
+        </select>
+        
+        <select id="getKpointSumByCourseId" resultClass="int" parameterClass="int">
+        	select 
+        	count(cou_kpoint_tbl.LEVEL) 
+        	from cou_kpoint_tbl 
+        	where cou_kpoint_tbl.COURSE_ID =#value#
+        	group by cou_kpoint_tbl.LEVEL 
+        	desc limit 1
+        </select>
+
+        <select id="getKpointList" resultMap="Kpoint_NS.KpointResult" parameterClass="QueryKpointCondition">
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.COURSE_ID = #courseId# AND COU_KPOINT_TBL.STATUS=0
+        </select>
+        
+        <select id="getKpointNameById" resultClass="java.lang.String" parameterClass="int">
+            SELECT
+            	COU_KPOINT_TBL.NAME
+            FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.POINT_ID = #value#
+        </select>
+        <select id="getKpointVoUrlById" resultClass="java.lang.String" parameterClass="int">
+            select res_vedio_tbl.VO_URL cou_kpoint_tbl 
+			from  cou_kpoint_tbl 
+			inner join res_vedio_tbl 
+			where cou_kpoint_tbl.POINT_ID=res_vedio_tbl.POINTID 
+			and  cou_kpoint_tbl.COURSE_ID =#value#
+			group by cou_kpoint_tbl.LEVEL desc limit 1
+
+        </select>
+        <select id="getKpointListByPid" resultMap="Kpoint_NS.KpointResult" parameterClass="QueryKpointCondition">
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.P_ID = #pid#
+        </select>
+        <!-- add by shixiaofeng -->
+        <select id="getRealUpNumByCourseId" resultClass="int" parameterClass="int">
+            SELECT 
+			  COUNT(1) 
+			FROM
+			  cou_kpoint_tbl 
+			WHERE cou_kpoint_tbl.COURSE_ID = #course_id# 
+			  AND cou_kpoint_tbl.status = 0 
+			  AND cou_kpoint_tbl.`LEAF` = 1
+        </select>
+        <!-- 为张栋iphone端提供数据 begin-->
+        <select id="getIphoneKpointListByPid" resultMap="Kpoint_NS.KpointResult" parameterClass="QueryKpointCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.P_ID = #pid# and COU_KPOINT_TBL.COURSE_ID=#courseId# and cou_kpoint_tbl.STATUS=0
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getIphoneKpointCountByPid" resultClass="int" parameterClass="QueryKpointCondition">
+            SELECT
+            count(*)
+            FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.P_ID = #pid# and COU_KPOINT_TBL.COURSE_ID=#courseId# and cou_kpoint_tbl.STATUS=0
+        </select>
+         <!-- 为张栋iphone端提供数据  end-->
+
+        <select id="getKpointListByCourseId" resultMap="Kpoint_NS.KpointResult" parameterClass="QueryKpointCondition">
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL
+            	WHERE  COU_KPOINT_TBL.COURSE_ID = #courseId#  AND COU_KPOINT_TBL.STATUS=0
+        </select>
+        
+         <select id="getAllKpointListByCourseId" resultMap="Kpoint_NS.KpointResult" parameterClass="QueryKpointCondition">
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL
+            	WHERE  COU_KPOINT_TBL.COURSE_ID = #courseId#
+        </select>
+        
+        <!-- get kpoint dto result  -1 all  -->
+        <select id="getKpointDTOListByCourseId" resultMap="Kpoint_NS.KeyDTOResult" parameterClass="QueryKpointCondition">
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_DTO_columns"/>
+            FROM COU_KPOINT_TBL
+            	WHERE  COU_KPOINT_TBL.COURSE_ID = #courseId#  AND COU_KPOINT_TBL.STATUS=0
+	           	<isNotNull property="leaf">
+            	 <isGreaterThan prepend="and" property="leaf" compareValue="-1">
+                		COU_KPOINT_TBL.LEAF=#leaf#
+                </isGreaterThan>
+                order by SORT_NUM;
+	        </isNotNull>
+        </select>
+        
+         <select id="getKpointListByCondition" resultMap="Kpoint_NS.KpointResult" parameterClass="QueryKpointCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Kpoint_NS.COU_KPOINT_TBL_columns"/>
+            FROM COU_KPOINT_TBL
+            	WHERE  COU_KPOINT_TBL.STATUS !=2 AND COU_KPOINT_TBL.POINT_ID !=-2
+		    <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                  COU_KPOINT_TBL.NAME like  CONCAT('%',#searchKey#,'%')
+			    </isNotEqual>
+	        </isNotNull>
+	        <isNotNull property="courseId">
+            	 <isGreaterThan prepend="and" property="courseId" compareValue="0">
+                		COU_KPOINT_TBL.COURSE_ID=#courseId#
+                </isGreaterThan>
+	        </isNotNull>
+	        order by COU_KPOINT_TBL.POINT_ID desc
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getKpointListByConditionCount" resultClass="int" parameterClass="QueryKpointCondition">
+            SELECT COUNT(1)
+            FROM COU_KPOINT_TBL
+            	WHERE COU_KPOINT_TBL.STATUS !=2 AND COU_KPOINT_TBL.POINT_ID !=-2
+		    <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                  COU_KPOINT_TBL.NAME like  CONCAT('%',#searchKey#,'%')
+			    </isNotEqual>
+	        </isNotNull>
+	        <isNotNull property="courseId">
+            	 <isGreaterThan prepend="and" property="courseId" compareValue="0">
+                		COU_KPOINT_TBL.COURSE_ID=#courseId#
+                </isGreaterThan>
+	        </isNotNull>
+        </select>
+
+         
+         <!-- video kpointlist -->
+        <select id="getKeyDTOWebResultByCourseId" resultMap="Kpoint_NS.KeyDTOWebResult" parameterClass="int">
+			 SELECT  distinct
+			 <include refid="Kpoint_NS.COU_KeyDTOWebResult_DTO_columns"/> 
+ 			FROM  COU_KPOINT_TBL LEFT JOIN   RES_VEDIO_TBL ON COU_KPOINT_TBL.POINT_ID = RES_VEDIO_TBL.POINTID 
+ 			WHERE COU_KPOINT_TBL.COURSE_ID = #value#  AND COU_KPOINT_TBL.STATUS = 0;
+        </select>
+         <!-- video kpointlist -->
+         <!-- try listening -->
+         <select id="getTryKpointTreeByCourseId" resultMap="Kpoint_NS.UserKpoointDTOWebResult" parameterClass="int">
+			 select cou_kpoint_tbl.POINT_ID, 
+			 		cou_kpoint_tbl.P_ID ,cou_kpoint_tbl.NAME,
+			 		cou_kpoint_tbl.SORT_NUM, 
+			 		res_vedio_tbl.VO_URL, 
+			 		case when res_vedio_tbl.IS_AUDITION is null then 0 else  res_vedio_tbl.IS_AUDITION end IS_AUDITION ,
+			 		'try' as TYPE,
+			 		"" as lecture,
+			 		cou_kpoint_tbl.level,
+			 		cou_kpoint_tbl.leaf
+					FROM cou_kpoint_tbl left join res_vedio_tbl on  cou_kpoint_tbl.POINT_ID = res_vedio_tbl.POINTID where cou_kpoint_tbl.COURSE_ID = #value# ;
+        </select>
+        
+        <select id="getLeafKpointDTOByCourseId" resultMap="Kpoint_NS.LeafKpointUrlDTO" parameterClass="int">
+			select cou_kpoint_tbl.POINT_ID, cou_kpoint_tbl.SORT_NUM , res_vedio_tbl.VO_URL from 
+				cou_kpoint_tbl left join  res_vedio_tbl  on cou_kpoint_tbl.POINT_ID = res_vedio_tbl.POINTID 
+				where cou_kpoint_tbl.COURSE_ID = #value# and cou_kpoint_tbl.LEAF = 1;
+        </select>
+        
+        <select id="getChildKpointCount" resultClass="int" parameterClass="int">
+			select count(1) from cou_kpoint_tbl where  cou_kpoint_tbl.P_ID = #value#;
+        </select>
+        
+        <select id="getFirstLevelPointIdBy2" resultClass="Integer" parameterClass="int">
+        	SELECT B.POINT_ID
+        		FROM COU_KPOINT_TBL A LEFT JOIN COU_KPOINT_TBL B
+        		ON A.P_ID = B.POINT_ID
+        		WHERE A.POINT_ID = #value# 
+        </select>
+        
+        <select id="getFirstLevelPointIdBy3" resultClass="Integer" parameterClass="int">
+        	SELECT C.POINT_ID
+        		FROM COU_KPOINT_TBL A LEFT JOIN COU_KPOINT_TBL B
+        		ON A.P_ID = B.POINT_ID
+        		LEFT JOIN COU_KPOINT_TBL C
+        		ON B.P_ID = C.POINT_ID
+        		WHERE A.POINT_ID = #value# 
+        </select>
+        <select id="getKpointListForUnAss" resultMap="Kpoint_NS.KpointForAssResult" parameterClass="QueryKpointCondition">
+        	<!-- 子查询版，效率低，暂弃
+        	SELECT 
+        	<include refid="COU_KPOINT_TBL_columns"/>
+        	,COU_SELL_COU_TBL.SELL_ID,COU_SELL_WAY_TBL.SUBJECT_ID
+        	FROM COU_KPOINT_TBL,COU_SELL_COU_TBL,COU_SELL_WAY_TBL 
+        	WHERE COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+			AND COU_SELL_COU_TBL.SELL_ID=COU_SELL_WAY_TBL.SELL_ID	
+			AND  COU_KPOINT_TBL.COURSE_ID IN(
+        	SELECT COU_SELL_COU_TBL.COURSE_ID FROM COU_SELL_COU_TBL WHERE COU_SELL_COU_TBL.SELL_ID IN(        	
+        	SELECT COU_SELL_WAY_TBL.SELL_ID FROM COU_SELL_WAY_TBL WHERE COU_SELL_WAY_TBL.SELL_ID IN(
+        	SELECT DISTINCT PACK_ID FROM FINANCE_CASH_RECORD_TBL WHERE CUS_ID=#cusId# AND STATUS=1
+        	) AND COU_SELL_WAY_TBL.SUBJECT_ID=#subjectId#)
+        	) -->
+        	SELECT 
+        	<include refid="COU_KPOINT_TBL_columns"/>
+        	,COU_SELL_COU_TBL.SELL_ID,COU_SELL_WAY_TBL.SUBJECT_ID
+        	FROM COU_KPOINT_TBL
+        	INNER JOIN COU_SELL_COU_TBL ON COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+        	INNER JOIN COU_SELL_WAY_TBL ON COU_SELL_COU_TBL.SELL_ID=COU_SELL_WAY_TBL.SELL_ID
+        	INNER JOIN FINANCE_CASH_RECORD_TBL ON COU_SELL_WAY_TBL.SELL_ID=PACK_ID 
+        	WHERE FINANCE_CASH_RECORD_TBL.CUS_ID=#cusId# AND FINANCE_CASH_RECORD_TBL.STATUS=1
+        	AND COU_SELL_WAY_TBL.SUBJECT_ID=#subjectId#      	
+        	
+        	<dynamic>
+        	<isNotNull property="watchKids">
+	        	<isNotEmpty>
+		        	AND POINT_ID IN
+		        	<iterate property="watchKids" open="(" close=")" conjunction=",">
+		        	#watchKids[]#
+		        	</iterate>
+	        	</isNotEmpty>
+        	</isNotNull>
+        	<isNotNull property="assKids">
+	        	<isNotEmpty property="assKids">
+		        	AND POINT_ID NOT IN
+		        	<iterate property="assKids" open="(" close=")" conjunction=",">
+		        	#assKids[]#
+		        	</iterate>
+	        	</isNotEmpty>
+        	</isNotNull>
+        	</dynamic>
+        	GROUP BY PACK_ID,COU_KPOINT_TBL.POINT_ID
+        	 LIMIT 0,10
+        	
+        	<!--  SELECT
+        	<include refid="COU_KPOINT_TBL_columns"/>
+        	,COU_SELL_COU_TBL.SELL_ID,COU_SELL_WAY_TBL.SUBJECT_ID
+        	FROM COU_KPOINT_TBL,COU_SELL_COU_TBL,COU_SELL_WAY_TBL
+        	WHERE
+        	<dynamic>
+        	 COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID 
+        	 AND COU_SELL_COU_TBL.SELL_ID= COU_SELL_WAY_TBL.SELL_ID 
+        	<iterate prepend="AND POINT_ID IN" property="watchKids" open="(" close=")" conjunction=",">
+        	#watchKids[]#
+        	</iterate>
+        	AND POINT_ID NOT IN
+        	<iterate property="assKids" open="(" close=")" conjunction=",">
+        	#assKids[]#
+        	</iterate>
+        	</dynamic>
+        	-->
+        </select>
+        <select id="getMoreKpointListForUnAss" resultMap="Kpoint_NS.KpointForAssResult" parameterClass="QueryKpointCondition">
+        	<include refid="public_sql.page_begin"/>
+        	SELECT 
+        	<include refid="COU_KPOINT_TBL_columns"/>
+        	,COU_SELL_COU_TBL.SELL_ID,COU_SELL_WAY_TBL.SUBJECT_ID
+        	FROM COU_KPOINT_TBL
+        	INNER JOIN COU_SELL_COU_TBL ON COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+        	INNER JOIN COU_SELL_WAY_TBL ON COU_SELL_COU_TBL.SELL_ID=COU_SELL_WAY_TBL.SELL_ID
+        	INNER JOIN FINANCE_CASH_RECORD_TBL ON COU_SELL_WAY_TBL.SELL_ID=PACK_ID 
+        	WHERE FINANCE_CASH_RECORD_TBL.CUS_ID=#cusId# AND FINANCE_CASH_RECORD_TBL.STATUS=1
+        	AND COU_SELL_WAY_TBL.SUBJECT_ID=#subjectId#
+        	<dynamic>
+        	<isNotNull property="watchKids">
+        		<isNotEmpty property="watchKids">
+		        	AND POINT_ID IN
+		        	<iterate property="watchKids" open="(" close=")" conjunction=",">
+		        	#watchKids[]#
+		        	</iterate>
+	        	</isNotEmpty>
+        	</isNotNull>
+        	<isNotNull property="assKids">
+	        	<isNotEmpty property="assKids">
+		        	AND POINT_ID NOT IN
+		        	<iterate property="assKids" open="(" close=")" conjunction=",">
+		        	#assKids[]#
+		        	</iterate>
+		        </isNotEmpty>
+        	</isNotNull>
+        	</dynamic>
+        	GROUP BY PACK_ID,COU_KPOINT_TBL.POINT_ID
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getKpointCount" resultClass="int" parameterClass="QueryKpointCondition">
+        <!-- 子查询版，弃之
+        	SELECT COUNT(DISTINCT COU_KPOINT_TBL.POINT_ID)        	
+        	FROM COU_KPOINT_TBL,COU_SELL_COU_TBL,COU_SELL_WAY_TBL 
+        	WHERE COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+			AND COU_SELL_COU_TBL.SELL_ID=COU_SELL_WAY_TBL.SELL_ID	
+			AND  COU_KPOINT_TBL.COURSE_ID IN(
+        	SELECT COU_SELL_COU_TBL.COURSE_ID FROM COU_SELL_COU_TBL WHERE COU_SELL_COU_TBL.SELL_ID IN(        	
+        	SELECT COU_SELL_WAY_TBL.SELL_ID FROM COU_SELL_WAY_TBL WHERE COU_SELL_WAY_TBL.SELL_ID IN(
+        	SELECT DISTINCT PACK_ID FROM FINANCE_CASH_RECORD_TBL WHERE CUS_ID=#cusId# AND STATUS=1
+        	) AND COU_SELL_WAY_TBL.SUBJECT_ID=#subjectId#)
+        	)
+         -->
+         	SELECT COUNT(DISTINCT COU_KPOINT_TBL.POINT_ID) 
+         	FROM COU_KPOINT_TBL
+         	INNER JOIN COU_SELL_COU_TBL ON COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+        	INNER JOIN COU_SELL_WAY_TBL ON COU_SELL_COU_TBL.SELL_ID=COU_SELL_WAY_TBL.SELL_ID
+        	INNER JOIN FINANCE_CASH_RECORD_TBL ON COU_SELL_WAY_TBL.SELL_ID=PACK_ID 
+        	WHERE FINANCE_CASH_RECORD_TBL.CUS_ID=#cusId# AND FINANCE_CASH_RECORD_TBL.STATUS=1
+        	AND COU_SELL_WAY_TBL.SUBJECT_ID=#subjectId#
+        	<dynamic>
+        	<isNotNull property="watchKids">
+        		<isNotEmpty property="watchKids">
+		        	AND POINT_ID IN
+		        	<iterate property="watchKids" open="(" close=")" conjunction=",">
+		        	#watchKids[]#
+		        	</iterate>
+	        	</isNotEmpty>
+        	</isNotNull>
+        	<isNotNull property="assKids">
+	        	<isNotEmpty property="assKids">
+		        	AND POINT_ID NOT IN
+		        	<iterate property="assKids" open="(" close=")" conjunction=",">
+		        	#assKids[]#
+		        	</iterate>
+		        </isNotEmpty>
+        	</isNotNull>
+        	</dynamic>        	
+        </select>
+        <select id="getSellWayIdsByKpointId" resultClass="int" parameterClass="QueryKpointCondition">
+        	SELECT DISTINCT PACK_ID,COU_SELL_COU_TBL.SELL_ID 
+        	FROM COU_KPOINT_TBL,COU_SELL_COU_TBL,FINANCE_CASH_RECORD_TBL 
+        	WHERE COU_KPOINT_TBL.COURSE_ID=COU_SELL_COU_TBL.COURSE_ID
+        	AND COU_SELL_COU_TBL.SELL_ID=FINANCE_CASH_RECORD_TBL.PACK_ID
+        	AND COU_KPOINT_TBL.POINT_ID=#pointId#
+        	AND FINANCE_CASH_RECORD_TBL.CUS_ID=#cusId#
+        </select>
+</sqlMap>

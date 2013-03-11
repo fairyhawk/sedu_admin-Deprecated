@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="QstPic_NS">
+        <!--table:EXAM_QST_PIC_TBL-->
+        <typeAlias alias="QstPic" type="com.shangde.edu.exam.domain.QstPic"/>
+
+        <resultMap id="QstPicResult" class="QstPic">
+            <result property="qstId" column="QST_ID"/>
+            <result property="picId" column="PIC_ID"/>
+            <result property="picName" column="PIC_NAME"/>
+            <result property="picSize" column="PIC_SIZE"/>
+            <result property="picType" column="PIC_TYPE"/>
+            <result property="picPath" column="PIC_PATH"/>
+            <result property="creatTime" column="CREAT_TIME"/>
+        </resultMap>
+
+        <sql id="EXAM_QST_PIC_TBL_columns">
+            EXAM_QST_PIC_TBL.QST_ID,
+            EXAM_QST_PIC_TBL.PIC_ID,
+            EXAM_QST_PIC_TBL.PIC_NAME,
+            EXAM_QST_PIC_TBL.PIC_SIZE,
+            EXAM_QST_PIC_TBL.PIC_TYPE,
+            EXAM_QST_PIC_TBL.PIC_PATH,
+            EXAM_QST_PIC_TBL.CREAT_TIME
+        </sql>
+
+        <select id="getQstPicListByQstId" resultMap="QstPic_NS.QstPicResult" parameterClass="int">
+            SELECT
+            <include refid="QstPic_NS.EXAM_QST_PIC_TBL_columns"/>
+            FROM EXAM_QST_PIC_TBL 
+            WHERE QST_ID = #VALUE#
+        </select>
+        <!--end-->
+</sqlMap>

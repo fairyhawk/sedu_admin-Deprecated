@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Task_NS">
+        <!--table:TK_TASK_TBL-->
+        <typeAlias alias="Task" type="com.shangde.edu.tk.domain.Task"/>
+        <typeAlias alias="NomalTaskDTO" type="com.shangde.edu.tk.dto.NomalTaskDTO"/>
+        <typeAlias alias="KeyValueTaskDTO" type="com.shangde.edu.sys.dto.KeyValueDTO"/>
+        <typeAlias alias="QueryTaskCondition" type="com.shangde.edu.tk.condition.QueryTaskCondition"/>
+		
+		<resultMap id="KeyValueDTOResult" class="KeyValueTaskDTO">
+            <result property="key" column="TASK_ID"/>
+            <result property="value" column="TASK_NAME"/>
+        </resultMap>
+		
+        <resultMap id="TaskResult" class="Task">
+            <result property="taskId" column="TASK_ID"/>
+            <result property="sortNum" column="SORT_NUM"/>
+            <result property="taskName" column="TASK_NAME"/>
+            <result property="isRecommend" column="IS_RECOMMEND"/>
+            <result property="isTop" column="IS_TOP"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="executeUrl" column="EXECUTE_URL"/>
+            <result property="taskTarget" column="TASK_TARGET"/>
+            <result property="taskContent" column="TASK_CONTENT"/>
+            <result property="taskTips" column="TASK_TIPS"/>
+            <result property="taskType" column="TASK_TYPE"/>
+            <result property="limitNum" column="LIMIT_NUM"/>
+            <result property="taskLevel" column="TASK_LEVEL"/>
+            <result property="userType" column="USER_TYPE"/>
+            <result property="preTaskId" column="PRE_TASK_ID"/>
+            <result property="limitTimeStart" column="LIMIT_TIME_START"/>
+            <result property="limitTimeEnd" column="LIMIT_TIME_END"/>
+            <result property="resultType" column="RESULT_TYPE"/>
+            <result property="judgeLevel" column="JUDGE_LEVEL"/>
+            <result property="judgeUrl" column="JUDGE_URL"/>
+            <result property="executeObj" column="EXECUTE_OBJ"/>
+            <result property="executePoint" column="EXECUTE_POINT"/>
+            <result property="executeTime" column="EXECUTE_TIME"/>
+            <result property="jifen" column="JIFEN"/>
+            <result property="experience" column="EXPERIENCE"/>
+            <result property="isJifen" column="IS_JIFEN"/>
+            <result property="iconUrl" column="ICON_URL"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="isHasPreTask" column="is_Has_Pre_Task"/>
+            <result property="isLimitTimeTask" column="is_Limit_Time_Task"/>
+            <result property="publishStatus" column="publish_Status"/>
+            <result property="keyWord" column="key_word"/>
+        </resultMap>
+        
+        <resultMap id="NomalTaskResult" class="NomalTaskDTO">
+            <result property="taskId" column="TASK_ID"/>
+            <result property="taskName" column="TASK_NAME"/>
+            <result property="isRecommend" column="IS_RECOMMEND"/>
+            <result property="isTop" column="IS_TOP"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="executeUrl" column="EXECUTE_URL"/>
+            <result property="taskTarget" column="TASK_TARGET"/>
+            <result property="taskContent" column="TASK_CONTENT"/>
+            <result property="taskTips" column="TASK_TIPS"/>
+            <result property="taskType" column="TASK_TYPE"/>
+            <result property="taskLevel" column="TASK_LEVEL"/>
+            <result property="resultType" column="RESULT_TYPE"/>
+            <result property="judgeLevel" column="JUDGE_LEVEL"/>
+            <result property="judgeUrl" column="JUDGE_URL"/>
+            <result property="experience" column="EXPERIENCE"/>
+            <result property="iconUrl" column="ICON_URL"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="jifen" column="jifen"/>
+            <result property="preTaskId" column="PRE_TASK_ID"/>
+             <result property="keyWord" column="key_word"/>
+        </resultMap>
+        
+         <sql id="TK_NomalTASK_TBL_columns">
+            TK_TASK_TBL.TASK_ID,
+            TK_TASK_TBL.TASK_NAME,
+            TK_TASK_TBL.IS_RECOMMEND,
+            TK_TASK_TBL.IS_TOP,
+            TK_TASK_TBL.SORT_ID,
+            TK_TASK_TBL.EXECUTE_URL,
+            TK_TASK_TBL.TASK_TARGET,
+            TK_TASK_TBL.TASK_CONTENT,
+            TK_TASK_TBL.TASK_TIPS,
+            TK_TASK_TBL.TASK_TYPE,
+            TK_TASK_TBL.TASK_LEVEL,
+            TK_TASK_TBL.RESULT_TYPE,
+            TK_TASK_TBL.JUDGE_LEVEL,
+            TK_TASK_TBL.JUDGE_URL,
+            TK_TASK_TBL.EXPERIENCE,
+            TK_TASK_TBL.ICON_URL,
+            TK_TASK_TBL.CREATE_TIME,
+            TK_TASK_TBL.JIFEN,
+            TK_TASK_TBL.PRE_TASK_ID,
+            TK_TASK_TBL.key_word
+        </sql>
+
+        <sql id="TK_TASK_TBL_columns">
+            TK_TASK_TBL.TASK_ID,
+            TK_TASK_TBL.SORT_NUM,
+            TK_TASK_TBL.TASK_NAME,
+            TK_TASK_TBL.IS_RECOMMEND,
+            TK_TASK_TBL.IS_TOP,
+            TK_TASK_TBL.SORT_ID,
+            TK_TASK_TBL.EXECUTE_URL,
+            TK_TASK_TBL.TASK_TARGET,
+            TK_TASK_TBL.TASK_CONTENT,
+            TK_TASK_TBL.TASK_TIPS,
+            TK_TASK_TBL.TASK_TYPE,
+            TK_TASK_TBL.LIMIT_NUM,
+            TK_TASK_TBL.TASK_LEVEL,
+            TK_TASK_TBL.USER_TYPE,
+            TK_TASK_TBL.PRE_TASK_ID,
+            TK_TASK_TBL.LIMIT_TIME_START,
+            TK_TASK_TBL.LIMIT_TIME_END,
+            TK_TASK_TBL.RESULT_TYPE,
+            TK_TASK_TBL.JUDGE_LEVEL,
+            TK_TASK_TBL.JUDGE_URL,
+            TK_TASK_TBL.EXECUTE_OBJ,
+            TK_TASK_TBL.EXECUTE_POINT,
+            TK_TASK_TBL.EXECUTE_TIME,
+            TK_TASK_TBL.JIFEN,
+            TK_TASK_TBL.EXPERIENCE,
+            TK_TASK_TBL.IS_JIFEN,
+            TK_TASK_TBL.ICON_URL,
+            TK_TASK_TBL.CREATE_TIME,
+            TK_TASK_TBL.is_Has_Pre_Task,
+            TK_TASK_TBL.is_Limit_Time_Task,
+            TK_TASK_TBL.publish_Status,
+            TK_TASK_TBL.key_word
+        </sql>
+
+        <sql id="TK_TASK_TBL_properties">
+            #taskId#,
+            #sortNum#,
+            #taskName#,
+            #isRecommend#,
+            #isTop#,
+            #sortId#,
+            #executeUrl#,
+            #taskTarget#,
+            #taskContent#,
+            #taskTips#,
+            #taskType#,
+            #limitNum#,
+            #taskLevel#,
+            #userType#,
+            #preTaskId#,
+            #limitTimeStart#,
+            #limitTimeEnd#,
+            #resultType#,
+            #judgeLevel#,
+            #judgeUrl#,
+            #executeObj#,
+            #executePoint#,
+            #executeTime#,
+            #jifen#,
+            #experience#,
+            #isJifen#,
+            #iconUrl#,
+            #createTime#,
+            #isHasPreTask#,
+            #isLimitTimeTask#,
+            #publishStatus#,
+            #keyWord#
+        </sql>
+
+        <insert id="createTask" parameterClass="Task">
+            INSERT INTO TK_TASK_TBL (<include refid="Task_NS.TK_TASK_TBL_columns"/>) VALUES (<include refid="Task_NS.TK_TASK_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="taskId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTaskById" parameterClass="int">
+            DELETE FROM TK_TASK_TBL
+            WHERE
+                TASK_ID = #value#
+
+        </delete>
+
+        <update id="updateTask" parameterClass="Task">
+            UPDATE TK_TASK_TBL SET
+                TASK_ID = #taskId#,
+                SORT_NUM = #sortNum#,
+                TASK_NAME = #taskName#,
+                IS_RECOMMEND = #isRecommend#,
+                IS_TOP = #isTop#,
+                SORT_ID = #sortId#,
+                EXECUTE_URL = #executeUrl#,
+                TASK_TARGET = #taskTarget#,
+                TASK_CONTENT = #taskContent#,
+                TASK_TIPS = #taskTips#,
+                TASK_TYPE = #taskType#,
+                LIMIT_NUM = #limitNum#,
+                TASK_LEVEL = #taskLevel#,
+                USER_TYPE = #userType#,
+                PRE_TASK_ID = #preTaskId#,
+                LIMIT_TIME_START = #limitTimeStart#,
+                LIMIT_TIME_END = #limitTimeEnd#,
+                RESULT_TYPE = #resultType#,
+                JUDGE_LEVEL = #judgeLevel#,
+                JUDGE_URL = #judgeUrl#,
+                EXECUTE_OBJ = #executeObj#,
+                EXECUTE_POINT = #executePoint#,
+                EXECUTE_TIME = #executeTime#,
+                JIFEN = #jifen#,
+                EXPERIENCE = #experience#,
+                IS_JIFEN = #isJifen#,
+                ICON_URL = #iconUrl#,
+                CREATE_TIME = #createTime#,
+                is_Has_Pre_Task = #isHasPreTask#,
+                is_Limit_Time_Task = #isLimitTimeTask#,
+                publish_Status = #publishStatus#,
+                key_word = #keyWord#
+            WHERE
+                TASK_ID = #taskId#
+        </update>
+
+        <select id="getTaskById" resultMap="Task_NS.TaskResult" parameterClass="int">
+            SELECT
+            <include refid="Task_NS.TK_TASK_TBL_columns"/>
+            FROM TK_TASK_TBL
+            WHERE
+                TASK_ID = #value#
+        </select>
+        
+         <select id="getTaskByKey" resultMap="Task_NS.TaskResult" parameterClass="String">
+            SELECT
+            <include refid="Task_NS.TK_TASK_TBL_columns"/>
+            FROM TK_TASK_TBL
+            WHERE
+                key = #key#
+        </select>
+        
+        <select id="getNomalTaskById" resultMap="Task_NS.NomalTaskResult" parameterClass="int">
+            SELECT
+            <include refid="Task_NS.TK_NomalTASK_TBL_columns"/>
+            FROM TK_TASK_TBL
+            WHERE
+                TASK_ID = #value#
+        </select>
+
+        <select id="getTaskList" resultMap="Task_NS.TaskResult" parameterClass="QueryTaskCondition">
+            SELECT
+            <include refid="Task_NS.TK_TASK_TBL_columns"/>
+            FROM TK_TASK_TBL
+        </select>
+        
+        <select id="getTaskKeyValueList" resultMap="Task_NS.KeyValueDTOResult" parameterClass="QueryTaskCondition">
+            SELECT
+            TK_TASK_TBL.task_id, TK_TASK_TBL.task_name
+            FROM TK_TASK_TBL
+        </select>
+        
+        <!-- fen ye search  -->
+        <select id="getNomalTaskListByCondition" resultMap="Task_NS.TaskResult" parameterClass="QueryTaskCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Task_NS.TK_TASK_TBL_columns"/>
+            FROM TK_TASK_TBL
+              WHERE 1=1
+                <isNotNull property="searchKey" prepend="and">
+			                  TK_TASK_TBL.task_name like  CONCAT('%',#searchKey#,'%')
+	        	</isNotNull>
+	        	order by TK_TASK_TBL.TASK_ID
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getNomalTaskListCountByCondition" resultClass="int" parameterClass="QueryTaskCondition">
+            SELECT COUNT(1)
+            FROM TK_TASK_TBL
+            WHERE 1=1
+                <isNotNull property="searchKey" prepend="and">
+			                  TK_TASK_TBL.task_name like  CONCAT('%',#searchKey#,'%')
+	        	</isNotNull>
+        </select>
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Clazz_NS">
+        <!--table:COU_CLAZZ_TBL-->
+        <typeAlias alias="Clazz" type="com.shangde.edu.cou.domain.Clazz"/>
+        <typeAlias alias="QueryClazzCondition" type="com.shangde.edu.cou.condition.QueryClazzCondition"/>
+
+        <resultMap id="ClazzResult" class="Clazz">
+            <result property="clazzId" column="CLAZZ_ID"/>
+            <result property="title" column="TITLE"/>
+            <result property="status" column="STATUS"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="clazzPic" column="CLAZZ_PIC"/>
+            <result property="clazzIndexPic" column="CLAZZ_INDEX_PIC"/>
+            <result property="clazzOfferPrice" column="CLAZZ_OFFER_PRICE"/>
+            <result property="courseIdList" column="CLAZZ_ID" select="Clazz_NS.getCourseIdsByClazzId"/>
+        </resultMap>
+
+        <sql id="COU_CLAZZ_TBL_columns">
+            COU_CLAZZ_TBL.CLAZZ_ID,
+            COU_CLAZZ_TBL.TITLE,
+            COU_CLAZZ_TBL.STATUS,
+            COU_CLAZZ_TBL.ADD_TIME,
+            COU_CLAZZ_TBL.INTRODUCE,
+            COU_CLAZZ_TBL.SUBJECT_ID,
+            COU_CLAZZ_TBL.GRADE_ID,
+            COU_CLAZZ_TBL.CLAZZ_PIC,
+            COU_CLAZZ_TBL.CLAZZ_INDEX_PIC,
+            COU_CLAZZ_TBL.CLAZZ_OFFER_PRICE
+        </sql>
+
+        <sql id="COU_CLAZZ_TBL_properties">
+            #clazzId#,
+            #title#,
+            #status#,
+            #addTime#,
+            #introduce#,
+            #subjectId#,
+            #gradeId#,
+            #clazzPic#,
+            #clazzIndexPic#,
+            #clazzOfferPrice#
+        </sql>
+
+        <insert id="createClazz" parameterClass="Clazz">
+            INSERT INTO COU_CLAZZ_TBL (<include refid="Clazz_NS.COU_CLAZZ_TBL_columns"/>) VALUES (<include refid="Clazz_NS.COU_CLAZZ_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="clazzId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteClazzById" parameterClass="int">
+            DELETE FROM COU_CLAZZ_TBL
+            WHERE
+                CLAZZ_ID = #value#
+        </delete>
+
+        <update id="updateClazz" parameterClass="Clazz">
+            UPDATE COU_CLAZZ_TBL SET
+                CLAZZ_ID = #clazzId#,
+                TITLE = #title#,
+                STATUS = #status#,
+                ADD_TIME = #addTime#,
+                INTRODUCE = #introduce#,
+                SUBJECT_ID = #subjectId#,
+                GRADE_ID = #gradeId#,
+                CLAZZ_PIC = #clazzPic#,
+                CLAZZ_INDEX_PIC = #clazzIndexPic#,
+                CLAZZ_OFFER_PRICE = #clazzOfferPrice#
+            WHERE
+                CLAZZ_ID = #clazzId#
+        </update>
+
+        <select id="getClazzById" resultMap="Clazz_NS.ClazzResult" parameterClass="int">
+            SELECT
+            <include refid="Clazz_NS.COU_CLAZZ_TBL_columns"/>
+            FROM COU_CLAZZ_TBL
+            WHERE
+                CLAZZ_ID = #value#
+
+        </select>
+        
+        <!-- search courseIds by clazzId -->
+        <select id="getCourseIdsByClazzId" resultClass="int" parameterClass="int">
+            SELECT
+            	COU_CLAZZ_COU_TBL.course_id
+            FROM COU_CLAZZ_COU_TBL ,COU_COURSE_TBL
+            WHERE
+                COU_CLAZZ_COU_TBL.CLAZZ_ID = #value# AND COU_COURSE_TBL.COURSE_ID = COU_CLAZZ_COU_TBL.COURSE_ID order by COU_COURSE_TBL.price desc;
+
+        </select>
+		<!-- search courseIds by clazzId end -->
+		
+		
+        <select id="getClazzList" resultMap="Clazz_NS.ClazzResult" parameterClass="QueryClazzCondition">
+            SELECT
+            <include refid="Clazz_NS.COU_CLAZZ_TBL_columns"/>
+            FROM COU_CLAZZ_TBL order by clazz_id desc;
+        </select>
+        
+        <!-- fen ye search  -->
+        <select id="getClazzsListByCondition" resultMap="Clazz_NS.ClazzResult" parameterClass="QueryClazzCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Clazz_NS.COU_CLAZZ_TBL_columns"/>
+            FROM COU_CLAZZ_TBL
+              WHERE
+                COU_CLAZZ_TBL.STATUS  != 2
+                <isNotNull property="searchKey">
+	            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+			                  COU_CLAZZ_TBL.TITLE like  CONCAT('%',#searchKey#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	
+	        	<isNotNull property="subjectId">
+	            	 <isGreaterThan prepend="and" property="subjectId" compareValue="0">
+	                		COU_CLAZZ_TBL.subject_id=#subjectId#
+	                </isGreaterThan>
+	        	</isNotNull>
+	        	order by COU_CLAZZ_TBL.clazz_id desc
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getClazzsListByConditionCount" resultClass="int" parameterClass="QueryClazzCondition">
+            SELECT COUNT(1)
+           	FROM COU_CLAZZ_TBL
+              WHERE
+                COU_CLAZZ_TBL.STATUS  != 2
+                <isNotNull property="searchKey">
+	            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+			                  COU_CLAZZ_TBL.TITLE like  CONCAT('%',#searchKey#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	
+	        	<isNotNull property="subjectId">
+	            	 <isGreaterThan prepend="and" property="subjectId" compareValue="0">
+	                		COU_CLAZZ_TBL.subject_id=#subjectId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        </select>
+        
+        <!-- search tag content -->
+        <select id="getClazzListForTag" resultMap="Clazz_NS.ClazzResult" parameterClass="QueryClazzCondition">
+            SELECT
+            <include refid="Clazz_NS.COU_CLAZZ_TBL_columns"/>
+            FROM COU_CLAZZ_TBL order by clazz_offer_price;
+        </select>
+        <!-- search tag content end -->
+        <!--end-->
+</sqlMap>

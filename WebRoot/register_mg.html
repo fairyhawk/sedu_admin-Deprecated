@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HighSo嗨学网</title>
+<link rel="stylesheet" type="text/css" href="http://import.highso.org.cn/styles/web/public/web_register_mg.css" />
+<script type="text/javascript" src="http://import.highso.org.cn/js/web/public/web_jquery-jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="http://import.highso.org.cn/js/web/public/web_jquery.lazyload.js"></script>
+<script type="text/javascript" src="http://import.highso.org.cn/js/web/public/jQueryValidate/jquery.validate.js"></script>
+<!-- 独立的注册和登录脚本 -->
+		<script src="http://import.highso.org.cn/js/web/public/web_register_mg.js" type="text/javascript"></script>
+        <script type="text/javascript">
+
+	checkFromAndAgent();
+	var baselocation = "http://highso.cn";
+	var importURL = "http://import.highso.org.cn";
+	
+	var buyURL = "http://highso.cn/static/web/column/90/index_1.shtml";
+	var commonquestionURL = "http://highso.cn/static/web/column/89/index_1.shtml";
+	function enterSubmit(event) {
+		var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;   
+        if (keyCode == 13) {   
+        	login(2);
+        }
+	}
+
+</script>
+<script type="text/javascript">
+		$(function(){
+			var porsx; 				//外面ul的x座标
+			var lix					//当前li的x座标
+			var $timer;
+			var $timerTwo;
+			porsx = $(".outerul").offset().left;
+				$(".bigimg").hover(function(){
+					clearTimeout($timer)
+					clearTimeout($timerTwo)
+					lix = $(this).parents("li").offset().left
+					var flag = lix - porsx
+					clearTimeout($timer)
+					clearTimeout($timerTwo)
+					$(".outerul").find("li").each(function(i){
+						if($(this).css("position")=="relative"){
+							$(this).css({"position":"static"})
+							$(this).find(".bigimg").css({"position":"static"})	
+						}
+					})
+					$(this).siblings(".miaoshu").addClass("stopright")
+					$(".outerul").find(".miaoshu").each(function(i){
+						
+						if($(this).css("display")=="block"){
+							$(this).css({"display":"none"})
+							//$(this).removeClass("zin9").parent("li").removeClass("zin").find(".miaoshu").stop(true,false).hide()
+						}									 
+					});
+					if(flag > 460 && flag < 660){
+						$(this).siblings(".miaoshu").addClass("stopright")
+					}
+					if(flag < 460){
+						$(this).siblings(".miaoshu").removeClass("stopright")
+					}
+						//alert($(".outerul").find("li").index($(this).parents("li")));
+						var fl_num = $(".outerul").find("li").index($(this).parents("li"));
+						$(".outerul").find("li").each(function(i){
+							if(i!=fl_num){
+								$(i).css({"position":"static"})
+							}
+						})
+						$(this).parents("li").css({"position":"relative"})
+						
+						$(this).addClass("zin9")
+						$(this).css({"position":"absolute","top":"0","left":"0"})
+						$(this).next(".miaoshu").css({"display":"block"}).addClass("zin")
+						//$(this).parent().fadeTo("fast",1).siblings("li").fadeTo("fast",0.6)
+				},function(){
+						$(this).parents("li").css({"position":"static"})
+						$(this).removeClass("zin9")
+						$(this).css({"position":"static"})		
+						$(this).next(".miaoshu").css({"display":"none"}).removeClass("zin")
+						//$(this).parents("ul").find("li").fadeTo("fast",1)
+				})
+			$(".outerul").hover(function(){
+				clearTimeout($timer)
+			},function(){
+				$timer = setTimeout(function(){
+       		var rand = Math.floor(Math.random() * 33 + 1); 
+			
+			$(".bigimg").eq(rand).trigger("mouseover");
+			$timerTwo = setTimeout(function(){$(".bigimg").eq(rand).trigger("mouseleave")},3000)
+			
+			//alert(rand)
+         	
+		},100);
+			}).trigger("mouseleave");
+		})
+
+//专业标签切换
+$(function(){
+		$(".logRegMain_right_title01").click(function(){
+			$(".logRegMain_right_title01").css("background-position","0px 0px");
+			$(".logRegMain_right_title02").css("background-position","-98px 0px");
+			$(".logRegMain_zhuanye_con01").css("display","block");
+			$(".logRegMain_zhuanye_con02").css("display","none");
+			})
+	})
+$(function(){
+		$(".logRegMain_right_title02").click(function(){
+			$(".logRegMain_right_title01").css("background-position","0px -30px");
+			$(".logRegMain_right_title02").css("background-position","-98px -30px");
+			$(".logRegMain_zhuanye_con01").css("display","none");
+			$(".logRegMain_zhuanye_con02").css("display","block");
+			})
+	})
+//专业标签切换 结束
+
+</script>
+</head>
+
+<body>
+<!-- 谷歌统计 START -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount','UA-22194725-1']);
+  _gaq.push(['_setDomainName','none']);
+  _gaq.push(['_setCustomVar', 1,'Campaign','WeiStudy', 1]);;
+  _gaq.push(['_trackPageview']);
+  _gaq.push(['_setAllowLinker',true]);
+  _gaq.push(['_addOrganic','sogou','query']);
+  _gaq.push(['_addOrganic','soso','w']);
+  
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- 谷歌统计 END //-->
+
+<!-- 头部 -->
+<div class=header id="buy_header">
+	<div>
+		<h1>
+			<A href="http://highso.cn">HighSo嗨学网</A>
+		</h1>
+		<span> <B><a href="http://highso.cn/static/web/column/172/index_1.shtml">帮助</a>
+
+		</B>
+		</span>
+	</div>
+</div>
+<!-- 头部 //-->
+<!-- 内容区 -->
+<div class="logRegMain">
+	<div class="logRegMain_left">
+    	<div class="logRegMain_banner">
+        	<div class="logRegMain_left_title01">微学习@快进步</div>
+            <div class="logRegMain_left_pic01"><img src="http://import.highso.org.cn/images/web/public/register_weixuexi/logRegMain_left_pic01.jpg" alt="微学习@快进步" /></div>
+        </div>
+    	<div class="logRegMain_step">
+        	<div class="logRegMain_left_title02">微学习使用步骤，非常简单</div>
+            <div class="logRegMain_left_pic02"><img src="http://import.highso.org.cn/images/web/public/register_weixuexi/logRegMain_left_pic02.png" alt="微学习使用步骤，非常简单" /></div>
+        </div>
+    	<div class="logRegMain_say">
+        	<div class="logRegMain_left_title03">使用过微学习的人，他们说</div>
+            <div class="logRegMain_left_pic03">
+             <ul class="outerul">
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg1.jpg" alt="嗨学学员" />
+      <div class="miaoshu">
+        <p class="p1">嗨学学员 说：</p>
+                   <p class="p2">还不错，比想象中的好用</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg2.jpg" alt="李小兵" />
+      <div class="miaoshu">
+        <p class="p1">李小兵 说：</p>
+              <p class="p2">这就是微学习，稍稍有些短</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg3.jpg" alt="哆来咪" />
+      <div class="miaoshu">
+        <p class="p1">哆来咪 说：</p>
+                   <p class="p2">免费的东西怎么都好，能用就行</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg4.jpg" alt="经济分析师" />
+      <div class="miaoshu">
+        <p class="p1">经济分析师 说：</p>
+                   <p class="p2">不错，给力</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg5.jpg" alt="星空不是天气" />
+      <div class="miaoshu">
+        <p class="p1">星空不是天气 说：</p>
+                   <p class="p2">再长点就好了</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg6.jpg" alt="鲁果时间" />
+      <div class="miaoshu">
+        <p class="p1">鲁果时间 说：</p>
+                   <p class="p2">我强烈要求有下载功能</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg7.jpg" alt="TIME" />
+      <div class="miaoshu">
+        <p class="p1">TIME 说：</p>
+                   <p class="p2">未来会更好</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg8.jpg" alt="没有人什么都知道" />
+      <div class="miaoshu">
+        <p class="p1">没有人什么都知道 说：</p>
+                   <p class="p2">我会一直使用的，对我帮助很大</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg9.jpg" alt="酷跑新人" />
+      <div class="miaoshu">
+        <p class="p1">酷跑新人 说：</p>
+                   <p class="p2">酷</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg10.jpg" alt="大一学生" />
+      <div class="miaoshu">
+       <p class="p1">大一学生 说：</p>
+                   <p class="p2">更新速度不错，还有邮箱通知，很好很好</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg11.jpg" alt="别看我" />
+      <div class="miaoshu">
+        <p class="p1">别看我 说：</p>
+                   <p class="p2">太调我胃口了，一直全发了吧</p>
+      </div>
+    </li>
+    <li id="bigli" style=" width:101px; height:101px; float:right; border-right:none;"> 
+    <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/youimg.jpg" /> 
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg12.jpg" alt="还有更夸张的" />
+      <div class="miaoshu">
+         <p class="p1">还有更夸张的 说：</p>
+                   <p class="p2">持续观看，有待察看</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg13.jpg" alt="程微微" />
+      <div class="miaoshu">
+       <p class="p1">程微微 说：</p>
+                   <p class="p2">我不学公务员也有课程看，不错</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg14.jpg" alt="关键的学员" />
+      <div class="miaoshu">
+        <p class="p1">关键的学员 说：</p>
+                   <p class="p2">初中级会计职称更新快一点</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg15.jpg" alt="疯狂塞车" />
+      <div class="miaoshu">
+       <p class="p1">疯狂塞车 说：</p>
+                   <p class="p2">老师讲得不要太好</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg16.jpg" alt="老用户有优惠" />
+      <div class="miaoshu">
+        <p class="p1">老用户有优惠 说：</p>
+                   <p class="p2">能下载视频吗？</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg17.jpg" alt="嗨学学员478" />
+      <div class="miaoshu">
+        <p class="p1">嗨学学员478 说：</p>
+                   <p class="p2">我可以用手机播放吗？</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg18.jpg" alt="大内密探001" />
+      <div class="miaoshu">
+       <p class="p1">大内密探001 说：</p>
+                   <p class="p2">能随身携带就更好了。</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg19.jpg" alt="老师" />
+      <div class="miaoshu">
+        <p class="p1">老师 说：</p>
+                   <p class="p2">微学习，快进步，很好很好！</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg20.jpg" alt="不写用户名" />
+      <div class="miaoshu">
+        <p class="p1">不写用户名 说：</p>
+                   <p class="p2">太好了，我一直找呢</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg21.jpg" alt="嗨学网注册会计师学员" />
+      <div class="miaoshu">
+        <p class="p1">嗨学网注册会计师学员 说：</p>
+                   <p class="p2">对我非常有帮助</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg22.jpg" alt="嗨学网公务员学员" />
+      <div class="miaoshu">
+        <p class="p1">嗨学网公务员学员 说：</p>
+                   <p class="p2">申论课程要多一些。</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg23.jpg" alt="Jinji" />
+      <div class="miaoshu">
+        <p class="p1">Jinji 说：</p>
+                   <p class="p2">什么时候开通经济师课程啊</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg24.jpg" alt="1389567XXXX" />
+      <div class="miaoshu">
+        <p class="p1">1389567XXXX 说：</p>
+                   <p class="p2">我可以做练习题吗</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg25.jpg" alt="Boxsuper" />
+      <div class="miaoshu">
+        <p class="p1">Boxsuper 说：</p>
+                   <p class="p2">老师都是哪的啊？</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg26.jpg" alt="雷" />
+      <div class="miaoshu">
+         <p class="p1">雷 说：</p>
+                   <p class="p2">掌握基础知识了，但想学习更多，还得买课呀</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg27.jpg" alt="不学不成功斯基" />
+      <div class="miaoshu">
+        <p class="p1">不学不成功斯基 说：</p>
+                   <p class="p2">学习在微处</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg28.jpg" alt="咣咣的" />
+      <div class="miaoshu">
+        <p class="p1">咣咣的 说：</p>
+                   <p class="p2">挺好的！</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg29.jpg" alt="NEW人" />
+      <div class="miaoshu">
+        <p class="p1">NEW人 说：</p>
+                   <p class="p2">功能再多点就更好了！</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg30.jpg" alt="嗨学网老学员" />
+      <div class="miaoshu">
+       <p class="p1">嗨学网老学员 说：</p>
+                   <p class="p2">看起来挺简单有用的</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg31.jpg" alt="嗨学网考研学员" />
+      <div class="miaoshu">
+       <p class="p1">嗨学网考研学员 说：</p>
+                   <p class="p2">视频不错，清晰</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg32.jpg" alt="树根深入" />
+      <div class="miaoshu">
+         <p class="p1">树根深入 说：</p>
+                   <p class="p2">我分享给其他人有什么奖励吗？</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg33.jpg" alt="最新概念手机" />
+      <div class="miaoshu">
+        <p class="p1">最新概念手机 说：</p>
+                   <p class="p2">微学习的概念不错，有用</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg34.jpg" alt="嗨学网考研学员" />
+      <div class="miaoshu">
+       <p class="p1">嗨学网考研学员 说：</p>
+                   <p class="p2">正在学习，感觉不错</p>
+      </div>
+    </li>
+    <li> <img class="bigimg" src="http://import.highso.org.cn/images/web/public/register_weixuexi/tximg35.jpg" alt="会计证" />
+      <div class="miaoshu">
+        <p class="p1">会计证 说：</p>
+                   <p class="p2">好用</p>
+      </div>
+    </li>
+  </ul>
+          
+            </div>
+        </div>
+    </div>
+	<div class="logRegMain_right">
+    	<div class="logRegMain_login">
+        	<div class="logRegMain_reg"><a href="javascript:showRegisterDiv()">免费注册微学习</a></div>
+            <div class="logRegMain_logBox">
+			<form name="login_form_2" id="login_form_2">
+            <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <th width="52"><label for="login_email_2">邮箱：</label></th>
+                  <td colspan="3"><input type="text" onkeypress="iptLowerCase(event)" maxlength="30" id="login_email_2" class="ibg" name="customer.email" /><!--<span class="jqVaildate">请输入您真实的邮箱(只支持小写)</span>--></td>
+                </tr>
+                <tr>
+                  <th><label for="login_pwd_2">密码：</label></th>
+                  <td colspan="3"><input type="password" maxlength="20" id="login_pwd_2" class="ibg" name="customer.cusPwd" onkeyup="quickLogKeyUp(event, 2)" /><!--<span class="jqVaildate">密码为6-12位的字母或数字</span>--></td>
+                </tr>
+                <tr>
+                  <th></th>
+                  <td><input type="checkbox" checked id="remeber_me_2" name="remember_me_div" />记住我</td>
+                  <td width="135" colspan="2"><a href="http://highso.cn/static/web/column/91/index_1.shtml" class="fr fbai" target="_blank">找回密码？</a></td>
+                </tr>
+                <tr>
+                  <th></th>
+                  <td colspan="3"><a href="javascript:login(2)" class="logRegMain_log">登录</a></td>
+                </tr>
+              </table>						
+			</form>
+			</div>
+        </div>
+        <div class="logRegMain_zhuanye">
+        	<div class="logRegMain_right_title">
+            	<a class="logRegMain_right_title01" href="#">热门专业</a>
+            	<a class="logRegMain_right_title02" href="#">近期考试</a>
+            </div>
+            <ul class="logRegMain_zhuanye_con logRegMain_zhuanye_con01">
+            	<li><span class="fl fblue fbold">国家公务员</span><span class="fr">10037人</span></li>
+            	<li><span class="fl fblue fbold">初级会计职称</span><span class="fr">6990人</span></li>
+            	<li><span class="fl fblue fbold">中级会计职称</span><span class="fr">5400人</span></li>
+            	<li><span class="fl fblue fbold">考研</span><span class="fr">4099人</span></li>
+            	<li><span class="fl">心理咨询师</span><span class="fr">3998人</span></li>
+            	<li><span class="fl">人力资源师</span><span class="fr">3934人</span></li>
+            	<li><span class="fl">证券从业考试</span><span class="fr">3901人</span></li>
+            	<li><span class="fl">会计资格证</span><span class="fr">2889人</span></li>
+            	<li><span class="fl">二级建造师</span><span class="fr">2702人</span></li>
+            	<li><span class="fl">司法考试</span><span class="fr">2399人</span></li>
+            	<li><span class="fl">高级会计师</span><span class="fr">2103人</span></li>
+            	<li><span class="fl">注册会计师</span><span class="fr">2039人</span></li>
+            	<li><span class="fl">一级建造师</span><span class="fr">2003人</span></li>
+            	<li><span class="fl">初级经济师</span><span class="fr">1933人</span></li>
+            	<li><span class="fl">中级经济师</span><span class="fr">1921人</span></li>
+            </ul>
+            <ul class="logRegMain_zhuanye_con logRegMain_zhuanye_con02">
+            	<li><span class="fl fblue fbold">心理咨询师</span><span class="fr">3998人</span></li>
+            	<li><span class="fl fblue fbold">人力资源师</span><span class="fr">3934人</span></li>
+            	<li><span class="fl fblue fbold">证券从业考试</span><span class="fr">3901人</span></li>
+            	<li><span class="fl fblue fbold">国家公务员</span><span class="fr">10037人</span></li>
+            	<li><span class="fl">考研</span><span class="fr">4099人</span></li>
+            	<li><span class="fl">会计资格证</span><span class="fr">2889人</span></li>
+            	<li><span class="fl">初级会计职称</span><span class="fr">6990人</span></li>
+            	<li><span class="fl">中级会计职称</span><span class="fr">5400人</span></li>
+            	<li><span class="fl">二级建造师</span><span class="fr">2702人</span></li>
+            	<li><span class="fl">司法考试</span><span class="fr">2399人</span></li>
+            	<li><span class="fl">高级会计师</span><span class="fr">2103人</span></li>
+            	<li><span class="fl">注册会计师</span><span class="fr">2039人</span></li>
+            	<li><span class="fl">一级建造师</span><span class="fr">2003人</span></li>
+            	<li><span class="fl">初级经济师</span><span class="fr">1933人</span></li>
+            	<li><span class="fl">中级经济师</span><span class="fr">1921人</span></li>
+            </ul>
+        </div>
+        <div class="logRegMain_weibo"><a href="http://weibo.com/u/2464102470" target="_blank"><img src="http://import.highso.org.cn/images/web/public/register_weixuexi/logRegMain_right_weibo.png" alt="嗨学网微博" /></a></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<!-- 内容区 //-->
+<!-- 尾部 -->
+<div class=footer id="buy_footer">
+	<div class=webinfo>
+		<span><IMG src="http://import.highso.org.cn/images/web/public/footer_p1.gif">
+			<IMG src="http://import.highso.org.cn/images/web/public/footer_p2.gif">
+			<IMG src="http://import.highso.org.cn/images/web/public/footer_p3.gif">
+
+		</span>尚德机构远程教育
+		<br />京ICP备10217787号 Copyright © 2010-2011 highso.cn
+	</div>
+</div>
+<!-- 尾部 //-->
+<!-- 弹窗：注册 -->
+<div class="reg_box" id="register_div">
+    <div class="regTitle">
+    	<div class="regTitle_left"><img src="http://import.highso.org.cn/images/web/public/logRegPic/success_03.png" /></div>
+        <div class="regTitle_center"><b class="f16 fYaHei">我要注册</b><span class="close"><a href="javascript:closeRegLogDiv()"><img src="http://import.highso.org.cn/images/web/public/logRegPic/success_12.jpg" /></a></span></div>
+        <div class="regTitle_right"><img src="http://import.highso.org.cn/images/web/public/logRegPic/success_06.png" /></div>
+    </div>
+    <div class="sb_c">
+
+		<form id="regForm" name="regForm">
+    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <th>邮箱：</th>
+            <td><input type="text" class="ibg" name="customer.email" id="regEmail" maxlength="30" onkeypress="return regEmailChg(event)" /><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+          <tr>
+            <th>&nbsp;</th>
+
+            <td id="reg_email_msg">请输入您真实的邮箱(只支持小写)</td>
+          </tr>
+          <tr>
+            <th>密码：</th>
+            <td><input type="password" class="ibg" name="customer.cusPwd" id="regPwd" maxlength="20" /><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+          <tr>
+
+            <th>&nbsp;</th>
+            <td>密码为6-12位的字母或数字</td>
+          </tr>
+          <tr>
+            <th valign="top">确认密码：</th>
+            <td><input type="password" class="ibg" maxlength="20" id="cusPwdConfirm" name="cusPwdConfirm" equalTo="#regPwd" /><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+
+          <tr>
+            <th valign="top">&nbsp;</th>
+            <td>请再次输入密码</td>
+            
+          </tr>
+          <tr>
+            <th valign="top">手机号码：</th>
+            <td><input type="text" class="ibg" name="customer.mobile" id="regMobile" maxlength="15"/><span class="he_fen">&nbsp;*</span></td>
+
+          </tr>
+          <tr>
+            <th valign="top">&nbsp;</th>
+            <td>填写手机号码</td>
+          </tr>
+          <tr>
+            <th valign="top">专业：</th>
+            <td><select name="customer.subjectId" id="regSubjectId">
+
+            	<option value="-1">-请选择-</option>
+            	<option value="3">会计证</option>
+            	<option value="1">人力</option>
+            	<option value="7">注册会计师</option>
+            	<option value="5">司法</option>
+            	<option value="8">证券</option>
+
+            	<option value="9">一级建造师</option>
+            	<option value="10">高级会计师</option>
+            	<option value="11">公务员考试</option>
+            	<option value="2">心理咨询师</option>
+            	<option value="12">经济师考试</option>
+            	<option value="13">全国研究生统一入学考试</option>
+
+            	<option value="14">初级会计职称</option>
+            	<option value="15">中级会计职称</option>
+            	<option value="16">二级建造师</option>
+            </select></td>
+          </tr>
+          <tr>
+            <th valign="top">&nbsp;</th>
+
+            <td>请选择您想学习的专业</td>
+          </tr>
+          <!-- 验证码 --> 
+<tr>
+	<th>验证码：</th>
+	<td>
+		<input  class="ibg"  style="vertical-align:middle;width:98px;" type="text" name="randomCode" id="randomcode" maxlength="4" />&nbsp;
+		<img border="0" style="vertical-align:middle" src="http://highso.cn/util/randomCode.action" alt="验证码，点击图片更换" onclick="this.src='http://highso.cn/util/randomCode.action?random='+Math.random();" />
+
+	</td>
+</tr>
+<!-- 验证码 -->
+   		 <tr>
+            <th>&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="checkbox" name="highsoAgreement" class="login_list_ck" id="highso_agreement" checked /><font><a target="_blank" href="http://highso.cn/static/web/column/201/index_1.shtml">同意接受HighSo协议</a></font><br><span></span><br></td>
+
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td><a href="javascript:register()" class="btn_a_blue">马上注册</a></td>
+          </tr>
+        </table>
+        </form>
+    </div>
+
+</div>
+ <!-- 弹窗：注册 //-->
+ <div id="web_top_black" style=" display:none; position: absolute; opacity: 0.5; left: 0pt; top: 0pt; z-index: 4; background: none repeat scroll 0% 0% rgb(0, 0, 0); width: 1583px; height: 2347px;"></div>
+ <script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fdf1133dbdb836183f7ffe390dccdd72b' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>

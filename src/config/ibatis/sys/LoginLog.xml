@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="LoginLog_NS">
+    <!--table:SYS_FUNCTION_TBL-->
+    <typeAlias alias="LoginLog" type="com.shangde.edu.sys.domain.LoginLog"/>
+	<typeAlias alias="QueryLoginLogCondition" type="com.shangde.edu.sys.condition.QueryLoginLogCondition"/>
+	
+	<sql id="SYS_LOGIN_LOG_TBL_columns">
+	  SYS_LOGIN_LOG_TBL.ID,
+	  SYS_LOGIN_LOG_TBL.LOGINTIME,
+	  SYS_LOGIN_LOG_TBL.IP,
+	  SYS_LOGIN_LOG_TBL.USERID,
+	  SYS_USER_TBL.USER_NAME,
+	  SYS_USER_TBL.LOGIN_NAME
+	</sql>
+    
+    <resultMap class="LoginLog" id="LoginLogResult">
+    	<result property="id" column="ID"/>
+    	<result property="loginTime" column="LOGINTIME"/>
+    	<result property="ip" column="IP"/>
+    	<result property="userId" column="USERID"/>
+    	<result property="userName" column="USER_NAME"/>
+    	<result property="loginName" column="LOGIN_NAME"/>
+    </resultMap>
+    
+    <!-- 添加登录日志 -->
+    <insert id="add" parameterClass="LoginLog">
+		INSERT INTO SYS_LOGIN_LOG_TBL (
+		  SYS_LOGIN_LOG_TBL.LOGINTIME,
+		  SYS_LOGIN_LOG_TBL.IP,
+		  SYS_LOGIN_LOG_TBL.USERID
+		) 
+		VALUES
+		  (#loginTime#, #ip#, #userId#)
+    </insert>
+    
+    <!-- 查看所有登录日志记录 -->
+    <select id="getAll" resultMap="LoginLog_NS.LoginLogResult" parameterClass="QueryLoginLogCondition">
+		SELECT 
+		  <include refid="LoginLog_NS.SYS_LOGIN_LOG_TBL_columns"/>
+		FROM
+ 		  SYS_LOGIN_LOG_TBL,
+  		  SYS_USER_TBL
+  		WHERE SYS_LOGIN_LOG_TBL.USERID = SYS_USER_TBL.USER_ID 
+    	  ORDER BY SYS_LOGIN_LOG_TBL.ID DESC
+    	<include refid="public_sql.page_end"/>
+    </select>
+    
+    <select id="getAllCount" resultClass="int" parameterClass="QueryLoginLogCondition">
+    	SELECT 
+		  COUNT(1)
+		FROM
+		  SYS_LOGIN_LOG_TBL 
+    </select>
+    
+    <!-- 根据用户登录ID查看所有登录日志记录 -->
+    <select id="getByUserId" resultMap="LoginLog_NS.LoginLogResult" parameterClass="QueryLoginLogCondition">
+		SELECT 
+		  <include refid="LoginLog_NS.SYS_LOGIN_LOG_TBL_columns"/>
+		FROM
+ 		  SYS_LOGIN_LOG_TBL,
+  		  SYS_USER_TBL
+		WHERE SYS_USER_TBL.USER_ID = #userId# 
+  		  AND SYS_LOGIN_LOG_TBL.USERID = #userId# 
+    	ORDER BY SYS_LOGIN_LOG_TBL.ID DESC
+    	<include refid="public_sql.page_end"/>
+    </select>
+    
+    <select id="getByUserIdCount" resultClass="int" parameterClass="QueryLoginLogCondition">
+    	SELECT 
+		  COUNT(1)
+		FROM
+		  SYS_LOGIN_LOG_TBL
+		WHERE 
+		  SYS_LOGIN_LOG_TBL.USERID = #userId#
+    </select>
+    
+    <!-- 根据用户名搜索查看登录日志 -->
+    <select id="search" resultMap="LoginLog_NS.LoginLogResult" parameterClass="QueryLoginLogCondition">
+    	SELECT 
+		  <include refid="LoginLog_NS.SYS_LOGIN_LOG_TBL_columns"/>
+		FROM
+ 		  SYS_LOGIN_LOG_TBL,
+  		  SYS_USER_TBL
+  		WHERE SYS_LOGIN_LOG_TBL.USERID = SYS_USER_TBL.USER_ID 
+  			  AND (SYS_USER_TBL.USER_NAME LIKE '%$userName$%'
+  			  OR SYS_USER_TBL.LOGIN_NAME LIKE '%$userName$%')
+    	  ORDER BY SYS_LOGIN_LOG_TBL.ID DESC
+    	<include refid="public_sql.page_end"/>
+    </select>
+    
+    <select id="searchCount" resultClass="int" parameterClass="QueryLoginLogCondition">
+    	SELECT 
+		  count(1)
+		FROM
+ 		  SYS_LOGIN_LOG_TBL,
+  		  SYS_USER_TBL
+  		WHERE SYS_LOGIN_LOG_TBL.USERID = SYS_USER_TBL.USER_ID 
+  			  AND (SYS_USER_TBL.USER_NAME LIKE '%$userName$%'
+  			  OR SYS_USER_TBL.LOGIN_NAME LIKE '%$userName$%')
+    </select>
+    <!--end-->
+</sqlMap>

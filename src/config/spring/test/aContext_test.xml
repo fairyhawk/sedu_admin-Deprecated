@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="testuserService" class="com.shangde.edu.test.service.UserImpl" parent="baseService"/>
+   <bean id="testgroupService" class="com.shangde.edu.test.service.GroupImpl" parent="baseService"/>
+<bean id="testsubjectService" class="com.shangde.edu.test.service.SubjectImpl" parent="baseService"/>
+</beans>

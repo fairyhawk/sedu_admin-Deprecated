@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Modules_NS">
+	<typeAlias alias="Modules" type="com.shangde.edu.sys.domain.Modules" />
+	<typeAlias alias="QueryModulesCondition" type="com.shangde.edu.sys.condition.QueryModulesCondition" />
+
+	<resultMap id="ModulesResult" class="Modules">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="url" column="url" />
+		<result property="content" column="content" />
+		<result property="desc" column="desc" />
+		<result property="type" column="type" />
+		<result property="mIds" column="m_ids" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<sql id="SYS_MODULES_TBL_columns">
+		sys_modules_tbl.id,
+		sys_modules_tbl.name,
+		sys_modules_tbl.url, 
+		sys_modules_tbl.content,
+		sys_modules_tbl.desc,
+		sys_modules_tbl.type,
+		sys_modules_tbl.m_ids,
+		sys_modules_tbl.create_time
+	</sql>
+
+	<sql id="SYS_MODULES_TBL_properties">
+		#id#, 
+		#name#, 
+		#url#, 
+		#content#,
+		#desc#,
+		#type#,
+		#mIds#,
+		#createTime#
+	</sql>
+
+	<insert id="createModules" parameterClass="Modules">
+		INSERT INTO SYS_MODULES_TBL (
+		<include refid="Modules_NS.SYS_MODULES_TBL_columns" />
+		) VALUES (
+		<include refid="Modules_NS.SYS_MODULES_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post"
+			keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteModules" parameterClass="String">
+		DELETE FROM SYS_MODULES_TBL WHERE id in ($value$)
+	</delete>
+	
+	<update id="updateModules" parameterClass="Modules">
+		UPDATE SYS_MODULES_TBL SET 
+		name = #name#, 
+		sys_modules_tbl.desc = #desc#,
+		url = #url#,
+		content = #content#,
+		type = #type#,
+		m_ids = #mIds#
+		WHERE id = #id#
+	</update>
+	
+	<resultMap id="getModulesResult" class="Modules">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="url" column="url" />
+		<result property="content" column="content" />
+		<result property="type" column="type" />
+		<result property="createTime" column="create_time" />
+		<result property="desc" column="desc" />
+		<result property="mIds" column="m_ids" />
+		<!-- <result property="modelList" column="m_ids" select="Model_NS.getModelByMids" /> -->
+	</resultMap>
+	
+	<select id="getModulesList" resultMap="Modules_NS.getModulesResult" parameterClass="QueryModulesCondition">
+		SELECT <include refid="Modules_NS.SYS_MODULES_TBL_columns" /> FROM SYS_MODULES_TBL   
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="name">
+					name like '%$name$%'
+			</isNotEmpty>
+			<isNotEmpty property="content" prepend="and">
+					content like '%$content$%'
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY create_time desc 
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getModulesCount" resultClass="java.lang.Integer" parameterClass="QueryModulesCondition">
+		SELECT COUNT(1) FROM SYS_MODULES_TBL 
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="name">
+					name like '%$name$%'
+			</isNotEmpty>
+			<isNotEmpty property="content" prepend="and">
+					content like '%$content$%'
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getModulesByIds" resultMap="Modules_NS.ModulesResult" parameterClass="String">
+		SELECT <include refid="Modules_NS.SYS_MODULES_TBL_columns" /> FROM SYS_MODULES_TBL   
+		where id in ($value$)
+	</select>
+</sqlMap>

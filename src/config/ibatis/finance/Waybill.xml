@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Waybill_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="Waybill" type="com.shangde.edu.finance.domain.Waybill" />
+	<typeAlias alias="QueryWaybillCondition" type="com.shangde.edu.finance.condition.QueryWaybillCondition"/>
+	<typeAlias alias="WaybillDTO" type="com.shangde.edu.finance.dto.WaybillDTO" />
+	<resultMap id="WaybillResult" class="Waybill">
+		<result property="waybillId" column="waybill_id" />
+		<result property="waybillCode" column="waybill_code" />
+		<result property="expressCompany" column="express_company" />
+		<result property="goodsCategory" column="goods_category" />
+		<result property="consigneeEmail" column="consignee_email" />
+		<result property="consigneePhone" column="consignee_phone" />
+		<result property="orderCode" column="order_code" />
+		<result property="createDate" column="create_date" />
+		<result property="creator" column="creator" />
+		<result property="updateDate" column="update_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="waybillStatus" column="waybill_status" />
+		<result property="consigneeName" column="consignee_name" />
+	</resultMap>
+	<resultMap id="WaybillDTOResult" class="WaybillDTO" extends="WaybillResult">
+        
+    </resultMap>
+	<sql id="finance_waybill_tbl_columns">
+		finance_waybill_tbl.waybill_id, 
+		finance_waybill_tbl.waybill_code, 
+		finance_waybill_tbl.express_company,
+		finance_waybill_tbl.goods_category,
+		finance_waybill_tbl.consignee_email,
+		finance_waybill_tbl.consignee_phone,
+		finance_waybill_tbl.order_code,
+		finance_waybill_tbl.create_date,
+		finance_waybill_tbl.creator,
+		finance_waybill_tbl.update_date,
+		finance_waybill_tbl.update_user,
+		finance_waybill_tbl.waybill_status,
+		finance_waybill_tbl.consignee_name
+	</sql>
+
+	<sql id="finance_waybill_tbl_properties">
+		#waybillId#, #waybillCode#, #expressCompany#, #goodsCategory#,
+		#consigneeEmail#, #consigneePhone#, #orderCode#, #createDate#,
+		#creator#,#updateDate#,#updateUser#,#waybillStatus# ,#consigneeName#  
+	</sql>
+	<insert id="createWaybill" parameterClass="Waybill" >
+		insert into finance_waybill_tbl (
+		<include refid="Waybill_NS.finance_waybill_tbl_columns" />
+		) values (
+		<include refid="Waybill_NS.finance_waybill_tbl_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="waybillId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteWaybill" parameterClass="int">
+		delete from finance_waybill_tbl where waybill_id = #value#
+	</delete>
+
+	<update id="updateWaybill" parameterClass="Waybill">
+		update finance_waybill_tbl set 
+		<isNotNull property="waybillId">
+			waybill_id = #waybillId#,
+		</isNotNull>
+		<isNotNull property="waybillCode">
+			waybill_code = #waybillCode#,
+		</isNotNull>
+		<isNotNull property="expressCompany">
+			express_company= #expressCompany# ,
+		</isNotNull>
+		<isNotNull property="goodsCategory">
+			 goods_category = #goodsCategory#,
+		</isNotNull>
+		<isNotNull property="consigneeEmail">
+			 consignee_email = #consigneeEmail#,
+		</isNotNull>
+		<isNotNull property="consigneePhone">
+			 consignee_phone = #consigneePhone#,
+		</isNotNull>
+		<isNotNull property="orderCode">
+			 order_code = #orderCode#,
+		</isNotNull>
+		<isNotNull property="createDate">
+			 create_date = #createDate#,
+		</isNotNull>
+		<isNotNull property="creator">
+			 creator = #creator#,
+		</isNotNull>
+		<isNotNull property="updateDate">
+			 update_date = #updateDate#,
+		</isNotNull>
+		<isNotNull property="updateUser">
+			 update_user = #updateUser#,
+		</isNotNull>
+		<isNotNull property="waybillStatus">
+			 waybill_status = #waybillStatus#
+		</isNotNull>
+		<isNotNull property="consigneeName">
+			 consignee_name = #consigneeName#,
+		</isNotNull>
+		 WHERE waybill_id = #waybillId#
+	</update>
+	<select id="getWaybillById" resultMap="Waybill_NS.WaybillResult"
+		parameterClass="Waybill">
+		select
+		<include refid="Waybill_NS.finance_waybill_tbl_columns" />
+		from finance_waybill_tbl where waybill_id = #waybillId#
+	</select>
+	<select id="getWaybillList" resultMap="Waybill_NS.WaybillDTOResult"
+		parameterClass="QueryWaybillCondition">
+		<include refid="public_sql.page_begin"/>
+		select
+		<include refid="Waybill_NS.finance_waybill_tbl_columns" />
+		 from finance_waybill_tbl where 1=1
+		<isNotEmpty prepend="and" property="consigneePhone">
+			finance_waybill_tbl.consignee_phone like CONCAT(#consigneePhone#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="waybillCode">
+			finance_waybill_tbl.waybill_code like CONCAT(#waybillCode#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="expressCompany">
+			finance_waybill_tbl.express_company like CONCAT(#expressCompany#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="consigneeEmail">
+			finance_waybill_tbl.consignee_email like CONCAT(#consigneeEmail#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createBeginDate">
+            finance_waybill_tbl.create_date >= #createBeginDate#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createEndDate">
+            <![CDATA[finance_waybill_tbl.create_date <= #createEndDate# ]]>
+         </isNotEmpty> 
+         order by finance_waybill_tbl.waybill_id desc
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getWaybillListCount" resultClass="int"
+		parameterClass="QueryWaybillCondition">
+		select
+		count(1) from finance_waybill_tbl where 1=1
+		<isNotEmpty prepend="and" property="consigneePhone">
+			finance_waybill_tbl.consignee_phone like CONCAT(#consigneePhone#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="waybillCode">
+			finance_waybill_tbl.waybill_code like CONCAT(#waybillCode#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="expressCompany">
+			finance_waybill_tbl.express_company like CONCAT(#expressCompany#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="consigneeEmail">
+			finance_waybill_tbl.consignee_email like CONCAT(#consigneeEmail#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createBeginDate">
+            finance_waybill_tbl.create_date >= #createBeginDate#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createEndDate">
+            <![CDATA[finance_waybill_tbl.create_date <= #createEndDate# ]]>
+         </isNotEmpty>
+         order by finance_waybill_tbl.waybill_id desc
+	</select>
+	
+	<select id="isWaybillCodeRepeat" resultClass="string"
+		parameterClass="Waybill">
+		select
+		count(1)
+		from finance_waybill_tbl where  1=1 <![CDATA[ and waybill_status<>"已作废"]]>
+		<isNotEmpty prepend="and" property="waybillCode">
+			waybill_code=#waybillCode#
+		</isNotEmpty>
+		<isEmpty prepend="and" property="waybillCode">
+			waybill_code='-00000';
+		</isEmpty>
+	</select>
+</sqlMap>

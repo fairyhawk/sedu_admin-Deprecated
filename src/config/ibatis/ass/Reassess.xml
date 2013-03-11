@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Reassess_NS">
+        <!--table:ASS_REASSESS_TBL-->
+        <typeAlias alias="Reassess" type="com.shangde.edu.ass.domain.Reassess"/>
+        <typeAlias alias="QueryReassessCondition" type="com.shangde.edu.ass.condition.QueryReassessCondition"/>
+
+        <resultMap id="ReassessResult" class="Reassess">
+            <result property="id" column="ID"/>
+            <result property="assId" column="ASS_ID"/>
+            <result property="reassContext" column="REASS_CONTEXT"/>
+            <result property="reassTime" column="REASS_TIME"/>
+            <result property="reCusId" column="RE_CUS_ID"/>
+            <result property="mark" column="MARK"/>
+        </resultMap>
+
+        <sql id="ASS_REASSESS_TBL_columns">
+            ASS_REASSESS_TBL.ID,
+            ASS_REASSESS_TBL.ASS_ID,
+            ASS_REASSESS_TBL.REASS_CONTEXT,
+            ASS_REASSESS_TBL.REASS_TIME,
+            ASS_REASSESS_TBL.RE_CUS_ID,
+            ASS_REASSESS_TBL.MARK
+        </sql>
+
+        <sql id="ASS_REASSESS_TBL_properties">
+            #id#,
+            #assId#,
+            #reassContext#,
+            #reassTime#,
+            #reCusId#,
+            #mark#
+        </sql>
+
+        <insert id="createReassess" parameterClass="Reassess">
+            INSERT INTO ASS_REASSESS_TBL (<include refid="Reassess_NS.ASS_REASSESS_TBL_columns"/>) VALUES (<include refid="Reassess_NS.ASS_REASSESS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteReassessById" parameterClass="int">
+            DELETE FROM ASS_REASSESS_TBL
+            WHERE
+             ID=#value#
+        </delete>
+
+        <update id="updateReassess" parameterClass="Reassess">
+            UPDATE ASS_REASSESS_TBL SET
+                ASS_ID = #assId#,
+                REASS_CONTEXT = #reassContext#,
+                REASS_TIME = #reassTime#,
+                RE_CUS_ID = #reCusId#,
+                MARK = #mark#
+            WHERE
+            	ID=#id#
+        </update>
+
+        <select id="getReassessById" resultMap="Reassess_NS.ReassessResult" parameterClass="int">
+            SELECT
+            <include refid="Reassess_NS.ASS_REASSESS_TBL_columns"/>
+            FROM ASS_REASSESS_TBL
+            WHERE
+             ID=#value#
+        </select>
+        
+        <select id="getReassessByAssId" resultMap="Reassess_NS.ReassessResult" parameterClass="int">
+            SELECT
+            <include refid="Reassess_NS.ASS_REASSESS_TBL_columns"/>
+            FROM ASS_REASSESS_TBL
+            WHERE
+             ASS_ID=#value#
+        </select>
+        
+        <select id="getReassessList" resultMap="Reassess_NS.ReassessResult" parameterClass="QueryReassessCondition">
+            SELECT
+            <include refid="Reassess_NS.ASS_REASSESS_TBL_columns"/>
+            FROM ASS_REASSESS_TBL
+        </select>
+        <!--end-->
+</sqlMap>

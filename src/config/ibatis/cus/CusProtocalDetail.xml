@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+        
+<sqlMap namespace="CusProtocalDetail_NS">
+	<typeAlias alias="CusProtocalDetail" type="com.shangde.edu.cus.domain.CusProtocalDetail"/>
+	<typeAlias alias="QueryCusProtocalDetailCondition" type="com.shangde.edu.cus.condition.QueryCusProtocalCondition"/>
+	<sql id="CUS_PROTOCAL_DETAIL_TBL_COLUMNS">
+		CUS_PROTOCAL_DETAIL_TBL.ID ID,
+		CUS_PROTOCAL_DETAIL_TBL.CUS_ID CUSID,
+		CUS_PROTOCAL_DETAIL_TBL.CUS_NAME CUSNAME,
+		CUS_PROTOCAL_DETAIL_TBL.MOBILE MOBILE,
+		CUS_PROTOCAL_DETAIL_TBL.ADDRESS ADDRESS,
+		CUS_PROTOCAL_DETAIL_TBL.POSTCODE POSTCODE,
+		CUS_PROTOCAL_DETAIL_TBL.IDENTITY_CARD IDENTITYCARD
+	</sql>
+
+	<resultMap id="CusProtocalDetailResult" class="CusProtocalDetail">
+		<result property="id" column="ID" />
+		<result property="cusId" column="CUSID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="mobile" column="MOBILE" />
+		<result property="address" column="ADDRESS" />
+		<result property="postcode" column="POSTCODE" />
+		<result property="identityCard" column="IDENTITYCARD" />
+	</resultMap>
+	
+	<insert id="createCusProtocalDetail" parameterClass="CusProtocalDetail">
+		INSERT INTO CUS_PROTOCAL_DETAIL_TBL (
+			CUS_PROTOCAL_DETAIL_TBL.CUS_ID,CUS_PROTOCAL_DETAIL_TBL.CUS_NAME,CUS_PROTOCAL_DETAIL_TBL.MOBILE,CUS_PROTOCAL_DETAIL_TBL.ADDRESS,CUS_PROTOCAL_DETAIL_TBL.POSTCODE,CUS_PROTOCAL_DETAIL_TBL.IDENTITY_CARD
+		) VALUES (
+			#cusId#,#cusName#,#mobile#,#address#,#postcode#,#identityCard#
+		)
+		<selectKey resultClass="int" type="post" keyProperty="cusId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteCusProtocalDetailById" parameterClass="int">
+		DELETE FROM CUS_PROTOCAL_DETAIL_TBL WHERE ID = #value#
+	</delete>
+	
+	
+	<select id="getCusProtocalDetailById" resultClass="CusProtocalDetail" parameterClass="int" >
+		SELECT
+			<include refid="CusProtocalDetail_NS.CUS_PROTOCAL_DETAIL_TBL_COLUMNS" />
+		FROM CUS_PROTOCAL_DETAIL_TBL WHERE ID = #value#
+	</select>
+	
+	<select id="getCusProtocalDetailByCusId" resultClass="CusProtocalDetail" parameterClass="int" >
+		SELECT
+			<include refid="CusProtocalDetail_NS.CUS_PROTOCAL_DETAIL_TBL_COLUMNS" />
+		FROM CUS_PROTOCAL_DETAIL_TBL WHERE CUS_ID = #value#
+	</select>
+	
+	<select id="getCusProtocalDetailByPage" resultClass="CusProtocalDetail" parameterClass="QueryCusProtocalDetailCondition" >
+		SELECT
+			<include refid="CusProtocalDetail_NS.CUS_PROTOCAL_DETAIL_TBL_COLUMNS" />
+		FROM CUS_PROTOCAL_DETAIL_TBL  WHERE 1 = 1 
+		<isNotEmpty property="mobile" prepend="AND">
+			MOBILE = #mobile#
+		</isNotEmpty>
+		<isNotEmpty property="address" prepend="AND">
+			ADDRESS = #address#
+		</isNotEmpty>
+		<isNotEmpty property="identitycard" prepend="AND">
+			IDENTITY_CARD = #identitycard#
+		</isNotEmpty>
+		<isGreaterThan compareValue="-1" prepend="AND" compareProperty="id">
+			ID = #id#
+		</isGreaterThan>
+		<isGreaterThan compareValue="-1" prepend="AND" compareProperty="cusId">
+			CUS_ID = #cusId#
+		</isGreaterThan>			
+		ORDER BY ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+	
+	<select id="getCusProtocalDetailCount" resultClass="int" parameterClass="QueryCusProtocalDetailCondition" >
+		SELECT
+			COUNT(ID)
+		FROM CUS_PROTOCAL_DETAIL_TBL  WHERE 1 = 1 
+		<isNotEmpty property="mobile" prepend="AND">
+			MOBILE = #mobile#
+		</isNotEmpty>
+		<isNotEmpty property="address" prepend="AND">
+			ADDRESS = #address#
+		</isNotEmpty>
+		<isNotEmpty property="identitycard" prepend="AND">
+			IDENTITY_CARD = #identitycard#
+		</isNotEmpty>
+		<isGreaterThan compareValue="-1" prepend="AND" compareProperty="id">
+			ID = #id#
+		</isGreaterThan>
+		<isGreaterThan compareValue="-1" prepend="AND" compareProperty="cusId">
+			CUS_ID = #cusId#
+		</isGreaterThan>			
+		ORDER BY ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+</sqlMap>

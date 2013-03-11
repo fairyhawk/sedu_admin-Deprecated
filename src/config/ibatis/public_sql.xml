@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="public_sql">
+    <typeAlias alias="pageQueryConditon" type="com.shangde.common.vo.PageQuery"/>
+    <typeAlias alias="insertKey" type="com.shangde.common.vo.InsertKey"/>
+    <sql id="page_begin">
+        
+    </sql>
+
+<!--分页查询语句结束部分-->
+    <sql id="page_end">
+     <isGreaterEqual property="startRecord" compareValue="0">
+        limit #startRecord#,#pageSize#
+        </isGreaterEqual>
+      <isLessThan property="startRecord" compareValue="0">
+       limit 0,#pageSize#
+      </isLessThan>
+    </sql>
+    <sql id="like_left">
+        concat('%',
+    </sql>
+
+    <sql id="like_right">
+        ,'%')
+    </sql>
+
+    <sql id="increment_sql">
+        select LAST_INSERT_ID() as value
+    </sql>
+
+    <statement id="executeSql" parameterClass="string" remapResults="true">
+        $value$
+    </statement>
+</sqlMap>

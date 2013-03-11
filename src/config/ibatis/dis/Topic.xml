@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Topic_NS">
+	<!--table:DIS_TOPIC_TBL -->
+
+	<typeAlias alias="Topic" type="com.shangde.edu.dis.domain.Topic" />
+	<typeAlias alias="TopicDTO" type="com.shangde.edu.dis.dto.TopicDTO" />
+	<typeAlias alias="QueryTopicCondition" type="com.shangde.edu.dis.condition.QueryTopicCondition" />
+
+	<resultMap id="TopicDTOResult" class="com.shangde.edu.dis.dto.TopicDTO">
+		<result property="id" column="ID" />
+		<result property="disName" column="DIS_NAME" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="type" column="TYPE" />
+		<result property="replyCounts" column="REPLYCOUNTS" />
+		<result property="recCount" column="RECCOUNT" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="status" column="STATUS" />
+		<result property="sysUserName" column="SYSUSERNAME" />
+ 	</resultMap>
+ 	<!-- 后台查询高级查询使用 -->
+ 	<resultMap id="TopicDTOResultBack" class="com.shangde.edu.dis.dto.TopicDTO">
+		<result property="id" column="ID" />
+		<result property="disName" column="DIS_NAME" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="type" column="TYPE" />
+		<result property="replyCounts" column="REPLYCOUNTS" />
+		<result property="recCount" column="RECCOUNT" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="status" column="STATUS" />
+		<result property="modified" column="modified"/>
+ 	</resultMap>
+ 	<resultMap id="TopicDTOResultBackIds" class="com.shangde.edu.dis.dto.TopicDTO">
+		<result property="id" column="ID" />
+ 	</resultMap>
+ 	<resultMap id="TopicResult" class="Topic">
+		<result property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="cusId" column="cus_id" />
+		<result property="disId" column="dis_id" />
+		<result property="isVote" column="isVote" />
+		<result property="voteId" column="vote_id" />
+		<result property="createTime" column="createtime" />
+		<result property="replyTime" column="replytime" />
+		<result property="modified" column="modified"/>
+		<result property="clickCounts" column="clickcounts" />
+		<result property="replyCounts" column="replycounts" />
+		<result property="recNum" column="recNum" />
+		<result property="recCount" column="recCount" />
+		<result property="canReply" column="canreply" />
+		<result property="isTop" column="ISTOP" />
+		<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById" />
+		<result property="type" column="TYPE" />
+		<result property="status" column="STATUS" />
+		<result property="voteCount" column="VOTECOUNT" />
+		<result property="sysUserName" column="SYSUSERNAME" />
+		<result property="tags" column="TAGS" />
+		<result property="picUrl" column="PICURL" />
+	</resultMap>
+
+	<sql id="DIS_TOPIC_TBL_columns">
+		DIS_TOPIC_TBL.ID,
+		DIS_TOPIC_TBL.TITLE,
+		DIS_TOPIC_TBL.CONTENT,
+		DIS_TOPIC_TBL.CUS_ID,
+		DIS_TOPIC_TBL.DIS_ID,
+		DIS_TOPIC_TBL.ISVOTE,
+		DIS_TOPIC_TBL.VOTE_ID,
+		DIS_TOPIC_TBL.CREATETIME,
+		DIS_TOPIC_TBL.REPLYTIME,
+		DIS_TOPIC_TBL.MODIFIED,
+		DIS_TOPIC_TBL.CLICKCOUNTS,
+		DIS_TOPIC_TBL.REPLYCOUNTS,
+		DIS_TOPIC_TBL.RECNUM,
+		DIS_TOPIC_TBL.RECCOUNT,
+		DIS_TOPIC_TBL.CANREPLY,
+		DIS_TOPIC_TBL.VOTECOUNT,
+		DIS_TOPIC_TBL.ISTOP,
+		DIS_TOPIC_TBL.TYPE,
+		DIS_TOPIC_TBL.STATUS,
+		DIS_TOPIC_TBL.SYSUSERNAME,
+		DIS_TOPIC_TBL.TAGS,
+		DIS_TOPIC_TBL.PICURL
+    </sql>
+
+	<sql id="DIS_TOPIC_TBL_properties">
+		#id#,
+		#title#,
+		#content#,
+		#customer.cusId#,
+		#disId#,
+		#isVote#,
+		#voteId#,
+		#createTime#,
+		#replyTime#,
+		#modified#,
+		#clickCounts#,
+		#replyCounts#,
+		#recNum#,
+		#recCount#,
+		#canReply#,
+		#voteCount#,
+		#isTop#,
+		#type#,
+		#status#,
+		#sysUserName#,
+		#tags#,
+		#picUrl#
+	</sql>
+	
+	<delete id="deleteTopicById" parameterClass="QueryTopicCondition">
+		DELETE FROM
+		DIS_TOPIC_TBL
+		WHERE ID = #id#
+	</delete>
+	<delete id="delTopicById" parameterClass="int">
+		DELETE FROM
+		DIS_TOPIC_TBL
+		WHERE ID = #id#
+	</delete>
+	
+	<!-- back -->
+	<select id="getTopicDTOList" resultMap="Topic_NS.TopicDTOResult" parameterClass="QueryTopicCondition">
+		<include refid="public_sql.page_begin" />
+			SELECT
+				dis_topic_tbl.id as ID,
+				dis_topic_tbl.type as TYPE,
+				dis_discussion_tbl.`name` as DIS_NAME,
+				dis_topic_tbl.title as TITLE,
+				dis_topic_tbl.content as CONTENT,
+				cus_customer_tbl.CUS_NAME,
+				cus_customer_tbl.EMAIL,
+				cus_customer_tbl.CUS_ID,
+				dis_topic_tbl.replycounts as REPLYCOUNTS,
+				dis_topic_tbl.recCount as RECCOUNT,
+				dis_topic_tbl.createtime as CREATETIME,
+				dis_topic_tbl.status as STATUS,
+				dis_topic_tbl.sysUserName
+			FROM
+				dis_topic_tbl ,
+				dis_discussion_tbl ,
+				cus_customer_tbl
+			WHERE
+				dis_topic_tbl.cus_id = cus_customer_tbl.CUS_ID AND
+				dis_topic_tbl.dis_id = dis_discussion_tbl.id
+			ORDER BY CREATETIME DESC	
+		<include refid="public_sql.page_end" />
+	</select>
+	<select id="getTopicCountByList" resultClass="int" parameterClass="QueryTopicCondition">
+		SELECT COUNT(1) FROM DIS_TOPIC_TBL
+	</select>
+
+	<select id="getTopicCountByListFront" resultClass="int" parameterClass="QueryTopicCondition">
+		SELECT COUNT(1) FROM DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+			AND (STATUS=0 or STATUS=1)
+		</dynamic>
+	</select>
+
+	
+	
+   	<!-- 修改投票次数字段 -->
+   	<update id="updateTopicVoteCount" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		voteCount = voteCount + #incremental#
+		WHERE ID = #id#
+   	</update>
+   	
+   	<!--
+		根据小组ID查询本组热门话题
+		排序条件：如果推荐次数、回应次数相同，则按发布时间倒序排列
+	 -->
+	<select id="getHotTopicByDisId" resultMap="Topic_NS.TopicResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		FROM DIS_TOPIC_TBL
+		WHERE
+		DIS_ID=#disId# and (STATUS = 0 or STATUS = 1) and recCount > 0 
+		ORDER BY RECCOUNT DESC,replyCounts desc,createTime desc LIMIT 10
+	</select>
+   	<!-- 修改状态字段 -->
+   	<update id="updateTopicStatus" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		STATUS = #status#
+		WHERE ID = #id#
+   	</update>
+   	<!-- 状态批量修改 -->
+   	<update id="batchUpdateTopicStatus" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		STATUS = #status#
+		WHERE 
+		<iterate property="idsList" open="(" close=")" conjunction="or">
+          id=$idsList[].id$
+        </iterate>
+   	</update>
+   	<!-- 修改最后回复时间 -->
+   	<update id="updateTopicReplyTime" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		REPLYTIME = #replyTime#
+		WHERE ID = #id#
+   	</update>
+   	<!-- 修改推荐次数字段 -->
+	<update id="updateTopicRecCount" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		RECCOUNT = RECCOUNT + #incremental#
+		WHERE ID = #id#
+   	</update>
+   	
+   	<!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+   	
+   	<!-- ********************前台部分******************** -->
+
+	<resultMap class="com.shangde.edu.dis.dto.DisReTopicDTO" id="DisReTopicDTO">
+		<result property="id" column="id" />
+		<result property="topicId" column="topicId" />
+		<result property="cusId" column="cusId" />
+		<result property="disId" column="disId" />
+		<result property="topicContent" column="topicContent" />
+		<result property="reTopicContent" column="reTopicContent" />
+		<result property="topicTime" column="topicTime" />
+		<result property="reTopicTime" column="reTopicTime" />
+		<result property="customer" column="reply_cusId" select="Customer_NS.getCustomerById" />
+		<result property="targetCustomer" column="target_cus_id" select="Customer_NS.getCustomerById" />
+	</resultMap>
+  
+  	<resultMap id="MyTopicResult" class="Topic">
+		<result property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="cusId" column="cus_id" />
+		<result property="disId" column="dis_id" />
+		<result property="createTime" column="createtime" />
+		<result property="replyTime" column="replytime" />
+		<result property="modified" column="modified"/>
+		<result property="replyCounts" column="replycounts" />
+		<result property="recNum" column="recNum" />
+		<result property="recCount" column="recCount" />
+		<result property="canReply" column="canreply" />
+		<result property="tags" column="TAGS" />
+		<result property="picUrl" column="PICURL" />
+		<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById" />
+	</resultMap>
+	
+	<sql id="DIS_MYTOPIC__columns">
+		DIS_TOPIC_TBL.ID,
+		DIS_TOPIC_TBL.CONTENT,
+		DIS_TOPIC_TBL.CUS_ID,
+		DIS_TOPIC_TBL.DIS_ID,
+		DIS_TOPIC_TBL.CREATETIME,
+		DIS_TOPIC_TBL.REPLYTIME,
+		DIS_TOPIC_TBL.MODIFIED,
+		DIS_TOPIC_TBL.REPLYCOUNTS,
+		DIS_TOPIC_TBL.RECNUM,
+		DIS_TOPIC_TBL.RECCOUNT,
+		DIS_TOPIC_TBL.CANREPLY,
+		DIS_TOPIC_TBL.TAGS,
+		DIS_TOPIC_TBL.PICURL
+	</sql>
+  
+ 	<!--添加-->
+ 	<insert id="createTopic" parameterClass="Topic">
+		INSERT INTO DIS_TOPIC_TBL (
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		) VALUES (
+		<include refid="Topic_NS.DIS_TOPIC_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+	<!--修改-->
+    <update id="updateTopic" parameterClass="Topic">
+		UPDATE DIS_TOPIC_TBL 
+		<dynamic prepend="set">
+			<isNotNull property="title" prepend=",">
+				TITLE = #title#
+			</isNotNull>
+			<isNotNull property="content" prepend=",">
+				CONTENT = #content#
+			</isNotNull>
+			<isNotNull property="customer.cusId" prepend=",">
+				CUS_ID = #customer.cusId#
+			</isNotNull>
+			<isNotNull property="disId" prepend=",">
+				DIS_ID = #disId#
+			</isNotNull>		
+			<isNotNull property="disAreaId" prepend=",">
+				DIS_AREA_ID = #disAreaId#
+			</isNotNull>	
+			<isNotNull property="isVote" prepend=",">
+				ISVOTE = #isVote#
+			</isNotNull>
+			<isNotNull property="voteId" prepend=",">
+				VOTE_ID = #voteId#
+			</isNotNull>	
+			<isNotNull property="createTime" prepend=",">
+				CREATETIME = #createTime#
+			</isNotNull>	
+			<isNotNull property="replyTime" prepend=",">
+				REPLYTIME = #replyTime#
+			</isNotNull>
+			<isNotNull property="clickCounts" prepend=",">
+				CLICKCOUNTS = #clickCounts#
+			</isNotNull>
+			<isNotNull property="replyCounts" prepend=",">
+				REPLYCOUNTS = #replyCounts#
+			</isNotNull>
+			<isNotNull property="recNum" prepend=",">
+				RECNUM = #recNum#
+			</isNotNull>
+			<isNotNull property="recCount" prepend=",">
+				RECCOUNT = #recCount#
+			</isNotNull>		
+			<isNotNull property="canReply" prepend=",">
+				CANREPLY = #canReply#
+			</isNotNull>
+			<isNotNull property="isTop" prepend=",">
+				ISTOP = #isTop#
+			</isNotNull>
+			<isNotNull property="status" prepend=",">
+				STATUS = #status#
+			</isNotNull>		
+			<isNotNull property="type" prepend=",">
+				TYPE = #type#
+			</isNotNull>
+			<isNotNull property="voteCount" prepend=",">
+				VOTECOUNT = #voteCount#
+			</isNotNull>
+			<isNotNull property="sysUserName" prepend=",">
+				sysUserName = #sysUserName#
+			</isNotNull>
+			<isNotNull property="modified" prepend=",">
+				modified = #modified#
+			</isNotNull>
+			<isNotNull property="tags" prepend=",">
+				tags = #tags#
+			</isNotNull>
+		</dynamic>					
+		WHERE ID = #id#
+    </update>
+ 	
+   	
+   	<!-- 查询小组话题数量 -->
+   	<select id="getDisTopicCount" resultClass="int" parameterClass="int">
+		SELECT COUNT(1) FROM DIS_TOPIC_TBL where dis_id = #value# and (STATUS = 0 or STATUS = 1)
+	</select>
+   	 	
+   	<!-- TOP最新的话题 -->
+	<select id="getNewTopic" resultMap="Topic_NS.TopicResult"
+		parameterClass="QueryTopicCondition">
+		SELECT
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		FROM DIS_TOPIC_TBL
+		WHERE DIS_ID = #disId# and (STATUS = 0 or STATUS = 1)
+		ORDER BY CREATETIME DESC LIMIT 10
+	</select>
+
+	<!-- 我发布的话题 -->
+	<select id="getMyTopic" resultMap="Topic_NS.MyTopicResult"
+		parameterClass="QueryTopicCondition">
+		SELECT
+		<include refid="Topic_NS.DIS_MYTOPIC__columns" />
+		FROM DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+			AND (STATUS=0 or STATUS=1)
+		</dynamic>
+		ORDER BY CREATETIME DESC LIMIT 10
+	</select>
+
+	<!-- 我回应的话题 -->
+	<select id="getReTopic" resultMap="Topic_NS.DisReTopicDTO"
+		parameterClass="QueryTopicCondition">
+		SELECT
+		  DIS_TOPIC_REPLY_TBL.ID as id,
+		  DIS_TOPIC_TBL.ID as topicId,
+		  DIS_TOPIC_TBL.CUS_ID as cusId,
+		  DIS_TOPIC_TBL.DIS_ID as disId,
+		  DIS_TOPIC_TBL.CONTENT as topicContent,
+		  DIS_TOPIC_REPLY_TBL.CONTENT AS reTopicContent,
+		  DIS_TOPIC_TBL.CREATETIME as topicTime,
+		  DIS_TOPIC_REPLY_TBL.REPLYTIME as reTopicTime,
+		  DIS_TOPIC_REPLY_TBL.target_cus_id as target_cus_id,
+		  DIS_TOPIC_REPLY_TBL.CUS_ID as reply_cusId
+		FROM DIS_TOPIC_REPLY_TBL,DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			DIS_TOPIC_REPLY_TBL.TOPIC_ID = DIS_TOPIC_TBL.ID AND (STATUS=0 or
+			STATUS=1) and
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					DIS_TOPIC_REPLY_TBL.CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_TOPIC_REPLY_TBL.DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+		</dynamic>
+		order by DIS_TOPIC_REPLY_TBL.REPLYTIME DESC LIMIT 10
+	</select>
+	
+   	<!-- 推荐的话题 -->
+   	<select id="getRecommend" resultMap="Topic_NS.TopicResult"
+		parameterClass="QueryTopicCondition">
+		SELECT
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		FROM DIS_TOPIC_TBL
+		WHERE DIS_ID = #disId# and (STATUS = 0 or STATUS = 1)
+		AND recCount > 0
+		ORDER BY recCount DESC LIMIT 10
+	</select>
+	
+	<!-- 最新的话题点更多分页查询 -->
+	<select id="getNewTopicList" resultMap="Topic_NS.TopicResult"
+		parameterClass="QueryTopicCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		FROM DIS_TOPIC_TBL
+		WHERE DIS_ID = #disId# and (STATUS = 0 or STATUS = 1)
+		ORDER BY CREATETIME DESC
+		<include refid="public_sql.page_end" />
+	</select>
+	<select id="getNewTopicListCount" resultClass="int" parameterClass="QueryTopicCondition">
+		SELECT COUNT(1)
+		FROM DIS_TOPIC_TBL
+		WHERE DIS_ID = #disId# and (STATUS = 0 or STATUS = 1)
+	</select>
+	
+	<!-- 我发布的话题更多页 -->
+	<select id="getMyTopicList" resultMap="Topic_NS.MyTopicResult"
+		parameterClass="QueryTopicCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Topic_NS.DIS_MYTOPIC__columns" />
+		FROM DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+			AND (STATUS=0 or STATUS=1)
+		</dynamic>
+		ORDER BY CREATETIME DESC
+		<include refid="public_sql.page_end" />
+	</select>
+	<select id="getMyTopicListCount" resultClass="int" parameterClass="QueryTopicCondition">
+		SELECT	COUNT(1)
+		FROM DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+			AND (STATUS=0 or STATUS=1)
+		</dynamic>
+	</select>
+   	
+   	<!-- 我回应的话题更多页 -->
+	<select id="getReTopicList" resultMap="Topic_NS.DisReTopicDTO"
+		parameterClass="QueryTopicCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		  DIS_TOPIC_REPLY_TBL.ID as id,
+		  DIS_TOPIC_TBL.ID as topicId,
+		  DIS_TOPIC_TBL.CUS_ID as cusId,
+		  DIS_TOPIC_TBL.DIS_ID as disId,
+		  DIS_TOPIC_TBL.CONTENT as topicContent,
+		  DIS_TOPIC_REPLY_TBL.CONTENT AS reTopicContent,
+		  DIS_TOPIC_TBL.CREATETIME as topicTime,
+		  DIS_TOPIC_REPLY_TBL.REPLYTIME as reTopicTime,
+		  DIS_TOPIC_REPLY_TBL.target_cus_id as target_cus_id,
+		  DIS_TOPIC_REPLY_TBL.CUS_ID as reply_cusId
+		FROM DIS_TOPIC_REPLY_TBL,DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			DIS_TOPIC_REPLY_TBL.TOPIC_ID = DIS_TOPIC_TBL.ID AND (STATUS=0 or
+			STATUS=1) and
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					DIS_TOPIC_REPLY_TBL.CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_TOPIC_REPLY_TBL.DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+		</dynamic>
+		order by DIS_TOPIC_REPLY_TBL.REPLYTIME DESC
+		<include refid="public_sql.page_end" />
+	</select>
+   	<select id="getReTopicListCount" resultClass="int"
+		parameterClass="QueryTopicCondition">
+		SELECT COUNT(1)
+		FROM DIS_TOPIC_REPLY_TBL,DIS_TOPIC_TBL
+		<dynamic prepend="WHERE">
+			DIS_TOPIC_REPLY_TBL.TOPIC_ID = DIS_TOPIC_TBL.ID AND (STATUS=0 or
+			STATUS=1) and
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					DIS_TOPIC_REPLY_TBL.CUS_ID=#cusId#
+			    </isNotEqual>
+			</isNotNull>
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_TOPIC_REPLY_TBL.DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<!-- 推荐的话题更多页 -->
+   	<select id="getRecommendList" resultMap="Topic_NS.TopicResult"
+		parameterClass="QueryTopicCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		FROM DIS_TOPIC_TBL
+		WHERE DIS_ID = #disId# and (STATUS = 0 or STATUS = 1)
+		AND recCount > 0
+		ORDER BY recCount DESC
+		<include refid="public_sql.page_end" />
+	</select>
+   	<select id="getRecommendListCount" resultClass="int"
+		parameterClass="QueryTopicCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT COUNT(1)
+		FROM DIS_TOPIC_TBL
+		WHERE DIS_ID = #disId# and (STATUS = 0 or STATUS = 1)
+		AND recCount > 0
+		<include refid="public_sql.page_end" />
+	</select>
+	
+	<!-- 根据ID查询单个话题的详细信息 -->
+	<select id="getTopicById" resultMap="Topic_NS.TopicResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Topic_NS.DIS_TOPIC_TBL_columns" />
+		FROM DIS_TOPIC_TBL
+		WHERE ID = #id#
+	</select>
+	
+	<!-- 删除话题 -->
+	<delete id="delTopic" parameterClass="Map">
+		delete from DIS_TOPIC_TBL where id = #id# and cus_id = #cusId#
+	</delete>
+	
+	<!-- 修改回复次数字段 -->
+   	<update id="updateTopicReplyCounts" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		replycounts = replycounts + #incremental#
+		WHERE ID = #id#
+   	</update>
+	
+	<!-- 修改点击次数字段 -->
+   	<update id="updateTopicClickCounts" parameterClass="Map">
+		UPDATE DIS_TOPIC_TBL SET
+		clickcounts = clickcounts + #incremental#
+		WHERE ID = #id#
+   	</update>
+	
+   	<!-- ********************后台部分******************** -->
+   	
+   	<!-- 后台条件查询,帖子表，与回复表，帖子表为主 -->
+   	<select id="searchTopicList" resultMap="Topic_NS.TopicDTOResultBack" parameterClass="QueryTopicCondition">
+   		select 
+   			 
+   			topic.id id,discussion.name DIS_NAME,topic.title title,topic.content content,customer.cus_name CUS_NAME,customer.email email,customer.cus_id CUS_ID,topic.type type,topic.replycounts replycounts,topic.recCount recCount,topic.status status,
+       		topic.createtime createtime,topic.modified modified
+       		
+        from (dis_topic_tbl topic,dis_discussion_tbl discussion,sys_subject_tbl subject
+        	<dynamic>
+        		<!-- 当回复表数据不等于0等情况下，才根连接回复表查询 -->
+        		<isNotEqual property="replyCounts" compareValue="0">
+        			,dis_topic_reply_tbl reply
+        		</isNotEqual>
+        	</dynamic>
+        )
+        
+		inner join cus_customer_tbl customer on topic.cus_id = customer.cus_id
+		
+	    where topic.dis_id = discussion.id and discussion.subjectid = subject.subject_id
+	    <dynamic>
+	    	<isNotEqual property="replyCounts" compareValue="0">
+	    		and topic.id = reply.topic_id
+	    	</isNotEqual>
+	        <isEqual property="searchCriteria" compareValue="-1">
+	        	and (discussion.name like '%$keyWorld$%' or topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%'
+	        		<isNotEqual property="replyCounts" compareValue="0">
+	        			or reply.content like '%$keyWorld$%'
+	        		</isNotEqual>
+	        	 or customer.cus_name like '%$keyWorld$%')
+	        </isEqual>
+	        <isNotEqual property="searchCriteria" compareValue="-1">
+	        	<isEqual property="searchCriteria" compareValue="1">
+	        		and discussion.name like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="2">
+	        		and (topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%')
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="3">
+	        		<isNotEqual property="replyCounts" compareValue="0">
+	        			and reply.content like '%$keyWorld$%'
+	        		</isNotEqual>
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="4">
+	        		and customer.cus_name like '%$keyWorld$%'
+	        	</isEqual>
+	        </isNotEqual>
+	        
+	        <isNotEqual property="subjectId" compareValue="-1">
+	        	and subject.subject_id = #subjectId#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="type" compareValue="-1">
+	        	 and topic.type = #type#
+	        </isNotEqual>
+	         <isNotEqual property="status" compareValue="-1">
+	        	 and topic.status = #status#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="createTimeStart" compareValue="-1">
+				<![CDATA[ and topic.createtime >= #createTimeStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="createTimeEnd" compareValue="-1">
+				<![CDATA[ and topic.createtime <= #createTimeEnd# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedStart" compareValue="-1">
+				<![CDATA[ and topic.modified >= #modifiedStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedEnd" compareValue="-1">
+				<![CDATA[ and topic.modified <= #modifiedEnd# ]]>
+			</isNotEqual>
+			
+        </dynamic>
+	    group by topic.id
+	    order by topic.createtime desc
+	    <include refid="public_sql.page_end" />
+   	</select>
+   	<select id="searchTopicCountByList" resultMap="Topic_NS.TopicDTOResultBackIds" parameterClass="QueryTopicCondition">
+   		select
+   			topic.id
+        from (dis_topic_tbl topic,dis_discussion_tbl discussion,sys_subject_tbl subject
+        	<dynamic>
+        		<isNotEqual property="replyCounts" compareValue="0">
+        			,dis_topic_reply_tbl reply
+        		</isNotEqual>
+        	</dynamic>
+        )
+        
+		inner join cus_customer_tbl customer on topic.cus_id = customer.cus_id
+		
+	    where topic.dis_id = discussion.id and discussion.subjectid = subject.subject_id
+	    <dynamic>
+	    	<isNotEqual property="replyCounts" compareValue="0">
+	    		and topic.id = reply.topic_id
+	    	</isNotEqual>
+	        <isEqual property="searchCriteria" compareValue="-1">
+	        	and (discussion.name like '%$keyWorld$%' or topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%' 
+	        		<isNotEqual property="replyCounts" compareValue="0">
+	        			or reply.content like '%$keyWorld$%'
+	        		</isNotEqual>
+	        	 or customer.cus_name like '%$keyWorld$%')
+	        </isEqual>
+	        <isNotEqual property="searchCriteria" compareValue="-1">
+	        	<isEqual property="searchCriteria" compareValue="1">
+	        		and discussion.name like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="2">
+	        		and (topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%')
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="3">
+	        		<isNotEqual property="replyCounts" compareValue="0">
+	        			and reply.content like '%$keyWorld$%'
+	        		</isNotEqual>
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="4">
+	        		and customer.cus_name like '%$keyWorld$%'
+	        	</isEqual>
+	        </isNotEqual>
+	        
+	        <isNotEqual property="subjectId" compareValue="-1">
+	        	and subject.subject_id = #subjectId#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="type" compareValue="-1">
+	        	 and topic.type = #type#
+	        </isNotEqual>
+	        <isNotEqual property="status" compareValue="-1">
+	        	 and topic.status = #status#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="createTimeStart" compareValue="-1">
+				<![CDATA[ and topic.createtime >= #createTimeStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="createTimeEnd" compareValue="-1">
+				<![CDATA[ and topic.createtime <= #createTimeEnd# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedStart" compareValue="-1">
+				<![CDATA[ and topic.modified >= #modifiedStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedEnd" compareValue="-1">
+				<![CDATA[ and topic.modified <= #modifiedEnd# ]]>
+			</isNotEqual>
+			
+        </dynamic>
+	    group by topic.id
+   	</select>
+   	<!-- 后台条件查询,帖子表，与回复表，同时为主 and topic.id = reply.topic_id -->
+   	<select id="searchReplyTopicList" resultMap="Topic_NS.TopicDTOResultBack" parameterClass="QueryTopicCondition">
+   		select 
+   			topic.id id,discussion.name DIS_NAME,topic.title title,topic.content content,customer.cus_name CUS_NAME,customer.email email,customer.cus_id CUS_ID,topic.type type,topic.replycounts replycounts,topic.recCount recCount,topic.status status,
+       		topic.createtime createtime,topic.modified modified
+        from (dis_topic_tbl topic,dis_discussion_tbl discussion,sys_subject_tbl subject,dis_topic_reply_tbl reply)
+        
+		inner join cus_customer_tbl customer on topic.cus_id = customer.cus_id
+		
+	    where topic.dis_id = discussion.id and discussion.subjectid = subject.subject_id and topic.id = reply.topic_id
+	    <dynamic>
+	        <isEqual property="searchCriteria" compareValue="-1">
+	        	and (discussion.name like '%$keyWorld$%' or topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%' or reply.content like '%$keyWorld$%' or customer.cus_name like '%$keyWorld$%')
+	        </isEqual>
+	        <isNotEqual property="searchCriteria" compareValue="-1">
+	        	<isEqual property="searchCriteria" compareValue="1">
+	        		and discussion.name like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="2">
+	        		and (topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%')
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="3">
+	        		and reply.content like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="4">
+	        		and customer.cus_name like '%$keyWorld$%'
+	        	</isEqual>
+	        </isNotEqual>
+	        
+	        <isNotEqual property="subjectId" compareValue="-1">
+	        	and subject.subject_id = #subjectId#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="type" compareValue="-1">
+	        	 and topic.type = #type#
+	        </isNotEqual>
+	         <isNotEqual property="status" compareValue="-1">
+	        	 and topic.status = #status#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="createTimeStart" compareValue="-1">
+				<![CDATA[ and topic.createtime >= #createTimeStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="createTimeEnd" compareValue="-1">
+				<![CDATA[ and topic.createtime <= #createTimeEnd# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedStart" compareValue="-1">
+				<![CDATA[ and topic.modified >= #modifiedStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedEnd" compareValue="-1">
+				<![CDATA[ and topic.modified <= #modifiedEnd# ]]>
+			</isNotEqual>
+			
+        </dynamic>
+	    group by topic.id
+	    order by topic.createtime desc
+	    <include refid="public_sql.page_end" />
+   	</select>
+   	<select id="searchReplyTopicCountByList" resultMap="Topic_NS.TopicDTOResultBackIds" parameterClass="QueryTopicCondition">
+   		select
+   			topic.id
+        from (dis_topic_tbl topic,dis_discussion_tbl discussion,sys_subject_tbl subject,dis_topic_reply_tbl reply)
+        
+		inner join cus_customer_tbl customer on topic.cus_id = customer.cus_id
+		
+	    where topic.dis_id = discussion.id and discussion.subjectid = subject.subject_id and topic.id = reply.topic_id
+	    <dynamic>
+	        <isEqual property="searchCriteria" compareValue="-1">
+	        	and (discussion.name like '%$keyWorld$%' or topic.title like '%$keyWorld$%' or topic.content like '%$keyWorld$%' or reply.content like '%$keyWorld$%' or customer.cus_name like '%$keyWorld$%')
+	        </isEqual>
+	        <isNotEqual property="searchCriteria" compareValue="-1">
+	        	<isEqual property="searchCriteria" compareValue="1">
+	        		and discussion.name like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="2">
+	        		and topic.title like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="3">
+	        		and reply.content like '%$keyWorld$%'
+	        	</isEqual>
+	        	<isEqual property="searchCriteria" compareValue="4">
+	        		and customer.cus_name like '%$keyWorld$%'
+	        	</isEqual>
+	        </isNotEqual>
+	        
+	        <isNotEqual property="subjectId" compareValue="-1">
+	        	and subject.subject_id = #subjectId#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="type" compareValue="-1">
+	        	 and topic.type = #type#
+	        </isNotEqual>
+	        <isNotEqual property="status" compareValue="-1">
+	        	 and topic.status = #status#
+	        </isNotEqual>
+	        
+	        <isNotEqual property="createTimeStart" compareValue="-1">
+				<![CDATA[ and topic.createtime >= #createTimeStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="createTimeEnd" compareValue="-1">
+				<![CDATA[ and topic.createtime <= #createTimeEnd# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedStart" compareValue="-1">
+				<![CDATA[ and topic.modified >= #modifiedStart# ]]>
+			</isNotEqual>
+			<isNotEqual property="modifiedEnd" compareValue="-1">
+				<![CDATA[ and topic.modified <= #modifiedEnd# ]]>
+			</isNotEqual>
+			
+        </dynamic>
+	    group by topic.id
+   	</select>
+   	
+   	
+   	
+   	
+</sqlMap>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Course_Statics_NS">
+	<typeAlias alias="courseStatic" type="com.shangde.edu.feed.domain.CourseStatic"/>
+	<typeAlias alias="queryCourseStaticsCondition" type="com.shangde.edu.feed.condition.QueryCourseStaticsCondition"/>
+	
+	<resultMap class="courseStatic" id="courseStaticResult">
+		<result property="id" column="ID"/>
+		<result property="courseId" column="COURSE_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="courseCategoryId" column="COURSE_CATEGORY_ID"/>
+		<result property="statisticsTime" column="STATISTICS_TIME"/>
+		<result property="userName" column="USER_NAME"/>
+	</resultMap>
+	
+	<resultMap class="courseStatic" id="courseStaticFrontResult">
+		<result property="id" column="ID"/>
+		<result property="courseId" column="COURSE_ID"/>
+		<result property="courseName" column="COURSE_NAME"/>
+        <result property="usePersonNumber" column="ID" select="Feed_Course_NS.userPersonNum"/>
+        <result property="watchNumber" column="WATCH_NUMBER" />
+	</resultMap>
+	
+	
+	<sql id="FEED_COURSE_STATICS_TBL_columns">
+		FEED_COURSE_STATICS_TBL.ID,
+		FEED_COURSE_STATICS_TBL.COURSE_ID,
+		FEED_COURSE_STATICS_TBL.USER_ID,
+		FEED_COURSE_STATICS_TBL.COURSE_CATEGORY_ID,
+		FEED_COURSE_STATICS_TBL.STATISTICS_TIME
+	</sql>
+	
+	<sql id="FEED_COURSE_STATICS_TBL_properties">
+		#id#,
+		#courseId#,
+		#userId#,
+		#courseCategoryId#,
+		#statisticsTime#
+	</sql>
+	
+	<insert id="createCourseStatic" parameterClass="courseStatic">
+		INSERT INTO FEED_COURSE_STATICS_TBL(<include refid="FEED_COURSE_STATICS_TBL_columns"/>)
+		VALUES(<include refid="FEED_COURSE_STATICS_TBL_properties"/>)
+		 <selectKey resultClass="int" type="post" keyProperty="id" >
+                <include refid="public_sql.increment_sql"/>
+         </selectKey>
+	</insert>
+	
+	<select id="getUserListByCourseId" resultMap="Feed_Course_Statics_NS.courseStaticResult" parameterClass="queryCourseStaticsCondition">
+		<include refid="public_sql.page_begin"/> 
+			SELECT <include refid="FEED_COURSE_STATICS_TBL_columns"/>,FEED_USER_STAT_TBL.EMAIL AS USER_NAME
+			FROM FEED_COURSE_STATICS_TBL,FEED_USER_STAT_TBL
+			WHERE COURSE_ID = #courseId#
+			 <isNotNull prepend="and" property="startTime">
+	  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME >=#startTime#]]>
+	  		  </isNotNull>
+	  		  <isNotNull prepend="and" property="endTime">
+	  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME<=#endTime#]]>
+	  		  </isNotNull>
+	  		  <isNotNull prepend="and" property="courseCategoryId">
+	  		  	COURSE_CATEGORY_ID=#courseCategoryId#
+	  		  </isNotNull>
+			AND FEED_COURSE_STATICS_TBL.USER_ID = FEED_USER_STAT_TBL.CUS_ID
+			ORDER BY STATISTICS_TIME DESC
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getUserListByCourseIdCount" resultClass="int" parameterClass="queryCourseStaticsCondition">
+		SELECT COUNT(1)
+		FROM FEED_COURSE_STATICS_TBL
+		WHERE FEED_COURSE_STATICS_TBL.COURSE_ID = #courseId#
+		  <isNotNull prepend="and" property="startTime">
+  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME>=#startTime#]]>
+  		  </isNotNull>
+  		  <isNotNull prepend="and" property="endTime">
+  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME<=#endTime#]]>
+  		  </isNotNull>
+  		  <isNotNull prepend="and" property="courseCategoryId">
+  		  	COURSE_CATEGORY_ID=#courseCategoryId#
+  		  </isNotNull>
+	</select>
+	
+	
+	<select id="getCouserStaticListByTerm" resultMap="Feed_Course_Statics_NS.courseStaticFrontResult" parameterClass="queryCourseStaticsCondition">
+		<include refid="public_sql.page_begin"/> 
+		  SELECT FEED_COURSE_TBL.NAME AS COURSE_NAME,FEED_COURSE_TBL.ID,FEED_COURSE_STATICS_TBL.COURSE_ID,
+			  (SELECT COUNT(*) 
+			  FROM feed_course_statics_tbl 
+			  WHERE feed_course_statics_tbl.COURSE_ID = FEED_COURSE_TBL.ID
+			  <isNotNull prepend="and" property="startTime">
+	  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME>=#startTime#]]>
+	  		  </isNotNull>
+	  		  <isNotNull prepend="and" property="endTime">
+	  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME<=#endTime#]]>
+	  		  </isNotNull>
+	  		  <isNotNull prepend="and" property="courseCategoryId">
+	  		  	FEED_COURSE_STATICS_TBL.COURSE_CATEGORY_ID=#courseCategoryId#
+	  		  </isNotNull>) AS WATCH_NUMBER
+		  FROM FEED_COURSE_STATICS_TBL,FEED_COURSE_TBL
+  		  WHERE 1=1
+  		  <isNotNull prepend="and" property="startTime">
+  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME >=#startTime#]]>
+  		  </isNotNull>
+  		  <isNotNull prepend="and" property="endTime">
+  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME<=#endTime#]]>
+  		  </isNotNull>
+  		  <isNotNull prepend="and" property="courseCategoryId">
+  		  	FEED_COURSE_STATICS_TBL.COURSE_CATEGORY_ID=#courseCategoryId#
+  		  </isNotNull>
+  		  AND FEED_COURSE_STATICS_TBL.COURSE_ID = FEED_COURSE_TBL.ID
+  		  GROUP BY FEED_COURSE_TBL.ID
+  		 <include refid="public_sql.page_end"/>
+	</select>
+	
+	
+	<select id="getCouserStaticListCount" resultClass="int" parameterClass="queryCourseStaticsCondition">
+		 	SELECT COUNT(1) 
+  			FROM (SELECT DISTINCT feed_course_statics_tbl.`course_id`,feed_course_tbl.id 
+  			 	  FROM feed_course_statics_tbl,feed_course_tbl 
+	  			  WHERE feed_course_statics_tbl.COURSE_ID =feed_course_tbl.id 
+	  			  <isNotNull prepend="and" property="startTime">
+		  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME>=#startTime#]]>
+		  		  </isNotNull>
+		  		  <isNotNull prepend="and" property="endTime">
+		  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME<=#endTime#]]>
+		  		  </isNotNull>
+		  		  <isNotNull prepend="and" property="courseCategoryId">
+		  		  	FEED_COURSE_STATICS_TBL.COURSE_CATEGORY_ID=#courseCategoryId#
+		  		  </isNotNull> 
+	  			  GROUP BY feed_course_tbl.id ) groupresult
+	</select>
+	
+    <select id="userPersonNum" resultClass="int" parameterClass="int">
+       	SELECT COUNT(groupresult.user_id) FROM (SELECT DISTINCT feed_course_statics_tbl.`user_id` FROM feed_course_statics_tbl WHERE feed_course_statics_tbl.COURSE_ID =#value#) groupresult 
+    </select>
+    
+    <select id="usePersonNum" resultClass="int" parameterClass="queryCourseStaticsCondition">
+       	SELECT COUNT(groupresult.user_id) FROM (
+       			SELECT DISTINCT feed_course_statics_tbl.`user_id`
+       			FROM feed_course_statics_tbl 
+       		    WHERE feed_course_statics_tbl.COURSE_ID =#courseId#
+      		      <isNotNull prepend="and" property="startTime">
+		  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME>=#startTime#]]>
+		  		  </isNotNull>
+		  		  <isNotNull prepend="and" property="endTime">
+		  		  	<![CDATA[FEED_COURSE_STATICS_TBL.STATISTICS_TIME<=#endTime#]]>
+		  		  </isNotNull>
+		  		  <isNotNull prepend="and" property="courseCategoryId">
+		  		  	FEED_COURSE_STATICS_TBL.COURSE_CATEGORY_ID=#courseCategoryId#
+		  		  </isNotNull> 
+       ) groupresult 
+    </select>
+</sqlMap>

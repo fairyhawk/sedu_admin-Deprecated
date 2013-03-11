@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SellWay_NS">
+        <!--table:COU_SELL_WAY_TBL-->
+        <typeAlias alias="SellWay" type="com.shangde.edu.cou.domain.SellWay"/>
+        <typeAlias alias="QuerySellWayCondition" type="com.shangde.edu.cou.condition.QuerySellWayCondition"/>
+        <typeAlias alias="SellWayDTO" type="com.shangde.edu.cou.dto.SellWayDTO"/>
+         <typeAlias alias="TeacherCookieDTO" type="com.shangde.edu.cou.dto.TeacherCookieDTO"/>
+         <!--销售记录财务表-->
+         <typeAlias alias="SellWayNewDTO" type="com.shangde.edu.cou.dto.SellWayNewDTO"/>
+         <resultMap id="SellWayNewResult" class="SellWayNewDTO">
+         	<result property="sellId" column="SELL_ID"/>
+         	<result property="sellName" column="SELL_NAME"/>
+         	<result property="subjectName" column="SUBJECT_NAME"/>
+         	<result property="sellPrice" column="SELL_PRICE"/>
+         	<result property="cashRecordPrice" column="CASH_RECORD_PRICE"/>
+         	<result property="email" column="EMAIL"/>
+         	<result property="addTime" column="ADD_TIME"/>
+         	<result property="beganSellTime" column="BEGAN_SELL_TIME"/>
+         	<result property="createTime" column="CREATE_TIME"/>
+         	<result property="shopPayTime" column="SHOP_PAY_TIME"/>
+         	<result property="validityTime" column="VALIDITY_TIME"/>
+         	<result property="validityNum" column="VALIDITY_NUM"/>
+         	<result property="stopSellTime" column="STOP_SELL_TIME"/>
+         	<result property="dropTime" column="DROP_TIME"/>
+         	<result property="stopServiceTime" column="STOP_SERVICE_TIME"/>
+         	<result property="payTime" column="PAY_TIME"/>
+         	<result property="upTime" column="UP_TIME"/>
+         	 <result property="confirmTime" column="CONFIRM_TIME"/>
+         </resultMap>
+		
+        <resultMap id="SellWayResult" class="SellWay">
+           <result property="sellId" column="SELL_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="sellName" column="SELL_NAME"/>
+            <result property="status" column="STATUS"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="sellPrice" column="SELL_PRICE"/>
+            <result property="sellMark" column="SELL_MARK"/>
+            <result property="teacher" column="TEACHER"/>
+            <result  property="lessonNumber" column="LESSON_NUMBER"/>
+            <result  property="subjectKey" column="SUBJECT_KEY"/>
+            <result property="validity" column="VALIDITY"/>
+            <result property="startTime" column="START_TIME"/>
+            <result property="imagesUrl" column="IMAGES_URL"/>
+            <result property="vedioUrl" column="VEDIO_URL"/>
+            <result property="remark" column="REMARK"/>
+            <result property="shopState" column="SHOP_STATE" nullValue="0"/>
+            <result property="dropTime" column="DROP_TIME"/>
+            <result property="timeVersion" column="TIME_VERSION"/>
+            <result property="upTime" column="UP_TIME"/>
+            <result property="disProperty" column="DISPROPERTY"/>
+            <result property="disPosition" column="DISPOSITION"/>
+            <result property="validityTime" column="VALIDITY_TIME"/>
+            <result property="upgradeShow" column="UPGRADE_SHOW"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+            <result property="nowPrice" column="now_price"/>
+            <result property="rebatePrice" column="rebate_price"/>
+            <!-- 新添加 -->
+            <result property="beganSellTime" column="BEGAN_SELL_TIME"/>
+            <result property="confirmTime" column="CONFIRM_TIME"/>
+            <result property="stopSellTime" column="STOP_SELL_TIME"/>
+            <result property="stopServiceTime" column="STOP_SERVICE_TIME"/>
+            <result property="validityNum" column="VALIDITY_NUM"/>
+            <result property="sellType" column="SELL_TYPE"/>
+            <result property="specialtyId" column="specialty_id"/>
+            <result property="teacherName" column="TEACHER_NAME"/>
+            <result property="suitPerson" column="suit_person"/>
+            <result property="detail" column="detail"/>
+            <result property="directory" column="directory"/>
+            <result property="label" column="label"/>
+            <result property="upShelveTime" column="up_shelve_time"/>
+            <result property="directUpShelve" column="direct_up_shelve"/>
+            <result property="downShelveTime" column="down_shelve_time"/>
+            <result property="directDownShelve" column="direct_down_shelve"/>
+            <result property="mode" column="mode"/>
+            <result property="sellMode" column="sell_mode"/>
+            <result property="validTime" column="valid_time"/>
+            <result property="validityBeginTime" column="validity_begin_time"/>
+            <result property="validityEndTime" column="validity_end_time"/>
+            <result property="integral" column="integral"/>
+            <result property="isUpgrade" column="is_upgrade"/>
+            <result property="isProtocal" column="is_protocal"/>
+            <result property="protocalContent" column="protocal_content"/>
+        </resultMap>
+        
+        <resultMap id="SellWayResultFXS" class="SellWay">
+           <result property="sellId" column="SELL_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="sellName" column="SELL_NAME"/>
+            <result property="status" column="STATUS"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="sellPrice" column="SELL_PRICE"/>
+            <result property="sellMark" column="SELL_MARK"/>
+            <result property="teacher" column="TEACHER"/>
+            <result  property="lessonNumber" column="LESSON_NUMBER"/>
+            <result  property="subjectKey" column="SUBJECT_KEY"/>
+        </resultMap>
+        
+		<resultMap class="SellWayDTO" id="SellWayDTOResult" extends="SellWayResult">
+			<result property="subjectName" column="SUBJECT_ID" select="SellWay_NS.getSubjectById"/>
+			<result property="courseNum" column="SELL_ID" select="SellWay_NS.getSellCouList"/> 
+			<result property="sellStatus" column="sellStatus" />
+		</resultMap>
+        <sql id="COU_SELL_WAY_TBL_columns">
+            COU_SELL_WAY_TBL.SELL_ID,
+            COU_SELL_WAY_TBL.SUBJECT_ID,
+            COU_SELL_WAY_TBL.SELL_NAME,
+            COU_SELL_WAY_TBL.STATUS,
+            COU_SELL_WAY_TBL.ADD_TIME,
+            COU_SELL_WAY_TBL.SELL_PRICE,
+            COU_SELL_WAY_TBL.SELL_MARK,
+            COU_SELL_WAY_TBL.TEACHER,
+            COU_SELL_WAY_TBL.LESSON_NUMBER,
+            COU_SELL_WAY_TBL.SUBJECT_KEY,
+            COU_SELL_WAY_TBL.VALIDITY,
+            COU_SELL_WAY_TBL.START_TIME,
+            COU_SELL_WAY_TBL.IMAGES_URL,
+            COU_SELL_WAY_TBL.VEDIO_URL,           
+            COU_SELL_WAY_TBL.REMARK,          
+            COU_SELL_WAY_TBL.SHOP_STATE,
+            COU_SELL_WAY_TBL.DROP_TIME,
+            COU_SELL_WAY_TBL.TIME_VERSION,
+            COU_SELL_WAY_TBL.UP_TIME,
+            COU_SELL_WAY_TBL.DISPROPERTY,
+            COU_SELL_WAY_TBL.DISPOSITION,
+            COU_SELL_WAY_TBL.VALIDITY_TIME,
+            COU_SELL_WAY_TBL.UPGRADE_SHOW,
+            COU_SELL_WAY_TBL.UPDATE_TIME,
+            COU_SELL_WAY_TBL.UPDATE_USER,
+            COU_SELL_WAY_TBL.now_price,
+            COU_SELL_WAY_TBL.rebate_price,
+            COU_SELL_WAY_TBL.BEGAN_SELL_TIME,
+            COU_SELL_WAY_TBL.CONFIRM_TIME,
+  			COU_SELL_WAY_TBL.STOP_SELL_TIME,
+    		COU_SELL_WAY_TBL.STOP_SERVICE_TIME,
+    		COU_SELL_WAY_TBL.VALIDITY_NUM,
+    		COU_SELL_WAY_TBL.SELL_TYPE,
+    		COU_SELL_WAY_TBL.specialty_id,
+    		COU_SELL_WAY_TBL.TEACHER_NAME,
+    		COU_SELL_WAY_TBL.suit_person,
+    		COU_SELL_WAY_TBL.detail,
+    		COU_SELL_WAY_TBL.directory,
+    		COU_SELL_WAY_TBL.label,
+    		COU_SELL_WAY_TBL.up_shelve_time,
+    		COU_SELL_WAY_TBL.direct_up_shelve,
+    		COU_SELL_WAY_TBL.down_shelve_time,
+    		COU_SELL_WAY_TBL.direct_down_shelve,
+    		COU_SELL_WAY_TBL.mode,
+    		COU_SELL_WAY_TBL.sell_mode,
+    		COU_SELL_WAY_TBL.valid_time,
+    		COU_SELL_WAY_TBL.validity_begin_time,
+    		COU_SELL_WAY_TBL.validity_end_time,
+    		COU_SELL_WAY_TBL.integral,
+    		COU_SELL_WAY_TBL.is_upgrade,
+    		COU_SELL_WAY_TBL.is_protocal,
+    		COU_SELL_WAY_TBL.protocal_content
+        </sql>
+
+        <sql id="COU_SELL_WAY_TBL_properties">
+            #sellId#,
+            #subjectId#,
+            #sellName#,
+            #status#,
+            #addTime#,
+            #sellPrice#,
+            #sellMark#,
+            #teacher#,
+            #lessonNumber#,
+            #subjectKey#,
+            #validity#,
+            #startTime#,
+            #imagesUrl#,        
+            #vedioUrl#,
+            #remark#,
+            #shopState#,
+            #dropTime#,
+            #timeVersion#,
+            #upTime#,
+            #disProperty#,
+            #disPosition#,
+            #validityTime#,
+            #upgradeShow#,
+            #updateTime#,
+            #updateUser#,
+            #nowPrice#,
+            #rebatePrice#,
+            #beganSellTime#,
+            #confirmTime#,
+            #stopSellTime#,
+            #stopServiceTime#,
+            #validityNum#,
+            #sellType#,
+            #specialtyId#,
+            #teacherName#,
+            #suitPerson#,
+            #detail#,
+            #directory#,
+            #label#,
+            #upShelveTime#,
+            #directUpShelve#,
+            #downShelveTime#,
+            #directDownShelve#,
+            #mode#,
+            #sellMode#,
+            #validTime#,
+            #validityBeginTime#,
+            #validityEndTime#,
+            #integral#,
+            #isUpgrade#,
+            #isProtocal#,
+            #protocalContent#
+        </sql>
+
+        <insert id="createSellWay" parameterClass="SellWay">
+            INSERT INTO COU_SELL_WAY_TBL (<include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>) VALUES (<include refid="SellWay_NS.COU_SELL_WAY_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="sellId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSellWayById" parameterClass="int">
+        update COU_SELL_WAY_TBL set status=2 where sell_id=#value#
+        </delete>
+
+        <update id="updateSellWay" parameterClass="SellWay">
+            UPDATE COU_SELL_WAY_TBL SET
+            SELL_ID= #sellId#,
+            SUBJECT_ID=#subjectId#,
+            SELL_NAME=#sellName#,
+            STATUS= #status#,
+            ADD_TIME=#addTime#,
+            SELL_PRICE=#sellPrice#,
+            SELL_MARK=#sellMark#,
+            TEACHER=#teacher#,
+            LESSON_NUMBER=#lessonNumber#,
+            SUBJECT_KEY=#subjectKey#,
+            VALIDITY=#validity#,
+            START_TIME=#startTime#,
+            IMAGES_URL=#imagesUrl#,  
+            VEDIO_URL= #vedioUrl#,        
+            REMARK=#remark#,      
+            SHOP_STATE=#shopState#,
+            DROP_TIME=#dropTime#,
+            TIME_VERSION=#timeVersion#,
+            UP_TIME=#upTime#,
+            DISPROPERTY=#disProperty#,
+            DISPOSITION=#disPosition#,
+            VALIDITY_TIME=#validityTime#,
+            UPGRADE_SHOW=#upgradeShow#,
+            UPDATE_TIME=#updateTime#,
+            UPDATE_USER=#updateUser#,
+            now_price=#nowPrice#,
+            rebate_price=#rebatePrice#,
+            BEGAN_SELL_TIME=#beganSellTime#,
+            CONFIRM_TIME=#confirmTime#,
+  			STOP_SELL_TIME=#stopSellTime#,
+    		STOP_SERVICE_TIME=#stopServiceTime#,
+    		VALIDITY_NUM=#validityNum#,
+    		SELL_TYPE=#sellType#,  specialty_id=#specialtyId#,
+    		TEACHER_NAME=#teacherName#,
+    		suit_person= #suitPerson#,
+    		detail=#detail#,
+    		directory=#directory#,
+    		label=#label#,
+    		up_shelve_time=#upShelveTime#,
+    		direct_up_shelve=#directUpShelve#,
+    		down_shelve_time=#downShelveTime#,
+    		direct_down_shelve=#directDownShelve#,
+    		mode=#mode#,
+    		sell_mode=#sellMode#,
+    		valid_time=#validTime#,
+    		validity_begin_time=#validityBeginTime#,
+    		validity_end_time=#validityEndTime#,
+    		integral=#integral#,
+    		is_upgrade=#isUpgrade#,
+    		is_protocal=#isProtocal#,
+    		protocal_content=#protocalContent#
+            WHERE
+                SELL_ID = #sellId#
+        </update>
+      
+        <select id="getSellWayById" resultMap="SellWay_NS.SellWayResult" parameterClass="int">
+            SELECT
+            <include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+            FROM COU_SELL_WAY_TBL
+            WHERE
+                SELL_ID = #value#
+        </select>
+
+        <select id="getSellWayList" resultMap="SellWay_NS.SellWayResult" parameterClass="QuerySellWayCondition">
+            SELECT
+            <include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+            FROM COU_SELL_WAY_TBL
+        </select>
+        <select id="getSellWayInfoList" resultMap="SellWay_NS.SellWayDTOResult" parameterClass="QuerySellWayCondition">
+         <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+             <![CDATA[ ,       
+                   case when (BEGAN_SELL_TIME<=now() and (STOP_SELL_TIME>=now() or STOP_SELL_TIME is null)) then '在售'                   
+                        when (BEGAN_SELL_TIME>=now() or STOP_SELL_TIME<=now() or BEGAN_SELL_TIME is null) then '停售'                        
+                         end sellStatus
+            ]]>
+            FROM COU_SELL_WAY_TBL
+            <dynamic prepend="where">
+                status!=2
+            	<isNotEqual property="subjectId" compareValue="0">
+            	and	SUBJECT_ID = #subjectId#
+            	</isNotEqual>
+            </dynamic>    
+             ORDER BY SELL_ID DESC
+            <include refid="public_sql.page_end"/>  
+        </select>    
+         <select id="getSellWayInfoListCount" resultClass="int">
+            SELECT
+           count(*)
+            FROM COU_SELL_WAY_TBL where status!=2  ORDER BY UPDATE_TIME DESC 
+        </select> 
+        	 <resultMap id="ListTeacher" class="TeacherCookieDTO">
+            <result property="name" column="TEACHER_NAME"/>
+        </resultMap>
+        <!-- 根据项目打包售卖方式的ID查询所对应的课程老师 -->
+ <select id="getselectListTeacher" resultMap="SellWay_NS.ListTeacher" parameterClass="int">
+	   select DISTINCT TEACHER_NAME from
+		(SELECT cou_sell_cou_tbl.COURSE_ID as cc,COU_SELL_WAY_TBL.SELL_ID AS SELL_ID FROM COU_SELL_WAY_TBL as 
+	
+	COU_SELL_WAY_TBL left join  cou_sell_cou_tbl as  cou_sell_cou_tbl  on  
+	
+	COU_SELL_WAY_TBL.SELL_ID=cou_sell_cou_tbl.SELL_ID) as bb
+	        left join 
+	      (SELECT COU_TEACHER_TBL.NAME as TEACHER_NAME,COU_COURSE_TBL.COURSE_ID AS COURSE_ID  FROM 	COU_COURSE_TBL 
+	
+	as COU_COURSE_TBL left  join COU_TEACHER_TBL as COU_TEACHER_TBL on COU_COURSE_TBL.TEACHER_ID= 
+	
+	COU_TEACHER_TBL.TC_ID) as aa
+	       on 
+	       bb.cc=aa.COURSE_ID  WHERE bb.SELL_ID=#value#
+     </select>    
+     <select id="showSellWayListByWhere" resultMap="SellWay_NS.SellWayDTOResult" parameterClass="QuerySellWayCondition">
+         <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+           <![CDATA[ ,       
+                   case when (BEGAN_SELL_TIME<=now() and (STOP_SELL_TIME>=now() or STOP_SELL_TIME is null)) then '在售'                   
+                        when (BEGAN_SELL_TIME>=now() or STOP_SELL_TIME<=now() or BEGAN_SELL_TIME is null) then '停售'                        
+                         end sellStatus
+            FROM COU_SELL_WAY_TBL  where 1=1
+            	 and status!=2]]>
+            	<isNotEmpty property="sellType">
+            		<isNotEqual prepend="and" property="sellType" compareValue="-1">
+            			COU_SELL_WAY_TBL.SELL_TYPE = #sellType#
+            		</isNotEqual>
+            	</isNotEmpty>
+            	<isNotNull property="word">
+            		<isNotEqual property="word" compareValue="">
+            			and (SELL_NAME like  CONCAT('%',#word#,'%')
+            		     or teacher like CONCAT('%',#word#,'%')
+            		     or sell_id=#word#)
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotNull property="teacherName">
+            		<isNotEqual property="teacherName" compareValue="">
+            			and TEACHER_NAME like  CONCAT('%',#teacherName#,'%')
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotEmpty prepend="AND" property="upShelveBeginTime">
+            	 	up_shelve_time >= #upShelveBeginTime#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="upShelveEndTime">
+            	 	<![CDATA[up_shelve_time <= #upShelveEndTime# ]]>
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="downShelveBeginTime">
+            	 	down_shelve_time >= #downShelveBeginTime#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="downShelveEndTime">
+            	 	<![CDATA[down_shelve_time <= #downShelveEndTime# ]]>
+            	 </isNotEmpty>
+            	 <isEqual property="isSelling" compareValue="1">
+            		<![CDATA[and BEGAN_SELL_TIME<=now() and (STOP_SELL_TIME>=now() or STOP_SELL_TIME is null) ]]>
+            	 </isEqual>
+            	 <isEqual property="isSelling" compareValue="2">
+            		<![CDATA[and (BEGAN_SELL_TIME>=now() or STOP_SELL_TIME<=now() or BEGAN_SELL_TIME is null) 
+            		 ]]>
+            	 </isEqual>
+            	 <isNotEmpty prepend="AND" property="shopState">
+            	 	SHOP_STATE = #shopState#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="status">
+            	 	STATUS = #status#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="beganSellTimeBegin">
+            	 	BEGAN_SELL_TIME >= #beganSellTimeBegin#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="beganSellTimeEnd">
+            	 	<![CDATA[BEGAN_SELL_TIME <= #beganSellTimeEnd# ]]>
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="stopSellTimeBegin">
+            	 	STOP_SELL_TIME >= #stopSellTimeBegin#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="stopSellTimeEnd">
+            	 	<![CDATA[STOP_SELL_TIME <= #stopSellTimeEnd# ]]>
+            	 </isNotEmpty>
+            	 <isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+            		<isNotEqual property="subjectId" compareValue="0">
+            			SUBJECT_ID = #subjectId#
+            		</isNotEqual>
+            	</isNotEqual>
+            	<isNotEmpty property="isProtocal">
+            		<isNotEqual property="isProtocal" compareValue="-1">
+            			AND IS_PROTOCAL = #isProtocal#
+            		</isNotEqual>
+            	</isNotEmpty>
+             ORDER BY UPDATE_TIME DESC
+            <include refid="public_sql.page_end"/>  
+        </select> 
+	<select id="showSellWayListByWhereCount" resultClass="int">
+            SELECT
+            count(1)
+            FROM COU_SELL_WAY_TBL  where 1=1
+            	 and status!=2
+            	<isNotEmpty property="sellType">
+            		<isNotEqual prepend="and" property="sellType" compareValue="-1">
+            			COU_SELL_WAY_TBL.SELL_TYPE = #sellType#
+            		</isNotEqual>
+            	</isNotEmpty>
+            	<isNotNull property="word">
+            		<isNotEqual property="word" compareValue="">
+            			and (SELL_NAME like  CONCAT('%',#word#,'%')
+            		     or teacher like CONCAT('%',#word#,'%')
+            		     or sell_id=#word#)
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotNull property="teacherName">
+            		<isNotEqual property="teacherName" compareValue="">
+            			and TEACHER_NAME like  CONCAT('%',#teacherName#,'%')
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotEmpty prepend="AND" property="upShelveBeginTime">
+            	 	up_shelve_time >= #upShelveBeginTime#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="upShelveEndTime">
+            	 	<![CDATA[up_shelve_time <= #upShelveEndTime# ]]>
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="downShelveBeginTime">
+            	 	down_shelve_time >= #downShelveBeginTime#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="downShelveEndTime">
+            	 	<![CDATA[down_shelve_time <= #downShelveEndTime# ]]>
+            	 </isNotEmpty>
+            	 <isEqual property="isSelling" compareValue="1">
+            		<![CDATA[and BEGAN_SELL_TIME<=now() and (STOP_SELL_TIME>=now() or STOP_SELL_TIME is null) ]]>
+            	 </isEqual>
+            	 <isEqual property="isSelling" compareValue="2">
+            		<![CDATA[and (BEGAN_SELL_TIME>=now() or STOP_SELL_TIME<=now() or BEGAN_SELL_TIME is null) 
+            		 ]]>
+            	 </isEqual>
+            	 <isNotEmpty prepend="AND" property="shopState">
+            	 		SHOP_STATE = #shopState#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="status">
+            	 	STATUS = #status#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="beganSellTimeBegin">
+            	 	BEGAN_SELL_TIME >= #beganSellTimeBegin#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="beganSellTimeEnd">
+            	 	<![CDATA[BEGAN_SELL_TIME <= #beganSellTimeEnd# ]]>
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="stopSellTimeBegin">
+            	 	STOP_SELL_TIME >= #stopSellTimeBegin#
+            	 </isNotEmpty>
+            	 <isNotEmpty prepend="AND" property="stopSellTimeEnd">
+            	 	<![CDATA[STOP_SELL_TIME <= #stopSellTimeEnd# ]]>
+            	 </isNotEmpty>
+            	 <isNotEqual prepend="AND" property="subjectId" compareValue="-1">
+            		<isNotEqual property="subjectId" compareValue="0">
+            			SUBJECT_ID = #subjectId#
+            		</isNotEqual>
+            	</isNotEqual>
+            	<isNotEmpty property="isProtocal">
+            		<isNotEqual property="isProtocal" compareValue="-1">
+            			AND IS_PROTOCAL = #isProtocal#
+            		</isNotEqual>
+            	</isNotEmpty>
+             ORDER BY SELL_ID DESC
+	</select>
+
+	
+	<select id="getSellWayBySubjectId" resultMap="SellWay_NS.SellWayResult" parameterClass="int">
+			SELECT
+			<include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+			FROM cou_sell_way_tbl 
+			WHERE cou_sell_way_tbl.SUBJECT_ID =#value#
+	
+	</select>
+	   <select id="getSellCouList" resultClass="int" parameterClass="int">
+            SELECT count(1) FROM COU_SELL_COU_TBL where SELL_ID = #value#
+       </select>
+       <!-- 更新商品上架状态 -->
+       <update id="updatesShopState" parameterClass="int">
+       <isGreaterEqual property="value" compareValue="0">
+       update COU_SELL_WAY_TBL set SHOP_STATE=1 where SELL_ID=#value#
+       </isGreaterEqual>
+       </update>
+       
+       <select id="getSubjectById" resultClass="String"
+		parameterClass="int">
+		SELECT
+		SUBJECT_NAME
+		FROM SYS_SUBJECT_TBL WHERE SUBJECT_ID = #value#
+
+	</select>
+       
+	<!-- 陈松 代理商-->
+	<select id="getSellWayForAgent" resultMap="SellWay_NS.SellWayResultFXS" parameterClass="int">
+            SELECT
+            	COU_SELL_WAY_TBL.SELL_ID,
+            	COU_SELL_WAY_TBL.SUBJECT_ID,
+            	COU_SELL_WAY_TBL.SELL_NAME,
+            	COU_SELL_WAY_TBL.STATUS,
+            	COU_SELL_WAY_TBL.SELL_PRICE,
+            	COU_SELL_WAY_TBL.ADD_TIME,
+            	COU_SELL_WAY_TBL.SELL_MARK,
+            	COU_SELL_WAY_TBL.TEACHER,
+            	COU_SELL_WAY_TBL.LESSON_NUMBER,
+            	COU_SELL_WAY_TBL.SUBJECT_KEY
+            FROM COU_SELL_WAY_TBL
+            WHERE SUBJECT_ID=#value# and status=0 and SHOP_STATE=1
+        </select> 
+        <!-- 陈松代理商结束--> 
+        
+      <!-- 销售记录财务表 -->
+      <select id="showSellWayListRecord" resultMap="SellWay_NS.SellWayNewResult" parameterClass="QuerySellWayCondition">
+      	<include refid="public_sql.page_begin"/>
+      		select 
+      			csw.SELL_ID,csw.SELL_NAME,ss.SUBJECT_NAME,csw.SELL_PRICE,cc.EMAIL,csw.ADD_TIME,csw.UP_TIME,csw.CONFIRM_TIME,csw.BEGAN_SELL_TIME,fcr.CREATE_TIME,fcr.SHOP_PAY_TIME,fct.PAY_TIME,
+      			csw.VALIDITY_TIME,csw.VALIDITY_NUM,csw.STOP_SELL_TIME,csw.DROP_TIME,csw.STOP_SERVICE_TIME,fcr.CASH_RECORD_PRICE,fcr.CREATE_TIME,fcr.ID
+			from finance_cash_record_tbl fcr
+			 left join COU_SELL_WAY_TBL csw on fcr.pack_id=csw.sell_id
+			left join cus_customer_tbl cc on cc.cus_id=fcr.cus_id
+			left join sys_subject_tbl ss on ss.subject_id=fcr.cr_subject_id 
+			left join finance_contract_tbl fct on fct.id=fcr.ct_id
+			where 1=1 and fcr.CR_SUBJECT_ID!=0 and fcr.status=1 and fct.pay_type!=0 and fcr.CASH_RECORD_PRICE!=0
+			<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+					<![CDATA[  csw.ADD_TIME >= #startCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<isNotEqual property="endCountTime" compareValue="">
+					<![CDATA[  csw.ADD_TIME <= #endCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			order by fcr.create_time desc
+		 <include refid="public_sql.page_end"/>     		
+      </select>
+      <select id="getshowSellWayListRecordCount" resultClass="int">
+            SELECT
+           	count(*)
+            FROM finance_cash_record_tbl fcr left join finance_contract_tbl fct on fct.id=fcr.ct_id
+            left join COU_SELL_WAY_TBL csw on fcr.pack_id=csw.sell_id
+             where 1=1 and fcr.CR_SUBJECT_ID!=0 and fcr.status=1  and fct.pay_type!=0 and fcr.CASH_RECORD_PRICE!=0
+            <isNotNull prepend="and" property="startCountTime">
+				<isNotEqual property="startCountTime" compareValue="">
+					<![CDATA[  csw.ADD_TIME >= #startCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<isNotEqual property="endCountTime" compareValue="">
+					<![CDATA[  csw.ADD_TIME <= #endCountTime# ]]>
+				</isNotEqual>
+			</isNotNull>
+      </select> 
+      <select id="getCardCourseSell" parameterClass="int" resultMap="SellWay_NS.SellWayResult">
+	      	SELECT
+				<include refid="SellWay_NS.COU_SELL_WAY_TBL_columns"/>
+			FROM
+				COU_SELL_WAY_TBL
+			JOIN CARD_COURSE_SELL_TBL ON COU_SELL_WAY_TBL.SELL_ID = CARD_COURSE_SELL_TBL.SELL_ID
+			JOIN CARD_MAIN_TBL ON CARD_MAIN_TBL.CARD_MAIN_ID = CARD_COURSE_SELL_TBL.CARD_MAIN_ID
+			WHERE CARD_COURSE_SELL_TBL.CARD_MAIN_ID =#VALUE#
+      </select> 
+</sqlMap>

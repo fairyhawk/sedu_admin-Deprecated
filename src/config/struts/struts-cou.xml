@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="cou" namespace="/cou" extends="edu-default">
+    	<!-- 售卖方式 -->
+        <action name="sellway" class="com.shangde.edu.cou.action.SellWayAction">   
+        <interceptor-ref name="eduStack"/>
+			<interceptor-ref name="defaultStack" />     	
+        	<result name="listSellWay">/back/jsp/cou/course/sellWay_list.jsp</result>
+        	<result name="addSellWay">/back/jsp/cou/course/sellWay_add.jsp</result>
+        	<result name="getSellWay" type="redirect">sellway!toUpdateSellWay.action?sellWay.sellId=${sellWay.sellId}&amp;saveSuccess=yes</result>
+        	<result name="toAddCourse">/back/jsp/cou/course/sellWay_addCourse.jsp</result>
+        	<result name="toSellWayInfo">/back/jsp/cou/course/sellWay_info_list.jsp</result>
+        	<result name="toUpdateSellWay">/back/jsp/cou/course/sellWay_update.jsp</result>
+        	<result name="updateCouponTypeByStateForMore" type="redirectAction">
+        		<param name="actionName">sellway!showSellWayList</param>
+        		<param name="querySellWayCondition.currentPage">1</param>
+        		</result>
+        	<result name="json" type="json">
+			 	<param name="root">result</param>
+			</result>
+			<!-- 销售记录财务表 -->
+			<result name="showSellWayListRecord">/back/jsp/cou/course/sellWayRecord_list.jsp</result>
+			<!-- 导出Excel -->
+			<result name="exportSellWay" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportName}"</param>
+			</result> 
+			
+			<!-- wd 转到商品列表，用于返回第一页-->
+			<result name="showListOne" type="redirectAction">
+        		<param name="actionName">sellway!showSellWayList</param>
+        		<param name="querySellWayCondition.currentPage">1</param>
+			</result>
+        </action>
+        
+     	<action name="address" class="com.shangde.edu.cus.action.AddressAction" >
+        	<result name="toAddress">/back/jsp/finance/contract/customer_address.jsp</result>
+        	<result name="list" type="redirect">
+        	/finance/backContract!getContractList.action?queryContractCondition.currentPage=1
+        	</result>
+        	
+        </action>
+        
+        <!-- 前台售卖方式 -->
+         <action name="sellwayweb" class="com.shangde.edu.cou.web.SellWayWebAction">  
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+         </action>
+        
+    	<!--课程action 后台 -->
+        <action name="course" class="com.shangde.edu.cou.action.CourseAction">
+            <result name="addExam">/back/jsp/common/success.jsp</result>
+            <result name="toAddCourse">/back/jsp/cou/course/course_add.jsp</result>
+            <result name="listCoursesBySortId">/back/jsp/cou/course/course_list.jsp</result>
+            <result name="listCoursesFree">/back/jsp/cou/course/course_list_free.jsp</result>
+            <result name="listCourses1Free">/back/jsp/cou/course/course1_list_free.jsp</result>
+            <result name="toUpdateCourse">/back/jsp/cou/course/course_update.jsp</result>
+            
+            <result name="getCouFreeGiveList">/back/jsp/cou/course/couFreeGive_list.jsp</result>
+            <result name="exportCouFreeGive" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportName}"</param>
+			</result> 
+            
+            
+            <result name="UpdateCourseSuccess" type="redirect">
+            	course!listCoursesBySortId.action?queryCourseCondition.currentPage=1&amp;course.sortId=${course.sortId}&amp;searchKey=${searchKey}
+            </result>
+            <result name="deleteCourse" type="redirect">
+           		course!listCoursesBySortId.action?queryCourseCondition.currentPage=1&amp;course.sortId=${course.sortId}&amp;searchKey=${searchKey}
+            </result>
+            
+            <result name="freezeAllCourse" type="redirect">
+           		course!listCoursesBySortId.action?queryCourseCondition.currentPage=1&amp;course.sortId=${course.sortId}&amp;searchKey=${searchKey}
+            </result>
+            
+            <result name="deletePicSuccess" type="redirect">
+           		course!toUpdateCourse.action?course.courseId=${course.courseId}
+            </result>
+            
+            <result name="getCourseBySortId" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="listHistoryPrice">/back/jsp/cou/course/historyPrice_list.jsp</result>
+            
+            <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<interceptor-ref name="eduStack"/>
+			<interceptor-ref name="defaultStack" />
+			<param name="savePath">/course</param>
+			
+			<interceptor-ref name="fileUpload">  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            
+            <result name="reupload" type="redirect">exam!toAddExam.action</result>
+            <result name="toDeleteCourse" >/back/jsp/cou/course/course_list_delete.jsp</result>
+            <result name="loadCourseInfo" type="redirect">course!toUpdateCourse.action?course.courseId=${course.courseId}&amp;course.sortId=${course.sortId}&amp;saveSuccess=yes</result>
+        </action>
+        
+        <!--课程action 前台 -->
+        <action name="courseweb" class="com.shangde.edu.cou.web.CourseWebAction">
+			<interceptor-ref name="loginStack"/>
+			
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="coursejson" type="json">
+				<param name="root">courseReult</param>
+			</result>
+ 			
+ 			<result name="updatedc" type="json">
+ 			<param name="root">result</param>
+ 			</result>
+ 			
+ 			<result name="fan">/api/createXML.jsp</result>
+          	<result name="toPreparePindao">/web/jsp/channel/pindao.jsp</result>
+          	<result name="toPreparePindaoTest">/web/jsp/channel/cpapindao.jsp</result>
+          	<result name="toPrepareCourse">/web/jsp/course/course_new.jsp</result>
+          	<result name="coursePlan">/static/usercenter/jsp/mycourse/course_plan.jsp</result>
+          	
+          	<param name="savePath">/course</param>
+          	<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+			
+			<!-- 文件下载 baiang.zhao. 2011-5-11 13:38:30-->
+			<result name="downloadFile" type="streamx">
+                <param name="contentType">application/octet-streamx;charset=ISO8859-1</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+        
+        <!-- 学员中心 课程登陆后action -->
+        <action name="courselimit" class="com.shangde.edu.cou.web.CourseWebAction">
+         	<interceptor-ref name="eduStackForWeb"/>
+         	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="toMyCourse">/static/usercenter/jsp/mycourse/mycour.jsp</result>
+			<result name="toListenMyCourse">/static/usercenter/jsp/vedio/Flashvideo.jsp</result>
+			<result name="allcourse">/static/usercenter/jsp/mycourse/allcourse.jsp</result>
+        </action>
+        <!-- 学员中心 登陆后action end -->
+        
+        <!--知识点action 后台-->
+        <action name="kpoint" class="com.shangde.edu.cou.action.KPointAction">
+        	<interceptor-ref name="eduStack"/>
+            <result name="toAddOrUpdateKpoint">/back/jsp/cou/kpoint/kpoint_addOrUpdate.jsp</result>
+            <result name="addOrUpdateKpoint" type='redirect'>kpoint!toAddOrUpdateKpoint.action?kpoint.courseId=${kpoint.courseId}&amp;subjectId=${subjectId}&amp;saveSuccess=yes</result>
+            <result name="toAddVedioByCourse">/back/jsp/cou/kpoint/kpoint_res_add.jsp</result>
+            <result name="listKpointsByCondition">/back/jsp/cou/kpoint/kpoint_list.jsp</result>
+            <result name="deleteKpoint" type="redirect">
+            	kpoint!listKpointsByCondition.action?queryKpointCondition.currentPage=1&amp;kpoint.courseId=${kpoint.courseId}&amp;searchKey=${searchKey}
+            </result>
+            <result name="freezeKpoints" type="redirect">
+            	kpoint!listKpointsByCondition.action?queryKpointCondition.currentPage=1&amp;kpoint.courseId=${kpoint.courseId}&amp;searchKey=${searchKey}
+            </result>
+            
+            <result name="fixKpoints" type='redirect'>kpoint!toAddOrUpdateKpoint.action?kpoint.courseId=${kpoint.courseId}</result>
+            <result name="getJSONKpoints" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStack"/>
+			<interceptor-ref name="defaultStack" />
+        </action>
+        
+        <!--知识点action 前台-->
+        <action name="kpointweb" class="com.shangde.edu.cou.web.KPointWebAction">
+            <interceptor-ref name="loginStack"/>
+            <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="kpontjson" type="json">
+				<param name="root">result</param>
+			</result>
+        </action>
+        <!--课程分类action 后台-->
+        <action name="coursesort" class="com.shangde.edu.cou.action.CourseSortAction">
+            <result name="addCourseSort">/back/jsp/common/success.jsp</result>
+            <result name="deleteCourseSort" type="redirect">coursesort!listCoursesortsByKey.action?queryCourseSortCondition.currentPage=1&amp;searchKey=${searchKey}</result>
+            <result name="toAddCourseSort">/back/jsp/cou/course/courseSort_add.jsp</result>
+            <result name="toSelectCourseSort">/back/jsp/cou/kpoint/course_select.jsp</result>
+            <result name="toSelectCourseSortPage">/back/jsp/cou/kpoint/course_select_list.jsp</result>
+            <result name="deleteCourseSorts" type="redirect">coursesort!toDeleteCourseSorts.action</result>
+            <result name="toDeleteCourseSorts">/back/jsp/cou/course/coursesort_delete.jsp</result>
+            <result name="listCoursesortsByKey">/back/jsp/cou/course/coursesort_list.jsp</result>
+            <result name="toUpdateCoursesort">/back/jsp/cou/course/courseSort_update.jsp</result>
+            <result name="updateCoursesort" type="redirect">coursesort!listCoursesortsByKey.action?queryCourseSortCondition.currentPage=1&amp;searchKey=${searchKey}</result>
+            <result name="freezeCoursesorts" type="redirect">coursesort!listCoursesortsByKey.action?queryCourseSortCondition.currentPage=1&amp;searchKey=${searchKey}</result>
+            <result name="getChildSortById" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="sortJson" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<interceptor-ref name="eduStack"/>
+			<interceptor-ref name="defaultStack" />
+			<param name="savePath">/coursesort</param>
+			
+			<interceptor-ref name="fileUpload">  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+        </action>
+        
+        <!--课程分类action 前台-->
+        <action name="coursesortweb" class="com.shangde.edu.cou.web.CourseSortWebAction">
+        	<interceptor-ref name="loginStack"/>
+            <result name="toListAllCoursesortListDTO">/web/jsp/course/course_list.jsp</result>
+        </action>
+        
+        <!-- 推荐课程 -->
+		<action name="tjcourse" class="com.shangde.edu.cou.action.TjCourseAction">
+			<interceptor-ref name="loginStack"/>
+     	    <result name="toAddTjCourse">/back/jsp/cou/course/tjcourse_add.jsp</result>
+     	    <result name="listTjcourses">/back/jsp/cou/course/tjcourse_list.jsp</result>
+        </action>
+        
+        
+        <!-- 教师 -->
+		<action name="teacher" class="com.shangde.edu.cou.action.TeacherAction">
+     	    <result name="list">/back/jsp/cou/teacher/teacher_list.jsp</result>
+        	<result name="addPage">/back/jsp/cou/teacher/teacher_add.jsp</result>
+        	<result name="updatePage">/back/jsp/cou/teacher/teacher_update.jsp</result>
+        	<result name="selectCoursePage">/back/jsp/cou/teacher/teacher_select_course.jsp</result>
+        	<result name="viewTeacher">/back/jsp/cou/teacher/teacher_view.jsp</result>
+        	<result name="relist" type="redirect">/cou/teacher!showTeacherList.action?queryTeacherCondition.isStar=${queryTeacherCondition.isStar}&amp;
+        			queryTeacherCondition.name=${queryTeacherCondition.name}&amp;queryTeacherCondition.currentPage=${queryTeacherCondition.currentPage}
+        	</result>        	
+            
+            <!-- 上传下载图片开始 -->
+            <interceptor-ref name="defaultStack" />
+			<param name="savePath">/teacher</param>
+			<interceptor-ref name="fileUpload">  
+                <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <!-- 配置允许上传的文件大小，单位字节 -->  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            <result name="reupload">/back/jsp/test_pic_upload.jsp</result>
+			<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+            <!-- 上传下载图片结束 -->
+             <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+        </action>
+        
+        <!-- 教师前台接口 -->
+        <action name="teacherweb" class="com.shangde.edu.cou.web.TeacherWebAction">
+        	<result name="teacherinfo">/web/jsp/teacher/teacher_info.jsp</result>
+            <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+            
+            <!-- 上传下载图片开始 -->
+            <interceptor-ref name="defaultStack" />
+			<param name="savePath">/teacher</param>
+			<interceptor-ref name="fileUpload">  
+                <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <!-- 配置允许上传的文件大小，单位字节 -->  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            <result name="reupload">/back/jsp/test_pic_upload.jsp</result>
+			<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+			<interceptor-ref name="loginStack" />
+            <!-- 上传下载图片结束 -->
+        </action>
+        
+        <!-- 优惠券 -->
+        <action name="coupon" class="com.shangde.edu.cou.action.CouponAction">
+        	<result name="list">/back/jsp/cou/coupon/coupon_list.jsp</result>
+        	<result name="addPage">/back/jsp/cou/coupon/coupon_add.jsp</result>
+        	<result name="updatePage">/back/jsp/cou/coupon/coupon_update.jsp</result>
+        	<result name="relist" type="redirect">
+        		/cou/coupon!showCouponList.action?queryCouponCondition.tmpName=${queryTemplateCondition.tmpName}&amp;
+        		queryTemplateCondition.currentPage=${queryTemplateCondition.currentPage}&amp;queryTemplateCondition.tmpType=${queryTemplateCondition.tmpType}
+        		&amp;queryTemplateCondition.tmpContent=${queryTemplateCondition.tmpContent}&amp;queryTemplateCondition.isUse=${queryTemplateCondition.isUse}
+            </result>
+        </action>
+        <!-- 优惠券结束 -->
+        
+        <!-- 前台优惠券 需登录-->
+        <action name="couponlimit" class="com.shangde.edu.cou.web.CouponWebAction">
+        	<result name="showMyCoupon">/web/jsp/ucenter/user_mycoupon.jsp</result>
+        	<result name="showUserCpCusList">/static/usercenter/jsp/contract/caiwu.jsp</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+        <!-- 前台优惠券结束 -->
+        
+        <!-- 前台优惠券 不需登陆-->
+        <action name="couponweb" class="com.shangde.edu.cou.web.CouponWebAction">
+        	<result name="initApplyCoupon">/web/jsp/course/coupon_apply.jsp</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+        <!-- 前台优惠券结束 -->
+        
+         <!-- 班级 -->
+        <action name="clazz" class="com.shangde.edu.cou.action.ClazzAction">
+        	<result name="toAddClazz">/back/jsp/cou/clazz/clazz_add.jsp</result>
+        	<result name="addClazz">/back/jsp/common/success.jsp</result>
+        	<result name="updateClazz">/back/jsp/common/success.jsp</result>
+        	<result name="listClazzs">/back/jsp/cou/clazz/clazz_list.jsp</result>
+        	<result name="toUpdateClazz">/back/jsp/cou/clazz/clazz_update.jsp</result>
+        	<result name="toListClazzs" type='redirect'>/cou/clazz!listClazzs.action?queryClazzCondition.currentPage=1</result>
+        	<result name="toClazzCourse">/back/jsp/cou/clazz/clazz_course_manage.jsp</result>
+        	<result name="addClazzCou" type="redirect">/cou/clazz!toClazzCourse.action?queryClazzCouCondition.currentPage=1&amp;clazz.clazzId=${clazz.clazzId}</result>
+        	<result name="deleteClazzCou" type="redirect">/cou/clazz!toClazzCourse.action?queryClazzCouCondition.currentPage=1&amp;clazz.clazzId=${clazz.clazzId}</result>
+        	
+        	<interceptor-ref name="eduStack"/>
+			<interceptor-ref name="defaultStack" />
+			<param name="savePath">/clazz</param>
+			
+			<interceptor-ref name="fileUpload">  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+        </action>
+        <!-- 班级结束-->
+    </package>
+</struts>

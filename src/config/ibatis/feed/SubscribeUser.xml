@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SubscribeUser_NS">
+        <!--table:FEED_SUBSCRIBE_USER_TBL-->
+        <typeAlias alias="SubscribeUser" type="com.shangde.edu.feed.domain.SubscribeUser"/>
+        <typeAlias alias="QuerySubscribeUserCondition" type="com.shangde.edu.feed.condition.QuerySubscribeUserCondition"/>
+
+        <resultMap id="SubscribeUserResult" class="SubscribeUser">
+            <result property="id" column="ID"/>
+            <result property="email" column="EMAIL"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="pubdate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+        </resultMap>
+        <resultMap id="CustomerResult_" class="SubscribeUser">
+            <result property="id" column="cus_id"/>
+            <result property="email" column="EMAIL"/>
+        </resultMap>
+
+        <sql id="FEED_SUBSCRIBE_USER_TBL_columns">
+            FEED_SUBSCRIBE_USER_TBL.ID,
+            FEED_SUBSCRIBE_USER_TBL.EMAIL,
+            FEED_SUBSCRIBE_USER_TBL.SUBJECT_ID,
+            FEED_SUBSCRIBE_USER_TBL.STATUS,
+            FEED_SUBSCRIBE_USER_TBL.PUBDATE,
+            FEED_SUBSCRIBE_USER_TBL.MODIFIED
+        </sql>
+
+        <sql id="FEED_SUBSCRIBE_USER_TBL_properties">
+            #id#,
+            #email#,
+            #subjectId#,
+            #status#,
+            #pubdate#,
+            #modified#
+        </sql>
+
+        <insert id="createSubscribeUser" parameterClass="SubscribeUser">
+            INSERT INTO FEED_SUBSCRIBE_USER_TBL (<include refid="SubscribeUser_NS.FEED_SUBSCRIBE_USER_TBL_columns"/>) VALUES (<include refid="SubscribeUser_NS.FEED_SUBSCRIBE_USER_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSubscribeUserById" parameterClass="int">
+            DELETE FROM FEED_SUBSCRIBE_USER_TBL
+            WHERE id = #id#
+        </delete>
+
+        <update id="updateSubscribeUser" parameterClass="SubscribeUser">
+            UPDATE FEED_SUBSCRIBE_USER_TBL SET
+                ID = #id#,
+                EMAIL = #email#,
+                SUBJECT_ID = #subjectId#,
+                STATUS = #status#,
+                PUBDATE = #pubdate#,
+                MODIFIED = #modified#
+            WHERE ID = #id#
+        </update>
+
+        <select id="getSubscribeUserById" resultMap="SubscribeUser_NS.SubscribeUserResult" parameterClass="int">
+            SELECT
+            <include refid="SubscribeUser_NS.FEED_SUBSCRIBE_USER_TBL_columns"/>
+            FROM FEED_SUBSCRIBE_USER_TBL
+            WHERE id = #id#
+        </select>
+
+        <select id="getSubscribeUserList" resultMap="SubscribeUser_NS.SubscribeUserResult" parameterClass="QuerySubscribeUserCondition">
+            SELECT
+            <include refid="SubscribeUser_NS.FEED_SUBSCRIBE_USER_TBL_columns"/>
+            FROM FEED_SUBSCRIBE_USER_TBL
+        </select>
+        
+        <!-- 购买用户 -->
+        <select id="getCustomerBuyList" resultMap="SubscribeUser_NS.CustomerResult_" parameterClass="int">
+            select 
+            	cus.cus_id,cus.email 
+            from finance_contract_tbl con inner join cus_customer_tbl cus 
+            on con.cus_id = cus.cus_id 
+            where 
+            	con.status = 1 and cus.email not like '%@test%'
+            <dynamic>
+            	<isNotEqual prepend="and" compareValue="0">
+            		cus.subject_id = #value#
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        <!-- 注册用户 -->
+        <select id="getCustomerRegList" resultMap="SubscribeUser_NS.CustomerResult_" parameterClass="int">
+            select 
+            	cus.cus_id,cus.email 
+            from cus_customer_tbl cus 
+            where 
+            	cus.cus_type = 0 and cus.email not like '%@test%'
+            <dynamic>
+            	<isNotEqual prepend="and" compareValue="0">
+            		cus.subject_id = #value#
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

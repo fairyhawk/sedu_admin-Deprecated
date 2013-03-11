@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ContractCount_NS">
+	<typeAlias alias="ContractCountDTO" type="com.shangde.edu.count.dto.ContractCountDTO" />
+	<typeAlias alias="ContractCashDTO"
+		type="com.shangde.edu.count.dto.ContractDTO" />
+	<typeAlias alias="QueryContractCountCondition"
+		type="com.shangde.edu.count.condition.QueryContractCountCondition" />
+	<!-- 订单统计用 -->	
+	
+	<typeAlias alias="ContractCountNewDTO" type="com.shangde.edu.count.dto.ContractCountNewDTO" />	
+		<!-- 配置缓存模型 -->
+		<cacheModel id="ContractCount_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+			<property value="1000" name="size" />
+		</cacheModel>
+	<resultMap id="ContractCountNewDTOResult" class="ContractCountNewDTO">
+		<result property="allStudent" column="allStudent" />
+		<result property="allOrder" column="allOrder" />
+		<result property="dtoOrder" column="dtoOrder" />
+		<result property="dtoOrderNo" column="dtoOrderNo" />
+		<result property="bankOrder" column="bankOrder" />
+		<result property="bankOrderNo" column="bankOrderNo" />
+		<result property="quickOrder" column="quickOrder" />
+		<result property="quickOrderNo" column="quickOrderNo" />
+		<result property="internetOrder" column="internetOrder" />
+		<result property="internetOrderNo" column="internetOrderNo" />
+		<result property="unionpayOrder" column="unionpayOrder" />
+		<result property="unionpayOrderNo" column="unionpayOrderNo" />
+		<result property="truefriendsOrder" column="truefriendsOrder" />
+		<result property="truefriendsOrderNo" column="truefriendsOrderNo" />
+		<result property="remittanceOrder" column="remittanceOrder" />
+		<result property="remittanceOrderNo" column="remittanceOrderNo" />
+		
+		<result property="orderNo" column="orderNo" />
+		<result property="giftOrder" column="giftOrder" />
+		<result property="afterAmount" column="afterAmount" />
+		<result property="Refund" column="Refund" />
+		<result property="allLinshi" column="allLinshi" />
+		<result property="subName" column="SUBJECT_NAME" />
+	</resultMap>
+
+	<resultMap id="ContractDTOResult" class="ContractCashDTO">
+		<result property="status" column="STATUS" />
+		<result property="ctId" column="CT_ID" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="payType" column="PAY_TYPE" />
+		<result property="sellPrice" column="SELL_PRICE" />
+
+	</resultMap>
+	<resultMap id="YFContractDTOResult" class="ContractCashDTO">
+		<result property="status" column="STATUS" />
+		<result property="ctId" column="CT_ID" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="payType" column="PAY_TYPE" />
+		<result property="sellPrice" column="SELL_PRICE" />
+	</resultMap>
+
+	<!-- 按专业得到当前专业下所有订单 订单状态，支付类型，购买专业，begin 王郑 -->
+	<select id="getContractCountSum"
+		resultMap="ContractCount_NS.ContractDTOResult"
+		parameterClass="QueryContractCountCondition"  cacheModel="ContractCount_NS-cache">
+		select finance_contract_tbl.STATUS,
+		finance_contract_tbl.PAY_TYPE, finance_cash_record_tbl.CT_ID,
+		cou_sell_way_tbl.SUBJECT_ID,cou_sell_way_tbl.SELL_PRICE
+		from finance_cash_record_tbl inner
+		join finance_contract_tbl inner join cou_sell_way_tbl on
+		finance_cash_record_tbl.CT_ID=finance_contract_tbl.ID and
+		finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID where
+		1=1 and cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				<![CDATA[  finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_FROM= #webFrom# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_AGENT= #webAgnet# ]]>
+			</isNotEqual>
+		</isNotNull>
+		group by finance_cash_record_tbl.ct_id
+	</select>
+	<!-- 按专业得到当前专业下所有订单 订单状态，支付类型，购买专业，begin 王郑 -->
+
+	<!-- 得到当前专业下未付款，退费订单集合  begin 王郑-->
+	<select id="getWfContractSum"
+		resultMap="ContractCount_NS.YFContractDTOResult"
+		parameterClass="QueryContractCountCondition" cacheModel="ContractCount_NS-cache">
+		select finance_contract_tbl.STATUS,
+		finance_contract_tbl.PAY_TYPE, finance_cash_record_tbl.CT_ID,
+		cou_sell_way_tbl.SUBJECT_ID, cou_sell_way_tbl.SELL_PRICE from
+		finance_cash_record_tbl inner join finance_contract_tbl inner
+		join cou_sell_way_tbl on
+		finance_cash_record_tbl.CT_ID=finance_contract_tbl.ID and
+		finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID where
+		1=1 and cou_sell_way_tbl.SUBJECT_ID=#subjectId# and
+		(finance_contract_tbl.STATUS=0 or finance_contract_tbl.STATUS=3)
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				<![CDATA[  finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_FROM= #webFrom# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_AGENT= #webAgnet# ]]>
+			</isNotEqual>
+		</isNotNull>
+		group by finance_cash_record_tbl.ct_id
+	</select>
+	<!-- 得到当前专业下未付款，退费订单集合  end 王郑-->
+
+	<!-- 得到当前专业注册人数 begin 王郑-->
+	<select id="getCustomerCount" resultClass="int"
+		parameterClass="QueryContractCountCondition" cacheModel="ContractCount_NS-cache">
+		select count(distinct cus_customer_tbl.CUS_ID) from
+		cus_customer_tbl where
+		cus_customer_tbl.CUS_TYPE =0 and
+		cus_customer_tbl.SUBJECT_ID=#subjectId# and
+		cus_customer_tbl.CUS_TYPE!=1
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  cus_customer_tbl.REG_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  cus_customer_tbl.REG_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				<![CDATA[  finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_FROM= #webFrom# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_AGENT= #webAgnet# ]]>
+			</isNotEqual>
+		</isNotNull>
+	</select>
+	<!-- 得到当前专业注册人数 end 王郑-->
+
+
+	<!-- 得到当前专业人数中 有多少人下了订单 begin 王郑-->
+	<select id="getCustomerContractCount" resultClass="int"
+		parameterClass="QueryContractCountCondition" cacheModel="ContractCount_NS-cache">
+		select count(distinct cus_customer_tbl.CUS_ID) from
+		finance_contract_tbl left join cus_customer_tbl on
+		finance_contract_tbl.CUS_ID= cus_customer_tbl.CUS_ID where
+		cus_customer_tbl.CUS_TYPE =0 and
+		cus_customer_tbl.SUBJECT_ID=#subjectId# and
+		cus_customer_tbl.CUS_TYPE!=1
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				<![CDATA[  finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_FROM= #webFrom# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				<![CDATA[  finance_contract_tbl.WEB_AGENT= #webAgnet# ]]>
+			</isNotEqual>
+		</isNotNull>
+	</select>
+	<!-- 得到当前专业人数中 有多少人下了订单 end 王郑-->
+	
+	<!-- 订单统计总 -->
+<select id="getCountractCountAll" parameterClass="QueryContractCountCondition" resultMap="ContractCount_NS.ContractCountNewDTOResult"  cacheModel="ContractCount_NS-cache">
+		  select * from   
+		  (
+		  select subject_id,SUBJECT_NAME,contract.*,linshi.allLinshi from sys_subject_tbl left join
+(
+select *,
+   SUM(1) as  allOrder,
+   SUM(CASE WHEN zon.PAY_TYPE='2' THEN 1 ELSE 0 END) AS 'dtoOrder', 
+   SUM(CASE WHEN zon.PAY_TYPE='2' AND zon.STATUS =0  THEN 1 ELSE 0 END) AS 'dtoOrderNo', 
+   SUM(CASE WHEN  zon.PAY_TYPE=1 THEN 1 ELSE 0 END) AS 'bankOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=1 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'bankOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=4 THEN 1 ELSE 0 END) AS 'quickOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=4 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'quickOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=3 THEN 1 ELSE 0 END) AS 'internetOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=3 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'internetOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=6 THEN 1 ELSE 0 END) AS 'truefriendsOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=6 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'truefriendsOrderNo',
+   SUM(CASE WHEN  zon.PAY_TYPE=7 THEN 1 ELSE 0 END) AS 'remittanceOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=7 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'remittanceOrderNo',
+   <!-- 2011/12/28 yangning statics add unionpay paytype is 8 -->
+   SUM(CASE WHEN  zon.PAY_TYPE=8 THEN 1 ELSE 0 END) AS 'unionpayOrder',
+   SUM(CASE WHEN  zon.PAY_TYPE=8 AND zon.STATUS =0 THEN 1 ELSE 0 END) AS 'unionpayOrderNo',
+   SUM(CASE WHEN  zon.STATUS =0 THEN 1 ELSE 0 END) AS 'orderNo',
+   SUM(CASE WHEN zon.PAY_TYPE='0' THEN 1 ELSE 0 END) AS 'giftOrder', 
+   SUM(CASE WHEN zon.STATUS=1 THEN (zon.CONTRACT_CUTSUMMONEY+zon.Freight) ELSE 0 END) AS 'afterAmount',
+   SUM(CASE WHEN  zon.STATUS =3 THEN 3 ELSE 0 END) DIV 3 AS 'Refund'
+ from 
+ ( 			<!-- DISTINCT之后  finance_contract_tbl.ID必须添加 -->
+		  SELECT  DISTINCT(finance_cash_record_tbl.CR_SUBJECT_ID),finance_contract_tbl.ID, finance_contract_tbl.CREATE_TIME,finance_contract_tbl.PAY_TIME,    
+   finance_contract_tbl.PAY_TYPE,finance_contract_tbl.STATUS ,finance_contract_tbl.CONTRACT_CUTSUMMONEY,finance_contract_tbl.Freight
+   
+      FROM finance_contract_tbl left join  finance_cash_record_tbl on finance_cash_record_tbl.`CT_ID` = finance_contract_tbl.`ID` 
+      JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1 
+   WHERE 
+   ( 1=1 
+   		  
+   		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>  
+
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				 finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				 finance_contract_tbl.WEB_FROM= #webFrom#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				 finance_contract_tbl.WEB_AGENT= #webAgnet#
+			</isNotEqual>
+		</isNotNull>
+	
+	) 	
+		   
+    )
+     zon group by CR_SUBJECT_ID
+    )
+     as contract on sys_subject_tbl.subject_id=contract.CR_SUBJECT_ID
+     
+     <!-- 新关联表 开始-->
+     left join 
+(
+	select *,sum(1) as allLinshi
+	from	
+	(
+	 SELECT finance_cash_record_tbl.CR_SUBJECT_ID  FROM finance_contract_tbl left join  finance_cash_record_tbl on finance_cash_record_tbl.`CT_ID` = finance_contract_tbl.`ID`
+	 JOIN cou_sell_way_tbl ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SELL_TYPE=1  
+	left join cus_customer_tbl cc on cc.CUS_ID=finance_contract_tbl.CUS_ID
+    where 
+    1=1 
+    
+       	<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull> 
+         <isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+ 
+		<isNotNull prepend="and" property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				 finance_contract_tbl.CONTRACT_FROM_URL= #contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webFrom">
+			<isNotEqual property="webFrom" compareValue="">
+				 finance_contract_tbl.WEB_FROM= #webFrom#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="webAgnet">
+			<isNotEqual property="webAgnet" compareValue="">
+				 finance_contract_tbl.WEB_AGENT= #webAgnet#
+			</isNotEqual>
+		</isNotNull>	
+		 
+   GROUP BY finance_contract_tbl.cus_id
+	) linshi group by CR_SUBJECT_ID
+
+) as linshi on linshi.CR_SUBJECT_ID=sys_subject_tbl.subject_id
+
+     
+     <!-- 新关联表 结束 -->
+     
+     
+ ) 
+    as contr left join 
+
+  (SELECT subject_id,cus_customer_tbl.REG_TIME,
+                      SUM(1) AS 'allStudent'
+                      FROM cus_customer_tbl
+                    WHERE cus_type in (0,1)
+ 
+        <isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  REG_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  REG_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		 
+                     GROUP BY subject_id
+                      ORDER BY subject_id) as cus on contr.SUBJECT_ID=cus.subject_id 
+       where 1=1  
+         
+			<isNotEqual property="subjectId" compareValue="0">
+				and contr.SUBJECT_ID= #subjectId#
+			</isNotEqual>
+	</select>
+</sqlMap>

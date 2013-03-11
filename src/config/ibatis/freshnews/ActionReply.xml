@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ActionReply_NS">
+        <!--table:CUS_ACTION_REPLY_TBL-->
+        <typeAlias alias="ActionReply" type="com.shangde.edu.freshnews.domain.ActionReply"/>
+        <resultMap id="ActionReplyResult" class="ActionReply">
+            <result property="id" column="ID"/>
+            <result property="actionId" column="ACTION_ID"/>
+            <result property="operateType" column="OPERATE_TYPE"/>
+            <result property="operateUserId" column="OPERATE_USER_ID"/>
+            <result property="operateUserEmail" column="OPERATE_USER_EMAIL"/>
+            <result property="operateUserName" column="OPERATE_USER_NAME"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="replyFrom" column="REPLY_FROM"/>
+            <result property="content" column="CONTENT"/>
+        </resultMap>
+
+        <sql id="CUS_ACTION_REPLY_TBL_columns">
+            CUS_ACTION_REPLY_TBL.ID,
+            CUS_ACTION_REPLY_TBL.ACTION_ID,
+            CUS_ACTION_REPLY_TBL.OPERATE_TYPE,
+            CUS_ACTION_REPLY_TBL.OPERATE_USER_ID,
+            CUS_ACTION_REPLY_TBL.OPERATE_USER_EMAIL,
+            CUS_ACTION_REPLY_TBL.OPERATE_USER_NAME,
+            CUS_ACTION_REPLY_TBL.CREATE_TIME,
+            CUS_ACTION_REPLY_TBL.REPLY_FROM,
+            CUS_ACTION_REPLY_TBL.CONTENT
+        </sql>
+
+        <sql id="CUS_ACTION_REPLY_TBL_properties">
+            #id#,
+            #actionId#,
+            #operateType#,
+            #operateUserId#,
+            #operateUserEmail#,
+            #operateUserName#,
+            #createTime#,
+            #replyFrom#,
+            #content#
+        </sql>
+
+        <insert id="createActionReply" parameterClass="ActionReply">
+            INSERT INTO CUS_ACTION_REPLY_TBL (<include refid="ActionReply_NS.CUS_ACTION_REPLY_TBL_columns"/>) VALUES (<include refid="ActionReply_NS.CUS_ACTION_REPLY_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <!--end-->
+</sqlMap>

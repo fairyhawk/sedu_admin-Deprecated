@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="NodePreMid_NS">
+        <!--table:KNO_NODE_PRE_MID_TBL-->
+        <typeAlias alias="NodePreMid" type="com.shangde.edu.kno.domain.NodePreMid"/>
+        <typeAlias alias="QueryNodePreMidCondition" type="com.shangde.edu.kno.condition.QueryNodePreMidCondition"/>
+
+        <resultMap id="NodePreMidResult" class="NodePreMid">
+            <result property="id" column="ID"/>
+            <result property="ksnId" column="KSN_ID"/>
+            <result property="preId" column="PRE_ID"/>
+            <result property="nodeId" column="NODE_ID"/>
+            <result property="preNodeId" column="PRE_NODE_ID"/>
+            <result property="preNodeName" column="PRE_NODE_NAME"/>
+        </resultMap>
+
+        <sql id="KNO_NODE_PRE_MID_TBL_columns">
+            KNO_NODE_PRE_MID_TBL.ID,
+            KNO_NODE_PRE_MID_TBL.KSN_ID,
+            KNO_NODE_PRE_MID_TBL.PRE_ID,
+            KNO_NODE_PRE_MID_TBL.NODE_ID,
+            KNO_NODE_PRE_MID_TBL.PRE_NODE_ID,
+            KNO_NODE_PRE_MID_TBL.PRE_NODE_NAME
+        </sql>
+
+        <sql id="KNO_NODE_PRE_MID_TBL_properties">
+            #id#,
+            #ksnId#,
+            #preId#,
+            #nodeId#,
+            #preNodeId#,
+            #preNodeName#
+        </sql>
+
+        <insert id="createNodePreMid" parameterClass="NodePreMid">
+            INSERT INTO KNO_NODE_PRE_MID_TBL (<include refid="NodePreMid_NS.KNO_NODE_PRE_MID_TBL_columns"/>) VALUES (<include refid="NodePreMid_NS.KNO_NODE_PRE_MID_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteNodePreMidById" parameterClass="int">
+            DELETE FROM KNO_NODE_PRE_MID_TBL
+            WHERE
+                ID = #value#
+
+
+
+
+
+        </delete>
+
+        <update id="updateNodePreMid" parameterClass="NodePreMid">
+            UPDATE KNO_NODE_PRE_MID_TBL SET
+                ID = #id#,
+                KSN_ID = #ksnId#,
+                PRE_ID = #preId#,
+                NODE_ID = #nodeId#,
+                PRE_NODE_ID = #preNodeId#,
+                PRE_NODE_NAME = #preNodeName#
+            WHERE
+                ID = #id#
+
+
+
+
+
+        </update>
+
+		<select id="getNodePreMidByKsnId" resultMap="NodePreMid_NS.NodePreMidResult" parameterClass="int">
+            SELECT
+            <include refid="NodePreMid_NS.KNO_NODE_PRE_MID_TBL_columns"/>
+            FROM KNO_NODE_PRE_MID_TBL
+            WHERE
+                KSN_ID = #value#
+
+
+
+
+
+        </select>
+
+        <select id="getNodePreMidById" resultMap="NodePreMid_NS.NodePreMidResult" parameterClass="int">
+            SELECT
+            <include refid="NodePreMid_NS.KNO_NODE_PRE_MID_TBL_columns"/>
+            FROM KNO_NODE_PRE_MID_TBL
+            WHERE
+                ID = #value#
+
+
+
+
+
+        </select>
+
+        <select id="getNodePreMidList" resultMap="NodePreMid_NS.NodePreMidResult" parameterClass="QueryNodePreMidCondition">
+            SELECT
+            <include refid="NodePreMid_NS.KNO_NODE_PRE_MID_TBL_columns"/>
+            FROM KNO_NODE_PRE_MID_TBL
+        </select>
+        <!--end-->
+</sqlMap>

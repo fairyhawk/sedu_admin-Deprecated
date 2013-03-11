@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="zh-CN" />
+		<title>HighSo嗨学网</title>
+		<meta name="Keywords" content=" HighSo,嗨学网,远程网络,职业教育领跑者,尚德机构" />
+		<meta name="Description" content="" />
+		
+		<link rel="stylesheet" type="text/css" href="http://172.16.100.231/sedu/styles/web/public/b2c_register.css" />
+		 
+		<script type="text/javascript" src="http://172.16.100.231/sedu/js/web/public/web_jquery-jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="http://172.16.100.231/sedu/js/web/public/web_jquery.lazyload.js"></script>
+		<script type="text/javascript" src="http://172.16.100.231/sedu/js/web/public/jQueryValidate/jquery.validate.js"></script>
+		
+		
+        <script type="text/javascript" src="http://172.16.100.231/sedu/js/web/public/b2c_register.js"></script>
+
+		<script type="text/javascript"> 
+			var baselocation = 'http://172.16.100.231/sedu';
+			var importURL = 'http://172.16.100.231/sedu';
+		</script>
+
+
+	</head>
+	
+	
+	<body>
+	<div style="position:absolute; filter:alpha(opacity=50); opacity: 0.5; -khtml-opacity: 0.5; -moz-opacity:0.5; left:0;top:0;z-index:4; background:#000;" id="web_top_black"></div>
+		<!-- 弹出注册窗口 -->
+		<center><font size="+3" color="#FF0000"><a href="javascript:showLoginDiv()">登录</a></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font size="+3" color="#FF0000"><a href="javascript:showRegisterDiv()">注册</a></font></center>
+        <div class="show_box" id="register_div" style="display:none;position:absolute;left:37%;top:15%;background-color:white;z-index:5;">
+	<div class="sb_top">
+    	<span><a href="javascript:closeRegLogDiv()"><img src="http://172.16.100.231/sedu/images/web/public/icon_close.gif" /></a></span>
+        <h6>我要注册</h6>或者 <a href="javascript:showLoginDiv()">登录</a>
+</div>
+    <div class="vline"></div>
+    <div class="sb_c">
+		<form id="regForm" name="regForm">
+    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <th>邮箱：</th>
+            <td><input type="text" class="ibg" name="customer.email" id="regEmail" maxlength="30" onkeypress="return regEmailChg(event)" /><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+          <tr>
+            <th>&nbsp;</th>
+            <td id="reg_email_msg">请输入您真实的邮箱(只支持小写)</td>
+          </tr>
+          <tr>
+            <th>密码：</th>
+            <td><input type="password" class="ibg" name="customer.cusPwd" id="regPwd" maxlength="20" /><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+          <tr>
+            <th>&nbsp;</th>
+            <td>密码为6-12位的字母或数字</td>
+          </tr>
+          <tr>
+            <th valign="top">确认密码：</th>
+            <td><input type="password" class="ibg" maxlength="20" id="cusPwdConfirm" name="cusPwdConfirm" equalTo="#regPwd" /><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+          <tr>
+            <th valign="top">&nbsp;</th>
+            <td>请再次输入密码</td>
+            
+          </tr>
+          <tr>
+            <th valign="top">手机号码：</th>
+            <td><input type="text" class="ibg" name="customer.mobile" id="regMobile" maxlength="15"/><span class="he_fen">&nbsp;*</span></td>
+          </tr>
+          <tr>
+            <th valign="top">&nbsp;</th>
+            <td>填写手机号码</td>
+          </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="checkbox" name="highsoAgreement" class="login_list_ck" id="highso_agreement" checked /><font><a target="_blank" href="http://highso.cn/static/web/column/71/index_1.shtml">同意接受HighSo协议</a></font><br><span></span><br></td>
+          </tr>
+           <tr>
+            <th valign="top">专业：</th>
+            <td><select name="customer.subjectId" id="regSubjectId">
+            	<option value="-1">-请选择-</option>
+            	<option value="3">会计证</option>
+            	<option value="1">人力</option>
+            	<option value="7">注册会计师</option>
+            	<option value="5">司法</option>
+            	<option value="8">证券</option>
+            	<option value="9">一级建造师</option>
+            	<option value="10">高级会计师</option>
+            	<option value="11">公务员考试</option>
+            	<option value="12">心理咨询师</option>
+            </select></td>
+          </tr>
+          <tr>
+            <th valign="top">&nbsp;</th>
+            <td>请选择您想学习的专业</td>
+          </tr>
+          
+          <tr>
+	        	<th>验证码：</th>
+	       		<td>
+	       			<input  class="iyz" type="text" name="randomCode" maxlength="4" />&nbsp;
+	        		<img border="0" src="http://172.16.100.231/sedu/util/randomCode.action" alt="验证码，点击图片更换" onclick="this.src='http://highso.org.cn/util/randomCode.action?random='+Math.random();" />
+	        		<!-- 将提交的验证码交给randomCode.action处理 -->
+	        	</td>
+   		 </tr>
+          
+          
+          <tr>
+            <td>&nbsp;</td>
+            <td> &nbsp;</td>
+          </tr>
+          
+          
+          <tr>
+            <td>&nbsp;</td>
+            <td><a href="javascript:register()" class="btn_a_blue">马上注册</a></td>
+          </tr>
+        </table>
+        </form>
+    </div>
+</div>
+<!-- 弹出登录窗口 -->
+        <div class="show_box" id="login_div" style="display:none;position:absolute;left:37%;top:15%;z-index:5;">
+	<div class="sb_top">
+    	<span><a href="javascript:closeRegLogDiv()"><img src="http://172.16.100.231/sedu/images/web/public/icon_close.gif" /></a></span>
+        <h6>我要登录</h6>
+        或者 <a href="javascript:showRegisterDiv()">注册</a>
+</div>
+    <div class="vline"></div>
+ 	 <div class="sb_msg" id="login_message" style="display:none"></div>
+    <div class="sb_c">
+      <form id="login_form_2" name="login_form_2">
+    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <th>邮箱：</th>
+            <td><input type="text" name="customer.email" class="ibg" id="login_email_2" maxlength="30" onkeypress="iptLowerCase(event)"/></td>
+          </tr>
+          <tr>
+            <th>&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <th>密码：</th>
+            <td><input onkeyup="quickLogKeyUp(event, 2)" type="password" name="customer.cusPwd" class="ibg" id="login_pwd_2" maxlength="20"/>&nbsp;&nbsp;<font><a href="http://highso.cn/static/web/column/68/index_1.shtml"><u>忘记密码？</u></a></font></td>
+          </tr>
+          <tr>
+            <th>&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="checkbox" name="remember_me_div" id="remeber_me_2" checked/>
+              <font>记住我 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
+          </tr>
+          
+          <tr>
+	        	<th valign="top">验证码：</th>
+	       		<td>
+	       			<input  class="iyz" type="text" name="randomCode"  />&nbsp;
+	        		<img border="0" src="http://172.16.100.231/sedu/util/randomCode.action" alt="验证码，点击图片更换" onclick="this.src='http://172.16.100.231/sedu/util/randomCode.action?random='+Math.random();" />
+	        	</td>
+   			</tr>
+			
+
+          
+          <tr>
+            <td>&nbsp;</td>
+            <td><a href="javascript:login(2)" class="btn_a_blue">登录</a></td>
+          </tr>
+        </table>
+       </form>
+    </div>
+</div>
+   <!-- 注册成功后弹出的窗口-->     
+   <div class="show_box" id="register_success" style="display:none;position:absolute;left:37%;top:15%;z-index:5;">
+	<div class="sb_top">
+    	<span><a href="javascript:closeRegLogDiv()"><img src="http://172.16.100.231/sedu/images/web/public/icon_close.gif" /></a></span>
+        <h6>注册成功</h6>        
+</div>
+  <div class="vline"></div>
+    <div class="sb_c">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <th width="50">&nbsp;</th>
+            <td><font><b id="reg_suc_user_name"></b> 欢迎您来到嗨学网，您还没有购买课程，赶快去购买学习吧！</font></td>
+            <td width="50">&nbsp;</td>
+        </tr>
+          <tr>
+            <th>&nbsp;</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td><a href="javascript:toIndexPage()" onclick="closeRegLogDiv()" class="btn_a_red">购买课程</a></td>
+            <td>&nbsp;</td>
+          </tr>
+      </table>
+  </div>
+</div>
+   
+   <!-- 弹出登陆错误 -->
+   
+ <div class="popup wrong" id="error_win" style="display:none;position:absolute;left:37%;top:15%;z-index:5;">
+<ul class="title"><li class="ml"></li><li class="mc">错误提示</li><li class="mr"></li></ul>
+<div class="con">
+<div class="ml"><img src="http://172.16.100.231/sedu/images/web/public/popimg2.gif"  /></div>
+<div class="mr"><b class="orange" id="error_message">登录邮箱或者密码错误，请重新输入！</b><br />
+<p class="popbut"><a href="javascript:closeErrorWin()">确定</a><span class="popbutmr"></span></p>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+
+   
+   
+		
+	</body>
+</html>

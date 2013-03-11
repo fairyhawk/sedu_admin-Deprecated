@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Assess_NS">
+        <!--table:ASS_ASSESS_TBL-->
+        <typeAlias alias="Assess" type="com.shangde.edu.ass.domain.Assess"/>
+        <typeAlias alias="AssessDto" type="com.shangde.edu.ass.dto.AssessDto"/>
+        <typeAlias alias="QueryAssessCondition" type="com.shangde.edu.ass.condition.QueryAssessCondition"/>
+
+        <resultMap id="AssessResult" class="Assess">        	
+            <result property="id" column="ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="sellwayId" column="SELLWAY_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="kpointId" column="KPOINT_ID"/>
+            <result property="assTitle" column="ASS_TITLE"/>
+            <result property="assContext" column="ASS_CONTEXT"/>
+            <result property="assTime" column="ASS_TIME"/>
+            <result property="verifyTime" column="VERIFY_TIME"/>
+            <result property="assLeavel" column="ASS_LEAVEL"/>
+            <result property="status" column="STATUS"/>
+            <result property="verifyContext" column="VERIFY_CONTEXT"/>
+        </resultMap>
+        <resultMap id="AssessTopResult" class="Assess">
+        	<result property="levelAvg" column="LEVEL_AVG"/>
+            <result property="id" column="ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="sellwayId" column="SELLWAY_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="kpointId" column="KPOINT_ID"/>
+            <result property="assTitle" column="ASS_TITLE"/>
+            <result property="assContext" column="ASS_CONTEXT"/>
+            <result property="assTime" column="ASS_TIME"/>
+            <result property="verifyTime" column="VERIFY_TIME"/>
+            <result property="assLeavel" column="ASS_LEAVEL"/>
+            <result property="status" column="STATUS"/>
+            <result property="verifyContext" column="VERIFY_CONTEXT"/>
+        </resultMap>
+        <resultMap id="AssessDtoResult" class="AssessDto">
+        	<result property="id" column="ID"/>
+       		<result property="cusName" column="CUS_NAME"/>
+       		<result property="cusId" column="CUS_ID"/>
+       		<result property="email" column="EMAIL"/>
+       		<result property="photo" column="PHOTO"/>
+       		<result property="assTitle" column="ASS_TITLE"/>
+       		<result property="assLeavel" column="ASS_LEAVEL"/>
+       		<result property="assTime" column="ASS_TIME"/>
+       		<result property="assContext" column="ASS_CONTEXT"/>
+       		<result property="courseId" column="COURSE_ID"/>
+       		<result property="kpointId" column="KPOINT_ID"/>
+       		<result property="sellwayId" column="SELLWAY_ID"/>
+       		<result property="status" column="STATUS"/>
+       		<result property="subjectId" column="SUBJECT_ID"/>
+       		<result property="verifyContext" column="VERIFY_CONTEXT"/>
+       		<result property="verifyTime" column="VERIFY_TIME"/>
+        </resultMap>
+
+        <sql id="ASS_ASSESS_TBL_columns">
+            ASS_ASSESS_TBL.ID,
+            ASS_ASSESS_TBL.SUBJECT_ID,
+            ASS_ASSESS_TBL.CUS_ID,
+            ASS_ASSESS_TBL.SELLWAY_ID,
+            ASS_ASSESS_TBL.COURSE_ID,
+            ASS_ASSESS_TBL.KPOINT_ID,
+            ASS_ASSESS_TBL.ASS_TITLE,
+            ASS_ASSESS_TBL.ASS_CONTEXT,
+            ASS_ASSESS_TBL.ASS_TIME,
+            ASS_ASSESS_TBL.VERIFY_TIME,
+            ASS_ASSESS_TBL.ASS_LEAVEL,
+            ASS_ASSESS_TBL.STATUS,
+            ASS_ASSESS_TBL.VERIFY_CONTEXT
+        </sql>
+        <sql id="ASS_ASSESS_TBL_column">
+            ASS_ASSESS_TBL.SUBJECT_ID,
+            ASS_ASSESS_TBL.CUS_ID,
+            ASS_ASSESS_TBL.SELLWAY_ID,
+            ASS_ASSESS_TBL.COURSE_ID,
+            ASS_ASSESS_TBL.KPOINT_ID,
+            ASS_ASSESS_TBL.ASS_TITLE,
+            ASS_ASSESS_TBL.ASS_CONTEXT,
+            ASS_ASSESS_TBL.ASS_TIME,
+            ASS_ASSESS_TBL.VERIFY_TIME,
+            ASS_ASSESS_TBL.ASS_LEAVEL,
+            ASS_ASSESS_TBL.STATUS,
+            ASS_ASSESS_TBL.VERIFY_CONTEXT
+        </sql>
+        <sql id="ASS_ASSESSDTO_columns">
+        	ass_assess_tbl.id,
+ 			cus_customer_tbl.CUS_NAME,
+			cus_customer_tbl.CUS_ID,
+			cus_customer_tbl.EMAIL,
+			cus_customer_tbl.PHOTO,
+			ass_assess_tbl.ass_title,
+			ass_assess_tbl.ass_leavel,
+			ass_assess_tbl.ass_time,
+			ass_assess_tbl.ass_context,
+			ass_assess_tbl.course_id,
+			ass_assess_tbl.kpoint_id,
+			ass_assess_tbl.sellWay_id,
+			ass_assess_tbl.status,
+			ass_assess_tbl.subject_id,
+			ass_assess_tbl.verify_context,
+			ass_assess_tbl.verify_time
+        </sql>
+        <sql id="ASS_ASSESSDTO_propertie">
+        	#id#,
+        	#cusName#,
+        	#cusId#,
+        	#email#,
+        	#photo#,
+        	#assTitle#,
+        	#assLeavel#,
+        	#assTime#,
+        	#assContext#,
+        	#courseId#,
+        	#kpointId#,
+        	#sellwayId#,
+        	#status#,
+        	#subjectId#,
+        	#verifyContext#,
+        	#verifyTime#
+        </sql>
+        <sql id="ASS_ASSESS_TBL_propertie">
+            #subjectId#,
+            #cusId#,
+            #sellwayId#,
+            #courseId#,
+            #kpointId#,
+            #assTitle#,
+            #assContext#,
+            #assTime#,
+            #verifyTime#,
+            #assLeavel#,
+            #status#,
+            #verifyContext#
+        </sql>
+
+        <sql id="ASS_ASSESS_TBL_properties">
+            #id#,
+            #subjectId#,
+            #cusId#,
+            #sellwayId#,
+            #courseId#,
+            #kpointId#,
+            #assTitle#,
+            #assContext#,
+            #assTime#,
+            #verifyTime#,
+            #assLeavel#,
+            #status#,
+            #verifyContext#
+        </sql>
+        <insert id="createAssess" parameterClass="Assess">
+            INSERT INTO ASS_ASSESS_TBL (<include refid="Assess_NS.ASS_ASSESS_TBL_column"/>) VALUES (<include refid="Assess_NS.ASS_ASSESS_TBL_propertie"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteAssessById" parameterClass="int">
+            DELETE FROM ASS_ASSESS_TBL
+            WHERE
+            ID=#value#
+        </delete>
+
+        <update id="updateAssess" parameterClass="Assess">
+            UPDATE ASS_ASSESS_TBL SET
+                SUBJECT_ID = #subjectId#,
+                CUS_ID = #cusId#,
+                SELLWAY_ID = #sellwayId#,
+                COURSE_ID = #courseId#,
+                KPOINT_ID = #kpointId#,
+                ASS_TITLE = #assTitle#,
+                ASS_CONTEXT = #assContext#,
+                ASS_TIME = #assTime#,
+                VERIFY_TIME = #verifyTime#,
+                ASS_LEAVEL = #assLeavel#,
+                STATUS = #status#,
+                VERIFY_CONTEXT = #verifyContext#
+            WHERE ID=#id#
+        </update>
+
+        <select id="getAssessById" resultMap="Assess_NS.AssessResult" parameterClass="int">
+            SELECT
+            <include refid="Assess_NS.ASS_ASSESS_TBL_columns"/>
+            FROM ASS_ASSESS_TBL
+            WHERE
+             ID=#value#
+        </select>
+        
+		<!-- 考虑到性能，求平均分基于最多1000条记录 -->
+         <select id="getAssessListByCondition" resultMap="Assess_NS.AssessTopResult" parameterClass="QueryAssessCondition">
+            SELECT ROUND( AVG(ASS_ASSESS_TBL.ASS_LEAVEL),1) AS LEVEL_AVG, 
+            <include refid="Assess_NS.ASS_ASSESS_TBL_columns"/>
+            FROM ASS_ASSESS_TBL
+            WHERE SUBJECT_ID=#subId# AND STATUS !=2 AND STATUS !=3
+            <dynamic>
+            	<isNotEqual property="cusId" compareValue="0">
+            		AND CUS_ID=#cusId#
+            	</isNotEqual>            	
+            </dynamic>
+            <![CDATA[AND ASS_ASSESS_TBL.ID<1000]]>
+            GROUP BY KPOINT_ID            
+            ORDER BY LEVEL_AVG DESC,
+            ASS_TIME DESC
+            LIMIT 0,10
+        </select>
+        <select id="getMoreAssessByCondition" resultMap="Assess_NS.AssessResult" parameterClass="QueryAssessCondition">
+        	<include refid="public_sql.page_begin"/>
+        	SELECT <include refid="Assess_NS.ASS_ASSESS_TBL_columns"/>
+        	FROM ASS_ASSESS_TBL
+        	WHERE SUBJECT_ID=#subId# AND STATUS !=2 and STATUS !=3
+        	AND CUS_ID=#cusId#
+        	GROUP BY KPOINT_ID
+        	ORDER BY ASS_TIME
+        	<include refid="public_sql.page_end" />
+        </select>
+        <select id="getMyAssessCount" resultClass="int" parameterClass="QueryAssessCondition">
+        	SELECT COUNT(DISTINCT KPOINT_ID) FROM ASS_ASSESS_TBL
+        	WHERE SUBJECT_ID=#subId# AND CUS_ID=#cusId# AND STATUS !=2 and STATUS !=3
+        </select>
+        <select id="getAssessCountByKpointId" resultClass="int" parameterClass="QueryAssessCondition">
+        	SELECT COUNT(1) FROM ASS_ASSESS_TBL WHERE KPOINT_ID=#kpointId# AND STATUS !=2 and STATUS !=3
+        </select>
+        <select id="getAssKpointIdsByCusId" resultClass="int" parameterClass="QueryAssessCondition">
+        	SELECT DISTINCT KPOINT_ID FROM ASS_ASSESS_TBL WHERE CUS_ID=#cusId# AND SUBJECT_ID=#subId# AND STATUS !=2 and STATUS !=3
+        </select>
+        <select id="getAssessByCusId" resultMap="Assess_NS.AssessResult" parameterClass="QueryAssessCondition">
+            SELECT
+            <include refid="Assess_NS.ASS_ASSESS_TBL_columns"/>
+            FROM ASS_ASSESS_TBL WHERE 1=1 AND STATUS !=2 and STATUS !=3
+            	<isNotEqual property="cusId" compareValue="0">
+            		AND CUS_ID=#cusId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND SUBJECT_ID = #subId#
+            	</isNotEqual>
+        </select>
+        <select id="getAssessCount" resultClass="int" parameterClass="QueryAssessCondition">
+        	SELECT COUNT(1) FROM ASS_ASSESS_TBL WHERE STATUS !=2 and STATUS !=3
+        	<dynamic>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND SUBJECT_ID=#subId#
+            	</isNotEqual>
+            	<isNotEqual property="cusId" compareValue="0">
+            		AND CUS_ID=#cusId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            	<isNotEqual property="courseId" compareValue="0">
+            		AND COURSE_ID=#courseId#
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        <select id="getAssessList" resultMap="Assess_NS.AssessResult" parameterClass="QueryAssessCondition">
+            SELECT
+            <include refid="Assess_NS.ASS_ASSESS_TBL_columns"/>
+            FROM ASS_ASSESS_TBL
+            WHERE SUBJECT_ID=#subId# AND AND STATUS !=2 and STATUS !=3
+            <dynamic>
+            	<isNotEqual property="cusId" compareValue="0">
+            		AND CUS_ID=#cusId#
+            	</isNotEqual>
+            </dynamic>
+            GROUP BY KPOINT_ID
+            ORDER BY AVG(ASS_ASSESS_TBL.ASS_LEAVEL) DESC LIMIT 0,10
+        </select>
+
+        <select id="getKpointCountByLevel" resultClass="int" parameterClass="QueryAssessCondition">
+        	SELECT COUNT(DISTINCT KPOINT_ID) FROM ASS_ASSESS_TBL WHERE SUBJECT_ID=#subId# AND CUS_ID=#cusId# AND STATUS !=2 and STATUS !=3
+        	<dynamic>
+        	<isNotEqual property="assLeavel" compareValue="0">
+        	AND ASS_LEAVEL=#assLeavel#
+        	</isNotEqual>
+        	</dynamic>
+        </select>
+        <select id="getAllAssessList" resultMap="Assess_NS.AssessResult" parameterClass="QueryAssessCondition">
+ 			SELECT
+            <include refid="Assess_NS.ASS_ASSESS_TBL_columns"/>
+            FROM ASS_ASSESS_TBL WHERE 1 = 1 
+            <dynamic>
+            	<isEqual property="status" compareValue="-2">
+            		AND STATUS !=2 and STATUS !=3
+            	</isEqual>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND SUBJECT_ID=#subId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            		ORDER BY ASS_TIME DESC
+            	<isNotEqual property="isPage" compareValue="0">
+            		<include refid="public_sql.page_end"/>
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        <select id="getAssessDtoList" resultMap="Assess_NS.AssessDtoResult" parameterClass="QueryAssessCondition">
+			<include refid="public_sql.page_begin"/>
+			select
+			<include refid="Assess_NS.ASS_ASSESSDTO_columns"/>
+				from  ass_assess_tbl inner join cus_customer_tbl
+				on ass_assess_tbl.CUS_ID = cus_customer_tbl.CUS_ID
+				WHERE 1=1
+            <dynamic>
+            	<isEqual property="status" compareValue="-2">
+            		AND STATUS !=2 and STATUS !=3
+            	</isEqual>
+            	<isNotEqual property="status" compareValue="-1">
+            		<isNotEqual property="status" compareValue="-2">
+            			AND STATUS =#status#
+            		</isNotEqual>
+            	</isNotEqual>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND ass_assess_tbl.SUBJECT_ID=#subId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND ass_assess_tbl.KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            	<isNotEqual property="courseId" compareValue="0">
+            		AND ass_assess_tbl.COURSE_ID=#courseId#
+            	</isNotEqual>
+     	   		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  ass_assess_tbl.ass_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  ass_assess_tbl.ass_time <= #endTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyStartTime">
+					<![CDATA[  ass_assess_tbl.verify_time >= #verifyStartTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyEndTime">
+					<![CDATA[  ass_assess_tbl.verify_time <= #verifyEndTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="assTitle">
+					<![CDATA[  ass_assess_tbl.ass_title LIKE CONCAT('%',#assTitle#,'%')  ]]>
+				</isNotNull>
+            		ORDER BY ASS_TIME DESC
+            	<include refid="public_sql.page_end"/>
+            </dynamic>
+        </select>
+        <select id="getPageAssessList" resultClass="int" parameterClass="QueryAssessCondition">
+            SELECT COUNT(1) FROM ASS_ASSESS_TBL WHERE 1=1
+            <dynamic>
+            	<isEqual property="status" compareValue="-2">
+            		AND STATUS !=2 and STATUS !=3
+            	</isEqual>
+            	<isNotEqual property="status" compareValue="-1">
+            		AND STATUS =#status#
+            	</isNotEqual>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND SUBJECT_ID=#subId#
+            	</isNotEqual>
+            	<isNotEqual property="cusId" compareValue="0">
+            		AND CUS_ID=#cusId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            	<isNotEqual property="courseId" compareValue="0">
+            		AND COURSE_ID=#courseId#
+            	</isNotEqual>
+            	<isNotNull prepend="and" property="startTime">
+					<![CDATA[  ass_assess_tbl.ass_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  ass_assess_tbl.ass_time <= #endTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyStartTime">
+					<![CDATA[  ass_assess_tbl.verify_time >= #verifyStartTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyEndTime">
+					<![CDATA[  ass_assess_tbl.verify_time <= #verifyEndTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="assTitle">
+					<![CDATA[  ass_assess_tbl.ass_title LIKE CONCAT('%',#assTitle#,'%')  ]]>
+				</isNotNull>
+            </dynamic>
+        </select>
+        <select id="getBackAssessDtoList" resultMap="Assess_NS.AssessDtoResult" parameterClass="QueryAssessCondition">
+			<include refid="public_sql.page_begin"/>
+			select
+			<include refid="Assess_NS.ASS_ASSESSDTO_columns"/>
+				from  ass_assess_tbl inner join cus_customer_tbl
+				on ass_assess_tbl.CUS_ID = cus_customer_tbl.CUS_ID
+				WHERE 1=1
+            <dynamic>
+            	<isNotEqual property="status" compareValue="-1">
+            		AND STATUS =#status#
+            	</isNotEqual>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND ass_assess_tbl.SUBJECT_ID=#subId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND ass_assess_tbl.KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            	<isNotEqual property="courseId" compareValue="0">
+            		AND ass_assess_tbl.COURSE_ID=#courseId#
+            	</isNotEqual>
+     	   		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  ass_assess_tbl.ass_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  ass_assess_tbl.ass_time <= #endTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyStartTime">
+					<![CDATA[  ass_assess_tbl.verify_time >= #verifyStartTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyEndTime">
+					<![CDATA[  ass_assess_tbl.verify_time <= #verifyEndTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="assTitle">
+					<![CDATA[  ass_assess_tbl.ass_title LIKE CONCAT('%',#assTitle#,'%')  ]]>
+				</isNotNull>
+            		ORDER BY ASS_TIME DESC
+            	<include refid="public_sql.page_end"/>
+            </dynamic>
+        </select>
+        <select id="getBackPageAssessList" resultClass="int" parameterClass="QueryAssessCondition">
+            SELECT COUNT(1) FROM ASS_ASSESS_TBL WHERE 1=1
+            <dynamic>
+            	<isNotEqual property="status" compareValue="-1">
+            		AND STATUS =#status#
+            	</isNotEqual>
+            	<isNotEqual property="subId" compareValue="0">
+            		AND SUBJECT_ID=#subId#
+            	</isNotEqual>
+            	<isNotEqual property="cusId" compareValue="0">
+            		AND CUS_ID=#cusId#
+            	</isNotEqual>
+            	<isNotEqual property="kpointId" compareValue="0">
+            		AND KPOINT_ID=#kpointId#
+            	</isNotEqual>
+            	<isNotEqual property="courseId" compareValue="0">
+            		AND COURSE_ID=#courseId#
+            	</isNotEqual>
+            	<isNotNull prepend="and" property="startTime">
+					<![CDATA[  ass_assess_tbl.ass_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  ass_assess_tbl.ass_time <= #endTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyStartTime">
+					<![CDATA[  ass_assess_tbl.verify_time >= #verifyStartTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="verifyEndTime">
+					<![CDATA[  ass_assess_tbl.verify_time <= #verifyEndTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="assTitle">
+					<![CDATA[  ass_assess_tbl.ass_title LIKE CONCAT('%',#assTitle#,'%')  ]]>
+				</isNotNull>
+            </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

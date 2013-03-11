@@ -1,0 +1,3472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Contract_NS">
+        <!--table:FINANCE_CONTRACT_TBL-->
+        <typeAlias alias="Contract" type="com.shangde.edu.finance.domain.Contract"/>
+        <typeAlias alias="QueryContractCondition" type="com.shangde.edu.finance.condition.QueryContractCondition"/>
+		<typeAlias alias="CashRecord"    type="com.shangde.edu.finance.domain.CashRecord"/>
+		<typeAlias alias="MessageRemindDTO" type="com.shangde.common.vo.MessageRemindDTO"/>
+		<typeAlias alias="ContractExcelDTO" type="com.shangde.edu.finance.dto.ContractExcelDTO"/>
+		<typeAlias alias="CashRecordDTO" type="com.shangde.edu.finance.domain.CashRecordDTO"/>
+		<typeAlias alias="ContractDTO" type="com.shangde.edu.finance.dto.ContractDTO"/>
+		<typeAlias alias="MonthDay" type="com.shangde.edu.finance.dto.MonthDayForpayTypeDTO"/>
+		<typeAlias alias="Teacher" type="com.shangde.edu.cou.domain.Teacher"/>
+		<typeAlias alias="SellWay" type="com.shangde.edu.cou.domain.SellWay"/>
+		<typeAlias alias="CrmFinance" type="com.shangde.edu.finance.dto.CrmFinanceDTO"/>
+		<!-- 配置缓存模型 -->
+		<cacheModel id="Contract_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="Contract_NS.createContract" />
+			<flushOnExecute statement="Contract_NS.updateContract" />
+			<flushOnExecute statement="Contract_NS.deleteContractById"/>
+			<flushOnExecute statement="Contract_NS.deleteContractByCusId"/>
+			<property value="1000" name="size" />
+		</cacheModel>
+		<resultMap class="SellWay" id="SellWayResult">
+		    <result property="sellId" column="SELL_ID"/>
+            <result property="sellName" column="SELL_NAME"/>
+            <result property="sellPrice" column="SELL_PRICE"/>
+		</resultMap>
+        <resultMap id="ContractResult" class="Contract">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="id" column="ID"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="contractFrom" column="CONTRACT_FROM"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="status" column="STATUS"/>
+            <result property="payType" column="PAY_TYPE"/>
+            <result property="remark" column="REMARK"/>
+            <result property="contractSumMoney" column="CONTRACT_SUMMONEY"/>
+            <result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+            <result property="useCoupon" column="USECOUPON"/>
+            <result property="couponMoney" column="COUPON_MONEY"/>
+            <result property="payTime" column="PAY_TIME"/>
+            <result property="callSum" column="CALL_SUM"/>
+            <result property="contractCDkey" column="CONTRACT_CDKEY"/>
+            <result property="cdkeySum" column="CDKEY_SUM"/>
+            <result property="cusIdAddress" column="CUSID_ADDRESS"/>
+            <result property="webFrom" column="WEB_FROM"/>
+            <result property="webAgent" column="WEB_AGENT"/>
+            <result property="wi" column="WI"/>
+            <result property="contractFromUrl" column="CONTRACT_FROM_URL"/>
+            <result property="src" column="SRC"/>
+            <result property="cid" column="CID"/>
+            <result property="relief" column="relief"/>
+            <result property="freight" column="freight"/>
+            <result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById"/>
+            <result property="codList" column="ID" select="Cod_NS.getContractCodList"/>
+            <result property="addressDTO" column="CUS_ID" select="Address_NS.getAddressDTOByCusId"/>
+            <result property="cancelFrom" column="CANCEL_FROM"/>
+            <result property="cancelTime" column="CANCEL_TIME"/>
+            <result property="couponId"   column="COUPON_ID"/>
+        </resultMap>
+        <resultMap id="MessageRemindDTOResult" class="MessageRemindDTO">
+            <result property="mobile" column="MOBILE"/>
+            <result property="cusFromUrl" column="CUS_FROM_URL"/>
+        </resultMap>
+        <resultMap id="ContractExcelDTOResult" class="ContractExcelDTO" extends="ContractResult" >
+        	<result property="cashRecordList" column="ID" select="CashRecord_NS.getCashRecordByCtId"  />
+        	<result property="addressDTO" column="CUSID_ADDRESS" select="Address_NS.getAddressDTOById"/>
+        </resultMap>
+        <resultMap class="ContractDTO" id="ContractDTOResult">
+            <result property="contractFromUrl" column="CONTRACT_FROM_URL"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+           	<result property="cusId" column="CUS_ID"/>
+			<result property="payTime" column="PAY_TIME"/>
+            <result property="webAgent" column="WEB_AGENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="webFrom" column="WEB_FROM"/>
+            <result property="cusIdAddress" column="CUSID_ADDRESS"/>
+        	<result property="status" column="STATUS"/>
+            <result property="payType" column="PAY_TYPE"/>
+			<result property="contractSumMoney" column="CONTRACT_SUMMONEY"/>
+			<result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+			<result property="couponMoney" column="COUPON_MONEY"/>
+			<result property="freight" column="freight"/>
+			<result property="useCoupon" column="USECOUPON"/>
+        	<result property="sellWayName" column="SELL_NAME"/>
+        	<result property="sellWayId" column="SELL_ID"/>
+        	<result property="regTime" column="REG_TIME"/>
+        	<result property="subjectId" column="SUBJECT_ID"/>
+        	<result property="email" column="EMAIL"/>
+        	<result property="cusFromUrl" column="CUS_FROM_URL"/>
+        	<result property="mobile" column="mobile"/>
+        </resultMap>
+        
+        <!-- 订单统计优化 -->
+        <resultMap class="ContractDTO" id="ContractNEWDTOResult">
+        	<result property="sellWayId" column="SELL_ID"/>
+        	<result property="subjectId" column="SUBJECT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="id" column="ID"/>
+        	<result property="contractFromUrl" column="CONTRACT_FROM_URL"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+           	<result property="email" column="EMAIL"/>
+            <result property="webFrom" column="WEB_FROM"/>
+            <result property="webAgent" column="WEB_AGENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+			<result property="payTime" column="PAY_TIME"/>
+			<result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+			<result property="contractSumMoney" column="CONTRACT_SUMMONEY"/>
+			<result property="couponMoney" column="COUPON_MONEY"/>
+        	<result property="status" column="STATUS"/>
+            <result property="payType" column="PAY_TYPE"/>
+            <result property="callSum" column="CALL_SUM"/>
+        	<result property="cancelFrom" column="CANCEL_FROM"/>
+        </resultMap>
+        
+        <!-- Crm 订单列表字段 -->
+        <resultMap class="ContractDTO" id="CrmContractResult"  >
+        	<result property="contractId" column="CONTRACT_ID"/>
+			<result property="webFrom" column="WEB_FROM"/>
+			<result property="webAgent" column="WEB_AGENT"/>
+        	<result property="contractFromUrl" column="CONTRACT_FROM_URL"/> 
+        	<result property="createTime" column="CREATE_TIME"/>
+			<result property="payTime" column="PAY_TIME"/>
+			<result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+			<result property="contractSumMoney" column="CONTRACT_SUMMONEY"/>
+			<result property="couponMoney" column="COUPON_MONEY"/>
+			<result property="id" column="ID"/>
+			<result property="cusId" column="CUS_ID"/>
+			<result property="status" column="STATUS"/>
+			<result property="payType" column="PAY_TYPE"/>
+			<result property="callSum" column="CALL_SUM"/>
+        	<result property="cancelFrom" column="CANCEL_FROM"/>
+			<result property="subjectId" column="SUBJECT_ID"/>	 	
+			<result property="sellWayId" column="SELL_ID"/> 
+			<result property="email" column="EMAIL"/>
+			<result property="userId" column="user_id"/>
+       		<result property="createUserId" column="create_user_id"/>
+       		<result property="createUserName" column="create_user_name"/>
+           	<result property="userName" column="user_name"/>
+           	<result property="origin" column="origin"/>
+           	<result property="chanceStime" column="chance_stime"/>
+           	<result property="chanceUtime" column="chance_utime"/>
+        </resultMap>
+        
+        
+        
+        <resultMap id="CashRecordDTOResult" class="CashRecordDTO">
+      		<result property="status" column="STATUS"/>
+        	<result property="ctId" column="CT_ID"/>
+        	<result property="subjectId" column="SUBJECT_ID"/>
+        	<result property="payType" column="PAY_TYPE"/>
+        	<result property="cancelFrom" column="CANCEL_FROM"/>
+        	<result property="payPrice" column="CONTRACT_CUTSUMMONEY"/>
+        </resultMap>
+        <!-- 为张栋提供iphone端数据 -->
+        <resultMap id="ContractSellWayResult" class="SellWayDTO">
+        	<result property="sellId" column="SELL_ID"/>
+        	<result property="sellName" column="SELL_NAME"/>
+        </resultMap>
+        
+        <resultMap id="TeacherResult" class="Teacher">
+            <result property="tcId" column="TC_ID"/>
+            <result property="name" column="NAME"/>
+        </resultMap>
+        <!-- 为张栋提供iphone端数据 -->
+
+        <sql id="FINANCE_CONTRACT_TBL_columns">
+            FINANCE_CONTRACT_TBL.CUS_ID,
+            FINANCE_CONTRACT_TBL.ID,
+            FINANCE_CONTRACT_TBL.CONTRACT_ID,
+            FINANCE_CONTRACT_TBL.CONTRACT_FROM,
+            FINANCE_CONTRACT_TBL.CREATE_TIME,
+            FINANCE_CONTRACT_TBL.STATUS,
+            FINANCE_CONTRACT_TBL.PAY_TYPE,
+            FINANCE_CONTRACT_TBL.REMARK,
+            FINANCE_CONTRACT_TBL.CONTRACT_SUMMONEY,
+            FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,
+            FINANCE_CONTRACT_TBL.USECOUPON,
+            FINANCE_CONTRACT_TBL.COUPON_MONEY,
+            FINANCE_CONTRACT_TBL.PAY_TIME,
+            FINANCE_CONTRACT_TBL.CALL_SUM,
+            FINANCE_CONTRACT_TBL.CONTRACT_CDKEY,
+            FINANCE_CONTRACT_TBL.CDKEY_SUM,
+            FINANCE_CONTRACT_TBL.CUSID_ADDRESS,
+            FINANCE_CONTRACT_TBL.WEB_FROM,
+            FINANCE_CONTRACT_TBL.WEB_AGENT,
+            FINANCE_CONTRACT_TBL.WI,
+            FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL,
+            FINANCE_CONTRACT_TBL.SRC,
+            FINANCE_CONTRACT_TBL.CID,
+			finance_contract_tbl.freight,
+            finance_contract_tbl.relief,
+            FINANCE_CONTRACT_TBL.CANCEL_FROM,
+            FINANCE_CONTRACT_TBL.CANCEL_TIME,
+            FINANCE_CONTRACT_TBL.COUPON_ID
+        </sql>
+
+        <sql id="FINANCE_CONTRACT_TBL_properties">
+            #cusId#,
+            #id#,
+            #contractId#,
+            #contractFrom#,
+            #createTime#,
+            #status#,
+            #payType#,
+            #remark#,
+            #contractSumMoney#,
+            #contractCutSumMoney#,
+            #useCoupon#,
+            #couponMoney#,
+            #payTime#,
+            #callSum#,
+            #contractCDkey#,
+            #cdkeySum#,
+            #cusIdAddress#,
+            #webFrom#,
+            #webAgent#,
+            #contractFromUrl#,
+            #wi#,
+            #src#,
+            #cid#,
+            #freight#,
+            #relief#,
+            #cancelFrom#,
+            #cancelTime#,
+            #couponId#
+        </sql>
+
+        <insert id="createContract" parameterClass="Contract" >
+            INSERT INTO FINANCE_CONTRACT_TBL (<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns"/>) VALUES (<include refid="Contract_NS.FINANCE_CONTRACT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteContractById" parameterClass="int">
+            DELETE FROM FINANCE_CONTRACT_TBL
+            WHERE ID = #value#
+        </delete>
+        <delete id="deleteContractByCusId" parameterClass="int">
+            DELETE FROM FINANCE_CONTRACT_TBL
+            WHERE CUS_ID = #value#
+        </delete>
+        <update id="updateContract" parameterClass="Contract" >
+            UPDATE FINANCE_CONTRACT_TBL SET
+                CUS_ID = #cusId#,
+                ID = #id#,
+                CONTRACT_ID = #contractId#,
+                CONTRACT_FROM = #contractFrom#,
+                CREATE_TIME = #createTime#,
+                STATUS = #status#,
+                PAY_TYPE = #payType#,
+                REMARK = #remark#,
+                CONTRACT_SUMMONEY = #contractSumMoney#,
+            	CONTRACT_CUTSUMMONEY = #contractCutSumMoney#,
+            	USECOUPON = #useCoupon#,
+            	COUPON_MONEY = #couponMoney#,
+            	PAY_TIME=#payTime#,
+            	CALL_SUM=#callSum#,
+            	CONTRACT_CDKEY=#contractCDkey#,
+            	CDKEY_SUM=#cdkeySum#,
+            	WEB_FROM=#webFrom#,
+            	WEB_AGENT=#webAgent#,
+            	WI=#wi#,
+            	CUSID_ADDRESS=#cusIdAddress#,
+            	SRC=#src#,
+            	CID=#cid#,
+            	CONTRACT_FROM_URL=#contractFromUrl#,
+            	CANCEL_FROM=#cancelFrom#,
+            	CANCEL_TIME=#cancelTime#,
+            	COUPON_ID=#couponId#
+            WHERE ID = #id#
+        </update>
+		<select id="getStatus" resultClass="String" parameterClass="CashRecord" cacheModel="Contract_NS-cache">
+			SELECT FINANCE_CONTRACT_TBL.STATUS FROM FINANCE_CONTRACT_TBL,FINANCE_CASH_RECORD_TBL
+			WHERE FINANCE_CASH_RECORD_TBL.CONTRACT_ID = FINANCE_CONTRACT_TBL.CONTRACT_ID
+				<isNotNull property="courseId">
+					<isNotEqual property="courseId" compareValue="0" prepend="and"> 
+						FINANCE_CASH_RECORD_TBL.COURSE_ID = #courseId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="cusId">
+			<isNotEqual property="cusId" compareValue="0"
+				prepend="and">
+				FINANCE_CASH_RECORD_TBL.CUS_ID = #cusId#
+			</isNotEqual>
+		</isNotNull>
+		LIMIT 0,1
+	</select>
+	<select id="getContractById" resultMap="Contract_NS.ContractResult"
+		parameterClass="int" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL WHERE ID = #value#
+	</select>
+	<select id="getContractByCus_Id"
+		resultMap="Contract_NS.ContractResult" parameterClass="int" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL WHERE CUS_ID = #value# ORDER BY
+		CREATE_TIME DESC LIMIT 0,1
+	</select>
+
+	<!-- 根据是否支付查询订单 -->
+	<select id="getContractByStatus"
+		resultMap="Contract_NS.ContractResult" parameterClass="int" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL WHERE STATUS = #value#
+	</select>
+	<select id="getContractList" resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		from finance_contract_tbl
+		inner join finance_cash_record_tbl 
+		inner join cou_sell_way_tbl
+		where finance_contract_tbl.ID=finance_cash_record_tbl.CT_ID
+		and finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="1"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+					and finance_contract_tbl.COUPON_MONEY !=0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull property="sellId">
+				<isNotEqual property="sellId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SELL_ID=#sellId#
+				</isNotEqual>
+			</isNotNull>
+		group by finance_cash_record_tbl.CT_ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<select id="getContractLists" resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		ORDER BY ID DESC LIMIT 5000
+	</select>
+	
+	<!-- 导出到excel -->
+		<select id="getContractDTOLists" resultMap="Contract_NS.ContractDTOResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select 
+		FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,
+		FINANCE_CONTRACT_TBL.freight,
+		FINANCE_CONTRACT_TBL.COUPON_MONEY,
+		FINANCE_CONTRACT_TBL.USECOUPON,
+		FINANCE_CONTRACT_TBL.CONTRACT_SUMMONEY,
+		FINANCE_CONTRACT_TBL.CONTRACT_ID,
+		FINANCE_CONTRACT_TBL.STATUS,
+		FINANCE_CONTRACT_TBL.PAY_TYPE,
+		FINANCE_CONTRACT_TBL.CUSID_ADDRESS,
+		FINANCE_CONTRACT_TBL.WEB_FROM,
+		FINANCE_CONTRACT_TBL.CREATE_TIME,
+		FINANCE_CONTRACT_TBL.WEB_AGENT,
+		FINANCE_CONTRACT_TBL.PAY_TIME,
+		FINANCE_CONTRACT_TBL.CUS_ID,
+		FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL,
+		cus_customer_tbl.REG_TIME,
+		cus_customer_tbl.SUBJECT_ID,
+		cus_customer_tbl.EMAIL,
+		cus_customer_tbl.CUS_FROM_URL,
+		cou_sell_way_tbl.SELL_NAME,
+		cou_sell_way_tbl.SELL_ID,
+		cus_customer_tbl.mobile
+		from  finance_contract_tbl, finance_cash_record_tbl, cou_sell_way_tbl,cus_customer_tbl
+		where finance_contract_tbl.ID=finance_cash_record_tbl.CT_ID  and
+		finance_contract_tbl.CUS_ID= finance_cash_record_tbl.CUS_ID and
+		finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID and 
+		finance_contract_tbl.CUS_ID= cus_customer_tbl.CUS_ID   and
+		finance_cash_record_tbl.CUS_ID=cus_customer_tbl.CUS_ID
+		<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="1"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+					and finance_contract_tbl.COUPON_MONEY !=0
+				</isEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sellType"> 
+			<isNotEqual property="sellType" compareValue="0" prepend="and">
+			 cou_sell_way_tbl.SELL_TYPE=#sellType#
+			</isNotEqual>
+			</isNotNull>
+		group by finance_cash_record_tbl.CT_ID
+		ORDER BY FINANCE_CONTRACT_TBL.ID DESC LIMIT 20000
+	</select>
+
+	<select id="getContractPriceSum" resultClass="Integer"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT SUM(CONTRACT_CUTSUMMONEY) FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME > #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME < #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="getContractCount" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(1) FROM( 
+		SELECT COUNT(1)
+		from finance_contract_tbl
+		inner join finance_cash_record_tbl 
+		inner join cou_sell_way_tbl
+		where finance_contract_tbl.ID=finance_cash_record_tbl.CT_ID
+		and finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+						<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="1"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+					and finance_contract_tbl.COUPON_MONEY !=0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+				</isEqual>
+			</isNotNull>
+			<isNotNull property="sellId">
+				<isNotEqual property="sellId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SELL_ID=#sellId#
+				</isNotEqual>
+			</isNotNull>
+		group by finance_cash_record_tbl.CT_ID)
+		as t
+	</select>
+
+	<select id="getContractCODList"
+		resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT DISTINCT
+		   <include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+			FROM FINANCE_CONTRACT_TBL   
+	   		<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1">
+				JOIN FINANCE_CASH_RECORD_TBL AS b
+	   				   ON  FINANCE_CONTRACT_TBL.ID = b.CT_ID    AND b.cr_subject_id !=0 AND  b.cr_subject_id = #subjectId#  
+				</isNotEqual> 
+			</isNotNull>
+			
+			where  FINANCE_CONTRACT_TBL.PAY_TYPE=2 
+	 	    <isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+		
+		ORDER BY FINANCE_CONTRACT_TBL.ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+
+ 
+ 
+	<select id="getContractCODCount" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT DISTINCT COUNT(1) 	
+		    FROM FINANCE_CONTRACT_TBL AS a   
+		
+	   		<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1">
+				JOIN FINANCE_CASH_RECORD_TBL AS b
+	   				   ON   a.ID = b.CT_ID    AND b.cr_subject_id !=0 AND  b.cr_subject_id = #subjectId#  
+				</isNotEqual> 
+			</isNotNull>
+			
+			where  a.PAY_TYPE=2 
+	 	    <isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					a.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					a.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  a.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  a.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  a.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  a.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					a.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					a.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					a.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+		ORDER BY a.ID DESC
+		
+	</select>
+
+	
+	<select id="getContractBankPayList"
+		resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT DISTINCT
+		   <include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+			FROM FINANCE_CONTRACT_TBL   
+			 join  finance_cash_record_tbl  on finance_cash_record_tbl.CT_ID = finance_contract_tbl.ID   
+				 join COU_SELL_WAY_TBL on finance_cash_record_tbl.PACK_ID = COU_SELL_WAY_TBL.SELL_ID
+				<isNotNull property="sellType"> 
+					<isNotEqual property="sellType" compareValue="0">
+						and COU_SELL_WAY_TBL.sell_Type=#sellType# 
+					</isNotEqual>	
+				</isNotNull>
+				
+	   		<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1">
+				JOIN FINANCE_CASH_RECORD_TBL AS b
+	   				   ON  FINANCE_CONTRACT_TBL.ID = b.CT_ID    AND b.cr_subject_id !=0 AND  b.cr_subject_id = #subjectId#  
+				</isNotEqual> 
+			</isNotNull>
+			
+			where  FINANCE_CONTRACT_TBL.PAY_TYPE=7 
+	 	    <isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					FINANCE_CONTRACT_TBL.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+		
+		ORDER BY FINANCE_CONTRACT_TBL.ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+
+ 
+ 
+	<select id="getContractBankPayCount" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT DISTINCT COUNT(1) 	
+		    FROM FINANCE_CONTRACT_TBL AS a   
+		
+				 join  finance_cash_record_tbl  on finance_cash_record_tbl.CT_ID = a.ID   
+				 join COU_SELL_WAY_TBL on finance_cash_record_tbl.PACK_ID = COU_SELL_WAY_TBL.SELL_ID
+				<isNotNull property="sellType"> 
+					<isNotEqual property="sellType" compareValue="0">
+						and COU_SELL_WAY_TBL.sell_Type=#sellType# 
+					</isNotEqual>	
+				</isNotNull>
+				
+	   		<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1">
+				JOIN FINANCE_CASH_RECORD_TBL AS b
+	   				   ON   a.ID = b.CT_ID    AND b.cr_subject_id !=0 AND  b.cr_subject_id = #subjectId#  
+				</isNotEqual> 
+			</isNotNull>
+				
+			where  a.PAY_TYPE=7
+	 	    <isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					a.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					a.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  a.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  a.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  a.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  a.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					a.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					a.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					a.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+		ORDER BY a.ID DESC
+		
+	</select>
+
+	
+	<select id="getContract" resultMap="Customer_NS.CustomerResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Customer_NS.CUS_CUSTOMER_TBL_columns" />
+		FROM CUS_CUSTOMER_TBL WHERE CUS_CUSTOMER_TBL.CUS_ID IN (SELECT
+		DISTINCT FINANCE_CONTRACT_TBL.CUS_ID FROM FINANCE_CONTRACT_TBL)
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<select id="getUserContractCount" resultClass="int"
+		parameterClass="int" cacheModel="Contract_NS-cache">
+		SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE CUS_ID = #value#
+	</select>
+	<select id="getUserContractCountPay" resultClass="int"
+		parameterClass="int" cacheModel="Contract_NS-cache">
+		SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE STATUS=1 AND
+		CUS_ID = #value#
+	</select>
+
+	<select id="getContractNumber" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(*) FROM FINANCE_CONTRACT_TBL WHERE 1=1
+		<isNotEqual prepend="and" property="payType"
+			compareValue="-1">
+			PAY_TYPE=#payType#
+		</isNotEqual>
+		<isEqual prepend="and" property="payType" compareValue="-1">
+			PAY_TYPE!=0
+		</isEqual>
+		<isEqual property="conStr" compareValue="1">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  CREATE_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  CREATE_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			AND STATUS != 2 AND STATUS != 4
+		</isEqual>
+		<isEqual property="conStr" compareValue="2">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  PAY_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  PAY_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			AND STATUS = 1
+		</isEqual>
+	</select>
+	
+	<select id="getContractNumberBySubject" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select count( distinct finance_contract_tbl.CONTRACT_ID )FROM
+		finance_contract_tbl , finance_cash_record_tbl, cou_sell_way_tbl 
+		where finance_contract_tbl.ID = finance_cash_record_tbl.CT_ID
+		and cou_sell_way_tbl.SELL_ID = finance_cash_record_tbl.PACK_ID
+		<isNotEqual prepend="and" property="payType"
+			compareValue="-1">
+			PAY_TYPE=#payType#
+		</isNotEqual>
+		<isEqual prepend="and" property="payType" compareValue="-1">
+			PAY_TYPE!=0
+		</isEqual>
+		<isNotEqual property="subjectId" compareValue="0"
+			prepend="and">
+			cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isEqual property="conStr" compareValue="1">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS != 2 AND
+			finance_contract_tbl.STATUS!=4
+		</isEqual>
+		<isEqual property="conStr" compareValue="2">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS = 1
+		</isEqual>
+	</select>
+	
+	
+	
+	
+	<select id="getContractBySubjectList"
+		resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		select
+		<include refid="FINANCE_CONTRACT_TBL_columns" />
+		FROM finance_contract_tbl , finance_cash_record_tbl,
+		cou_course_tbl where finance_contract_tbl.ID =
+		finance_cash_record_tbl.CT_ID and cou_course_tbl.COURSE_ID =
+		finance_cash_record_tbl.COURSE_ID
+		<isNotEqual property="subjectId" compareValue="-1"
+			prepend="and">
+			cou_course_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue=""
+				prepend="and">
+				CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isEqual property="conStr" compareValue="1">
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS != 2 AND
+			finance_contract_tbl.STATUS!=4
+		</isEqual>
+		<isEqual property="conStr" compareValue="2">
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS = 1
+		</isEqual>
+		GROUP BY finance_contract_tbl.CONTRACT_ID
+		<include refid="public_sql.page_end" />
+	</select>
+	<select id="getContractBySubjectCount" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select count( distinct finance_contract_tbl.CONTRACT_ID )FROM
+		finance_contract_tbl , finance_cash_record_tbl, cou_course_tbl
+		where finance_contract_tbl.ID = finance_cash_record_tbl.CT_ID
+		and cou_course_tbl.COURSE_ID = finance_cash_record_tbl.COURSE_ID
+		<isNotEqual property="subjectId" compareValue="-1"
+			prepend="and">
+			cou_course_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue=""
+				prepend="and">
+				CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isEqual property="conStr" compareValue="1">
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS != 2 AND
+			finance_contract_tbl.STATUS!=4
+		</isEqual>
+		<isEqual property="conStr" compareValue="2">
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS = 1
+		</isEqual>
+	</select>
+
+	<select id="getPayContractNumber" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(*) FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  CREATE_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  CREATE_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			<isNotNull property="status">
+				<isNotEqual property="status" compareValue="0"
+					prepend="and">
+					STATUS=#status#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="getMonthContractNumber" resultClass="int"
+		parameterClass="String" cacheModel="Contract_NS-cache">
+		SELECT COUNT(*) FROM FINANCE_CONTRACT_TBL WHERE PAY_TYPE != 0 AND CREATE_TIME LIKE '%$month$%'
+	</select>
+	<select id="getMonthPayContractNumber" resultClass="int"
+		parameterClass="String" cacheModel="Contract_NS-cache">
+		SELECT COUNT(*) FROM FINANCE_CONTRACT_TBL WHERE PAY_TIME LIKE
+		'%$month$%' AND STATUS=1
+	</select>
+	<select id="getMonthPayContractSumMoney" resultClass="Integer"
+		parameterClass="String" cacheModel="Contract_NS-cache">
+		SELECT SUM(CONTRACT_CUTSUMMONEY)FROM FINANCE_CONTRACT_TBL WHERE PAY_TIME LIKE
+		'%$month$%' AND STATUS=1
+	</select>
+	<select id="getMonthDayContract"
+		resultMap="Customer_NS.CustomerResult" parameterClass="String" cacheModel="Contract_NS-cache">
+		SELECT * FROM FINANCE_CONTRACT_TBL WHERE CREATE_TIME LIKE
+		'%$month$%' GROUP BY
+		DATE_FORMAT(FINANCE_CONTRACT_TBL.`CREATE_TIME`,'%Y-%m-%d')
+	</select>
+	<select id="getMonthDayPayContract"
+		resultMap="Customer_NS.CustomerResult" parameterClass="String" cacheModel="Contract_NS-cache">
+		SELECT * FROM FINANCE_CONTRACT_TBL WHERE CREATE_TIME LIKE
+		'%$month$%' AND STATUS=1 GROUP BY
+		DATE_FORMAT(FINANCE_CONTRACT_TBL.`CREATE_TIME`,'%Y-%m-%d')
+	</select>
+	
+	<!-- 王郑，折线统计附加条件查询 begin-->
+	<select id="getPayContractNumberByCondition" resultClass="int" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(*) FROM (SELECT COUNT(*)
+		FROM FINANCE_CONTRACT_TBL
+		LEFT JOIN finance_cash_record_tbl
+		ON  finance_cash_record_tbl.CONTRACT_ID = FINANCE_CONTRACT_TBL.CONTRACT_ID 
+		LEFT JOIN cou_sell_way_tbl
+		ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+		LEFT JOIN webfrom_agent_tbl
+		ON FINANCE_CONTRACT_TBL.WEB_FROM IS NOT NULL AND  FINANCE_CONTRACT_TBL.WEB_FROM !="" AND FINANCE_CONTRACT_TBL.WEB_FROM = webfrom_agent_tbl.WEB_FROM
+		WHERE 1=1
+		<isNotNull property="month">
+			<isNotEqual property="month" compareValue="">
+				AND FINANCE_CONTRACT_TBL.PAY_TIME LIKE '%$month$%'
+				AND FINANCE_CONTRACT_TBL.STATUS=1
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual property="subjectId" compareValue="-1">
+			 AND cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				AND FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual property="webType" compareValue="0">
+				AND webfrom_agent_tbl.TYPE_ID=#webType#
+		</isNotEqual>
+		GROUP BY FINANCE_CONTRACT_TBL.`CONTRACT_ID`) AS t
+	</select> 
+	
+	<!--王郑，折线统计附加条件查询  end -->
+	
+		<!-- 王郑，折线统计附加条件查询 begin-->
+	<select id="getContractNumberByCondition" resultClass="int" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(*) FROM (SELECT COUNT(*)
+		FROM FINANCE_CONTRACT_TBL
+		LEFT JOIN finance_cash_record_tbl
+		ON  finance_cash_record_tbl.CONTRACT_ID = FINANCE_CONTRACT_TBL.CONTRACT_ID 
+		LEFT JOIN cou_sell_way_tbl
+		ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+		LEFT JOIN webfrom_agent_tbl
+		ON FINANCE_CONTRACT_TBL.WEB_FROM IS NOT NULL AND  FINANCE_CONTRACT_TBL.WEB_FROM !="" AND FINANCE_CONTRACT_TBL.WEB_FROM = webfrom_agent_tbl.WEB_FROM
+		WHERE 1=1
+		<isNotNull property="month">
+			<isNotEqual property="month" compareValue="">
+				AND FINANCE_CONTRACT_TBL.CREATE_TIME LIKE '%$month$%' 
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual property="subjectId" compareValue="-1">
+			 AND cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				AND FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual property="webType" compareValue="0">
+				AND webfrom_agent_tbl.TYPE_ID=#webType#
+		</isNotEqual>
+
+		GROUP BY FINANCE_CONTRACT_TBL.`CONTRACT_ID`) AS t
+	</select> 
+	
+	<!--王郑，折线统计附加条件查询  end -->
+	
+	
+	<!-- 王郑，折线统计附加条件查询 begin-->
+	<select id="getPayContractSumMoneyByCondition" resultClass="int" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT SUM(CONTRACT_CUTSUMMONEY) FROM (SELECT FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY CONTRACT_CUTSUMMONEY
+		FROM FINANCE_CONTRACT_TBL
+		LEFT JOIN finance_cash_record_tbl
+		ON  finance_cash_record_tbl.CONTRACT_ID = FINANCE_CONTRACT_TBL.CONTRACT_ID 
+		LEFT JOIN cou_sell_way_tbl
+		ON finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+		LEFT JOIN webfrom_agent_tbl
+		ON FINANCE_CONTRACT_TBL.WEB_FROM IS NOT NULL AND  FINANCE_CONTRACT_TBL.WEB_FROM !="" AND FINANCE_CONTRACT_TBL.WEB_FROM = webfrom_agent_tbl.WEB_FROM
+		WHERE 1=1
+		<isNotNull property="month">
+			<isNotEqual property="month" compareValue="">
+				AND FINANCE_CONTRACT_TBL.PAY_TIME LIKE '%$month$%'
+				AND FINANCE_CONTRACT_TBL.STATUS=1
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual property="subjectId" compareValue="-1">
+			 AND cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue="">
+				AND FINANCE_CONTRACT_TBL.CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotEqual property="webType" compareValue="0">
+				AND webfrom_agent_tbl.TYPE_ID=#webType#
+		</isNotEqual>
+
+		GROUP BY FINANCE_CONTRACT_TBL.`CONTRACT_ID`) AS t
+	</select> 
+	
+	<!--王郑，折线统计附加条件查询  end -->
+
+	<select id="getIsoderbyid" resultClass="int"
+		parameterClass="Contract" cacheModel="Contract_NS-cache">
+		SELECT FINANCE_CONTRACT_TBL.STATUS FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0"
+					prepend="and">
+					CUS_ID = #cusId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID = #contractId#
+				</isNotEqual>
+			</isNotNull>			
+		</dynamic>
+		GROUP BY CONTRACT_ID
+	</select>
+
+	<select id="getuseroderbyid" resultMap="Contract_NS.ContractResult"
+		parameterClass="Contract" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0"
+					prepend="and">
+					CUS_ID = #cusId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID = #contractId#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="getContractByList"
+		resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+
+			<isNotEqual property="userId" compareValue="0"
+				prepend="and">
+				CUS_ID = #userId#
+			</isNotEqual>
+			<isNotEqual property="status" compareValue="0"
+				prepend="and">
+				STATUS=#status#
+			</isNotEqual>
+		</dynamic>
+	</select>
+
+	<select id="queryOrderByList" resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL WHERE SRC= #src# AND CID= #cid# AND
+		CREATE_TIME LIKE '$createTime$%'
+	</select>
+
+	<select id="getContractByFromAgent"
+		resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			and finance_contract_tbl.STATUS=1 and
+			finance_contract_tbl.WEB_AGENT='wm'
+		</dynamic>
+	</select>
+	<select id="getContractByCourseId"
+		resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL INNER JOIN FINANCE_CASH_RECORD_TBL ON
+		FINANCE_CONTRACT_TBL.CONTRACT_ID=FINANCE_CASH_RECORD_TBL.CONTRACT_ID
+		<dynamic prepend="WHERE">
+			<isNotEqual property="courseId" compareValue="0"
+				prepend="and">
+				FINANCE_CASH_RECORD_TBL.COURSE_ID = #courseId#
+			</isNotEqual>
+		</dynamic>
+		<include refid="public_sql.page_end" />
+	</select>
+	<select id="getContractByCourseIdCount" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT count(*) FROM FINANCE_CONTRACT_TBL INNER JOIN
+		FINANCE_CASH_RECORD_TBL ON
+		FINANCE_CONTRACT_TBL.CONTRACT_ID=FINANCE_CASH_RECORD_TBL.CONTRACT_ID
+		<dynamic prepend="WHERE">
+			<isNotEqual property="courseId" compareValue="0"
+				prepend="and">
+				FINANCE_CASH_RECORD_TBL.COURSE_ID = #courseId#
+			</isNotEqual>
+		</dynamic>
+	</select>
+
+	<select id="getEmailByContractStatus"
+		resultMap="Contract_NS.MessageRemindDTOResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select
+		distinct(cus_customer_tbl.MOBILE),cus_customer_tbl.CUS_FROM_URL
+		from finance_contract_tbl inner join cus_customer_tbl on
+		finance_contract_tbl.CUS_ID = cus_customer_tbl.CUS_ID where
+		finance_contract_tbl.status = #status#
+		<![CDATA[
+				and cus_customer_tbl.MOBILE <>'' and cus_customer_tbl.MOBILE is not null
+				and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP( finance_contract_tbl.CREATE_TIME ))/60 > 60
+				and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP( finance_contract_tbl.CREATE_TIME ))/60 < 90
+			]]>
+		and not exists ( select finance_contract_tbl.CONTRACT_ID from
+		finance_contract_tbl where (finance_contract_tbl.status = 1 )
+		and cus_customer_tbl.CUS_ID = finance_contract_tbl.cus_id)
+
+
+        </select>
+        
+        <select id="getContractCountByCusId" resultMap="Contract_NS.ContractResult" parameterClass="int" cacheModel="Contract_NS-cache">
+            SELECT * FROM FINANCE_CONTRACT_TBL where CUS_ID = #cusId#  and PAY_TYPE=2 and STATUS=0
+        </select>
+        
+        <select id="getContractByPayType" resultMap="Contract_NS.ContractResult" parameterClass="int" cacheModel="Contract_NS-cache">
+            SELECT * FROM FINANCE_CONTRACT_TBL WHERE PAY_TYPE=#value# GROUP BY STATUS
+        </select>
+        
+        <delete id="delContractExceptCtId" parameterClass="QueryContractCondition">
+            DELETE FROM FINANCE_CONTRACT_TBL
+            WHERE	CUS_ID = #userId# 
+            AND	ID != #id#
+        </delete>
+        <select id="getContractSum" resultMap="Contract_NS.CashRecordDTOResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select finance_contract_tbl.STATUS,finance_contract_tbl.PAY_TYPE,
+		finance_cash_record_tbl.CT_ID,cou_sell_way_tbl.SUBJECT_ID,finance_contract_tbl.CANCEL_FROM,  finance_contract_tbl.CONTRACT_CUTSUMMONEY
+		from finance_cash_record_tbl inner join finance_contract_tbl 
+		inner join cou_sell_way_tbl on
+		finance_cash_record_tbl.CT_ID=finance_contract_tbl.ID and
+		finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID where 1=1
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		group by finance_cash_record_tbl.ct_id
+	</select>
+
+	<select id="getYfContractSum" resultMap="Contract_NS.CashRecordDTOResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select finance_contract_tbl.STATUS,finance_contract_tbl.PAY_TYPE,
+		finance_cash_record_tbl.CT_ID,cou_sell_way_tbl.SUBJECT_ID,finance_contract_tbl.CANCEL_FROM,  finance_contract_tbl.CONTRACT_CUTSUMMONEY
+		from finance_cash_record_tbl inner join finance_contract_tbl 
+		inner join cou_sell_way_tbl on
+		finance_cash_record_tbl.CT_ID=finance_contract_tbl.ID and
+		finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID where 1=1 
+		and (finance_contract_tbl.STATUS=1 or finance_contract_tbl.STATUS=2 or finance_contract_tbl.STATUS=3 or finance_contract_tbl.STATUS=4)
+		<isNotNull prepend="and" property="startCountTime">
+			<isNotEqual property="startCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #startCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="endCountTime">
+			<isNotEqual property="endCountTime" compareValue="">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #endCountTime# ]]>
+			</isNotEqual>
+		</isNotNull>
+		group by finance_cash_record_tbl.ct_id
+	</select>
+        
+                <!-- 货到付款导出excel查询 -->
+         <select id="getContractCODListExcel" resultMap="Contract_NS.ContractExcelDTOResult" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+            SELECT
+            <include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns"/>
+             FROM FINANCE_CONTRACT_TBL 
+             
+             <isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1">
+				JOIN FINANCE_CASH_RECORD_TBL AS b
+	   				   ON  FINANCE_CONTRACT_TBL.ID = b.CT_ID    AND b.cr_subject_id !=0 AND  b.cr_subject_id = #subjectId#  
+				</isNotEqual> 
+			</isNotNull>
+			
+			where  FINANCE_CONTRACT_TBL.PAY_TYPE=2 
+             <isNotNull property="contractId">
+            	<isNotEqual property="contractId" compareValue="0" prepend="and">
+		               FINANCE_CONTRACT_TBL.CONTRACT_ID=#contractId#
+			    </isNotEqual>
+			  </isNotNull>
+			  <isNotNull property="contractFrom">
+            	<isNotEqual property="contractFrom" compareValue="0" prepend="and">
+		               FINANCE_CONTRACT_TBL.CONTRACT_FROM like '%$contractFrom$%'
+			    </isNotEqual>
+			  </isNotNull>			
+			  <isNotNull prepend="and" property="startTime">
+			    <![CDATA[  FINANCE_CONTRACT_TBL.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			 <isNotNull prepend="and" property="payStartTime">
+			    <![CDATA[  FINANCE_CONTRACT_TBL.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  FINANCE_CONTRACT_TBL.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			  <isNotNull property="userId">
+            	<isNotEqual property="userId" compareValue="0" prepend="and">
+		              FINANCE_CONTRACT_TBL.CUS_ID=#userId#
+			    </isNotEqual>
+			  </isNotNull>
+	   		  <isNotNull property="newStatus">
+	   		  	<isNotEqual property="newStatus" compareValue="-1" prepend="and">
+		             	FINANCE_CONTRACT_TBL.STATUS=#newStatus#
+             	</isNotEqual>
+			  </isNotNull>
+			   <isNotNull property="contractCDkey">
+	   		  	<isNotEqual property="contractCDkey" compareValue="0" prepend="and">
+		             	FINANCE_CONTRACT_TBL.CONTRACT_CDKEY=#contractCDkey#
+             	</isNotEqual>
+			  </isNotNull>
+          ORDER BY FINANCE_CONTRACT_TBL.ID DESC limit 1000
+        </select>
+        <!--end-->
+        
+        <!-- 网盟用 -->
+        <select id="getContractListwm" resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull> 
+					
+				 
+		</dynamic>
+		ORDER BY ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+        
+     <select id="getContractCountwm" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL  
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME > #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME < #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+
+		</dynamic>
+		ORDER BY ID DESC
+	</select>
+	
+	
+	<!-- strat fanxin 2011-08-24  -->
+	  <select id="getContractCountwmCus" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL ,cus_customer_tbl 
+		where 1=1 AND FINANCE_CONTRACT_TBL.CUS_ID = cus_customer_tbl.CUS_ID
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME > #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME < #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					CUS_WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					CUS_WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+	
+		ORDER BY ID DESC
+	</select>
+	
+	<select id="getContractListwmCus" resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL ,cus_customer_tbl 
+		where 1=1 AND FINANCE_CONTRACT_TBL.CUS_ID = cus_customer_tbl.CUS_ID
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					CUS_WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					CUS_WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull> 
+		ORDER BY ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+	
+	<select id="getContractPriceSumwmCus" resultClass="Integer"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT SUM(CONTRACT_CUTSUMMONEY) FROM FINANCE_CONTRACT_TBL ,cus_customer_tbl 
+		where 1=1 AND FINANCE_CONTRACT_TBL.CUS_ID = cus_customer_tbl.CUS_ID
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					CUS_WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					CUS_WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull> 
+		
+	</select>
+<!-- end fanxin 2011-08-24  -->
+	
+	<!-- 给张栋提供iphone端数据 或得当前用户所购买的售卖方式-->
+		<select id="getContractAndSellWayByCusId" resultMap="Contract_NS.ContractSellWayResult" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		<include refid="public_sql.page_begin" />
+		select cou_sell_way_tbl.SELL_ID,cou_sell_way_tbl.SELL_NAME
+		from finance_cash_record_tbl
+		inner join finance_contract_tbl inner join cou_sell_way_tbl
+		where  finance_contract_tbl.CUS_ID=#userId#
+		and (finance_contract_tbl.STATUS =1 or finance_contract_tbl.STATUS =2 or  finance_contract_tbl.STATUS =4)
+		and finance_contract_tbl.id=finance_cash_record_tbl.CT_ID
+		and finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+		group by finance_cash_record_tbl.PACK_ID
+		<include refid="public_sql.page_end" />
+		</select>
+	<!-- 给张栋提供iphone端数据 -->
+	
+	<!-- 给张栋提供iphone端数据 -->
+		<select id="getContractAndSellWayCount" resultClass="int" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select count(1)
+		from 
+		(	select finance_cash_record_tbl.PACK_ID
+			from finance_cash_record_tbl
+			inner join finance_contract_tbl inner join cou_sell_way_tbl
+			where  finance_contract_tbl.CUS_ID=347
+			and (finance_contract_tbl.STATUS =1 or finance_contract_tbl.STATUS =2 or  finance_contract_tbl.STATUS =4)
+			and finance_contract_tbl.id=finance_cash_record_tbl.CT_ID
+			and finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID
+			group by finance_cash_record_tbl.PACK_ID)
+			as t
+		</select>
+	<!-- 给张栋提供iphone端数据 -->
+	<!-- 给张栋提供iphone端数据 或得当前售卖方式的老师-->
+		<select id="getTeacherBySellWayId" resultMap="Contract_NS.TeacherResult" parameterClass="int" cacheModel="Contract_NS-cache">
+		select cou_teacher_tbl.TC_ID,cou_teacher_tbl.NAME
+		from cou_course_tbl 
+		inner join cou_sell_cou_tbl 
+		inner join cou_teacher_tbl
+		where cou_course_tbl.COURSE_ID=cou_sell_cou_tbl.COURSE_ID 
+		and cou_course_tbl.TEACHER_ID= cou_teacher_tbl.TC_ID
+		and cou_sell_cou_tbl.SELL_ID=#value#
+		group by cou_course_tbl.TEACHER_ID
+		</select>
+	<!-- 给张栋提供iphone端数据 -->
+
+	<select id="getContractPriceSumwm" resultClass="Integer"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT SUM(CONTRACT_CUTSUMMONEY) + SUM(IFNULL(FREIGHT, 0)) FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME > #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME < #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+	<!-- 闫柏锡更改 -->
+	<select id="getReconciliationAmout" resultClass="Integer"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select   SUM(tt.CONTRACT_CUTSUMMONEY+tt.freight)  from
+		(
+			SELECT FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,FINANCE_CONTRACT_TBL.freight from finance_contract_tbl   
+				 join  finance_cash_record_tbl  on finance_cash_record_tbl.CT_ID = finance_contract_tbl.ID   
+				 join COU_SELL_WAY_TBL on finance_cash_record_tbl.PACK_ID = COU_SELL_WAY_TBL.SELL_ID
+				<isNotNull property="sellType"> 
+					<isNotEqual property="sellType" compareValue="0">
+						and COU_SELL_WAY_TBL.sell_Type=#sellType# 
+					</isNotEqual>	
+				</isNotNull>
+				
+				where 1=1 and FINANCE_CONTRACT_TBL.PAY_TYPE!=0
+				<isNotNull property="contractId">
+					<isNotEqual property="contractId" compareValue="0"
+						prepend="and">
+						finance_contract_tbl.CONTRACT_ID=#contractId#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="contractFrom">
+					<isNotEqual property="contractFrom" compareValue="0"
+						prepend="and">
+						finance_contract_tbl.CONTRACT_FROM like '%$contractFrom$%'
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="subjectId">
+					<isNotEqual property="subjectId" compareValue="-1"
+						prepend="and">
+						cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull prepend="and" property="startTime">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="payStartTime">
+					<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="payEndTime">
+					<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+				</isNotNull>
+				<isNotNull property="userId">
+					<isNotEqual property="userId" compareValue="0"
+						prepend="and">
+						finance_contract_tbl.CUS_ID=#userId#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="newStatus">
+					<isNotEqual property="newStatus" compareValue="-1"
+						prepend="and">
+						finance_contract_tbl.STATUS=#newStatus#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="contractCDkey">
+					<isNotEqual property="contractCDkey" compareValue="0"
+						prepend="and">
+						finance_contract_tbl.CONTRACT_CDKEY=#contractCDkey#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="payType">
+					<isNotEqual property="payType" compareValue="-1"
+						prepend="and">
+						finance_contract_tbl.PAY_TYPE = #payType#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="contractFromUrl">
+					<isNotEqual property="contractFromUrl" compareValue=""
+						prepend="and">
+						finance_contract_tbl.CONTRACT_FROM_URL=#contractFromUrl#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="webFrom">
+					<isNotEqual property="webFrom" compareValue=""
+						prepend="and">
+						finance_contract_tbl.WEB_FROM=#webFrom#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="webAgent">
+					<isNotEqual property="webAgent" compareValue=""
+						prepend="and">
+						finance_contract_tbl.WEB_AGENT=#webAgent#
+					</isNotEqual>
+				</isNotNull>
+				<isNotNull property="coupon">
+					<isEqual property="coupon" compareValue="1"
+						prepend="and">
+						finance_contract_tbl.USECOUPON=#coupon#
+						and finance_contract_tbl.COUPON_MONEY !=0
+					</isEqual>
+				</isNotNull>
+				
+				<isNotNull property="coupon">
+					<isEqual property="coupon" compareValue="0"
+						prepend="and">
+						finance_contract_tbl.USECOUPON=#coupon#
+					</isEqual>
+				</isNotNull>
+				<isNotNull property="sellId">
+					<isNotEqual property="sellId" compareValue="-1"
+						prepend="and">
+						cou_sell_way_tbl.SELL_ID=#sellId#
+					</isNotEqual>
+				</isNotNull>
+				group by finance_contract_tbl.ID
+		) as tt				
+		
+		<!--  
+				SELECT SUM(FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY+FINANCE_CONTRACT_TBL.freight) FROM FINANCE_CONTRACT_TBL WHERE PAY_TYPE!=0
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue=""
+				prepend="and">
+				CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		
+		<isNotNull property="contractId">
+			<isNotEqual property="contractId" compareValue="0"
+				prepend="and">
+				CONTRACT_ID=#contractId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractFrom">
+			<isNotEqual property="contractFrom" compareValue="0"
+				prepend="and">
+				CONTRACT_FROM like '%$contractFrom$%'
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  CREATE_TIME > #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  CREATE_TIME < #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="payStartTime">
+			<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="payEndTime">
+			<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+		</isNotNull>
+		<isNotNull property="userId">
+			<isNotEqual property="userId" compareValue="0"
+				prepend="and">
+				CUS_ID=#userId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="newStatus">
+			<isNotEqual property="newStatus" compareValue="-1"
+				prepend="and">
+				STATUS=#newStatus#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractCDkey">
+			<isNotEqual property="contractCDkey" compareValue="0"
+				prepend="and">
+				CONTRACT_CDKEY=#contractCDkey#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="payType">
+			<isNotEqual property="payType" compareValue="-1"
+				prepend="and">
+				PAY_TYPE = #payType#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webFrom">
+			<isNotEqual property="webFrom" compareValue=""
+				prepend="and">
+				WEB_FROM=#webFrom#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webAgent">
+			<isNotEqual property="webAgent" compareValue=""
+				prepend="and">
+				WEB_AGENT=#webAgent#
+			</isNotEqual>
+		</isNotNull>	
+		-->	
+	</select>
+	
+	
+	
+	<select id="getContractListForFanli" resultMap="Contract_NS.ContractResult"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		ORDER BY ID DESC LIMIT 5000
+	</select>
+	
+	<select id="getSellNameByContractId" resultMap="Contract_NS.SellWayResult" parameterClass="String" cacheModel="Contract_NS-cache">
+		SELECT cou_sell_way_tbl.SELL_NAME,cou_sell_way_tbl.SELL_ID ,
+		cou_sell_way_tbl.SELL_PRICE
+		FROM cou_sell_way_tbl
+		INNER JOIN finance_cash_record_tbl 
+		WHERE finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID 
+		AND finance_cash_record_tbl.CONTRACT_ID=#value#
+	</select>	
+	
+	<!-- 应付订单金额 wd -->
+		<select id="getCUTSUMMONEY" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT SUM(FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY) FROM FINANCE_CONTRACT_TBL WHERE PAY_TYPE!=0 AND PAY_TYPE!=5
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue=""
+				prepend="and">
+				CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		
+		<isNotNull property="contractId">
+			<isNotEqual property="contractId" compareValue="0"
+				prepend="and">
+				CONTRACT_ID=#contractId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractFrom">
+			<isNotEqual property="contractFrom" compareValue="0"
+				prepend="and">
+				CONTRACT_FROM like '%$contractFrom$%'
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  CREATE_TIME > #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  CREATE_TIME < #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="payStartTime">
+			<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="payEndTime">
+			<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+		</isNotNull>
+		<isNotNull property="userId">
+			<isNotEqual property="userId" compareValue="0"
+				prepend="and">
+				CUS_ID=#userId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="newStatus">
+			<isNotEqual property="newStatus" compareValue="-1"
+				prepend="and">
+				STATUS=#newStatus#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractCDkey">
+			<isNotEqual property="contractCDkey" compareValue="0"
+				prepend="and">
+				CONTRACT_CDKEY=#contractCDkey#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="payType">
+			<isNotEqual property="payType" compareValue="-1"
+				prepend="and">
+				PAY_TYPE = #payType#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webFrom">
+			<isNotEqual property="webFrom" compareValue=""
+				prepend="and">
+				WEB_FROM=#webFrom#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webAgent">
+			<isNotEqual property="webAgent" compareValue=""
+				prepend="and">
+				WEB_AGENT=#webAgent#
+			</isNotEqual>
+		</isNotNull>		
+	</select>
+	
+	<!--Yangning 商品退费更新订单状态  普通商品线上支付-->
+	<update id="updateStatusForRefund" parameterClass="java.lang.String">
+		UPDATE FINANCE_CONTRACT_TBL SET STATUS = 3 WHERE CONTRACT_ID =  #value# LIMIT 1
+	</update>
+	<!--Yangning 商品退费更新订单状态  货到付款  -->
+	<update id="updateStatusForRefundLocal" parameterClass="java.lang.String">
+		UPDATE FINANCE_CONTRACT_TBL SET STATUS = 4 WHERE CONTRACT_ID =  #value# LIMIT 1
+	</update>
+	<!--Yangning 商品退费查看订单是否为 货到付款  -->
+	<select id="isLocalPay" parameterClass="java.lang.String" resultClass="java.lang.Integer" cacheModel="Contract_NS-cache">
+		SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE CONTRACT_ID = #value# AND PAY_TYPE = 2
+	</select>
+	  <!--Yangning 后台批量删除用户时批量删除用户订单-->
+     <delete id="delContractByCusIds" parameterClass="java.lang.String">
+     	DELETE FROM FINANCE_CONTRACT_TBL WHERE CUS_ID IN ($value$)
+     </delete>
+     
+     <!-- crm订单列表查询 -->
+     <select id="getCrmContractList" resultMap="CrmContractResult" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		     <include refid="public_sql.page_begin" />
+		SELECT 
+		  f.contract_id,
+		  f.WEB_FROM,
+		  f.WEB_AGENT,
+		  f.CONTRACT_FROM_URL,
+		  f.CREATE_TIME,
+		  f.PAY_TIME,
+		  f.CONTRACT_CUTSUMMONEY,
+		  f.CONTRACT_SUMMONEY,
+		  f.COUPON_MONEY,
+		  f.ID,
+		  f.CUS_ID,
+		  f.STATUS,
+		  f.PAY_TYPE,
+		  f.CALL_SUM,
+		  f.CANCeL_FROM,
+		  sw.SUBJECT_ID,
+		  sw.SELL_ID,
+		  u.email,
+		  ifnull(c.user_id,0) user_id,
+		  ifnull(c.create_user_id,0) create_user_id,
+		  su.user_name create_user_name,
+		  s.user_name,
+		  ifnull(c.origin,0) origin,
+		  c.chance_stime,
+		  c.chance_utime 
+		FROM
+		  finance_contract_tbl f 
+		  JOIN finance_cash_record_tbl fcr 
+		    ON f.id = fcr.ct_id 
+     						<isNotNull property="contractId">
+								<isNotEqual property="contractId" compareValue="0"
+									prepend="and">
+									f.CONTRACT_ID=#contractId#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFrom">
+								<isNotEqual property="contractFrom" compareValue="0"
+									prepend="and">
+									f.CONTRACT_FROM like '%$contractFrom$%'
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull prepend="and" property="startTime">
+								<![CDATA[  f.CREATE_TIME >= #startTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="endTime">
+								<![CDATA[  f.CREATE_TIME <= #endTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="payStartTime">
+								<![CDATA[  f.PAY_TIME >= #payStartTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="payEndTime">
+								<![CDATA[  f.PAY_TIME <= #payEndTime# ]]>
+							</isNotNull>
+							<isNotNull property="userId">
+								<isNotEqual property="userId" compareValue="0"
+									prepend="and">
+									f.CUS_ID=#userId#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="newStatus">
+								<isNotEqual property="newStatus" compareValue="-1"
+									prepend="and">
+									f.STATUS=#newStatus#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractCDkey">
+								<isNotEqual property="contractCDkey" compareValue="0"
+									prepend="and">
+									f.CONTRACT_CDKEY=#contractCDkey#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="payType">
+								<isNotEqual property="payType" compareValue="-1"
+									prepend="and">
+									f.PAY_TYPE = #payType#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFromUrl">
+								<isNotEqual property="contractFromUrl" compareValue=""
+									prepend="and">
+									f.CONTRACT_FROM_URL=#contractFromUrl#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webFrom">
+								<isNotEqual property="webFrom" compareValue=""
+									prepend="and">
+									f.WEB_FROM=#webFrom#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webAgent">
+								<isNotEqual property="webAgent" compareValue=""
+									prepend="and">
+									f.WEB_AGENT=#webAgent#
+								</isNotEqual>
+							</isNotNull>
+							
+							<isNotNull property="coupon">
+								<isEqual property="coupon" compareValue="1"
+									prepend="and">
+									f.USECOUPON=#coupon#
+									and f.COUPON_MONEY !=0
+								</isEqual>
+							</isNotNull>
+							
+							<isNotNull property="coupon">
+								<isEqual property="coupon" compareValue="0"
+									prepend="and">
+									f.USECOUPON=#coupon#
+								</isEqual>
+							</isNotNull> 
+		  JOIN COU_SELL_WAY_TBL sw 
+		    ON sw.sell_id = fcr.pack_id 
+			 <isNotNull property="sellId">
+				<isNotEqual property="sellId" compareValue="-1"
+					prepend="and">
+					sw.SELL_ID=#sellId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					sw.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull> 
+			<isNotNull property="sellType"> 
+				<isNotEqual property="sellType" compareValue="0" prepend="and">
+					sw.SELL_TYPE=#sellType# 
+				</isNotEqual>	
+			</isNotNull>
+		     JOIN cus_customer_tbl cu ON cu.cus_id=f.cus_id  
+		      LEFT JOIN crm_user_tbl u ON u.cus_id=cu.cus_id  
+		      LEFT JOIN crm_chance_tbl c ON c.crm_user_id=u.id 
+		      LEFT JOIN sys_user_tbl s ON s.user_id=c.user_id
+		      LEFT JOIN sys_user_tbl su ON su.user_id=c.create_user_id 
+		      GROUP BY f.id order by f.id desc  
+		      <include refid="public_sql.page_end" />  
+     </select>
+     
+     <select id="getCrmContractCount" resultClass="int" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">  
+		    	
+		SELECT COUNT(1) FROM(
+		SELECT f.id AS cc  FROM
+		  finance_contract_tbl f 
+		  JOIN finance_cash_record_tbl fcr 
+		    ON f.id = fcr.ct_id 
+		     <isNotNull property="contractId">
+								<isNotEqual property="contractId" compareValue="0"
+									prepend="and">
+									f.CONTRACT_ID=#contractId#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFrom">
+								<isNotEqual property="contractFrom" compareValue="0"
+									prepend="and">
+									f.CONTRACT_FROM like '%$contractFrom$%'
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull prepend="and" property="startTime">
+								<![CDATA[  f.CREATE_TIME >= #startTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="endTime">
+								<![CDATA[  f.CREATE_TIME <= #endTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="payStartTime">
+								<![CDATA[  f.PAY_TIME >= #payStartTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="payEndTime">
+								<![CDATA[  f.PAY_TIME <= #payEndTime# ]]>
+							</isNotNull>
+							<isNotNull property="userId">
+								<isNotEqual property="userId" compareValue="0"
+									prepend="and">
+									f.CUS_ID=#userId#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="newStatus">
+								<isNotEqual property="newStatus" compareValue="-1"
+									prepend="and">
+									f.STATUS=#newStatus#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractCDkey">
+								<isNotEqual property="contractCDkey" compareValue="0"
+									prepend="and">
+									f.CONTRACT_CDKEY=#contractCDkey#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="payType">
+								<isNotEqual property="payType" compareValue="-1"
+									prepend="and">
+									f.PAY_TYPE = #payType#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFromUrl">
+								<isNotEqual property="contractFromUrl" compareValue=""
+									prepend="and">
+									f.CONTRACT_FROM_URL=#contractFromUrl#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webFrom">
+								<isNotEqual property="webFrom" compareValue=""
+									prepend="and">
+									f.WEB_FROM=#webFrom#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webAgent">
+								<isNotEqual property="webAgent" compareValue=""
+									prepend="and">
+									f.WEB_AGENT=#webAgent#
+								</isNotEqual>
+							</isNotNull>
+							
+							<isNotNull property="coupon">
+								<isEqual property="coupon" compareValue="1"
+									prepend="and">
+									f.USECOUPON=#coupon#
+									and f.COUPON_MONEY !=0
+								</isEqual>
+							</isNotNull>
+							
+							<isNotNull property="coupon">
+								<isEqual property="coupon" compareValue="0"
+									prepend="and">
+									f.USECOUPON=#coupon#
+								</isEqual>
+							</isNotNull> 
+		  JOIN COU_SELL_WAY_TBL sw 
+		    ON sw.sell_id = fcr.pack_id 
+				<isNotNull property="sellId">
+				<isNotEqual property="sellId" compareValue="-1"
+					prepend="and">
+					sw.SELL_ID=#sellId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					sw.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull> 
+			<isNotNull property="sellType"> 
+				<isNotEqual property="sellType" compareValue="0" prepend="and">
+					sw.SELL_TYPE=#sellType# 
+				</isNotEqual>	
+			</isNotNull>	 
+		    GROUP BY f.id)ss
+    	
+	 </select>
+     
+     <!-- 查询订单优化 -->
+     <select id="contractAll" resultMap="Contract_NS.ContractNEWDTOResult" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+					<include refid="public_sql.page_begin" />
+				     	select lefttbl.CONTRACT_ID,
+								lefttbl.WEB_FROM,
+								lefttbl.WEB_AGENT,
+								lefttbl.CONTRACT_FROM_URL,
+								lefttbl.CREATE_TIME,
+								lefttbl.PAY_TIME,
+								lefttbl.CONTRACT_CUTSUMMONEY,
+								lefttbl.CONTRACT_SUMMONEY,
+								lefttbl.COUPON_MONEY,
+								lefttbl.ID,
+								lefttbl.CUS_ID,
+								lefttbl.STATUS,
+								lefttbl.PAY_TYPE,
+								lefttbl.CALL_SUM,
+								lefttbl.CANCeL_FROM
+								,csw.SUBJECT_ID,csw.SELL_ID,cc.EMAIL  
+					from finance_contract_tbl 	  as lefttbl
+				  join finance_cash_record_tbl fcr on fcr.CT_ID = lefttbl.ID 
+				 <isNotNull property="sellType">
+				 	<isNotEqual property="sellType" compareValue="0">
+					JOIN cou_sell_way_tbl ON fcr.PACK_ID=cou_sell_way_tbl.SELL_ID 
+						 and cou_sell_way_tbl.SELL_TYPE=#sellType#  
+					</isNotEqual>
+				</isNotNull>
+				  left join cus_customer_tbl cc on lefttbl.cus_id=cc.cus_id
+					left join COU_SELL_WAY_TBL csw on csw.subject_id=fcr.CR_SUBJECT_ID AND
+    				fcr.PACK_ID=csw.sell_id  
+					 where 1=1
+					 <isNotNull property="contractId">
+								<isNotEqual property="contractId" compareValue="0"
+									prepend="and">
+									lefttbl.CONTRACT_ID=#contractId#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFrom">
+								<isNotEqual property="contractFrom" compareValue="0"
+									prepend="and">
+									lefttbl.CONTRACT_FROM like '%$contractFrom$%'
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull prepend="and" property="startTime">
+								<![CDATA[  lefttbl.CREATE_TIME >= #startTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="endTime">
+								<![CDATA[  lefttbl.CREATE_TIME <= #endTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="payStartTime">
+								<![CDATA[  lefttbl.PAY_TIME >= #payStartTime# ]]>
+							</isNotNull>
+							<isNotNull prepend="and" property="payEndTime">
+								<![CDATA[  lefttbl.PAY_TIME <= #payEndTime# ]]>
+							</isNotNull>
+							<isNotNull property="userId">
+								<isNotEqual property="userId" compareValue="0"
+									prepend="and">
+									lefttbl.CUS_ID=#userId#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="newStatus">
+								<isNotEqual property="newStatus" compareValue="-1"
+									prepend="and">
+									lefttbl.STATUS=#newStatus#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractCDkey">
+								<isNotEqual property="contractCDkey" compareValue="0"
+									prepend="and">
+									lefttbl.CONTRACT_CDKEY=#contractCDkey#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="payType">
+								<isNotEqual property="payType" compareValue="-1"
+									prepend="and">
+									lefttbl.PAY_TYPE = #payType#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="contractFromUrl">
+								<isNotEqual property="contractFromUrl" compareValue=""
+									prepend="and">
+									lefttbl.CONTRACT_FROM_URL=#contractFromUrl#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webFrom">
+								<isNotEqual property="webFrom" compareValue=""
+									prepend="and">
+									lefttbl.WEB_FROM=#webFrom#
+								</isNotEqual>
+							</isNotNull>
+							<isNotNull property="webAgent">
+								<isNotEqual property="webAgent" compareValue=""
+									prepend="and">
+									lefttbl.WEB_AGENT=#webAgent#
+								</isNotEqual>
+							</isNotNull>
+							
+							<isNotNull property="coupon">
+								<isEqual property="coupon" compareValue="1"
+									prepend="and">
+									lefttbl.USECOUPON=#coupon#
+									and lefttbl.COUPON_MONEY !=0
+								</isEqual>
+							</isNotNull>
+							
+							<isNotNull property="coupon">
+								<isEqual property="coupon" compareValue="0"
+									prepend="and">
+									lefttbl.USECOUPON=#coupon#
+								</isEqual>
+							</isNotNull> 
+				group by lefttbl.ID    
+				order by lefttbl.ID desc  
+				<include refid="public_sql.page_end" />  
+     </select> 
+     
+     <select id="contractAllSubject" resultMap="Contract_NS.ContractNEWDTOResult" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache"> 
+     <include refid="public_sql.page_begin" /> 
+     	select  distinct lefttbl.contract_id,
+				lefttbl.WEB_FROM,
+				lefttbl.WEB_AGENT,
+				lefttbl.CONTRACT_FROM_URL,
+				lefttbl.CREATE_TIME,
+				lefttbl.PAY_TIME,
+				lefttbl.CONTRACT_CUTSUMMONEY,
+				lefttbl.CONTRACT_SUMMONEY,
+				lefttbl.COUPON_MONEY,
+				lefttbl.ID,
+				lefttbl.CUS_ID,
+				lefttbl.STATUS,
+				lefttbl.PAY_TYPE,
+				lefttbl.CALL_SUM,
+				lefttbl.CANCeL_FROM 
+				,csw.SUBJECT_ID,csw.SELL_ID,cc.EMAIL  
+		     	  from finance_contract_tbl  
+		  as lefttbl 
+		  join  finance_cash_record_tbl fcr on fcr.CT_ID = lefttbl.ID   
+		inner join (select sell_id,subject_id from COU_SELL_WAY_TBL  where 1=1
+			<isNotNull property="sellId">
+				<isNotEqual property="sellId" compareValue="-1"
+					prepend="and">
+					COU_SELL_WAY_TBL.SELL_ID=#sellId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					COU_SELL_WAY_TBL.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull> 
+			<isNotNull property="sellType"> 
+				<isNotEqual property="sellType" compareValue="0">
+					and COU_SELL_WAY_TBL.SELL_TYPE=#sellType# 
+				</isNotEqual>	
+			</isNotNull>
+					
+		) as csw on  fcr.PACK_ID   =  csw.SELL_ID
+		  left join cus_customer_tbl cc on lefttbl.cus_id=cc.cus_id  
+		   where 1=1 
+		<isNotNull property="contractId">
+			<isNotEqual property="contractId" compareValue="0"
+				prepend="and">
+				lefttbl.CONTRACT_ID=#contractId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractFrom">
+			<isNotEqual property="contractFrom" compareValue="0"
+				prepend="and">
+				lefttbl.CONTRACT_FROM like '%$contractFrom$%'
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  lefttbl.CREATE_TIME >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  lefttbl.CREATE_TIME <= #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="payStartTime">
+			<![CDATA[  lefttbl.PAY_TIME >= #payStartTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="payEndTime">
+			<![CDATA[  lefttbl.PAY_TIME <= #payEndTime# ]]>
+		</isNotNull>
+		<isNotNull property="userId">
+			<isNotEqual property="userId" compareValue="0"
+				prepend="and">
+				lefttbl.CUS_ID=#userId#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="newStatus">
+			<isNotEqual property="newStatus" compareValue="-1"
+				prepend="and">
+				lefttbl.STATUS=#newStatus#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractCDkey">
+			<isNotEqual property="contractCDkey" compareValue="0"
+				prepend="and">
+				lefttbl.CONTRACT_CDKEY=#contractCDkey#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="payType">
+			<isNotEqual property="payType" compareValue="-1"
+				prepend="and">
+				lefttbl.PAY_TYPE = #payType#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="contractFromUrl">
+			<isNotEqual property="contractFromUrl" compareValue=""
+				prepend="and">
+				lefttbl.CONTRACT_FROM_URL=#contractFromUrl#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webFrom">
+			<isNotEqual property="webFrom" compareValue=""
+				prepend="and">
+				lefttbl.WEB_FROM=#webFrom#
+			</isNotEqual>
+		</isNotNull>
+		<isNotNull property="webAgent">
+			<isNotEqual property="webAgent" compareValue=""
+				prepend="and">
+				lefttbl.WEB_AGENT=#webAgent#
+			</isNotEqual>
+		</isNotNull>						
+		<isNotNull property="coupon">
+			<isEqual property="coupon" compareValue="1"
+				prepend="and">
+				lefttbl.USECOUPON=#coupon#
+				and lefttbl.COUPON_MONEY !=0
+			</isEqual>
+		</isNotNull>						
+		<isNotNull property="coupon">
+			<isEqual property="coupon" compareValue="0"
+				prepend="and">
+				lefttbl.USECOUPON=#coupon#
+			</isEqual>
+		</isNotNull>
+		 <include refid="public_sql.page_end" />
+     </select> 
+     
+      
+     
+     
+     <select id="getContractCountNew" resultClass="int" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">  
+		SELECT COUNT(1) FROM( 
+		SELECT COUNT(1) from finance_contract_tbl   
+		 join  finance_cash_record_tbl  on finance_cash_record_tbl.CT_ID = finance_contract_tbl.ID  
+		 join COU_SELL_WAY_TBL on finance_cash_record_tbl.PACK_ID = COU_SELL_WAY_TBL.SELL_ID
+		 <isNotNull property="sellType">
+		 	<isNotEqual property="sellType" compareValue="0">
+				and cou_sell_way_tbl.SELL_TYPE=#sellType#  
+			</isNotEqual> 
+		</isNotNull> 
+		where 1=1
+
+						<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					finance_contract_tbl.PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					finance_contract_tbl.WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="1"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+					and finance_contract_tbl.COUPON_MONEY !=0
+				</isEqual>
+			</isNotNull>
+			
+			<isNotNull property="coupon">
+				<isEqual property="coupon" compareValue="0"
+					prepend="and">
+					finance_contract_tbl.USECOUPON=#coupon#
+				</isEqual>
+			</isNotNull>
+			<isNotNull property="sellId">
+				<isNotEqual property="sellId" compareValue="-1"
+					prepend="and">
+					cou_sell_way_tbl.SELL_ID=#sellId#
+				</isNotEqual>
+			</isNotNull>
+		group by finance_contract_tbl.ID)
+		as t
+     </select>
+     
+     <select id="getContractCountNewNew" resultClass="int" cacheModel="Contract_NS-cache">
+     		select count(*) from finance_contract_tbl where 1=1			
+     		<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					finance_contract_tbl.CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+      </select>
+      
+      <select id="getMontyDayForpayType" resultClass="MonthDay" parameterClass="String" cacheModel="Contract_NS-cache">
+		select DATE_FORMAT(pay_time,'%Y-%m-%d') as day,
+		SUM(CASE WHEN pay_type = 7   THEN   CONTRACT_CUTSUMMONEY ELSE 0  END ) as  hk,
+		SUM(CASE WHEN pay_type = 1   THEN  CONTRACT_CUTSUMMONEY ELSE 0 END ) as  zfb,
+		SUM(CASE WHEN pay_type = 4   THEN   CONTRACT_CUTSUMMONEY ELSE 0 END ) as  kq,
+		SUM(CASE WHEN pay_type = 3   THEN   CONTRACT_CUTSUMMONEY ELSE 0 END ) as  wy,
+		SUM(CASE WHEN pay_type = 6   THEN   CONTRACT_CUTSUMMONEY ELSE 0 END ) as  zy,
+		SUM(CASE WHEN pay_type = 8   THEN   CONTRACT_CUTSUMMONEY ELSE 0 END ) as  yl,
+		SUM(CASE WHEN pay_type = 2   THEN   CONTRACT_CUTSUMMONEY ELSE 0 END ) as  hd,
+		SUM(CASE WHEN (pay_type !=5 and pay_type!=0)  THEN   CONTRACT_CUTSUMMONEY ELSE 0  END ) as  zong
+		 from finance_contract_tbl where  status=1 and  DATE_FORMAT(pay_time,'%Y-%m')  = DATE_FORMAT(#value#,'%Y-%m')  group by DATE_FORMAT(pay_time,'%Y-%m-%d')    
+      </select>
+      
+      <!-- Yang 2012/02/22 modify sendMessage remove study store contract -->
+      <select id="getContractNumberBySubjectToMsg" resultClass="int"
+		parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		select count( distinct finance_contract_tbl.CONTRACT_ID )FROM
+		finance_contract_tbl , finance_cash_record_tbl, cou_sell_way_tbl 
+		where finance_contract_tbl.ID = finance_cash_record_tbl.CT_ID
+		and cou_sell_way_tbl.SELL_ID = finance_cash_record_tbl.PACK_ID
+		<isNotEqual prepend="and" property="payType"
+			compareValue="-1">
+			PAY_TYPE=#payType#
+		</isNotEqual>
+		<isEqual prepend="and" property="payType" compareValue="-1">
+			PAY_TYPE!=0
+		</isEqual>
+		<isNotEqual property="subjectId" compareValue="0"
+			prepend="and">
+			cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+		</isNotEqual>
+		<isEqual property="conStr" compareValue="1">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS != 2 AND
+			finance_contract_tbl.STATUS!=4
+		</isEqual>
+		<isEqual property="conStr" compareValue="2">
+			<isNotNull prepend="and" property="startCountTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME >= #startCountTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endCountTime">
+				<![CDATA[  finance_contract_tbl.PAY_TIME <= #endCountTime# ]]>
+			</isNotNull>
+			AND finance_contract_tbl.STATUS = 1
+		</isEqual>
+		AND cou_sell_way_tbl.SELL_TYPE = 1
+	</select>
+	
+	<select id="getCrmFinanceByCusId" parameterClass="Integer" resultClass="CrmFinance" cacheModel="Contract_NS-cache">
+	   select chance.origin,record.user_id as userId,sys_user_tbl.USER_NAME as userName,record.create_time as RecordTime from  crm_user_tbl as user,crm_chance_tbl as chance,crm_record_tbl record ,sys_user_tbl  
+       where user.cus_id=#value# and  user.id=chance.crm_user_id and chance.id=record.crm_chance_id and comm_status=0 and record.user_id=sys_user_tbl.user_id
+       order by record.id
+	</select>
+	
+	<select id="getFinanceByCouponId" parameterClass="int" resultMap="Contract_NS.ContractResult" cacheModel="Contract_NS-cache">
+	SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL WHERE COUPON_ID = #value#
+	</select>
+	
+	<resultMap id="ContractResultForCPS" class="Contract">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="id" column="ID"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="contractFrom" column="CONTRACT_FROM"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="status" column="STATUS"/>
+            <result property="payType" column="PAY_TYPE"/>
+            <result property="remark" column="REMARK"/>
+            <result property="contractSumMoney" column="CONTRACT_SUMMONEY"/>
+            <result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+            <result property="useCoupon" column="USECOUPON"/>
+            <result property="couponMoney" column="COUPON_MONEY"/>
+            <result property="payTime" column="PAY_TIME"/>
+            <result property="callSum" column="CALL_SUM"/>
+            <result property="contractCDkey" column="CONTRACT_CDKEY"/>
+            <result property="cdkeySum" column="CDKEY_SUM"/>
+            <result property="cusIdAddress" column="CUSID_ADDRESS"/>
+            <result property="webFrom" column="WEB_FROM"/>
+            <result property="webAgent" column="WEB_AGENT"/>
+            <result property="wi" column="WI"/>
+            <result property="contractFromUrl" column="CONTRACT_FROM_URL"/>
+            <result property="src" column="SRC"/>
+            <result property="cid" column="CID"/>
+            <result property="relief" column="relief"/>
+            <result property="freight" column="freight"/>
+            <result property="cusId" column="CUS_ID" />
+            <result property="cancelFrom" column="CANCEL_FROM"/>
+            <result property="cancelTime" column="CANCEL_TIME"/>
+            <result property="couponId"   column="COUPON_ID"/>
+        </resultMap>
+	<!-- 根据推广查询订单数据 -->
+	<select id="getContractListForCPS"  resultMap="Contract_NS.ContractResultForCPS" parameterClass="QueryContractCondition" cacheModel="Contract_NS-cache">
+		SELECT
+		<include refid="Contract_NS.FINANCE_CONTRACT_TBL_columns" />
+		FROM FINANCE_CONTRACT_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID=#contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFrom">
+				<isNotEqual property="contractFrom" compareValue="0"
+					prepend="and">
+					CONTRACT_FROM like '%$contractFrom$%'
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  CREATE_TIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  CREATE_TIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payStartTime">
+				<![CDATA[  PAY_TIME >= #payStartTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="payEndTime">
+				<![CDATA[  PAY_TIME <= #payEndTime# ]]>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0"
+					prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="newStatus">
+				<isNotEqual property="newStatus" compareValue="-1"
+					prepend="and">
+					STATUS=#newStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractCDkey">
+				<isNotEqual property="contractCDkey" compareValue="0"
+					prepend="and">
+					CONTRACT_CDKEY=#contractCDkey#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payType">
+				<isNotEqual property="payType" compareValue="-1"
+					prepend="and">
+					PAY_TYPE = #payType#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractFromUrl">
+				<isNotEqual property="contractFromUrl" compareValue=""
+					prepend="and">
+					CONTRACT_FROM_URL=#contractFromUrl#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webFrom">
+				<isNotEqual property="webFrom" compareValue=""
+					prepend="and">
+					WEB_FROM=#webFrom#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="webAgent">
+				<isNotEqual property="webAgent" compareValue=""
+					prepend="and">
+					WEB_AGENT=#webAgent#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<!-- Yaning 2012/04/11 for DelTemp User -->
+	<select id="getPaidContractByCusId" parameterClass="int" resultClass="int">
+		SELECT COUNT(1) FROM FINANCE_CONTRACT_TBL WHERE PAY_TYPE != 0 AND (FINANCE_CONTRACT_TBL.STATUS = 1 OR FINANCE_CONTRACT_TBL.STATUS = 3) AND CUS_ID = #value#
+	</select>
+
+	<!-- 新增：360CPS查询。 ZHENG QIANG 2012-5-14 -->
+	<resultMap id="QueryCPS360OrderQueryResult" class="com.shangde.edu.ad.dto.CPS360OrderQueryDTO">
+		<result column="ID" property="id" />
+		<result column="CONTRACT_ID" property="contractId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CONTRACT_SUMMONEY" property="contractSumMoney" />
+		<result column="COUPON_MONEY" property="couponMoney" />
+		<result column="CONTRACT_CUTSUMMONEY" property="contractCutSumMoney" />
+		<result column="FREIGHT" property="freight" />
+		<result column="STATUS" property="localStatus" />
+		<result column="WI" property="wi" />
+		<result column="SRC" property="src" />
+		<result column="CID" property="cid" />
+	</resultMap>
+
+	<resultMap id="QueryCPS360OrderCheckResult" class="com.shangde.edu.ad.dto.CPS360OrderCheckDTO">
+		<result column="ID" property="id" />
+		<result column="CONTRACT_ID" property="contractId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CONTRACT_SUMMONEY" property="contractSumMoney" />
+		<result column="COUPON_MONEY" property="couponMoney" />
+		<result column="CONTRACT_CUTSUMMONEY" property="contractCutSumMoney" />
+		<result column="FREIGHT" property="freight" />
+		<result column="STATUS" property="localStatus" />
+	</resultMap>
+
+	<!-- 360CPS订单查询 -->
+	<select id="queryCPS360OrderQuery"
+		parameterClass="com.shangde.edu.ad.condition.QueryCPS360OrderQueryCondition"
+		resultMap="QueryCPS360OrderQueryResult">
+		SELECT 
+		    FINANCE_CONTRACT_TBL.ID,
+		    FINANCE_CONTRACT_TBL.CONTRACT_ID,
+		    FINANCE_CONTRACT_TBL.CREATE_TIME,
+		    FINANCE_CONTRACT_TBL.CONTRACT_SUMMONEY,
+		    FINANCE_CONTRACT_TBL.COUPON_MONEY,
+		    FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,
+		    FINANCE_CONTRACT_TBL.FREIGHT,
+		    FINANCE_CONTRACT_TBL.STATUS,
+			FINANCE_CONTRACT_TBL.WI,
+			FINANCE_CONTRACT_TBL.SRC,
+			FINANCE_CONTRACT_TBL.CID
+		FROM
+		    FINANCE_CONTRACT_TBL
+		    WHERE FINANCE_CONTRACT_TBL.WEB_FROM = #webFrom#
+		    <isNotEmpty prepend="AND" property="orderIds">
+		    	FINANCE_CONTRACT_TBL.CONTRACT_ID IN
+		    	<iterate open="(" close=")" conjunction="," property="orderIds">
+		    		 #orderIds[]#
+		    	</iterate>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="startTime">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME >= #startTime#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="endTime">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME <= #endTime#
+		    	]]>
+		    </isNotEmpty>
+		    		    <isNotEmpty prepend="AND" property="updstartTime">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME >= #updstartTime#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="updendTime">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME <= #updendTime#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="lastOrderId">
+		    	<![CDATA[
+					FINANCE_CONTRACT_TBL.CONTRACT_ID > #lastOrderId#
+		    	]]>
+		    </isNotEmpty>
+		    ORDER BY FINANCE_CONTRACT_TBL.CONTRACT_ID ASC
+		    LIMIT 2000
+	</select>
+
+	<!-- 360CPS对账查询 -->
+	<select id="queryCPS360OrderCheck"
+		parameterClass="com.shangde.edu.ad.condition.QueryCPS360OrderCheckCondition"
+		resultMap="QueryCPS360OrderCheckResult">
+		SELECT 
+		    FINANCE_CONTRACT_TBL.ID,
+		    FINANCE_CONTRACT_TBL.CONTRACT_ID,
+		    FINANCE_CONTRACT_TBL.CREATE_TIME,
+		    FINANCE_CONTRACT_TBL.CONTRACT_SUMMONEY,
+		    FINANCE_CONTRACT_TBL.COUPON_MONEY,
+		    FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,
+		    FINANCE_CONTRACT_TBL.FREIGHT,
+		    FINANCE_CONTRACT_TBL.STATUS
+		FROM
+		    FINANCE_CONTRACT_TBL
+		    WHERE FINANCE_CONTRACT_TBL.WEB_FROM = #webFrom#
+		    	AND FINANCE_CONTRACT_TBL.STATUS = 1
+		    <isNotEmpty prepend="AND" property="lastOrderId">
+		    	<![CDATA[
+					FINANCE_CONTRACT_TBL.CONTRACT_ID > #lastOrderId#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="billMonthYear">
+		    	YEAR(FINANCE_CONTRACT_TBL.CREATE_TIME) = #billMonthYear#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="billMonthMonth">
+		    	MONTH(FINANCE_CONTRACT_TBL.CREATE_TIME) = #billMonthMonth#
+		    </isNotEmpty>
+		    ORDER BY FINANCE_CONTRACT_TBL.CONTRACT_ID ASC
+		    LIMIT 2000
+	</select>
+	<!-- 新增成果网订单查询  byjoqk 2012年7月13日-->
+	<resultMap id="QueryCPSCHANETOrderQueryResult" class="com.shangde.edu.ad.dto.CHANETOrderQueryDTO">
+		<result column="ID" property="id" />
+		<result column="CONTRACT_ID" property="contractId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CONTRACT_SUMMONEY" property="contractSumMoney" />
+		<result column="COUPON_MONEY" property="couponMoney" />
+		<result column="CONTRACT_CUTSUMMONEY" property="contractCutSumMoney" />
+		<result column="FREIGHT" property="freight" />
+		<result column="STATUS" property="localStatus" />
+		<result column="PAY_TYPE" property="payTypez" />
+		<result column="WI" property="wi" />
+		<result column="SRC" property="src" />
+		<result column="CID" property="cid" />
+		
+	</resultMap>
+	<!-- 成果网订单查询  -->
+	<select id="queryCHANETOrderQuery"
+		parameterClass="com.shangde.edu.ad.condition.QueryCHANETOrderQueryCondition"
+		resultMap="QueryCPSCHANETOrderQueryResult">
+		SELECT 
+		    FINANCE_CONTRACT_TBL.ID,
+		    FINANCE_CONTRACT_TBL.CONTRACT_ID,
+		    FINANCE_CONTRACT_TBL.CREATE_TIME,
+		    FINANCE_CONTRACT_TBL.CONTRACT_SUMMONEY,
+		    FINANCE_CONTRACT_TBL.COUPON_MONEY,
+		    FINANCE_CONTRACT_TBL.CONTRACT_CUTSUMMONEY,
+		    FINANCE_CONTRACT_TBL.FREIGHT,
+		    FINANCE_CONTRACT_TBL.STATUS,
+		    finance_contract_tbl.PAY_TYPE,
+			FINANCE_CONTRACT_TBL.WI,
+			FINANCE_CONTRACT_TBL.SRC,
+			FINANCE_CONTRACT_TBL.CID
+		FROM
+		    FINANCE_CONTRACT_TBL
+		  
+		      WHERE    FINANCE_CONTRACT_TBL.WEB_FROM = #webFrom#
+		    <isNotEmpty prepend="AND" property="start">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME >= #start#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="end">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME <= #end#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="orderid">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CONTRACT_ID = #orderid#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="orderstatus">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.STATUS = #orderstatus#
+		    	]]>
+		    </isNotEmpty>
+		    ORDER BY FINANCE_CONTRACT_TBL.CONTRACT_ID 
+	</select>
+	
+	
+	
+	<resultMap id="ContractResultForCPS" class="Contract">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="id" column="ID"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="contractFrom" column="CONTRACT_FROM"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="status" column="STATUS"/>
+            <result property="payType" column="PAY_TYPE"/>
+            <result property="remark" column="REMARK"/>
+            <result property="contractSumMoney" column="CONTRACT_SUMMONEY"/>
+            <result property="contractCutSumMoney" column="CONTRACT_CUTSUMMONEY"/>
+            <result property="useCoupon" column="USECOUPON"/>
+            <result property="couponMoney" column="COUPON_MONEY"/>
+            <result property="payTime" column="PAY_TIME"/>
+            <result property="callSum" column="CALL_SUM"/>
+            <result property="contractCDkey" column="CONTRACT_CDKEY"/>
+            <result property="cdkeySum" column="CDKEY_SUM"/>
+            <result property="cusIdAddress" column="CUSID_ADDRESS"/>
+            <result property="webFrom" column="WEB_FROM"/>
+            <result property="webAgent" column="WEB_AGENT"/>
+            <result property="wi" column="WI"/>
+            <result property="contractFromUrl" column="CONTRACT_FROM_URL"/>
+            <result property="src" column="SRC"/>
+            <result property="cid" column="CID"/>
+            <result property="relief" column="relief"/>
+            <result property="freight" column="freight"/>
+            <result property="cancelFrom" column="CANCEL_FROM"/>
+            <result property="couponId"   column="COUPON_ID"/>
+        </resultMap>
+	
+	<!-- 订单查询 -->
+	<select id="queryCommonOrderQuery" parameterClass="com.shangde.edu.ad.condition.QueryCommonOrderQueryCondition"
+		resultMap="ContractResultForCPS">
+		SELECT * FROM FINANCE_CONTRACT_TBL WHERE FINANCE_CONTRACT_TBL.WEB_FROM = #webFrom# 
+		<isNotEmpty prepend="AND" property="starttime">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME >= #starttime#
+		    	]]>
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="endtime">
+		    	<![CDATA[
+		    		FINANCE_CONTRACT_TBL.CREATE_TIME <= #endtime#
+		    	]]>
+		    </isNotEmpty>
+	</select>
+	
+</sqlMap>

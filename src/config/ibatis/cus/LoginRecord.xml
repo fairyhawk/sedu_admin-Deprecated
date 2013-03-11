@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="LoginRecord_NS">
+        <!--table:CUS_LOGIN_RECORD_TBL-->
+        <typeAlias alias="LoginRecord" type="com.shangde.edu.cus.domain.LoginRecord"/>
+        <typeAlias alias="QueryLoginRecordCondition" type="com.shangde.edu.cus.condition.QueryLoginRecordCondition"/>
+	<cacheModel id="LoginRecord_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="LoginRecord_NS.createLoginRecord" />
+			<flushOnExecute statement="LoginRecord_NS.updateLoginRecord" />
+			<flushOnExecute statement="LoginRecord_NS.deleteLoginRecordByCusId" />
+			<flushOnExecute statement="LoginRecord_NS.deleteLoginRecordByCusIds" />
+			<property value="1000" name="size" />
+	</cacheModel>
+        <resultMap id="LoginRecordResult" class="LoginRecord">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="loginIp" column="LOGIN_IP"/>
+            <result property="loginTime" column="LOGIN_TIME"/>
+            <result property="address" column="ADDRESS"/>
+        </resultMap>
+
+        <sql id="CUS_LOGIN_RECORD_TBL_columns">
+            CUS_LOGIN_RECORD_TBL.CUS_ID,
+            CUS_LOGIN_RECORD_TBL.LOGIN_IP,
+            CUS_LOGIN_RECORD_TBL.LOGIN_TIME,
+            CUS_LOGIN_RECORD_TBL.ADDRESS
+        </sql>
+
+        <sql id="CUS_LOGIN_RECORD_TBL_properties">
+            #cusId#,
+            #loginIp#,
+            #loginTime#,
+            #address#
+        </sql>
+
+        <insert id="createLoginRecord" parameterClass="LoginRecord">
+            INSERT INTO CUS_LOGIN_RECORD_TBL (<include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>) VALUES (<include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_properties"/>)
+        </insert>
+
+		<!-- 
+        <delete id="deleteLoginRecordById" parameterClass="">
+            DELETE FROM CUS_LOGIN_RECORD_TBL
+        </delete>
+         -->
+         
+         <delete id="deleteLoginRecordByCusId" parameterClass="int">
+            DELETE FROM CUS_LOGIN_RECORD_TBL WHERE CUS_ID=#value#
+        </delete>
+
+        <update id="updateLoginRecord" parameterClass="LoginRecord">
+            UPDATE CUS_LOGIN_RECORD_TBL SET
+                CUS_ID = #cusId#,
+                LOGIN_IP = #loginIp#,
+                LOGIN_TIME = #loginTime#,
+                ADDRESS = #address#
+			WHERE CUS_ID = #cusId#
+				AND LOGIN_TIME = #loginTime#
+				AND LOGIN_IP = #loginIp#
+        </update>
+
+		<!-- 
+        <select id="getLoginRecordById" resultMap="LoginRecord_NS.LoginRecordResult" parameterClass="">
+            SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+        </select>
+        -->
+
+        <select id="getLoginRecordList" resultMap="LoginRecord_NS.LoginRecordResult" parameterClass="QueryLoginRecordCondition" cacheModel="LoginRecord_NS-cache">
+            SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+        </select>
+
+        <select id="getAddressNullLoginRecordList" resultMap="LoginRecord_NS.LoginRecordResult" cacheModel="LoginRecord_NS-cache">
+            SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+            WHERE ADDRESS IS NULL
+        </select>
+
+        <select id="getLoginRecordListByCusLimit5" resultMap="LoginRecord_NS.LoginRecordResult" parameterClass="int" cacheModel="LoginRecord_NS-cache">
+            SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+            WHERE CUS_ID = #value#
+            ORDER BY LOGIN_TIME DESC
+            LIMIT 0,5
+        </select>        
+         <select id="getLoginRecordByCusId" resultMap="LoginRecord_NS.LoginRecordResult" parameterClass="int" cacheModel="LoginRecord_NS-cache">
+            SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+            WHERE 
+            CUS_ID=#value#
+            ORDER BY LOGIN_TIME 
+            ASC limit 1
+             
+        </select>
+        <select id="getSecondLoginRecordByCusId" resultMap="LoginRecord_NS.LoginRecordResult" parameterClass="int" cacheModel="LoginRecord_NS-cache">
+         	SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+            WHERE 
+            CUS_ID=#value#
+            ORDER BY LOGIN_TIME 
+            ASC
+        </select>
+        <select id="getSecondLoginRecord" resultMap="LoginRecord_NS.LoginRecordResult" parameterClass="QueryLoginRecordCondition" cacheModel="LoginRecord_NS-cache">
+         	SELECT
+            <include refid="LoginRecord_NS.CUS_LOGIN_RECORD_TBL_columns"/>
+            FROM CUS_LOGIN_RECORD_TBL
+            WHERE 
+            CUS_ID=#cusId#
+            ORDER BY LOGIN_TIME 
+            ASC
+        </select>
+        <!-- Yangning 2011/12/06 后台批量删除用户时 级联批量删除登录信息  -->
+        <delete id="deleteLoginRecordByCusIds" parameterClass="String">
+            DELETE FROM CUS_LOGIN_RECORD_TBL WHERE CUS_ID IN ($value$)
+        </delete>
+        <!--end-->
+</sqlMap>

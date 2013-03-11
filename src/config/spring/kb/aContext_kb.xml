@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="chapterService" class="com.shangde.edu.kb.service.ChapterImpl" parent="baseService"/>
+    <bean id="difficultyService" class="com.shangde.edu.kb.service.DifficultyImpl" parent="baseService"/>
+    <bean id="knowledgeUnitService" class="com.shangde.edu.kb.service.KnowledgeUnitImpl" parent="baseService"/>
+    <bean id="professionalService" class="com.shangde.edu.kb.service.ProfessionalImpl" parent="baseService"/>
+    <bean id="sectionService" class="com.shangde.edu.kb.service.SectionImpl" parent="baseService"/>
+    <bean id="studyCourseService" class="com.shangde.edu.kb.service.StudyCourseImpl" parent="baseService"/>
+    <bean id="knowledgeService" class="com.shangde.edu.kb.service.KnowledgeImpl" parent="baseService"/>
+</beans>

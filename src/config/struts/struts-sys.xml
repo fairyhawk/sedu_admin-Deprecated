@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="sys" namespace="/sys" extends="edu-default">
+        <action name="group" class="com.shangde.edu.sys.action.GroupAction">
+            <result name="toAddGroup">/back/jsp/sys/user/group_add.jsp</result>
+            <result name="GroupTreeList">/back/jsp/sys/user/group_list.jsp</result>
+            <result name="techIndex">/back/jsp/sys/user/groupTree_techIndex.jsp</result>
+            <result name="techLeftframe">/back/jsp/sys/user/groupTree_techLeftframe.jsp</result>
+            <result name="techRightframe">/back/jsp/sys/user/groupTree_techRightframe.html</result>
+            <result name="switchframe">/back/jsp/sys/user/switchframe.jsp</result>
+            <result name="toDeleteGroup">/back/jsp/sys/user/group_delete.jsp</result>
+            <result name="deleteGroup" type="redirect">group!toDeleteGroup.action</result>
+            <result name="getChildGroupById" type="json">
+				<param name="root">result</param>
+			</result>
+        </action>
+        <action name="user" class="com.shangde.edu.sys.action.SysUserAction">
+        	<result name="changePwd">/back/jsp/sys/user/changePwd.jsp</result>
+            <result name="userManager">/back/jsp/sys/user/userManager.jsp</result>
+        	<result name="listAllUser">/back/jsp/sys/user/user_list.jsp</result>
+        	<result name="relistAllUser" type="redirect">/sys/user!listAllUser.action?queryUserCondition.currentPage=1</result>
+            <result name="listUserByGroupId">/back/jsp/sys/user/user_list.jsp</result>
+            <result name="toAddUser">/back/jsp/sys/user/user_add.jsp</result>
+            <result name="toEditUser">/back/jsp/sys/user/user_edit.jsp</result>
+            <result name="listAllUserForStu" type="redirect">user!listAllUserForStu.action?QueryUserCondition.currentPage=1</result>
+            <result name="toEditUserGradeSubjectRoleSec">/back/jsp/sys/user/setRole.jsp</result>
+            <result name="toViewUserGradeSubjectRoleSec">/back/jsp/sys/user/viewRole.jsp</result>
+            <result name="userAdd">/back/jsp/sys/user/userAdd.jsp</result>
+            <result name="toUpdatePwd">/back/jsp/sys/user/user_update_pwd.jsp</result>
+            <result name="toSetUserContentRole">/back/jsp/sys/user/user_setContentRole.jsp</result>
+            <result name="reshow">/sys/user!toEditUserContentRole.action</result>
+        </action>
+        <action name="roleAdmin" class="com.shangde.edu.sys.action.RoleAdminAction">
+            <result name="roleList">/back/jsp/sys/roleAdmin/roleList.jsp</result>
+            <result name="toEditRole">/back/jsp/sys/roleAdmin/role_edit.jsp</result>
+            <result name="toAddRoleRef">/back/jsp/sys/roleAdmin/role_addRef.jsp</result>
+            <result name="toEditRoleRef" type="redirect">user!toEditUserGradeSubjectRoleSec.action?user.userId=${userId}</result>
+        </action>
+        <action name="backLogin" class="com.shangde.edu.sys.action.BackLoginAction">
+        	<result name="success" type="dispatcher">/back/jsp/sys/login/login.jsp</result>
+			<result name="login" type="redirect">backMain.action</result>
+			<result name="loginError" type="dispatcher">/back/jsp/sys/login/login.jsp</result>
+			<result name="loginOut" type="redirect">/back/jsp/sys/login/loginOut.jsp</result>
+            <interceptor-ref name="loginStack" />
+		</action>
+		<action name="backMain" class="com.shangde.edu.sys.action.BackMainAction">
+			<result name="success" type="dispatcher">/back/jsp/sys/login/index.jsp</result>
+			<result name="topframe" type="dispatcher">/back/jsp/sys/login/topframe.jsp</result>
+			<result name="leftframe" type="dispatcher">/back/jsp/sys/login/leftframe.jsp</result>
+			<result name="switchframe" type="dispatcher">/back/jsp/sys/login/switchframe.jsp</result>
+			<result name="rightframe" type="dispatcher">/back/jsp/sys/login/rightmian.jsp</result>
+		</action>
+		<action name="visit" class="com.shangde.edu.sys.action.VisitAction">
+			<result name="visitlist">/back/jsp/sys/visit/visit_list.jsp</result>
+			<result name="deletevisit" type="redirect">visit!getVisitList.action?queryVisitHistoryCondition.currentPage=1</result>
+		</action>
+		<action name="func" class="com.shangde.edu.sys.action.FunctionAction">
+			<result name="toAddFunction">/back/jsp/sys/function/function_add.jsp</result>
+			<result name="toUpdateFunction">/back/jsp/sys/function/function_update.jsp</result>
+			<result name="showFunctionList">/back/jsp/sys/function/function_list.jsp</result>
+			<result name="reshow" type="redirect">/sys/func!showFunctionList.action</result>
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		<action name="loginLog" class="com.shangde.edu.sys.action.LoginLogAction">
+            <result name="loginLog_list">/back/jsp/sys/user/loginLog_list.jsp</result>
+		</action>
+		<action name="webFromAgent" class="com.shangde.edu.sys.action.WebFromAgentAction">
+			<result name="getAllList">/back/jsp/sys/webFromAgent/showWebFromAgent.jsp</result>
+			<result name="getWebFromAgentByTiaoJian">/back/jsp/sys/webFromAgent/showWebFromAgent.jsp</result>
+			<result name="addFromSuccess" type="redirect">/sys/webFromAgent!getAllListCountPage.action?queryWebFromAgentCondition.currentPage=1</result>
+			<result name="deleteSucces" type="redirect">/sys/webFromAgent!getAllListCountPage.action?queryWebFromAgentCondition.currentPage=1</result>
+			<result name="updateSuccess" type="redirect">/sys/webFromAgent!getAllListCountPage.action?queryWebFromAgentCondition.currentPage=1</result>
+			<result name="getWebFromAgentById">/back/jsp/sys/webFromAgent/updatWebFromAgent.jsp</result>
+			<result name="exportExcel" type="streamx">
+         		<param name="contentType">application/vnd.ms-excel</param>
+         		<param name="inputName">excelFile</param>
+         		<param name="contentDisposition">attachment;filename="${exportName}"</param>
+         	</result>
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+
+		<!-- Subject 管理 / Modified by ZHENG QIANG -->
+		<action name="subject" class="com.shangde.edu.sys.action.SubjectAction">
+			<result name="list">/back/jsp/sys/subject/subject_list.jsp</result>
+			<result name="update">/back/jsp/sys/subject/subject_update.jsp</result>
+			<result name="save">/back/jsp/sys/subject/subject_save.jsp</result>
+			<result name="redirectList" type="redirectAction">
+				<param name="actionName">subject</param>
+				<param name="namespace">/sys</param>
+				<param name="method">querySubject</param>
+				<param name="querySubjectConditionAdv.currentPage">1</param>
+			</result>
+		</action>
+		
+		   <!-- 文件copy -->
+         <action name="domain" class="com.shangde.edu.sys.action.DoMainAction">
+         	<result name="copyfile">/back/jsp/sys/doMain/doMain.jsp</result>
+         </action>
+         <action name="signUp" class="com.shangde.edu.sys.action.SignUpAction">
+         	<result name="listSignUp">/back/jsp/sys/signUp/signUp_list.jsp</result>
+         	<result name="exportSignUp" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportName}"</param>
+			</result> 
+         </action>
+
+         <action name="webFromAgentLog" class="com.shangde.edu.sys.action.WebFromAgentLogAction">
+         	<result name="webFromLog">/back/jsp/sys/webFromAgentLog/webFromAgentLog.jsp</result>
+         	<result name="userWebFrom">/back/jsp/sys/webFromAgentLog/userFromAgent.jsp</result>
+         	<result name="exportExcel" type="streamx">
+         		<param name="contentType">application/vnd.ms-excel</param>
+         		<param name="inputName">excelFile</param>
+         		<param name="contentDisposition">attachment;filename="${exportName}"</param>
+         	</result>
+         </action>
+
+         <!-- modules 管理 -->
+         <action name="modules" class="com.shangde.edu.sys.action.ModulesAction"> 
+         	<result name="modulesList">/back/jsp/sys/modules/list.jsp</result>
+         	<result name="toAdd">/back/jsp/sys/modules/add.jsp</result>
+         	<result name="toModify">/back/jsp/sys/modules/modify.jsp</result>
+         	<result name="add" type="redirect">/sys/modules!list.action</result>
+         	<result name="modify" type="redirect">/sys/modules!list.action</result>
+         </action>
+         
+         <action name="model" class="com.shangde.edu.sys.action.BackModelAction">
+         	<result name="modelList">/back/jsp/sys/model/model_list.jsp</result>
+         	<result name="toUpdateModel">/back/jsp/sys/model/edit_model.jsp</result>
+         	<result name="toCreateModel">/back/jsp/sys/model/add_model.jsp</result>
+         	<result name="deleteModel" type="redirect">/sys/model!getModelList.action?queryModelCondition.currentPage=1</result>
+         	<result name="updateModel" type="redirect">/sys/model!getModelList.action?queryModelCondition.currentPage=1</result>
+         	<result name="createModel" type="redirect">/sys/model!getModelList.action?queryModelCondition.currentPage=1</result>
+         </action>
+
+    </package>
+</struts>

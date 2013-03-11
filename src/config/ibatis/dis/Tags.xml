@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Tags_NS">
+
+
+	<typeAlias alias="Tags" type="com.shangde.edu.dis.domain.Tags" />
+	
+	<sql id="DIS_Tags_TBL_columns">
+		DIS_Tags_TBL.ID, 
+		DIS_Tags_TBL.NAME,
+		DIS_Tags_TBL.COUNT, 
+		DIS_Tags_TBL.STATUS
+	</sql>
+	<sql id="DIS_Tags_TBL_properties">
+		#id#, 
+		#name#, 
+		#count#, 
+		#status#
+	</sql>
+	
+	<!-- 添加标签 -->
+	<insert id="createTags" parameterClass="Tags">
+		INSERT INTO DIS_DISCUSSION_TBL (
+			<include refid="Tags_NS.DIS_Tags_TBL_columns" />
+		) VALUES (
+			<include refid="Tags_NS.DIS_Tags_TBL_properties" />
+		)
+		<selectKey resultClass="int" keyProperty="id"> 
+		 SELECT LAST_INSERT_ID() 
+		</selectKey>
+	</insert>
+	
+	<!-- 前台使用 -->
+	<select id="getTagsList" resultClass="Tags">
+		select
+			<include refid="Tags_NS.DIS_Tags_TBL_columns"/>
+		from DIS_TAGS_TBL
+			where status = 0
+	</select>
+
+
+</sqlMap>

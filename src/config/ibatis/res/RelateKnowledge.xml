@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RelateKnowledge_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="RelateKnowledge" type="com.shangde.edu.res.domain.RelateKnowledge" />
+
+	<resultMap id="RelateKnowledgeResult" class="RelateKnowledge">
+		<result property="relateKnowLedgeId" column="RELATE_KNOWLEDGE_ID" />
+		<result property="voId" column="VO_ID" />
+		<result property="knowledgePointId" column="KNOWLEDGE_POINT_ID" />
+		<result property="relateKnowledgePoint" column="RELATE_KNOWLEDGE_POINT" />
+		<result property="importantLevel" column="IMPORTANT_LEVEL" />
+	</resultMap>
+
+	<sql id="RES_RELATE_KNOWLEDGE_TBL_columns">
+		RES_RELATE_KNOWLEDGE_TBL.RELATE_KNOWLEDGE_ID, 
+		RES_RELATE_KNOWLEDGE_TBL.VO_ID, 
+		RES_RELATE_KNOWLEDGE_TBL.KNOWLEDGE_POINT_ID,
+		RES_RELATE_KNOWLEDGE_TBL.RELATE_KNOWLEDGE_POINT,
+		RES_RELATE_KNOWLEDGE_TBL.IMPORTANT_LEVEL
+	</sql>
+
+	<sql id="RES_RELATE_KNOWLEDGE_TBL_properties">
+		#relateKnowLedgeId#, #voId#, #knowledgePointId#, #relateKnowledgePoint#, #importantLevel#
+	</sql>
+
+	<insert id="createRelateKnowledge" parameterClass="RelateKnowledge" >
+		INSERT INTO RES_RELATE_KNOWLEDGE_TBL (
+		<include refid="RelateKnowledge_NS.RES_RELATE_KNOWLEDGE_TBL_columns" />
+		) VALUES (
+		<include refid="RelateKnowledge_NS.RES_RELATE_KNOWLEDGE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="relateKnowLedgeId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteRelateKnowledgeById" parameterClass="int">
+		DELETE FROM RES_RELATE_KNOWLEDGE_TBL WHERE RELATE_KNOWLEDGE_ID = #value#
+	</delete>
+	
+	<delete id="deleteRelateKnowledgeByVoID" parameterClass="int">
+		DELETE FROM RES_RELATE_KNOWLEDGE_TBL WHERE VO_ID = #value#
+	</delete>
+
+	<update id="updateRelateKnowledge" parameterClass="RelateKnowledge">
+		UPDATE RES_RELATE_KNOWLEDGE_TBL SET VO_ID = #voId#, KNOWLEDGE_POINT_ID = #knowledgePointId#, RELATE_KNOWLEDGE_POINT
+		= #relateKnowledgePoint# , IMPORTANT_LEVEL
+		= #importantLevel# 
+		 WHERE RELATE_KNOWLEDGE_ID = #relateKnowLedgeId#
+	</update>
+	<select id="getRelateKnowledgeById" resultMap="RelateKnowledge_NS.RelateKnowledgeResult"
+		parameterClass="int">
+		SELECT
+		<include refid="RelateKnowledge_NS.RES_RELATE_KNOWLEDGE_TBL_columns" />
+		FROM RES_RELATE_KNOWLEDGE_TBL WHERE RELATE_KNOWLEDGE_ID = #value#
+	</select>
+	<select id="getRelateKnowledgeByVoId" resultMap="RelateKnowledge_NS.RelateKnowledgeResult" parameterClass="int">
+		SELECT
+		<include refid="RelateKnowledge_NS.RES_RELATE_KNOWLEDGE_TBL_columns" />
+		FROM RES_RELATE_KNOWLEDGE_TBL WHERE VO_ID = #value# ORDER BY RES_RELATE_KNOWLEDGE_TBL.RELATE_KNOWLEDGE_ID
+	</select>
+</sqlMap>

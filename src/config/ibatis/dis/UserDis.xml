@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserDis_NS">
+        <!--table:CUS_USER_DIS_TBL-->
+        <typeAlias alias="UserDis" type="com.shangde.edu.cus.domain.UserDis"/>
+        <typeAlias alias="QueryUserDisCondition" type="com.shangde.edu.cus.condition.QueryUserDisCondition"/>
+
+        <resultMap id="UserDisResult" class="UserDis">
+            <result property="id" column="ID"/>
+            <result property="disId" column="DIS_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+        </resultMap>
+
+        <sql id="CUS_USER_DIS_TBL_columns">
+            CUS_USER_DIS_TBL.ID,
+            CUS_USER_DIS_TBL.DIS_ID,
+            CUS_USER_DIS_TBL.CUS_ID
+        </sql>
+
+        <sql id="CUS_USER_DIS_TBL_properties">
+            #id#,
+            #disId#,
+            #cusId#
+        </sql>
+
+        <insert id="createUserDis" parameterClass="UserDis">
+            INSERT INTO CUS_USER_DIS_TBL (<include refid="UserDis_NS.CUS_USER_DIS_TBL_columns"/>) VALUES (<include refid="UserDis_NS.CUS_USER_DIS_TBL_properties"/>)
+            <selectKey resultClass="" type="post" keyProperty="" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteUserDisById" parameterClass="">
+            DELETE FROM CUS_USER_DIS_TBL
+        </delete>
+
+        <update id="updateUserDis" parameterClass="UserDis">
+            UPDATE CUS_USER_DIS_TBL SET
+                ID = #id#,
+                DIS_ID = #disId#,
+                CUS_ID = #cusId#
+        </update>
+
+        <select id="getUserDisById" resultMap="UserDis_NS.UserDisResult" parameterClass="">
+            SELECT
+            <include refid="UserDis_NS.CUS_USER_DIS_TBL_columns"/>
+            FROM CUS_USER_DIS_TBL
+        </select>
+
+        <select id="getUserDisList" resultMap="UserDis_NS.UserDisResult" parameterClass="QueryUserDisCondition">
+            SELECT
+            <include refid="UserDis_NS.CUS_USER_DIS_TBL_columns"/>
+            FROM CUS_USER_DIS_TBL
+        </select>
+        <!--end-->
+        
+        
+        
+        <!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+</sqlMap>

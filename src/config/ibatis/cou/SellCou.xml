@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SellCou_NS">
+        <!--table:COU_SELL_COU_TBL-->
+        <typeAlias alias="SellCou" type="com.shangde.edu.cou.domain.SellCou"/>
+        <typeAlias alias="SellCouDTO" type="com.shangde.edu.cou.dto.SellCouDTO"/>
+        <typeAlias alias="QuerySellCouCondition" type="com.shangde.edu.cou.condition.QuerySellCouCondition"/>
+
+        <resultMap id="SellCouResult" class="SellCou">
+            <result property="id" column="ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sellId" column="SELL_ID"/>
+            <result property="sellCouPrice" column="SELL_COU_PRICE"/>
+        </resultMap>
+        <resultMap id="SellCouDTOResult" class="SellCouDTO" extends="SellCouResult">
+            <result property="course" column="Course_Id" select="Course_NS.getCourseById"/>
+        </resultMap>
+
+        <sql id="COU_SELL_COU_TBL_columns">
+            COU_SELL_COU_TBL.ID,
+            COU_SELL_COU_TBL.COURSE_ID,
+            COU_SELL_COU_TBL.SELL_ID,
+            COU_SELL_COU_TBL.SELL_COU_PRICE
+            
+        </sql>
+
+        <sql id="COU_SELL_COU_TBL_properties">
+            #id#,
+            #courseId#,
+            #sellId#,
+            #sellCouPrice#
+        </sql>
+
+        <insert id="createSellCou" parameterClass="SellCou">
+            INSERT INTO COU_SELL_COU_TBL (<include refid="SellCou_NS.COU_SELL_COU_TBL_columns"/>) VALUES (<include refid="SellCou_NS.COU_SELL_COU_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSellCouById" parameterClass="int">
+            DELETE FROM COU_SELL_COU_TBL
+            WHERE
+            ID = #value#
+        </delete>
+        <delete id="deleteSellCouBySellId" parameterClass="int">
+        	  DELETE FROM COU_SELL_COU_TBL
+            WHERE
+       		SELL_ID = #value#
+        </delete>
+       
+
+        <update id="updateSellCou" parameterClass="SellCou">
+            UPDATE COU_SELL_COU_TBL SET
+                ID = #id#,
+                COURSE_ID = #courseId#,
+                SELL_ID = #sellId#,
+                SELL_COU_PRICE=#sellCouPrice#
+            WHERE
+                ID = #id#
+
+
+        </update>
+
+        <select id="getSellCouById" resultMap="SellCou_NS.SellCouResult" parameterClass="int">
+            SELECT
+            <include refid="SellCou_NS.COU_SELL_COU_TBL_columns"/>
+            FROM COU_SELL_COU_TBL
+            WHERE
+                ID = #value#
+        </select>
+         <select id="getSellCouDTOById" resultMap="SellCou_NS.SellCouDTOResult" parameterClass="QuerySellCouCondition">
+            SELECT
+            *
+            FROM COU_SELL_COU_TBL
+            <dynamic prepend="where">
+            	<isNotEqual property="courseId" prepend="and" compareValue="0">
+            		COURSE_ID= #courseId#
+            	</isNotEqual>
+            	<isNotEqual prepend="and" property="sellId" compareValue="0">
+            		SELL_ID=#sellId#
+            	</isNotEqual>
+            	
+            </dynamic>
+                 
+
+
+        </select>
+
+        <select id="getSellCouList" resultMap="SellCou_NS.SellCouResult" parameterClass="QuerySellCouCondition">
+            SELECT
+            <include refid="SellCou_NS.COU_SELL_COU_TBL_columns"/>
+            FROM COU_SELL_COU_TBL
+            
+            <dynamic prepend="where">
+            	<isNotEqual property="sellId" compareValue="0" prepend="and">
+            		SELL_ID = #sellId#
+            	</isNotEqual>
+            	<isNotEqual property="courseId" compareValue="0" prepend="and" >
+            		COURSE_ID = #courseId#
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

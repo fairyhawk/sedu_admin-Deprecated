@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="mail" namespace="/mail" extends="edu-default">
+        <action name="mail" class="com.shangde.edu.mail.action.SendMailAction">
+            <result name="htmlMail">/back/jsp/mail/htmlMail.jsp</result>
+          
+        	
+        </action>
+       
+     </package>
+     
+</struts>

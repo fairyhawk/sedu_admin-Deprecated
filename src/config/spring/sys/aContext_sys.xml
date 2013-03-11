@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="functionService" class="com.shangde.edu.sys.service.FunctionImpl" parent="baseService"/>
+    <bean id="gradeService" class="com.shangde.edu.sys.service.GradeImpl" parent="baseService"/>
+    <bean id="groupService" class="com.shangde.edu.sys.service.GroupImpl" parent="baseService"/>
+    <bean id="roleFunctionService" class="com.shangde.edu.sys.service.RoleFunctionImpl" parent="baseService"/>
+    <bean id="roleService" class="com.shangde.edu.sys.service.RoleImpl" parent="baseService"/>
+    <bean id="simpleDicService" class="com.shangde.edu.sys.service.SimpleDicImpl" parent="baseService"/>
+    <bean id="subjectService" class="com.shangde.edu.sys.service.SubjectImpl" parent="baseService"/>
+    <bean id="userClassService" class="com.shangde.edu.sys.service.UserClassImpl" parent="baseService"/>
+    <bean id="userGradeSubjectRoleService" class="com.shangde.edu.sys.service.UserGradeSubjectRoleImpl" parent="baseService"/>
+    <bean id="userService" class="com.shangde.edu.sys.service.UserImpl" parent="baseServiceManyDb"/>
+    <bean id="visitHistoryService" class="com.shangde.edu.sys.service.VisitHistoryImpl" parent="baseService"/>
+    <bean id="loginLogService" class="com.shangde.edu.sys.service.LoginLogImpl" parent="baseService"/>
+     
+    <bean id="modelService" class="com.shangde.edu.sys.service.ModelServiceImpl" parent="baseService"/>
+	<bean id="modulesService" class="com.shangde.edu.sys.service.ModulesServiceImpl" parent="baseService"/>
+	
+	
+	<bean id="subjectWebService" class="com.shangde.edu.sys.webservice.SubjectWSImpl" parent="baseService"/>
+    <bean id="webServiceSubject" class="com.shangde.edu.sys.webservice.WebServiceSubjectImpl" parent="baseService"/>
+	 <bean id="webFromAgentService" class="com.shangde.edu.sys.service.IWebFromAgentImpl" parent="baseServiceManyDb"/>
+	 
+	 <bean id="subjectUrlService" class="com.shangde.edu.sys.service.SubjectUrlImpl" parent="baseService"/>
+	 <bean id="signUpService" class="com.shangde.edu.sys.service.SignUpServiceImpl" parent="baseServiceManyDb"/>
+	 <bean id="subjectAdv" class="com.shangde.edu.sys.service.SubjectAdvImpl" parent="baseService" />
+	 <bean id="webFromAgentLogService" class="com.shangde.edu.sys.service.WebFromAgentLogService" parent="baseServiceManyDb"/>
+	 <bean id="dicCodeService" class="com.shangde.edu.sys.service.DicCodeServiceImpl" parent="baseService" />
+</beans>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Gmrecord_NS">
+        <!--table:COU_GMRECORD_TBL-->
+        <typeAlias alias="Gmrecord" type="com.shangde.edu.cou.domain.Gmrecord"/>
+        <typeAlias alias="QueryGmrecordCondition" type="com.shangde.edu.cou.condition.QueryGmrecordCondition"/>
+
+        <resultMap id="GmrecordResult" class="Gmrecord">
+            <result property="id" column="ID"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="addTime" column="ADD_TIME"/>
+        </resultMap>
+
+        <sql id="COU_GMRECORD_TBL_columns">
+            COU_GMRECORD_TBL.ID,
+            COU_GMRECORD_TBL.USER_ID,
+            COU_GMRECORD_TBL.COURSE_ID,
+            COU_GMRECORD_TBL.ADD_TIME
+        </sql>
+
+        <sql id="COU_GMRECORD_TBL_properties">
+            #id#,
+            #userId#,
+            #courseId#,
+            #addTime#
+        </sql>
+
+        <insert id="createGmrecord" parameterClass="Gmrecord">
+            INSERT INTO COU_GMRECORD_TBL (<include refid="Gmrecord_NS.COU_GMRECORD_TBL_columns"/>) VALUES (<include refid="Gmrecord_NS.COU_GMRECORD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteGmrecordById" parameterClass="int">
+            DELETE FROM COU_GMRECORD_TBL
+            WHERE
+                ID = #value#
+
+
+
+        </delete>
+
+        <update id="updateGmrecord" parameterClass="Gmrecord">
+            UPDATE COU_GMRECORD_TBL SET
+                ID = #id#,
+                USER_ID = #userId#,
+                COURSE_ID = #courseId#,
+                ADD_TIME = #addTime#
+            WHERE
+                ID = #id#
+
+
+
+        </update>
+
+        <select id="getGmrecordById" resultMap="Gmrecord_NS.GmrecordResult" parameterClass="int">
+            SELECT
+            <include refid="Gmrecord_NS.COU_GMRECORD_TBL_columns"/>
+            FROM COU_GMRECORD_TBL
+            WHERE
+                ID = #value#
+
+
+
+        </select>
+
+        <select id="getGmrecordList" resultMap="Gmrecord_NS.GmrecordResult" parameterClass="QueryGmrecordCondition">
+            SELECT
+            <include refid="Gmrecord_NS.COU_GMRECORD_TBL_columns"/>
+            FROM COU_GMRECORD_TBL
+        </select>
+
+        <select id="getLastGMRecord" resultMap="Gmrecord_NS.GmrecordResult" parameterClass="int">
+            SELECT
+            <include refid="Gmrecord_NS.COU_GMRECORD_TBL_columns"/>
+            FROM COU_GMRECORD_TBL
+            WHERE USER_ID = #value#
+            ORDER BY ADD_TIME DESC
+            LIMIT 0,1
+        </select>
+        <!--end-->
+</sqlMap>

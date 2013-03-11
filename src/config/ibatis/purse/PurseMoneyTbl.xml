@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PurseMoneyTbl_NS">
+        <!--table:PURSE_MONEY_TBL-->
+        <typeAlias alias="PurseMoneyTbl" type="com.shangde.edu.purse.domain.Money"/>
+        <typeAlias alias="QueryPurseMoneyTblCondition" type="com.shangde.edu.purse.condition.QueryMoneyCondition"/>
+         <typeAlias alias="PurseMoneyDTO" type="com.shangde.edu.purse.dto.MoneyDTO"/>
+
+        <resultMap id="PurseMoneyTblResult" class="PurseMoneyTbl">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="money" column="MONEY"/>
+            <result property="status" column="STATUS"/>
+            <result property="creator" column="CREATOR"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+        </resultMap>
+        <resultMap id="PurseMoneyDTOResult" class="PurseMoneyDTO" extends="PurseMoneyTblResult">
+            <result property="userAccount" column="USER_ACCOUNT"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="accountStatus" column="ACCOUNT_STATUS"/>
+        </resultMap>
+
+        <sql id="PURSE_MONEY_TBL_columns">
+            PURSE_MONEY_TBL.CUS_ID,
+            PURSE_MONEY_TBL.MONEY,
+            PURSE_MONEY_TBL.STATUS,
+            PURSE_MONEY_TBL.CREATOR,
+            PURSE_MONEY_TBL.CREATE_TIME,
+            PURSE_MONEY_TBL.UPDATE_USER,
+            PURSE_MONEY_TBL.UPDATE_TIME
+        </sql>
+
+        <sql id="PURSE_MONEY_TBL_properties">
+            #cusId#,
+            #money#,
+            #status#,
+            #creator#,
+            #createTime#,
+            #updateUser#,
+            #updateTime#
+        </sql>
+        
+        <select id="getPurseMoneyTblList" resultMap="PurseMoneyTbl_NS.PurseMoneyDTOResult" parameterClass="QueryPurseMoneyTblCondition">
+            <include refid="public_sql.page_begin"/>
+	            SELECT
+					 <include refid="PurseMoneyTbl_NS.PURSE_MONEY_TBL_columns"/>,
+									CUS_CUSTOMER_TBL.EMAIL AS USER_ACCOUNT,
+					CUS_CUSTOMER_TBL.MOBILE,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_MONEY_TBL.`STATUS`
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = 'ACCOUNT_STATUS'
+					) AS ACCOUNT_STATUS
+				FROM
+					PURSE_MONEY_TBL
+				JOIN CUS_CUSTOMER_TBL ON CUS_CUSTOMER_TBL.CUS_ID = PURSE_MONEY_TBL.CUS_ID
+				WHERE
+					1 = 1
+					<isNotEmpty prepend="AND" property="userAccount">
+						CUS_CUSTOMER_TBL.EMAIL  like CONCAT('%',#userAccount#,'%')
+					</isNotEmpty>
+			        <isNotEmpty prepend="AND" property="mobile">
+						CUS_CUSTOMER_TBL.MOBILE  like CONCAT('%',#mobile#,'%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="updateBeginTime">
+			            PURSE_MONEY_TBL.UPDATE_TIME >= #updateBeginTime#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="and" property="updateEndTime">
+			            <![CDATA[PURSE_MONEY_TBL.UPDATE_TIME <= #updateEndTime# ]]>
+			        </isNotEmpty>
+			        <isNotEmpty prepend="AND" property="status">
+			        	PURSE_MONEY_TBL.STATUS = #status#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="AND" property="createBeginTime">
+			            PURSE_MONEY_TBL.CREATE_TIME >= #createBeginTime#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="and" property="createEndTime">
+			            <![CDATA[PURSE_MONEY_TBL.CREATE_TIME <= #createEndTime# ]]>
+			        </isNotEmpty>
+			<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getPurseMoneyTblCount" resultClass="int" parameterClass="QueryPurseMoneyTblCondition">
+          SELECT
+					COUNT(1)
+				FROM
+					PURSE_MONEY_TBL
+				JOIN CUS_CUSTOMER_TBL ON CUS_CUSTOMER_TBL.CUS_ID = PURSE_MONEY_TBL.CUS_ID
+				WHERE
+					1 = 1
+					<isNotEmpty prepend="AND" property="userAccount">
+						CUS_CUSTOMER_TBL.EMAIL  like CONCAT('%',#userAccount#,'%')
+					</isNotEmpty>
+			        <isNotEmpty prepend="AND" property="mobile">
+						CUS_CUSTOMER_TBL.MOBILE  like CONCAT('%',#mobile#,'%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="updateBeginTime">
+			            PURSE_MONEY_TBL.UPDATE_TIME >= #updateBeginTime#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="and" property="updateEndTime">
+			            <![CDATA[PURSE_MONEY_TBL.UPDATE_TIME <= #updateEndTime# ]]>
+			        </isNotEmpty>
+			        <isNotEmpty prepend="AND" property="status">
+			        	PURSE_MONEY_TBL.STATUS = #status#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="AND" property="createBeginTime">
+			            PURSE_MONEY_TBL.CREATE_TIME >= #createBeginTime#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="and" property="createEndTime">
+			            <![CDATA[PURSE_MONEY_TBL.CREATE_TIME <= #createEndTime# ]]>
+			        </isNotEmpty>
+        </select>
+        <select id="getMoneySum" resultClass="decimal" parameterClass="QueryPurseMoneyTblCondition">
+          SELECT
+					IFNULL(SUM(PURSE_MONEY_TBL.MONEY),0) AS MONEY_SUM
+				FROM
+					PURSE_MONEY_TBL
+				JOIN CUS_CUSTOMER_TBL ON CUS_CUSTOMER_TBL.CUS_ID = PURSE_MONEY_TBL.CUS_ID
+				WHERE
+					1 = 1
+					<isNotEmpty prepend="AND" property="userAccount">
+						CUS_CUSTOMER_TBL.EMAIL  like CONCAT('%',#userAccount#,'%')
+					</isNotEmpty>
+			        <isNotEmpty prepend="AND" property="mobile">
+						CUS_CUSTOMER_TBL.MOBILE  like CONCAT('%',#mobile#,'%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="updateBeginTime">
+			            PURSE_MONEY_TBL.UPDATE_TIME >= #updateBeginTime#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="and" property="updateEndTime">
+			            <![CDATA[PURSE_MONEY_TBL.UPDATE_TIME <= #updateEndTime# ]]>
+			        </isNotEmpty>
+			        <isNotEmpty prepend="AND" property="status">
+			        	PURSE_MONEY_TBL.STATUS = #status#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="AND" property="createBeginTime">
+			            PURSE_MONEY_TBL.CREATE_TIME >= #createBeginTime#
+			        </isNotEmpty>
+			        <isNotEmpty prepend="and" property="createEndTime">
+			            <![CDATA[PURSE_MONEY_TBL.CREATE_TIME <= #createEndTime# ]]>
+			        </isNotEmpty>
+        </select>
+
+     
+</sqlMap>

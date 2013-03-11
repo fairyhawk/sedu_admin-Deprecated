@@ -1,0 +1,23 @@
+/* Blue Style */
+body{
+	background-color: #486583;
+}
+#header{
+	height: 80px;
+	background: url(../images/header_bg.jpg) repeat-x 0 0;
+}
+	.clock{
+		color: #EEE;
+	}
+#top_nav_box{
+	background: url(../images/top_nav_bg.jpg) repeat-x 0 0;
+}
+.top_nav ul li a{
+	color: #EEE;
+}
+	.top_nav ul li a:hover{
+		background: url(../images/top_nav_bg_hover.jpg) repeat-x 0 1px;
+	}
+#CategoryTree{
+	background-color: #EAF2F9;
+}

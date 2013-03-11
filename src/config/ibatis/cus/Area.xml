@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Area_NS">
+        <!--table:CUS_AREA_TBL-->
+        <typeAlias alias="Area" type="com.shangde.edu.cus.domain.Area"/>
+        <typeAlias alias="QueryAreaCondition" type="com.shangde.edu.cus.condition.QueryAreaCondition"/>
+
+        <resultMap id="AreaResult" class="Area">
+            <result property="id" column="ID"/>
+            <result property="parentId" column="PARENT_ID"/>
+            <result property="areaName" column="AREA_NAME"/>
+            <result property="areaType" column="AREA_TYPE"/>
+        </resultMap>
+
+        <sql id="CUS_AREA_TBL_columns">
+            CUS_AREA_TBL.ID,
+            CUS_AREA_TBL.PARENT_ID,
+            CUS_AREA_TBL.AREA_NAME,
+            CUS_AREA_TBL.AREA_TYPE
+        </sql>
+
+        <sql id="CUS_AREA_TBL_properties">
+            #id#,
+            #parentId#,
+            #areaName#,
+            #areaType#
+        </sql>
+
+        <insert id="createArea" parameterClass="Area">
+            INSERT INTO CUS_AREA_TBL (<include refid="Area_NS.CUS_AREA_TBL_columns"/>) VALUES (<include refid="Area_NS.CUS_AREA_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteAreaById" parameterClass="int">
+            DELETE FROM CUS_AREA_TBL
+            WHERE
+                ID = #value#
+
+
+
+        </delete>
+
+        <update id="updateArea" parameterClass="Area">
+            UPDATE CUS_AREA_TBL SET
+                ID = #id#,
+                PARENT_ID = #parentId#,
+                AREA_NAME = #areaName#,
+                AREA_TYPE = #areaType#
+            WHERE
+                ID = #id#
+
+
+
+        </update>
+
+        <select id="getAreaById" resultMap="Area_NS.AreaResult" parameterClass="int">
+            SELECT
+            <include refid="Area_NS.CUS_AREA_TBL_columns"/>
+            FROM CUS_AREA_TBL
+            WHERE
+                ID = #value#
+
+
+
+        </select>
+
+        <select id="getAreaList" resultMap="Area_NS.AreaResult" parameterClass="QueryAreaCondition">
+            SELECT
+            <include refid="Area_NS.CUS_AREA_TBL_columns"/>
+            FROM CUS_AREA_TBL
+            <dynamic prepend="WHERE">
+            	<isNotEqual property="parentId" compareValue="0">
+            		CUS_AREA_TBL.PARENT_ID = #parentId#
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

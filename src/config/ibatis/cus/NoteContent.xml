@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CellContent_NS">
+        <!--table:CUS_ADDRESS_TBL-->
+        <typeAlias alias="QueryNoteContentCondition" type="com.shangde.edu.cus.condition.QueryNoteContentCondition"/>
+        <typeAlias alias="CellPhone" type="com.shangde.edu.cus.domain.CellPhone"/>
+        <typeAlias alias="NoteContent" type="com.shangde.edu.cus.domain.NoteContent"/>
+        <typeAlias alias="CusnotecontentDTO" type="com.shangde.edu.cus.dto.NoteContentDTO"/>
+
+        <resultMap id="CellPhoneResult" class="CellPhone">
+            <result property="cellId" column="CELLPHONE_ID"/>
+            <result property="sellPhone" column="CELLPHONE"/>
+            <result property="sellStatus" column="CELLPHONE_STATUS"/>
+            <result property="noteContentId" column="NOTECONTENT_ID"/> 
+            <result property="sellAddTime" column="SELL_ADD_TIME"/> 
+            <result property="cellEmail" column="CELLEMAIL"/>                 
+        </resultMap>
+        <resultMap id="CusnotecontentResult" class="NoteContent">
+            <result property="noteId" column="NOTE_ID"/>
+            <result property="noteContent" column="NOTE_CONTENT"/>
+            <result property="status" column="STATUS"/>
+            <result property="noteDespatcher" column="NOTE_DESPATCHER"/>
+            <result property="noteAddTime" column="NOTE_ADDTIME"/>         
+            <result property="userId" column="USER_ID"/>           
+        </resultMap>
+      <resultMap class="CusnotecontentDTO" id="CusnotecontentDtoResult" >
+      		<result property="noteId" column="NOTE_ID"/>
+            <result property="noteContent" column="NOTE_CONTENT"/>
+            <result property="status" column="STATUS"/>
+            <result property="noteDespatcher" column="NOTE_DESPATCHER"/>
+            <result property="noteAddTime" column="NOTE_ADDTIME"/>         
+  		<!-- <result property="singleCount" column="NOTE_ID" select="CellContent_NS.getSingleCountNum"/>
+         	<result property="singleRepeatCount" column="NOTE_ID" select="CellContent_NS.getSingleCountRepeatNum"/>  -->	 
+         </resultMap> 
+
+        <sql id="cus_cellphone_tbl_columns">
+            cus_cellphone_tbl.CELLPHONE_ID,
+             cus_cellphone_tbl.CELLPHONE,
+              cus_cellphone_tbl.CELLPHONE_STATUS,
+               cus_cellphone_tbl.NOTECONTENT_ID,
+               cus_cellphone_tbl.CELLEMAIL,
+                cus_cellphone_tbl.SELL_ADD_TIME
+        </sql>
+
+        <sql id="cus_cellphone_tbl_properties">
+            #cellId#,
+            #sellPhone#,
+            #sellStatus#,
+            #noteContentId#,
+            #cellEmail#,
+            #sellAddTime#
+        </sql>
+        <resultMap id="CusnotecontentResult" class="NoteContent">
+            <result property="noteId" column="NOTE_ID"/>
+            <result property="noteContent" column="NOTE_CONTENT"/>
+            <result property="status" column="STATUS"/>
+            <result property="noteDespatcher" column="NOTE_DESPATCHER"/>
+            <result property="noteAddTime" column="NOTE_ADDTIME"/>                  
+        </resultMap>
+
+        <sql id="cus_notecontent_tbl_columns">
+           cus_notecontent_tbl.NOTE_ID,
+           cus_notecontent_tbl.NOTE_CONTENT,
+           cus_notecontent_tbl.STATUS,
+           cus_notecontent_tbl.NOTE_DESPATCHER,
+           cus_notecontent_tbl.NOTE_ADDTIME,
+           cus_notecontent_tbl.USER_ID
+        </sql>
+
+        <sql id="cus_notecontent_tbl_properties">
+            #noteId#,
+            #noteContent#,
+            #status#,
+            #noteDespatcher#,
+            #noteAddTime#,
+            #userId#
+        </sql>
+        <sql id="cou_sell_way_tbl_columns">
+          	SELL_ID,
+          	SELL_NAME
+        </sql>
+        <resultMap id="CusnotecontentDTOResult" class="CusnotecontentDTO">
+            <result property="sellId" column="SELL_ID"/>
+            <result property="sellName" column="SELL_NAME"/>
+        </resultMap>
+         <resultMap id="CusnotecontentDTOResultt" class="CusnotecontentDTO">
+            <result property="noteId" column="NOTE_ID"/>
+        </resultMap>
+         <select id="getPayNoteContent" resultMap="CellContent_NS.CusnotecontentDtoResult" parameterClass="QueryNoteContentCondition">
+         <include refid="public_sql.page_begin"/>
+         select 
+         		<include refid="CellContent_NS.cus_notecontent_tbl_columns"/>
+        	  from cus_notecontent_tbl where 1=1
+        	  ORDER BY cus_notecontent_tbl.NOTE_ID DESC
+            <include refid="public_sql.page_end" />
+        </select>    
+         <select id="getPayNoteContentCount" resultClass="int">
+            select 
+         		 count(1)
+        	  from cus_notecontent_tbl 
+        </select> 
+        <select id="getSendNoteContentListWhere" resultMap="CellContent_NS.CusnotecontentDtoResult" parameterClass="QueryNoteContentCondition">
+         <include refid="public_sql.page_begin"/>
+         select  distinct cus_notecontent_tbl.NOTE_ID,
+               <include refid="CellContent_NS.cus_notecontent_tbl_columns"/>
+            FROM cus_notecontent_tbl  cus_notecontent_tbl 
+              <isEqual compareValue="2" property="searchId">
+              		<isNotEqual property="word" compareValue="">
+              			,cus_cellphone_tbl  cus_cellphone_tbl 
+              		</isNotEqual>
+              </isEqual>
+            	 where
+            	1=1
+            	 <isNotEmpty prepend="AND" property="noteAddTime">
+            	 	cus_notecontent_tbl.NOTE_ADDTIME >= #noteAddTime#
+            	 </isNotEmpty>
+            	  <isNotEmpty prepend="AND" property="endTime">
+            	 	 #endTime# >= cus_notecontent_tbl.NOTE_ADDTIME
+            	 </isNotEmpty>
+           <isNotNull property="searchId">
+          	 <isEqual compareValue="0" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+	            		and cus_notecontent_tbl.NOTE_CONTENT like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+	            	<isNotEqual property="word" compareValue="">
+	            		or cus_notecontent_tbl.NOTE_DESPATCHER like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+	            	<isNotEqual property="word" compareValue="">
+	            		or cus_notecontent_tbl.NOTE_ID  like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+          	  <isEqual compareValue="3" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+	            		and cus_notecontent_tbl.NOTE_CONTENT like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+          	 <isEqual compareValue="1" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+	            		and cus_notecontent_tbl.NOTE_DESPATCHER like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+          	 </isNotNull> 
+          	 <isEqual compareValue="2" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+               and cus_cellphone_tbl.NOTECONTENT_ID=cus_notecontent_tbl.NOTE_ID 
+					 and cus_cellphone_tbl.CELLEMAIL LIKE CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+             ORDER BY cus_notecontent_tbl.NOTE_ID DESC
+            <include refid="public_sql.page_end"/>    
+        </select>    
+         <select id="getSendNoteContentListWhereCount" resultClass="int" parameterClass="QueryNoteContentCondition">
+         	select count(1) 
+				<isEqual compareValue="2" property="searchId">
+              		<isNotEqual property="word" compareValue="">
+              			from (select  distinct  bb.NOTE_ID from (select  cus_notecontent_tbl.* 
+              		</isNotEqual>
+              </isEqual>   
+							 FROM  cus_notecontent_tbl  cus_notecontent_tbl 
+				 <isEqual compareValue="2" property="searchId">
+              		<isNotEqual property="word" compareValue="">
+              			,cus_cellphone_tbl  cus_cellphone_tbl  
+              		</isNotEqual>
+              </isEqual>   
+							   where              1=1  
+				<isNotEmpty prepend="AND" property="noteAddTime">
+            	 	cus_notecontent_tbl.NOTE_ADDTIME >= #noteAddTime#
+            	 </isNotEmpty>
+            	  <isNotEmpty prepend="AND" property="endTime">
+            	 	 #endTime# >= cus_notecontent_tbl.NOTE_ADDTIME
+            	 </isNotEmpty>
+           <isNotNull property="searchId">
+          	 <isEqual compareValue="0" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+	            		and cus_notecontent_tbl.NOTE_CONTENT like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+	            	<isNotEqual property="word" compareValue="">
+	            		or cus_notecontent_tbl.NOTE_DESPATCHER like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+	            	<isNotEqual property="word" compareValue="">
+	            		or cus_notecontent_tbl.NOTE_ID  like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+          	  <isEqual compareValue="3" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+	            		and cus_notecontent_tbl.NOTE_CONTENT like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+          	 <isEqual compareValue="1" property="searchId">
+	              <isNotEqual property="word" compareValue="">
+	            		and cus_notecontent_tbl.NOTE_DESPATCHER like  CONCAT('%',#word#,'%')
+	            	</isNotEqual>
+          	 </isEqual>
+          	 </isNotNull> 
+			<isEqual compareValue="2" property="searchId">
+	              <isNotEqual property="word" compareValue="">	
+	                and cus_cellphone_tbl.NOTECONTENT_ID=  cus_notecontent_tbl.NOTE_ID    and  cus_cellphone_tbl.CELLEMAIL LIKE CONCAT('%',#word#,'%')                                                                              
+             	</isNotEqual>
+          	 </isEqual>  
+          	 ORDER BY cus_notecontent_tbl.NOTE_ID DESC 
+          	 <isEqual compareValue="2" property="searchId">
+	              <isNotEqual property="word" compareValue="">	
+	               )  as bb  )  as cc      	
+             	</isNotEqual>
+          	 </isEqual>             
+        </select>    
+        <select id="getSingleContent" parameterClass="int" resultMap="CellContent_NS.CusnotecontentResult">
+        	select 
+        		<include refid="CellContent_NS.cus_notecontent_tbl_columns"/>
+        		from cus_notecontent_tbl where 
+        					cus_notecontent_tbl.NOTE_ID = #value#
+        </select>
+         <select id="getListCellPhoneSucceed" parameterClass="QueryNoteContentCondition" resultMap="CellContent_NS.CellPhoneResult">
+        	select 
+        		<include refid="CellContent_NS.cus_cellphone_tbl_columns"/>
+        		from cus_cellphone_tbl  where 
+        				cus_cellphone_tbl.NOTECONTENT_ID = #noteId#  
+	            		and  cus_cellphone_tbl.CELLPHONE   !=#key#
+        </select>
+        <select id="getListCellPhoneCrabs" parameterClass="QueryNoteContentCondition" resultMap="CellContent_NS.CellPhoneResult">
+        	select 
+        		<include refid="CellContent_NS.cus_cellphone_tbl_columns"/>
+        		from cus_cellphone_tbl  where 
+        				cus_cellphone_tbl.NOTECONTENT_ID = #noteId#  
+	            		and  cus_cellphone_tbl.CELLPHONE   =#key#
+        </select>
+         <select id="getListCellPhoneSingleCout" parameterClass="int" resultClass="int">
+        	select 
+        		count(*)
+        		from cus_cellphone_tbl  where 
+        				cus_cellphone_tbl.NOTECONTENT_ID = #value#  
+        </select>
+        <select id="getshowSinggleSellListJson" parameterClass="int" resultMap="CellContent_NS.CusnotecontentDTOResult">
+			select 
+				<include refid="CellContent_NS.cou_sell_way_tbl_columns"/>
+				from cou_sell_way_tbl  where SUBJECT_ID=#value#
+
+        </select>
+         <insert id="createNoteContent" parameterClass="NoteContent">
+            INSERT INTO cus_notecontent_tbl (<include refid="CellContent_NS.cus_notecontent_tbl_columns"/>) VALUES (<include refid="CellContent_NS.cus_notecontent_tbl_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="noteId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <insert id="createCellPhone" parameterClass="CellPhone">
+            INSERT INTO cus_cellphone_tbl (<include refid="CellContent_NS.cus_cellphone_tbl_columns"/>) VALUES (<include refid="CellContent_NS.cus_cellphone_tbl_properties"/>)
+        </insert>
+        <select id="getSetMessages" parameterClass="int" resultMap="CellContent_NS.CusnotecontentDTOResultt">
+			select 
+				<include refid="CellContent_NS.cus_notecontent_tbl_columns"/>
+				from cus_notecontent_tbl  where NOTE_ID =#value#
+
+        </select>
+        <select id="getSingleCountNum" parameterClass="int"  resultClass="int">
+        	select count(*) from  (select distinct CELLPHONE from  cus_cellphone_tbl where
+        		notecontent_id =#value#) AS BB
+        </select>
+           <select id="getSingleCountRepeatNum" parameterClass="int"  resultClass="int">
+        	select count(*) from  (select distinct CELLEMAIL from  cus_cellphone_tbl where
+        		notecontent_id =#value#) AS BB
+        </select>
+        
+        
+        <select id="getTodaySendCountByUserId" resultClass="int" parameterClass="int">
+				SELECT count(1) FROM cus_notecontent_tbl cn 
+				JOIN cus_cellphone_tbl cc ON cn.NOTE_ID=cc.NOTECONTENT_ID 
+				AND cc.CELLPHONE!=0 AND cn.NOTE_ADDTIME>DATE(NOW()) 
+				AND cn.USER_ID=#userId#  
+        </select>
+</sqlMap>

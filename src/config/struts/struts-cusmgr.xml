@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="cusmgr" namespace="/cusmgr" extends="edu-default">
+		<!-- customer -->
+        <action name="cusmgr" class="com.shangde.edu.cusmgr.action.CusMgrAction">
+     	    <result name="electivePage">/back/jsp/cusmgr/cusmgr_elective.jsp</result>
+     	    <result name="viewCustomer">/back/jsp/cusmgr/cusmgr_cus_view.jsp</result>
+     	    <result name="customerList">/back/jsp/cusmgr/cusmgr_cus_list.jsp</result>
+     	    	<result name="gradeList" type="json">
+				<param name="root">result</param>
+			</result>
+        </action>
+		<!-- customer end -->        
+    </package>
+</struts>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="util" namespace="/util" extends="edu-default">
+        <action name="randomCode" class="com.shangde.common.action.RandomCodeAction">
+            <result name="success" type="streamx">
+                <param name="inputName">imageInputStream</param>
+            </result>
+            <interceptor-ref name="loginStack" />
+        </action>
+        <action name="advertTrack" class="com.shangde.common.util.AdvertTrackAction">
+            <result name="success">/static/web/emar/Advert.jsp?url=${url}</result>
+            <interceptor-ref name="loginStack" />
+        </action>
+        <action name="QueryAdvertOrder" class="com.shangde.common.util.QueryAdvertOrder">
+            <result name="success">/static/web/emar/OrderList.jsp</result> 
+            <interceptor-ref name="loginStack" />
+        </action>
+    </package>
+</struts>

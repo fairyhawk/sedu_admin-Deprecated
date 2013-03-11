@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$title</title>
+</head>
+
+<body style="font-family:arial,verdana,sans-serif; font-size:12px; line-height:25px; margin:0;">
+<div style="width:660px; margin:0 auto; font-family:arial,verdana,sans-serif; font-size:12px; line-height:25px;">
+<div style="width:520px; margin:0 auto 0; padding:90px 60px 0; line-height:25px; background:url(http://import.highso.org.cn/images/web/public/email_bg_top.png) no-repeat center top;">
+  <h1 style="font-size:20px; padding:25px 0 10px 25px; display:none;"><a href="$link">微学习教学 考点难点解析——嗨学网助您考取国家公务员</a></h1>
+  <p style="padding:0 0 10px 0; border-bottom:1px dashed #999;">您好，尊敬的highso学员：</p>
+  <p style="padding:10px 0 0 0;">国家公务员考试将于下月开始报名，嗨学网在此推出<a style="color:#006699;" href="$link">免费学习课程——微学习（第一阶段）</a>。</p>
+  <p style="color:#999; text-align:right;">（点击标题链接进入嗨学网观看微学习课程）</p>
+   <p style="padding:10px 0 0 0; font-size:15px; font-weight:bold;">本期课程：<a style="color:#ff6600;" href="$link">《$title》</a></p>
+   <p style="color:#ff6600; font-size:13px; font-weight:bold;">点击链接地址立刻观看视频：<a style="color:#ff6600;" href="http://highso.cn/register_mg.html">http://highso.cn/register_mg.html</a></p>
+</div>
+<div style=" width:480px; line-height:25px; background:#f4fbfe; margin:20px auto 0; padding:20px; border:1px solid #d6e5ed;">
+	$content
+</div>
+<div style=" width:480px; line-height:25px; background:#f4f5f5; margin:20px auto 0; padding:20px; border:1px solid #dedddd;">
+<h2 style="padding:5px 0 0 35px; line-height:25px; font-size:14px; font-weight:bold; background:url(http://import.highso.org.cn/images/usercenter/wxx_ico.png) no-repeat 0px 3px;">微学习.微进步</h2>
+<p style="padding:5px 0 0 0px; line-height:25px;">微学习是一套知识要点集合体系，让零基础学员通过学习可以快速了解掌握国家公务员考试各科目、章节的知识要点。微学习视频是微学习计划中的第一步，未来我们还将为大家免费提供微学习题库等多种服务。 
+您想在微学习看到什么？想让我们为您提供什么样的服务？欢迎大家畅所欲言，把您的想法以及您对我们的意见和建议以邮件形式发送给我们，您的宝贵的建议一经采用我们将有丰厚奖品送给您。</p>
+<p style="padding:5px 0 0 0px;">邮箱：<a style="color:#ff6600;" href="mailto:shitao@sunland.org.cn" target="_blank">shitao@sunland.org.cn</a></p>
+<p style="padding:5px 0 0 0px;">嗨学网力求为您提供最优质的服务。 快来点击标题开始学习吧！</p>
+</div>
+<p style="margin:20px auto; width:520px;">这是一封系统邮件，请不要直接回复。</p>
+</div>
+</body>
+</html>

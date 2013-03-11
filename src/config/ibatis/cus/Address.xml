@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Address_NS">
+        <!--table:CUS_ADDRESS_TBL-->
+        <typeAlias alias="Address" type="com.shangde.edu.cus.domain.Address"/>
+        <typeAlias alias="AddressDTO" type="com.shangde.edu.cus.dto.AddressDTO"/>
+        <typeAlias alias="QueryAddressCondition" type="com.shangde.edu.cus.condition.QueryAddressCondition"/>
+
+        <resultMap id="AddressResult" class="Address">
+            <result property="id" column="ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="receiver" column="RECEIVER"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="postCode" column="POST_CODE"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="isFirst" column="IS_FIRST"/>
+            <result property="sendTime" column="SEND_TIME"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="provinceId" column="PROVINCE_ID"/>
+            <result property="cityId" column="CITY_ID"/>
+            <result property="townId" column="TOWN_ID"/>
+        </resultMap>
+
+        <resultMap id="AddressDTOResult" class="AddressDTO" extends="AddressResult">
+        	<result property="provinceName" column="PROVINCE_NAME"/>
+            <result property="cityName" column="CITY_NAME"/>
+            <result property="townName" column="TOWN_NAME"/>
+        </resultMap>
+
+        <sql id="CUS_ADDRESS_TBL_columns">
+            CUS_ADDRESS_TBL.ID,
+            CUS_ADDRESS_TBL.CUS_ID,
+            CUS_ADDRESS_TBL.RECEIVER,
+            CUS_ADDRESS_TBL.ADDRESS,
+            CUS_ADDRESS_TBL.POST_CODE,
+            CUS_ADDRESS_TBL.MOBILE,
+            CUS_ADDRESS_TBL.IS_FIRST,
+            CUS_ADDRESS_TBL.SEND_TIME,
+            CUS_ADDRESS_TBL.CREATE_TIME,
+            CUS_ADDRESS_TBL.PROVINCE_ID,
+            CUS_ADDRESS_TBL.CITY_ID,
+            CUS_ADDRESS_TBL.TOWN_ID
+        </sql>
+
+        <sql id="CUS_ADDRESS_TBL_properties">
+            #id#,
+            #cusId#,
+            #receiver#,
+            #address#,
+            #postCode#,
+            #mobile#,
+            #isFirst#,
+            #sendTime#,
+            #createTime#,
+            #provinceId#,
+            #cityId#,
+            #townId#
+        </sql>
+
+        <insert id="createAddress" parameterClass="Address">
+            INSERT INTO CUS_ADDRESS_TBL (<include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>) VALUES (<include refid="Address_NS.CUS_ADDRESS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteAddressById" parameterClass="int">
+            DELETE FROM CUS_ADDRESS_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateAddress" parameterClass="Address">
+            UPDATE CUS_ADDRESS_TBL SET
+                ID = #id#,
+                CUS_ID = #cusId#,
+                RECEIVER = #receiver#,
+                ADDRESS = #address#,
+                POST_CODE = #postCode#,
+                MOBILE = #mobile#,
+                IS_FIRST = #isFirst#,
+                SEND_TIME = #sendTime#,
+                CREATE_TIME = #createTime#,
+                PROVINCE_ID = #provinceId#,
+                CITY_ID = #cityId#,
+                TOWN_ID = #townId#
+            WHERE
+                ID = #id#
+        </update>
+
+
+        <update id="setAddrsCommonByCusId" parameterClass="int">
+            UPDATE CUS_ADDRESS_TBL SET
+                IS_FIRST = 0
+            WHERE
+                CUS_ID = #value#
+        </update>
+
+        <select id="getAddressById" resultMap="Address_NS.AddressResult" parameterClass="int">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>
+            FROM CUS_ADDRESS_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getAddressDTOById" resultMap="Address_NS.AddressDTOResult" parameterClass="int">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.PROVINCE_ID) AS PROVINCE_NAME,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.CITY_ID) AS CITY_NAME,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.TOWN_ID) AS TOWN_NAME 
+            FROM CUS_ADDRESS_TBL
+            WHERE
+                ID = #value#
+        </select>
+        
+        <select id="getAddressByCusId" resultMap="Address_NS.AddressResult" parameterClass="int">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>
+            FROM CUS_ADDRESS_TBL
+            WHERE
+                CUS_ID = #value#
+        </select>
+
+        <select id="getAddressList" resultMap="Address_NS.AddressResult" parameterClass="QueryAddressCondition">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>
+            FROM CUS_ADDRESS_TBL
+        </select>
+
+        <select id="getFirstAddressByCusId" resultMap="Address_NS.AddressResult" parameterClass="int">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>
+            FROM CUS_ADDRESS_TBL
+            WHERE
+                CUS_ID = #value#
+            ORDER BY IS_FIRST DESC, CREATE_TIME DESC
+            LIMIT 0, 1
+        </select>
+
+        <select id="getAddressDTOList" resultMap="Address_NS.AddressDTOResult" parameterClass="QueryAddressCondition">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.PROVINCE_ID) AS PROVINCE_NAME,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.CITY_ID) AS CITY_NAME,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.TOWN_ID) AS TOWN_NAME 
+            FROM CUS_ADDRESS_TBL
+       		WHERE CUS_ADDRESS_TBL.CUS_ID = #cusId#
+        </select>
+   
+        
+         <select id="getAddressDTOByCusId" resultMap="Address_NS.AddressDTOResult" parameterClass="int">
+            SELECT
+            <include refid="Address_NS.CUS_ADDRESS_TBL_columns"/>,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.PROVINCE_ID) AS PROVINCE_NAME,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.CITY_ID) AS CITY_NAME,
+            (SELECT AREA_NAME FROM CUS_AREA_TBL WHERE CUS_AREA_TBL.ID = CUS_ADDRESS_TBL.TOWN_ID) AS TOWN_NAME 
+            FROM CUS_ADDRESS_TBL
+       		WHERE CUS_ADDRESS_TBL.CUS_ID = #cusId#
+       		limit 1
+        </select>
+        <!--end-->
+</sqlMap>

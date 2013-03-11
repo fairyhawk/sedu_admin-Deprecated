@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FEED_User_Statistics_NS">
+	<typeAlias alias="userStatisticsDTO" type="com.shangde.edu.feed.dto.UserStatisticsDTO"/>
+	<typeAlias alias="queryUserStatisticsCondition" type="com.shangde.edu.feed.condition.QueryUserStatisticsCondition"/>
+	
+	<resultMap class="userStatisticsDTO" id="userStatisticsDTOResult">
+		<result property="id" column="CUS_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="subjectName" column="SUBJECT_NAME"/>
+		<result property="videoName" column="VIDEO_NAME"/>
+		<result property="courseName" column="COURSE_NAME"/>
+		<result property="regFrom" column="REG_FROM"/>
+		<result property="regTime" column="REG_TIME"/>
+		<result property="comeFeedNum" column="COME_FEED_NUM"/>
+		<result property="watchCourseNum" column="WATCH_COURSE_NUM"/>
+		<result property="watchVideoNum" column="WATCH_VIDEO_NUM"/>
+		<result property="watchAllTime" column="WATCH_ALL_TIME"/>
+		<result property="downloadVideoNum" column="DOWNLOAD_VIDEO_NUM"/>
+		<result property="collectionVideoNum" column="COLLECTION_VIDEO_NUM"/>
+		<result property="questionNum" column="QUESTION_NUM"/>
+		<result property="statisticsTime" column="STATISTICS_TIME"/>
+	</resultMap>
+	
+	<resultMap class="userStatisticsDTO" id="userResult">
+		<result property="id" column="CUS_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="subjectName" column="SUBJECT_NAME"/>
+		<result property="regFrom" column="REG_FROM"/>
+		<result property="regTime" column="REG_TIME"/>
+		<result property="comeFeedNum" column="COME_FEED_NUM"/>
+	</resultMap>
+	
+	<resultMap class="userStatisticsDTO" id="userCourseResult">
+		<result property="userName" column="USER_NAME"/>
+		<result property="courseName" column="COURSE_NAME"/>
+		<result property="statisticsTime" column="STATISTICS_TIME"/>
+	</resultMap>
+	
+	
+	<resultMap class="userStatisticsDTO" id="userInfoResult">
+		<result property="userName" column="USER_NAME"/>
+		<result property="videoName" column="VIDEO_NAME"/>
+		<result property="statisticsTime" column="STATISTICS_TIME"/>
+	</resultMap>
+	
+	
+	
+	<select id="getUserList" parameterClass="queryUserStatisticsCondition" resultMap="FEED_User_Statistics_NS.userResult">
+		<include refid="public_sql.page_begin"/>
+			SELECT  FEED_USER_STAT_TBL.CUS_ID,
+					FEED_USER_STAT_TBL.EMAIL AS USER_NAME,
+			  		SYS_SUBJECT_TBL.SUBJECT_NAME,
+			        FEED_USER_STAT_TBL.REG_LOCATION AS REG_FROM,
+			        FEED_USER_STAT_TBL.PUBDATE AS REG_TIME,
+			        (SELECT COUNT(*) FROM FEED_USER_STAT_LOG_TBL 
+			        WHERE FEED_USER_STAT_LOG_TBL.CUS_ID = FEED_USER_STAT_TBL.CUS_ID
+			        <isNotNull prepend="and" property="startTime">
+			        	<![CDATA[FEED_USER_STAT_LOG_TBL.PUBDATE >= #startTime#]]>
+			        </isNotNull>
+			        <isNotNull prepend="and" property="endTime">
+			        	<![CDATA[FEED_USER_STAT_LOG_TBL.PUBDATE <= #endTime#]]>
+			        </isNotNull>
+			        ) AS COME_FEED_NUM
+			FROM FEED_USER_STAT_TBL,SYS_SUBJECT_TBL
+			WHERE FEED_USER_STAT_TBL.SUBJECT_ID = SYS_SUBJECT_TBL.SUBJECT_ID
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getComeFromNum" parameterClass="queryUserStatisticsCondition" resultClass="int">
+		
+	</select>
+	
+	
+	<select id="getUserListCount" resultClass="int">
+		SELECT COUNT(1)
+		FROM FEED_USER_STAT_TBL,SYS_SUBJECT_TBL
+		WHERE FEED_USER_STAT_TBL.SUBJECT_ID = SYS_SUBJECT_TBL.SUBJECT_ID
+	</select>
+	
+	<select id="getWatchCourseNum" resultClass="int" parameterClass="queryUserStatisticsCondition">
+		SELECT COUNT(groupresult.course_id)  FROM (SELECT DISTINCT feed_user_video_tbl.course_id
+				FROM FEED_USER_STAT_TBL,feed_user_video_tbl,feed_course_tbl
+ 				WHERE  1=1
+ 			    <isNotNull prepend="and" property="userId">
+ 			    	feed_user_video_tbl.user_id = #userId#
+ 			    </isNotNull>
+ 				<isNotNull prepend="and" property="startTime">
+ 					<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+ 				</isNotNull>
+ 				<isNotNull prepend="and" property="endTime">
+ 					<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+ 				</isNotNull>
+ 				<isNotNull prepend="and" property="courseId">
+ 					feed_user_video_tbl.course_id=#courseId#
+ 				</isNotNull>
+		) groupresult
+	</select>
+	
+	
+		<select id="getWatchVideoNum" resultClass="int" parameterClass="queryUserStatisticsCondition">
+			SELECT COUNT(groupresult.video_id)  FROM (SELECT DISTINCT feed_user_video_tbl.video_id
+					FROM FEED_USER_STAT_TBL,feed_user_video_tbl
+	 				WHERE  1=1
+	 			    <isNotNull prepend="and" property="userId">
+	 			    	feed_user_video_tbl.user_id = #userId#
+	 			    </isNotNull>
+	 				<isNotNull prepend="and" property="startTime">
+	 					<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+	 				</isNotNull>
+	 				<isNotNull prepend="and" property="endTime">
+	 					<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+	 				</isNotNull>
+	 				<isNotNull prepend="and" property="courseId">
+	 					feed_user_video_tbl.course_id=#courseId#
+	 				</isNotNull>
+			) groupresult
+		</select>
+		
+		<select id="getWatchAllTime" resultClass="int" parameterClass="queryUserStatisticsCondition">
+			SELECT SUM(groupresult.one_video_watch_time) FROM (SELECT DISTINCT feed_user_video_tbl.one_video_watch_time
+			FROM feed_user_stat_tbl,feed_user_video_tbl
+			WHERE  1=1
+		    <isNotNull prepend="and" property="userId">
+		    	feed_user_video_tbl.user_id = #userId#
+		    </isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="courseId">
+				feed_user_video_tbl.course_id=#courseId#
+			</isNotNull>
+			) groupresult
+		</select>
+	
+		<select id="getDownLoadVideoNum" resultClass="int" parameterClass="queryUserStatisticsCondition">
+			SELECT COUNT(groupresult.video_id) FROM (SELECT DISTINCT feed_download_tbl.video_id FROM feed_download_tbl
+			WHERE  1=1
+		    <isNotNull prepend="and" property="userId">
+		    	feed_download_tbl.user_id = #userId#
+		    </isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[feed_download_tbl.statistics_time >= #startTime#]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[feed_download_tbl.statistics_time <= #endTime#]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="courseId">
+				feed_download_tbl.course_id=#courseId#
+			</isNotNull>
+			) groupresult
+		</select>
+		
+		
+		<select id="getCollectionVideoNum" resultClass="int" parameterClass="queryUserStatisticsCondition">
+			SELECT COUNT(groupresult.video_id)  FROM (SELECT DISTINCT feed_collection_tbl.video_id FROM feed_collection_tbl
+			WHERE  1=1
+		    <isNotNull prepend="and" property="userId">
+		    	feed_collection_tbl.user_id = #userId#
+		    </isNotNull>
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[feed_collection_tbl.statistics_time >= #startTime#]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[feed_collection_tbl.statistics_time <= #endTime#]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="courseId">
+				feed_collection_tbl.course_id=#courseId#
+			</isNotNull>
+			) groupresult
+		</select>
+		
+		
+		
+		<select id="getQuestionNum" resultClass="int" parameterClass="queryUserStatisticsCondition">
+			SELECT COUNT(*)  FROM (SELECT DISTINCT *
+					FROM feed_review_tbl
+	 				WHERE  1=1 
+	 				 <isNotNull prepend="and" property="userId">
+				    	feed_review_tbl.cus_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_review_tbl.pubdate >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_review_tbl.pubdate <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_review_tbl.course_id=#courseId#
+					</isNotNull>
+	 			   ) groupresult	
+		</select>
+		<!-- 课程观看详情开始 -->
+		<select id="getWatchCourseList" resultMap="FEED_User_Statistics_NS.userCourseResult" parameterClass="queryUserStatisticsCondition">
+			<include refid="public_sql.page_begin"/>
+				SELECT feed_user_stat_tbl.email AS USER_NAME,
+						feed_course_tbl.name AS COURSE_NAME,
+						feed_user_video_tbl.STATISTICS_TIME
+					FROM  feed_user_stat_tbl,feed_course_tbl,feed_user_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_user_video_tbl.`user_id`
+					AND   feed_user_video_tbl.`course_id` = feed_course_tbl.`id`
+					 <isNotNull prepend="and" property="userId">
+				    	feed_user_video_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_user_video_tbl.course_id=#courseId#
+					</isNotNull>
+			<include refid="public_sql.page_end"/>
+		</select>
+		
+		<select id="getWatchCourseListCount" resultClass="int" parameterClass="queryUserStatisticsCondition">
+				SELECT COUNT(1)
+					FROM  feed_user_stat_tbl,feed_course_tbl,feed_user_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_user_video_tbl.`user_id`
+					AND   feed_user_video_tbl.`course_id` = feed_course_tbl.`id`
+					 <isNotNull prepend="and" property="userId">
+				    	feed_user_video_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_user_video_tbl.course_id=#courseId#
+					</isNotNull>
+		</select>
+		<!-- 课程观看详情结束 -->
+		
+			<!-- 视频观看详情开始 -->
+		<select id="getWatchVideoList" resultMap="FEED_User_Statistics_NS.userInfoResult" parameterClass="queryUserStatisticsCondition">
+			<include refid="public_sql.page_begin"/>
+					SELECT feed_user_stat_tbl.email AS USER_NAME,
+						feed_micro_video_tbl.name AS VIDEO_NAME,
+						feed_user_video_tbl.STATISTICS_TIME
+					FROM  feed_user_stat_tbl,feed_user_video_tbl,feed_micro_video_tbl
+					WHERE feed_user_stat_tbl.cus_id = feed_user_video_tbl.user_id
+					AND   feed_user_video_tbl.video_id = feed_micro_video_tbl.Id
+					 <isNotNull prepend="and" property="userId">
+				    	feed_user_video_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_user_video_tbl.course_id=#courseId#
+					</isNotNull>
+			<include refid="public_sql.page_end"/>
+		</select>
+		
+		<select id="getWatchVideoListCount" resultClass="int" parameterClass="queryUserStatisticsCondition">
+					SELECT COUNT(1)
+					FROM  feed_user_stat_tbl,feed_micro_video_tbl,feed_user_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_user_video_tbl.`user_id`
+					AND   feed_user_video_tbl.video_id = feed_micro_video_tbl.Id
+					 <isNotNull prepend="and" property="userId">
+				    	feed_user_video_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_user_video_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_user_video_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_user_video_tbl.course_id=#courseId#
+					</isNotNull>
+		</select>
+		<!-- 视频观看详情结束 -->
+		
+		
+			<!--下载详情开始 -->
+		<select id="getDownloadVideoList" resultMap="FEED_User_Statistics_NS.userInfoResult" parameterClass="queryUserStatisticsCondition">
+			<include refid="public_sql.page_begin"/>
+				  SELECT  feed_user_stat_tbl.email AS USER_NAME,
+						feed_micro_video_tbl.name AS VIDEO_NAME,
+						feed_download_tbl.STATISTICS_TIME
+					FROM  feed_user_stat_tbl,feed_download_tbl,feed_micro_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_download_tbl.`user_id`
+					AND   feed_download_tbl.video_id = feed_micro_video_tbl.Id
+					 <isNotNull prepend="and" property="userId">
+				    	feed_download_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_download_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_download_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_download_tbl.course_id=#courseId#
+					</isNotNull>
+			<include refid="public_sql.page_end"/>
+		</select>
+		
+		<select id="getDownloadVideoListCount" resultClass="int" parameterClass="queryUserStatisticsCondition">
+					SELECT COUNT(1)
+					FROM  feed_user_stat_tbl,feed_download_tbl,feed_micro_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_download_tbl.`user_id`
+					AND   feed_download_tbl.video_id = feed_micro_video_tbl.Id
+					 <isNotNull prepend="and" property="userId">
+				    	feed_download_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_download_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_download_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_download_tbl.course_id=#courseId#
+					</isNotNull>
+		</select>
+		<!-- 下载详情结束 -->
+		
+		
+			<!-- 收藏详情开始 -->
+		<select id="getCollectionVideoList" resultMap="FEED_User_Statistics_NS.userInfoResult" parameterClass="queryUserStatisticsCondition">
+			<include refid="public_sql.page_begin"/>
+				 SELECT  feed_user_stat_tbl.email AS USER_NAME,
+						feed_micro_video_tbl.name AS VIDEO_NAME,
+						feed_collection_tbl.STATISTICS_TIME
+					FROM  feed_user_stat_tbl,feed_collection_tbl,feed_micro_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_collection_tbl.`user_id`
+					AND   feed_collection_tbl.video_id = feed_micro_video_tbl.Id
+					 <isNotNull prepend="and" property="userId">
+				    	feed_collection_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_collection_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_collection_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_collection_tbl.course_id=#courseId#
+					</isNotNull>
+			<include refid="public_sql.page_end"/>
+		</select>
+		
+		<select id="getCollectionVideoListCount" resultClass="int" parameterClass="queryUserStatisticsCondition">
+				SELECT COUNT(1)
+					FROM  feed_user_stat_tbl,feed_collection_tbl,feed_micro_video_tbl
+					WHERE feed_user_stat_tbl.`cus_id` = feed_collection_tbl.`user_id`
+					AND   feed_collection_tbl.video_id = feed_micro_video_tbl.Id
+					 <isNotNull prepend="and" property="userId">
+				    	feed_collection_tbl.user_id = #userId#
+				    </isNotNull>
+					<isNotNull prepend="and" property="startTime">
+						<![CDATA[feed_collection_tbl.statistics_time >= #startTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[feed_collection_tbl.statistics_time <= #endTime#]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="courseId">
+						feed_collection_tbl.course_id=#courseId#
+					</isNotNull>
+		</select>
+		<!-- 收藏详情结束 -->
+</sqlMap>  

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CusUserDis_NS">
+	<!--table:DIS_DIS_AREA_TBL -->
+	
+	<typeAlias alias="CusUserDis" type="com.shangde.edu.dis.domain.CusUserDis" />
+	<typeAlias alias="SubjectDTO" type="com.shangde.edu.dis.dto.SubjectDTO" />
+	<typeAlias alias="QueryCusUserDisCondition" type="com.shangde.edu.dis.condition.QueryCusUserDisCondition" />
+	
+	<resultMap id="CusUserDisResult" class="CusUserDis">
+		<result property="id" column="ID" />
+		<result property="disId" column="DIS_ID" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="auth" column="AUTH" />
+	</resultMap>
+	
+	<resultMap id="SubjectDTOResult" class="com.shangde.edu.dis.dto.SubjectDTO">
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="subjectName" column="SUBJECT_NAME" />
+	</resultMap>
+
+	<sql id="SUBJECTDTO_columns">
+	
+	</sql>
+	
+	<sql id="CUS_USER_DIS_TBL_columns">
+		CUS_USER_DIS_TBL.ID,
+		CUS_USER_DIS_TBL.DIS_ID,
+		CUS_USER_DIS_TBL.CUS_ID,
+		CUS_USER_DIS_TBL.AUTH
+	</sql>
+	
+	<sql id="CUS_USER_DIS_TBL_properties">
+		#id#,
+		#disId#,
+		#cusId#,
+		#auth#
+    </sql>
+    
+    <!-- 添加小组/用户关系表 -->
+	<insert id="createCusUserDis" parameterClass="CusUserDis">
+		INSERT INTO CUS_USER_DIS_TBL (
+		<include refid="CusUserDis_NS.CUS_USER_DIS_TBL_columns" />
+		) VALUES (
+		<include refid="CusUserDis_NS.CUS_USER_DIS_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+	
+	<!-- 更新小组信息 -->
+	<update id="updateCusUserDis" parameterClass="CusUserDis">
+		UPDATE
+		CUS_USER_DIS_TBL SET ID = #id#, DIS_ID = #disId#,CUS_ID = #cusId#, AUTH = #auth#
+		WHERE ID = #id#
+	</update>
+	
+	<!-- 根据用户id所在小组,且非屏蔽小组 -->
+	<select id="findCusUserDisByCusId" resultMap="CusUserDis_NS.CusUserDisResult"
+		parameterClass="int">
+		SELECT cus_user_dis.* 
+		FROM CUS_USER_DIS_TBL cus_user_dis inner join dis_discussion_tbl dis
+		WHERE cus_user_dis.dis_id = dis.id and dis.status = 0 and CUS_ID = #cusId#
+	</select>
+	
+	<!-- 查询用户是否购买过专业 -->
+	<select id="getMyBuySubject" resultMap="CusUserDis_NS.SubjectDTOResult" parameterClass="int">
+		SELECT  DISTINCT sys_subject_tbl.SUBJECT_ID AS SUBJECT_ID, sys_subject_tbl.SUBJECT_NAME
+		FROM
+		(SELECT finance_cash_record_tbl.PACK_ID AS pack_id,
+		finance_cash_record_tbl.CREATE_TIME
+		FROM `finance_cash_record_tbl`
+		WHERE
+		finance_cash_record_tbl.CUS_ID = #cusId# AND  STATUS=1 
+		ORDER BY
+		finance_cash_record_tbl.CREATE_TIME ASC) AS ma , cou_sell_way_tbl, sys_subject_tbl
+		WHERE
+		ma.pack_id= cou_sell_way_tbl.SELL_ID AND cou_sell_way_tbl.SUBJECT_ID =  sys_subject_tbl.SUBJECT_ID
+	</select>
+	
+</sqlMap>

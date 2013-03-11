@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CusMgr_NS">
+        <!--table:CUS_CUSTOMER_TBL-->
+		<typeAlias alias="Course" type="com.shangde.edu.cou.domain.Course"/>
+		<typeAlias alias="QueryCusMgrCondition" type="com.shangde.edu.cusmgr.condition.QueryCusMgrCondition"/>
+		<typeAlias alias="CourseDTO" type="com.shangde.edu.cusmgr.dto.CourseDTO"/>
+		<typeAlias alias="watchRankDTO" type="com.shangde.edu.cusmgr.dto.WatchRankDTO"/>
+		
+		<resultMap id="CourseDTOResult" class="CourseDTO">
+            <result property="title" column="TITLE"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+            <result property="gradeName" column="GRADE_NAME"/>
+        </resultMap>
+        
+         <resultMap id="CourseResult" class="Course">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="sortId" column="SORT_ID"/>
+            <result property="teacherId" column="TEACHER_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="tjMode" column="TJ_MODE"/>
+            <result property="lessionTime" column="LESSION_TIME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="title" column="TITLE"/>
+            <result property="introduce" column="INTRODUCE"/>
+            <result property="precourseId" column="PRECOURSE_ID"/>
+            <result property="flowcourseId" column="FLOWCOURSE_ID"/>
+            <!-- 临时存是否已选数据 -->
+            <result property="status" column="ELECTIVE"/>
+            <result property="gmNum" column="GM_NUM"/>
+            <result property="scNum" column="SC_NUM"/>
+            <result property="tgNum" column="TG_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="validTime" column="VALID_TIME"/>
+            <result property="gradeId" column="GRADE_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectById"/>
+            <result property="grade" column="GRADE_ID" select="Grade_NS.getGradeById"/>
+        </resultMap>
+
+		<select id="getNomalCourseListBySortId" resultMap="CusMgr_NS.CourseResult" parameterClass="QueryCusMgrCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT 
+            <include refid="Course_NS.COU_COURSE_TBL_columns"/>,
+					CASE
+						WHEN COURSE_ID IN (
+											SELECT COU.COURSE_ID
+											FROM COU_COURSE_TBL COU
+											LEFT JOIN CUS_CUS_COU_KPOINT_TBL CCK
+											ON COU.COURSE_ID = CCK.COURSE_ID
+											INNER JOIN CUS_CUSTOMER_TBL CUS
+											ON CCK.CUS_ID = CUS.CUS_ID
+											WHERE CUS.CUS_ID = 
+											<isNotNull property="cusId">
+												#cusId#
+											</isNotNull>
+											<isNull property="cusId">
+												0
+											</isNull>
+										   ) THEN 1
+						ELSE 0
+					END AS ELECTIVE
+					FROM COU_COURSE_TBL
+					WHERE 
+            			 COU_COURSE_TBL.STATUS = 0
+		                <isNotNull property="courseName">
+			            	<isNotEqual property="courseName" compareValue="" prepend="and">
+					                  COU_COURSE_TBL.TITLE like  CONCAT('%',#courseName#,'%')
+						    </isNotEqual>
+			        	</isNotNull>
+			        	<isNotNull property="sortId">
+			            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+			                		COU_COURSE_TBL.SORT_ID=#sortId#
+			                </isGreaterThan>
+			        	</isNotNull>
+		            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getNomalCourseCountBySortId" resultClass="int" parameterClass="QueryCusMgrCondition">
+            SELECT COUNT(1)
+            FROM COU_COURSE_TBL
+            WHERE
+                COU_COURSE_TBL.STATUS  = 0
+                <isNotNull property="courseName">
+	            	<isNotEqual property="courseName" compareValue="" prepend="and">
+			                  COU_COURSE_TBL.TITLE like  CONCAT('%',#courseName#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	<isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		COU_COURSE_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        </select>
+		
+
+		<select id="getCustomerListByUser" resultMap="Customer_NS.CustomerResult" parameterClass="QueryCusMgrCondition">
+            <include refid="public_sql.page_begin"/>
+				SELECT	DISTINCT CUS.CUS_ID,
+						CUS.CUS_NAME,
+						CUS.CUS_PWD,
+						CUS.EMAIL,
+						CUS.MOBILE,
+						CUS.REAL_NAME,
+						CUS.SEX,
+						CUS.ID_NUM,
+			            CUS.QQ,
+			            CUS.PHOTO,
+						CUS.LASTLOGIN_IP,
+						CUS.LASTLOGIN_TIME,
+						CUS.REG_TIME,
+          				CUS.BIRTHDAY,
+          				CUS.LOGIN_TIMES,
+          				CUS.IS_COMPLETE,
+          				CUS.COMPLETE_TIME
+					
+					FROM CUS_CUSTOMER_TBL CUS
+					INNER JOIN CUS_CUS_COU_KPOINT_TBL CCK
+					ON CUS.CUS_ID = CCK.CUS_ID
+					INNER JOIN COU_COURSE_TBL COU
+					ON CCK.COURSE_ID = COU.COURSE_ID
+					INNER  JOIN SYS_SUBJECT_TBL SUB
+					ON SUB.SUBJECT_ID = COU.SUBJECT_ID
+					INNER JOIN SYS_USER_GRADE_SUBJECT_ROLE_TBL UGSR
+					ON UGSR.SUBJECT_ID = SUB.SUBJECT_ID 
+					AND UGSR.SUBJECT_ID = COU.SUBJECT_ID
+					AND UGSR.GRADE_ID = COU.GRADE_ID
+					INNER JOIN SYS_USER_TBL USERS
+					ON UGSR.USER_ID = USERS.USER_ID
+					
+						WHERE USERS.USER_ID = #userId#
+							<isNotNull property="gradeId">
+				            	<isGreaterThan property="gradeId" compareValue="0" prepend="and">
+									UGSR.GRADE_ID = #gradeId#
+							    </isGreaterThan>
+				        	</isNotNull>
+				        	<isNotNull property="subjectId">
+				            	<isGreaterThan property="subjectId" compareValue="0" prepend="and">
+									UGSR.SUBJECT_ID = #subjectId#
+							    </isGreaterThan>
+				        	</isNotNull>
+		            		<include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getCustomerCountByUser" resultClass="int" parameterClass="QueryCusMgrCondition">
+            	SELECT COUNT(DISTINCT(CUS.CUS_ID))
+            
+          			FROM CUS_CUSTOMER_TBL CUS
+					INNER JOIN CUS_CUS_COU_KPOINT_TBL CCK
+					ON CUS.CUS_ID = CCK.CUS_ID
+					INNER JOIN COU_COURSE_TBL COU
+					ON CCK.COURSE_ID = COU.COURSE_ID
+					INNER  JOIN SYS_SUBJECT_TBL SUB
+					ON SUB.SUBJECT_ID = COU.SUBJECT_ID
+					INNER JOIN SYS_USER_GRADE_SUBJECT_ROLE_TBL UGSR
+					ON UGSR.SUBJECT_ID = SUB.SUBJECT_ID
+					AND UGSR.SUBJECT_ID = COU.SUBJECT_ID
+					AND UGSR.GRADE_ID = COU.GRADE_ID
+					INNER JOIN SYS_USER_TBL USERS
+					ON UGSR.USER_ID = USERS.USER_ID
+					
+						WHERE USERS.USER_ID = #userId#
+							<isNotNull property="gradeId">
+				            	<isGreaterThan property="gradeId" compareValue="0" prepend="and">
+									UGSR.GRADE_ID = #gradeId#
+							    </isGreaterThan>
+				        	</isNotNull>
+				        	<isNotNull property="subjectId">
+				            	<isGreaterThan property="subjectId" compareValue="0" prepend="and">
+									UGSR.SUBJECT_ID = #subjectId#
+							    </isGreaterThan>
+				        	</isNotNull>
+        </select>
+        
+        <select id="getGradeListBySubjectId" resultMap="Grade_NS.GradeResult" parameterClass="QueryCusMgrCondition">
+		SELECT distinct
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL , SYS_GRADE_TBL ,
+		SYS_SUBJECT_TBL , SYS_USER_TBL, SYS_ROLE_TBL WHERE
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.SUBJECT_ID =
+		SYS_SUBJECT_TBL.SUBJECT_ID AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.GRADE_ID =
+		SYS_GRADE_TBL.GRADE_ID AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID = SYS_USER_TBL.USER_ID
+		AND SYS_USER_GRADE_SUBJECT_ROLE_TBL.ROLE_ID =
+		SYS_ROLE_TBL.ROLE_ID AND SYS_SUBJECT_TBL.SUBJECT_ID =
+		#subjectId# AND SYS_USER_TBL.USER_ID = #userId#
+		</select>
+		
+		<select id="getCourseListByCusId" resultMap="CusMgr_NS.CourseDTOResult" parameterClass="int">
+           SELECT COU.TITLE, 
+           			GRADE.GRADE_NAME,
+           			SUB.SUBJECT_NAME
+					FROM COU_COURSE_TBL COU
+					INNER JOIN CUS_CUS_COU_KPOINT_TBL CCK
+					ON COU.COURSE_ID = CCK.COURSE_ID
+					INNER JOIN SYS_SUBJECT_TBL SUB
+					ON SUB.SUBJECT_ID = COU.SUBJECT_ID
+					INNER JOIN SYS_GRADE_TBL GRADE
+					ON GRADE.GRADE_ID = COU.GRADE_ID
+					WHERE CCK.CUS_ID = #value#
+					AND COU.STATUS = 0
+        </select>
+		<!-- end -->
+		<select id="getWatchRankCus" parameterClass="List" resultClass="watchRankDTO">
+			SELECT 
+				cus_customer_tbl.CUS_ID cusId,
+				cus_customer_tbl.PHOTO photo,
+				IFNULL(cus_customer_tbl.CUS_NAME,cus_customer_tbl.EMAIL) userName,
+				cus_customer_tbl.EMAIL email,
+				cus_customer_tbl.sex sex
+			 FROM cus_customer_tbl 
+			 WHERE  
+			  cus_customer_tbl.PHOTO IS NOT NULL AND cus_customer_tbl.PHOTO !=''
+		  	<iterate prepend="and" open="(" close=")" conjunction="or">
+		  		CUS_ID =#[]#
+		  	</iterate> 
+			 
+			limit 50
+		</select>
+</sqlMap>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VoteLog_NS">
+        <!--table:DIS_VOTE_LOG_TBL-->
+        <typeAlias alias="VoteLog" type="com.shangde.edu.dis.domain.VoteLog"/>
+        <typeAlias alias="QueryVoteLogCondition" type="com.shangde.edu.dis.condition.QueryVoteLogCondition"/>
+
+        <resultMap id="VoteLogResult" class="VoteLog">
+            <result property="id" column="ID"/>
+            <result property="voteId" column="VOTE_ID"/>
+            <result property="voteDetailId" column="vote_detail_id"/>
+            <result property="cusId" column="CUS_ID"/>
+        </resultMap>
+
+        <sql id="DIS_VOTE_LOG_TBL_columns">
+            DIS_VOTE_LOG_TBL.ID,
+            DIS_VOTE_LOG_TBL.VOTE_ID,
+            DIS_VOTE_LOG_TBL.vote_detail_id,
+            DIS_VOTE_LOG_TBL.CUS_ID
+        </sql>
+
+        <sql id="DIS_VOTE_LOG_TBL_properties">
+            #id#,
+            #voteId#,
+            #voteDetailId#,
+            #cusId#
+        </sql>
+
+        <insert id="createVoteLog" parameterClass="VoteLog">
+            INSERT INTO DIS_VOTE_LOG_TBL (<include refid="VoteLog_NS.DIS_VOTE_LOG_TBL_columns"/>) VALUES (<include refid="VoteLog_NS.DIS_VOTE_LOG_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <select id="getVoteLogByVoteId" resultMap="VoteLog_NS.VoteLogResult" parameterClass="Map">
+            SELECT
+            <include refid="VoteLog_NS.DIS_VOTE_LOG_TBL_columns"/>
+            FROM DIS_VOTE_LOG_TBL
+            WHERE vote_id = #voteId# and cus_id = #cusId#
+        </select>
+        <delete id="delVoteLogByVoteId" parameterClass="int">
+            DELETE FROM DIS_VOTE_LOG_TBL
+            WHERE VOTE_ID = #value#
+        </delete>
+        
+        
+        
+        <!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+        
+        
+        
+        
+        
+</sqlMap>

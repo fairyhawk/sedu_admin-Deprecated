@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TemplateHistory_NS">
+        <!--table:CMS_TEMPLATE_TBL-->
+        <typeAlias alias="TemplateHistory" type="com.shangde.edu.cms.domain.TemplateHistory"/>
+        <typeAlias alias="QueryTmpHistory" type="com.shangde.edu.cms.condition.QueryTmpHistory"/>
+		
+		<resultMap class="TemplateHistory" id="TemplateHistoryResult">
+			<result property="id" column="ID"/>
+			<result property="tmpId" column="TMP_ID"/>
+			<result property="tmpName" column="TMP_NAME"/>
+			<result property="tmpContent" column="TMP_CONTENT"/>
+			<result property="tmpType" column="TMP_TYPE"/>
+			<result property="userId" column="USER_ID"/>
+			<result property="tmpTime" column="TMP_TIME"/>
+			<result property="loginName" column="LOGIN_NAME"/>
+		</resultMap>
+		<resultMap class="TemplateHistory" id="TmpHistoryResult">
+			<result property="id" column="ID"/>
+			<result property="tmpId" column="TMP_ID"/>
+			<result property="tmpName" column="TMP_NAME"/>
+			<result property="tmpContent" column="TMP_CONTENT"/>
+			<result property="tmpType" column="TMP_TYPE"/>
+			<result property="userId" column="USER_ID"/>
+			<result property="tmpTime" column="TMP_TIME"/>
+		</resultMap>
+		
+		<sql id="CMS_TEMPLATE_HISTORY_TBL_columns">
+		  CMS_TEMPLATE_HISTORY_TBL.ID,
+		  CMS_TEMPLATE_HISTORY_TBL.TMP_ID,
+		  CMS_TEMPLATE_HISTORY_TBL.TMP_NAME,
+		  CMS_TEMPLATE_HISTORY_TBL.TMP_CONTENT,
+		  CMS_TEMPLATE_HISTORY_TBL.TMP_TYPE,
+		  CMS_TEMPLATE_HISTORY_TBL.USER_ID,
+		  CMS_TEMPLATE_HISTORY_TBL.TMP_TIME,
+		  SYS_USER_TBL.LOGIN_NAME
+		</sql>
+        
+        <insert id="add" parameterClass="TemplateHistory">
+        	INSERT 
+        		INTO CMS_TEMPLATE_HISTORY_TBL
+        		(
+        			CMS_TEMPLATE_HISTORY_TBL.TMP_ID,
+		  			CMS_TEMPLATE_HISTORY_TBL.TMP_NAME,
+		  			CMS_TEMPLATE_HISTORY_TBL.TMP_CONTENT,
+		  			CMS_TEMPLATE_HISTORY_TBL.TMP_TYPE,
+		  			CMS_TEMPLATE_HISTORY_TBL.USER_ID,
+		  			CMS_TEMPLATE_HISTORY_TBL.TMP_TIME
+        		)
+        	VALUES (#tmpId#, #tmpName#, #tmpContent#, #tmpType#, #userId#, #tmpTime#)
+        </insert>
+        
+        <select id="getAll" resultMap="TemplateHistoryResult" parameterClass="QueryTmpHistory">
+        	SELECT
+        		<include refid="CMS_TEMPLATE_HISTORY_TBL_columns"/>
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL,
+  				SYS_USER_TBL
+  			WHERE CMS_TEMPLATE_HISTORY_TBL.USER_ID = SYS_USER_TBL.USER_ID
+        		ORDER BY ID DESC
+        		<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getAllCount" resultClass="int">
+        	SELECT
+        		COUNT(1)
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL
+        </select>
+        
+        <select id="search" resultMap="TemplateHistoryResult" parameterClass="QueryTmpHistory" >
+            SELECT
+        		<include refid="CMS_TEMPLATE_HISTORY_TBL_columns"/>
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL,
+  				SYS_USER_TBL
+  			WHERE CMS_TEMPLATE_HISTORY_TBL.USER_ID = SYS_USER_TBL.USER_ID
+  			<isNotEqual property="tmpId" prepend="and" compareValue="0">
+  				 CMS_TEMPLATE_HISTORY_TBL.TMP_ID = #tmpId#
+  			</isNotEqual>
+  			<isNotNull property="tmpName" prepend="and">
+  				CMS_TEMPLATE_HISTORY_TBL.TMP_NAME LIKE '%$tmpName$%'
+  			</isNotNull>
+  			<isNotNull prepend="and" property="startTime">
+  				<![CDATA[ CMS_TEMPLATE_HISTORY_TBL.TMP_TIME >= #startTime# ]]>
+  			</isNotNull>
+  			<isNotNull prepend="and" property="endTime">
+  				<![CDATA[ CMS_TEMPLATE_HISTORY_TBL.TMP_TIME <= #endTime# ]]>
+  			</isNotNull>
+  			<isNotNull property="tmpType">
+  				<isNotEqual property="tmpType" compareValue="-1" prepend="and">
+  					CMS_TEMPLATE_HISTORY_TBL.TMP_TYPE = #tmpType#
+  				</isNotEqual>
+  			</isNotNull>
+        		ORDER BY ID DESC
+        		<include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="searchCount" resultClass="int" parameterClass="QueryTmpHistory" >
+            SELECT
+        		count(1)
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL
+  			WHERE 1=1
+  			<isNotEqual property="tmpId" prepend="and" compareValue="0">
+  				 CMS_TEMPLATE_HISTORY_TBL.TMP_ID = #tmpId#
+  			</isNotEqual>
+  			<isNotNull property="tmpName" prepend="and">
+  				CMS_TEMPLATE_HISTORY_TBL.TMP_NAME LIKE '%$tmpName$%'
+  			</isNotNull>
+			<isNotNull prepend="and" property="startTime">
+  				<![CDATA[ CMS_TEMPLATE_HISTORY_TBL.TMP_TIME >= #startTime# ]]>
+  			</isNotNull>
+  			<isNotNull prepend="and" property="endTime">
+  				<![CDATA[ CMS_TEMPLATE_HISTORY_TBL.TMP_TIME <= #endTime# ]]>
+  			</isNotNull>
+  			<isNotNull property="tmpType">
+  				<isNotEqual property="tmpType" compareValue="-1" prepend="and">
+  					CMS_TEMPLATE_HISTORY_TBL.TMP_TYPE = #tmpType#
+  				</isNotEqual>
+  			</isNotNull>
+        </select>
+        
+        <select id="getByTmpId" resultMap="TemplateHistoryResult" parameterClass="QueryTmpHistory">
+        	SELECT
+        		<include refid="CMS_TEMPLATE_HISTORY_TBL_columns"/>
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL
+        		WHERE CMS_TEMPLATE_HISTORY_TBL.TMP_ID = #tmpId#
+        		ORDER BY ID DESC
+        		<include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getByTmpIdCount" resultClass="int" parameterClass="QueryTmpHistory">
+        	SELECT
+        		COUNT(*)
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL
+        		WHERE CMS_TEMPLATE_HISTORY_TBL.TMP_ID = #tmpId#
+        </select>
+        
+        <select id="getById" resultClass="TemplateHistory" parameterClass="int">
+        	SELECT
+        	  CMS_TEMPLATE_HISTORY_TBL.ID as id,
+			  CMS_TEMPLATE_HISTORY_TBL.TMP_ID as tmpId,
+			  CMS_TEMPLATE_HISTORY_TBL.TMP_NAME as tmpName,
+			  CMS_TEMPLATE_HISTORY_TBL.TMP_CONTENT as tmpContent,
+			  CMS_TEMPLATE_HISTORY_TBL.TMP_TYPE as tmpType,
+			  CMS_TEMPLATE_HISTORY_TBL.USER_ID as userId,
+			  CMS_TEMPLATE_HISTORY_TBL.TMP_TIME as tmpTime
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL
+        		WHERE CMS_TEMPLATE_HISTORY_TBL.ID = #id#
+        </select>
+        
+        <delete id="delete" parameterClass="String">
+        	DELETE 
+			FROM
+  				CMS_TEMPLATE_HISTORY_TBL 
+			WHERE CMS_TEMPLATE_HISTORY_TBL.ID IN ($ids:String$)
+        </delete>
+        
+        <select id="getBysds" resultMap="TmpHistoryResult" parameterClass="String">
+			SELECT 
+				CMS_TEMPLATE_HISTORY_TBL.ID,
+        		CMS_TEMPLATE_HISTORY_TBL.TMP_ID,
+		  		CMS_TEMPLATE_HISTORY_TBL.TMP_NAME,
+		  		CMS_TEMPLATE_HISTORY_TBL.TMP_CONTENT,
+		  		CMS_TEMPLATE_HISTORY_TBL.TMP_TYPE,
+		  		CMS_TEMPLATE_HISTORY_TBL.USER_ID,
+		  		CMS_TEMPLATE_HISTORY_TBL.TMP_TIME 
+			FROM
+			  CMS_TEMPLATE_HISTORY_TBL
+			WHERE CMS_TEMPLATE_HISTORY_TBL.ID IN ($ids:String$)
+        </select>
+        
+        <select id="getByTmpIdToUpdate" resultMap="TemplateHistoryResult" parameterClass="QueryTmpHistory" >
+            SELECT
+        		<include refid="CMS_TEMPLATE_HISTORY_TBL_columns"/>
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL,
+  				SYS_USER_TBL
+  			WHERE CMS_TEMPLATE_HISTORY_TBL.USER_ID = SYS_USER_TBL.USER_ID
+  				AND CMS_TEMPLATE_HISTORY_TBL.TMP_ID = #tmpId#
+        		ORDER BY ID DESC
+        		<include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getByTmpIdToUpdateCount" resultClass="int" parameterClass="QueryTmpHistory" >
+            SELECT
+				COUNT(1)
+        	FROM
+        		CMS_TEMPLATE_HISTORY_TBL
+  			WHERE CMS_TEMPLATE_HISTORY_TBL.TMP_ID = #tmpId#
+        </select>
+        
+        <!--end-->
+</sqlMap>

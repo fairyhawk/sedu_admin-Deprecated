@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CouFreeGive_NS">
+        <typeAlias alias="CouFreeGive" type="com.shangde.edu.cou.domain.CouFreeGive"/>
+        <typeAlias alias="QueryCouFreeGiveCondition" type="com.shangde.edu.cou.condition.QueryCouFreeGiveCondition"/>
+       
+        <!-- CouFreeGive result  -->
+        <resultMap id="CouFreeGiveResult" class="CouFreeGive">
+            <result property="Id" column="ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="ctId" column="CT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="email" column="EMAIL"/> 
+            <result property="crInfo" column="CR_INFO"/>
+        </resultMap>
+        
+        <sql id="COU_FREE_GIVE_TBL_columns">
+        	COU_FREE_GIVE_TBL.ID,
+        	COU_FREE_GIVE_TBL.USER_NAME,
+            COU_FREE_GIVE_TBL.CT_ID,
+            COU_FREE_GIVE_TBL.CUS_ID,
+            COU_FREE_GIVE_TBL.CREATE_TIME
+        </sql>
+        
+        <sql id="COU_FREE_GIVE_TBL_properties">
+            #Id#,
+            #userName#,
+            #ctId#,
+            #cusId#,
+            #createTime#
+        </sql>
+
+        <insert id="createCouFreeGive" parameterClass="CouFreeGive">
+            INSERT INTO COU_FREE_GIVE_TBL (<include refid="CouFreeGive_NS.COU_FREE_GIVE_TBL_columns"/>) VALUES (<include refid="CouFreeGive_NS.COU_FREE_GIVE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="Id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCouFreeGiveById" parameterClass="int">
+            DELETE FROM COU_FREE_GIVE_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateCouFreeGive" parameterClass="CouFreeGive">
+            UPDATE COU_FREE_GIVE_TBL
+                ID = #Id#,
+        		USER_NAME =#userName#,
+            	CT_ID = #ctId#,
+          		CUS_ID = #cusId#,
+            	CREATE_TIME = #createTime#
+            WHERE
+                ID = #Id#
+        </update>
+
+        <select id="getCouFreeGiveById" resultMap="CouFreeGive_NS.CouFreeGiveResult" parameterClass="int">
+            SELECT
+            <include refid="CouFreeGive_NS.COU_FREE_GIVE_TBL_columns"/>
+            FROM COU_FREE_GIVE_TBL
+            WHERE
+                ID = #value#
+        </select>
+        
+         <select id="getCouFreeGiveList" resultMap="CouFreeGive_NS.CouFreeGiveResult" parameterClass="QueryCouFreeGiveCondition">
+            SELECT
+            <include refid="CouFreeGive_NS.COU_FREE_GIVE_TBL_columns"/>
+             ,cus_customer_tbl.EMAIL,
+  			FINANCE_CASH_RECORD_TBL.CR_INFO
+            FROM COU_FREE_GIVE_TBL,finance_contract_tbl,cus_customer_tbl,FINANCE_CASH_RECORD_TBL
+             WHERE COU_FREE_GIVE_TBL.CT_ID=finance_contract_tbl.CONTRACT_ID
+			AND COU_FREE_GIVE_TBL.CUS_ID=cus_customer_tbl.CUS_ID AND
+			 FINANCE_CASH_RECORD_TBL.CONTRACT_ID=finance_contract_tbl.CONTRACT_ID
+            
+	         	   <isNotNull prepend="AND" property="userName">
+	            		<isNotEmpty property="userName">
+	            			COU_FREE_GIVE_TBL.USER_NAME like CONCAT('%',#userName#,'%')
+	            		</isNotEmpty>
+	            	</isNotNull>
+	            	<isNotNull prepend="AND" property="ctId">
+	            		<isNotEqual property="ctId" compareValue=" ">
+	            			COU_FREE_GIVE_TBL.CT_ID =  #ctId#
+	            		</isNotEqual>
+	            	</isNotNull>
+	            	<isNotNull prepend="and" property="startCreateTime">
+						<![CDATA[  COU_FREE_GIVE_TBL.CREATE_TIME >= #startCreateTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endCreateTime">
+						<![CDATA[  COU_FREE_GIVE_TBL.CREATE_TIME <= #endCreateTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="email">
+						<![CDATA[  cus_customer_tbl.email like CONCAT('%',#email#,'%') ]]>
+					</isNotNull>
+	         
+	            ORDER  BY COU_FREE_GIVE_TBL.CREATE_TIME DESC
+		
+        </select>       
+       
+
+        <select id="getCouFreeGiveByCondition" resultMap="CouFreeGive_NS.CouFreeGiveResult" parameterClass="QueryCouFreeGiveCondition">
+             <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="CouFreeGive_NS.COU_FREE_GIVE_TBL_columns"/>
+            ,cus_customer_tbl.EMAIL,
+  			FINANCE_CASH_RECORD_TBL.CR_INFO
+            FROM  COU_FREE_GIVE_TBL,finance_contract_tbl,cus_customer_tbl,FINANCE_CASH_RECORD_TBL
+             WHERE COU_FREE_GIVE_TBL.CT_ID=finance_contract_tbl.CONTRACT_ID
+			AND COU_FREE_GIVE_TBL.CUS_ID=cus_customer_tbl.CUS_ID AND
+			 FINANCE_CASH_RECORD_TBL.CONTRACT_ID=finance_contract_tbl.CONTRACT_ID
+            
+	            	<isNotNull prepend="AND" property="userName">
+	            		<isNotEmpty property="userName">
+	            			COU_FREE_GIVE_TBL.USER_NAME like CONCAT('%',#userName#,'%')
+	            		</isNotEmpty>
+	            	</isNotNull>
+	            	<isNotNull prepend="AND" property="ctId">
+	            		<isNotEqual property="ctId" compareValue=" ">
+	            			COU_FREE_GIVE_TBL.CT_ID =  #ctId#
+	            		</isNotEqual>
+	            	</isNotNull>
+	            	<isNotNull prepend="and" property="startCreateTime">
+						<![CDATA[  COU_FREE_GIVE_TBL.CREATE_TIME >= #startCreateTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endCreateTime">
+						<![CDATA[  COU_FREE_GIVE_TBL.CREATE_TIME <= #endCreateTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="email">
+						<![CDATA[  cus_customer_tbl.email like CONCAT('%',#email#,'%') ]]>
+					</isNotNull>
+	         
+	            ORDER  BY COU_FREE_GIVE_TBL.CREATE_TIME DESC
+	            <include refid="public_sql.page_end"/>
+        </select>
+        
+        
+        <select id="getCouFreeGiveByConditionCount" resultClass="int" parameterClass="QueryCouFreeGiveCondition">
+            SELECT COUNT(1)  FROM  COU_FREE_GIVE_TBL,finance_contract_tbl,cus_customer_tbl,FINANCE_CASH_RECORD_TBL
+             WHERE COU_FREE_GIVE_TBL.CT_ID=finance_contract_tbl.CONTRACT_ID
+			AND COU_FREE_GIVE_TBL.CUS_ID=cus_customer_tbl.CUS_ID AND
+			 FINANCE_CASH_RECORD_TBL.CONTRACT_ID=finance_contract_tbl.CONTRACT_ID
+            
+	            	<isNotNull prepend="AND" property="userName">
+	            		<isNotEmpty property="userName">
+	            			COU_FREE_GIVE_TBL.USER_NAME like CONCAT('%',#userName#,'%')
+	            		</isNotEmpty>
+	            	</isNotNull>
+	            	<isNotNull prepend="AND" property="ctId">
+	            		<isNotEqual property="ctId" compareValue=" ">
+	            			COU_FREE_GIVE_TBL.CT_ID =  #ctId#
+	            		</isNotEqual>
+	            	</isNotNull>
+	            	<isNotNull prepend="and" property="startCreateTime">
+						<![CDATA[  COU_FREE_GIVE_TBL.CREATE_TIME >= #startCreateTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endCreateTime">
+						<![CDATA[  COU_FREE_GIVE_TBL.CREATE_TIME <= #endCreateTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="email">
+						<![CDATA[  cus_customer_tbl.email like CONCAT('%',#email#,'%') ]]>
+					</isNotNull>
+	           
+	            ORDER  BY COU_FREE_GIVE_TBL.CREATE_TIME DESC
+        </select>
+        
+      
+</sqlMap>

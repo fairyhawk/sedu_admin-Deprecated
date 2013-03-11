@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Uncoupon_NS">
+        <!--table:COU_UNCOUPON_TBL-->
+        <typeAlias alias="Uncoupon" type="com.shangde.edu.cou.domain.Uncoupon"/>
+        <typeAlias alias="QueryUncouponCondition" type="com.shangde.edu.cou.condition.QueryUncouponCondition"/>
+
+        <resultMap id="UncouponResult" class="Uncoupon">
+            <result property="uncpId" column="UNCP_ID"/>
+            <result property="id" column="ID"/>
+            <result property="email" column="EMAIL"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="serialNumber" column="SERIAL_NUMBER"/>
+        </resultMap>
+
+        <sql id="COU_UNCOUPON_TBL_columns">
+            COU_UNCOUPON_TBL.UNCP_ID,
+            COU_UNCOUPON_TBL.ID,
+            COU_UNCOUPON_TBL.EMAIL,
+            COU_UNCOUPON_TBL.MOBILE,
+            COU_UNCOUPON_TBL.SERIAL_NUMBER
+        </sql>
+
+        <sql id="COU_UNCOUPON_TBL_properties">
+            #uncpId#,
+            #id#,
+            #email#,
+            #mobile#,
+            #serialNumber#
+        </sql>
+
+        <insert id="createUncoupon" parameterClass="Uncoupon">
+            INSERT INTO COU_UNCOUPON_TBL (<include refid="Uncoupon_NS.COU_UNCOUPON_TBL_columns"/>) VALUES (<include refid="Uncoupon_NS.COU_UNCOUPON_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="uncpId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteUncouponById" parameterClass="int">
+            DELETE FROM COU_UNCOUPON_TBL
+            WHERE
+                UNCP_ID = #value#
+
+
+
+
+        </delete>
+
+        <update id="updateUncoupon" parameterClass="Uncoupon">
+            UPDATE COU_UNCOUPON_TBL SET
+                UNCP_ID = #uncpId#,
+                ID = #id#,
+                EMAIL = #email#,
+                MOBILE = #mobile#,
+                SERIAL_NUMBER = #serialNumber#
+            WHERE
+                UNCP_ID = #uncpId#
+
+
+
+
+        </update>
+
+        <select id="getUncouponById" resultMap="Uncoupon_NS.UncouponResult" parameterClass="int">
+            SELECT
+            <include refid="Uncoupon_NS.COU_UNCOUPON_TBL_columns"/>
+            FROM COU_UNCOUPON_TBL
+            WHERE
+                UNCP_ID = #value#
+
+
+
+
+        </select>
+
+        <select id="getUncouponList" resultMap="Uncoupon_NS.UncouponResult" parameterClass="QueryUncouponCondition">
+            SELECT
+            <include refid="Uncoupon_NS.COU_UNCOUPON_TBL_columns"/>
+            FROM COU_UNCOUPON_TBL
+            WHERE 1=1
+           	<isNotEqual property="id" compareValue="0">
+           		AND ID = #id#
+           	</isNotEqual>
+           	<isNotNull property="email">
+           		<isNotEqual property="email" compareValue="">
+           			AND EMAIL = #email#
+           		</isNotEqual>
+           	</isNotNull>
+        </select>
+
+        <select id="getUncouponListByEmail" resultMap="Uncoupon_NS.UncouponResult" parameterClass="java.lang.String">
+            SELECT
+            <include refid="Uncoupon_NS.COU_UNCOUPON_TBL_columns"/>
+            FROM COU_UNCOUPON_TBL 
+            WHERE EMAIL = #value#
+        </select>
+        
+
+        <select id="checkHasApplyed" resultClass="java.lang.Integer" parameterClass="Uncoupon">
+            SELECT COUNT(1)
+            FROM COU_UNCOUPON_TBL
+            WHERE
+            	EMAIL = #email#
+            	AND ID = #id#
+        </select>
+
+        <select id="getUncouponBySerialNumber" resultMap="Uncoupon_NS.UncouponResult" parameterClass="java.lang.String">
+            SELECT
+            <include refid="Uncoupon_NS.COU_UNCOUPON_TBL_columns"/>
+            FROM COU_UNCOUPON_TBL 
+            WHERE SERIAL_NUMBER = #value#
+        </select>
+        <!--end-->
+</sqlMap>

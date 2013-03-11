@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans> 
+ <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"> 
+  <property name="urlMap">
+         <map>
+          <entry key="/contractWebService.ws">
+              <ref bean="contractXFireExporter"/>  
+            </entry> 
+            <entry key="/cashRecordWebService.ws">
+              <ref bean="cashRecordtXFireExporter"/>  
+            </entry>
+            <entry key="/subjectWebService.ws">
+            	<ref bean="subjectWSXFireExporter"/>
+            </entry> 
+            <entry key="/sellWayWebService.ws">
+            	<ref bean="sellWayWSXFireExporter"/>
+            </entry>
+            <entry key="/wsSubjectWebService.ws">
+            	<ref bean="wsSubjectXFireExporter"/>
+            </entry>
+            <entry key="/customerWebService.ws">
+            	<ref bean="customerWSXFireExporter"/>
+            </entry>
+            <!-- 
+            <entry key="/highsoService.ws">
+            	<ref bean="highsoServiceXFireExporter"></ref>
+            </entry>
+             -->
+             <!-- 
+            <entry key="/testService.ws">
+              <ref bean="testRecordtXFireExporter"/>  
+            </entry> 
+             -->
+         </map>
+    </property>
+   </bean> 
+   <!-- 
+   <bean id="testRecordtXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="testRecordWebService"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.finance.service.ITest</value> 
+     </property> 
+   </bean> 
+    -->
+   <bean id="cashRecordtXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="cashRecordWebService"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.finance.webService.ICashRecordWeb</value> 
+     </property> 
+   </bean> 
+   <!-- 
+   <bean id="highsoServiceXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+   		<property name="serviceBean">
+   			<ref bean="highsoWebService"></ref>
+   		</property>
+   		 <property name="serviceClass"> 
+         <value>com.shangde.edu.webservice.xfire.IWebService</value> 
+     </property> 
+   </bean>
+    -->
+   <bean id="contractXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="contractWebService"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.finance.webService.IContractWeb</value> 
+     </property> 
+   </bean>
+   
+   <bean id="subjectWSXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="subjectWebService"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.sys.webservice.ISubjectWS</value> 
+     </property> 
+   </bean>
+       
+   <bean id="sellWayWSXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="sellWayWebService"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.cou.webservice.ISellWayWS</value> 
+     </property> 
+   </bean>
+
+   <bean id="customerWSXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="customerWebService"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.cus.webservice.ICustomerWS</value> 
+     </property> 
+   </bean>
+      
+   <bean id="wsSubjectXFireExporter" parent="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter"> 
+     <property name="serviceBean"> 
+         <ref bean="webServiceSubject"/> 
+     </property> 
+     <property name="serviceClass"> 
+         <value>com.shangde.edu.sys.webservice.WebServiceSubject</value> 
+     </property> 
+   </bean>   
+   <!-- webService base -->
+   <bean id="webService" class="org.codehaus.xfire.spring.remoting.XFireExporter" abstract="true">
+        <property name="serviceFactory">
+            <ref bean="xfire.serviceFactory" />
+        </property>
+        <property name="xfire">
+            <ref bean="xfire" />
+        </property>
+     </bean>
+</beans>
+

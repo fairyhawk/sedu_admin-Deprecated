@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+    <bean id="customerService" class="com.shangde.edu.cus.service.CustomerImpl" parent="baseServiceManyDb">
+    	<property name="mailService" ref="mailService"></property>
+    	<property name="cashRecordService" ref="cashRecordService"></property>
+    	<property name="notesService" ref="notesService"></property>
+    	<property name="cpCusService" ref="cpCusService"></property>
+    	<property name="studyPlanService" ref="studyPlanService"></property>
+    	<property name="exampaperRecordService" ref="exampaperRecordService"></property>
+    	
+    	<property name="optRecordService" ref="optRecordService"></property>
+    	
+    	<property name="tsRecordService" ref="tsRecordService"></property>
+    	<property name="totolsScoreService" ref="totolsScoreService"></property>
+    	<property name="taskCusService" ref="taskCusService"></property>
+    </bean>
+    <bean id="studyPlanService" class="com.shangde.edu.cus.service.StudyPlanImpl" parent="baseService"/>
+    <bean id="problemService" class="com.shangde.edu.cus.service.ProblemImpl" parent="baseServiceManyDb"/>
+    <bean id="reProblemService" class="com.shangde.edu.cus.service.ReProblemImpl" parent="baseService">
+    	<property name="actionReplyService" ref="actionReplyService"/>
+    </bean>
+    <bean id="smsService" class="com.shangde.edu.sms.service.SmsServiceImpl"/>
+    <bean id="totolsScoreService" class="com.shangde.edu.cus.service.TotolsScoreImpl" parent="baseService"/>
+    <bean id="tsRecordService" class="com.shangde.edu.cus.service.TsRecordImpl" parent="baseService"/>
+    <bean id="loginRecordService" class="com.shangde.edu.cus.service.LoginRecordImpl" parent="baseService"/>
+    <bean id="addressService" class="com.shangde.edu.cus.service.AddressImpl" parent="baseService"/>
+    <bean id="areaService" class="com.shangde.edu.cus.service.AreaImpl" parent="baseService"/>
+    <bean id="freezeLogService" class="com.shangde.edu.cus.service.FreezeLogImpl" parent="baseService"/>
+    <bean id="cfeedbackService" class="com.shangde.edu.cus.service.CustomerFeedbackImpl" parent="baseService"/>
+    
+     <bean id="hadataService" class="com.shangde.edu.vst.service.HdataImpl" parent="baseServiceManyDb"/>
+    
+</beans>  

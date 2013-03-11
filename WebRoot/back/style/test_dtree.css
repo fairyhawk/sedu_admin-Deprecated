@@ -1,0 +1,89 @@
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+|--------------------------------------------------*/
+
+.dtree {
+	color:#333333;
+	font-family:Arial;
+	font-size:12px;
+	overflow-y:auto;
+	background-color: #fff;
+	background-image: url(../images/left_bg_top.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	padding-top: 5px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:2px;
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+.dtree dt {
+	background:url(../images/menu_title_bg.jpg) top left repeat-x;
+}
+
+.dtree .dTreeNode dt a{
+	height:20px;
+	padding-top:3px;
+	line-height:19px;
+	width:209px;
+	display:block;
+	color:#FFF;
+	font-weight:bold;
+	text-decoration:none;
+	background: 10px 7px no-repeat;
+	text-indent:30px;
+	letter-spacing:2px;
+	
+}
+.dtree .dTreeNode dt a:hover{
+	color:#e8f3fd;
+}
+.dtree .clip {
+	list-style:none;
+	
+}
+
+.dtree .clip a{
+	height:25px;
+	widows:209px;
+	display:block;
+	line-height:25px;
+	text-indent:28px;
+	color: #006699;
+	text-decoration: none;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-color: #cad9ea;
+	border-bottom-color: #cad9ea;
+	border-left-color: #cad9ea;
+	background-color: #f2f9fd;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	border-top-color: #f2f9fd;
+}
+.dtree .clip .clip a:hover{
+	color:#239fe3;
+	background-color: #e8f3fd;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+/*----------------------------------2011/12/22 ÐÞ¸Ä»»Æ¤·ô--------------------------------------*/
+.dtree .dTreeNode dt a{ padding:10px 0; color:#4B4F5D;}
+.dtree .dTreeNode dt a:hover{color:#4B4F5D;}
+.dtree .dTreeNode dt a img{ vertical-align: middle; padding-right:5px;}
+.dtree .clip a{text-shadow: 0 1px 0 #DBDBDB;color: #4B4F5D; border:none;height:30px;line-height:30px;background-color:#BFC6CF;padding-left: 50px;text-indent: 0;}
+.dtree .clip a:hover{ background-color:#DBDBDB;}
+.clip{ }
+.dTreeNode{ background:url(../images/tree_line.gif) no-repeat top bottom center;}
+.dtree .clip .clip a:hover {  background-color: #B1B8C1;}
+.dtree dt{height: 41px;  }
+.menu{ padding-right:0px; width:208px;}

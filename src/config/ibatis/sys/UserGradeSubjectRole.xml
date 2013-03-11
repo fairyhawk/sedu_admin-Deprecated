@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserGradeSubjectRole_NS">
+	<!--table:SYS_USER_GRADE_SUBJECT_ROLE_TBL-->
+	<typeAlias alias="UserGradeSubjectRole"
+		type="com.shangde.edu.sys.domain.UserGradeSubjectRole" />
+	<typeAlias alias="QueryUserGradeSubjectRoleCondition"
+		type="com.shangde.edu.sys.condition.QueryUserGradeSubjectRoleCondition" />
+
+	<resultMap id="UserGradeSubjectRoleResult"
+		class="UserGradeSubjectRole">
+		<result property="roleId" column="ROLE_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="gradeId" column="GRADE_ID" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="limitScopeId" column="LIMIT_SCOPE_ID" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+	</resultMap>
+
+	<sql id="SYS_USER_GRADE_SUBJECT_ROLE_TBL_columns">
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.ROLE_ID,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.GRADE_ID,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.SUBJECT_ID,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.LIMIT_SCOPE_ID,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.STATUS,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.CREATE_TIME,
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.UPDATE_TIME
+	</sql>
+
+	<sql id="SYS_USER_GRADE_SUBJECT_ROLE_TBL_properties">
+		#roleId#, #userId#, #gradeId#, #subjectId#, #limitScopeId#,
+		#status#, #createTime#, #updateTime#
+	</sql>
+
+	<insert id="createUserGradeSubjectRole"
+		parameterClass="UserGradeSubjectRole">
+		INSERT INTO SYS_USER_GRADE_SUBJECT_ROLE_TBL (
+		<include
+			refid="UserGradeSubjectRole_NS.SYS_USER_GRADE_SUBJECT_ROLE_TBL_columns" />
+		) VALUES (
+		<include
+			refid="UserGradeSubjectRole_NS.SYS_USER_GRADE_SUBJECT_ROLE_TBL_properties" />
+		)
+	</insert>
+
+	<delete id="deleteUserGradeSubjectRoleById"
+		parameterClass="java.util.Map">
+		DELETE FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE ROLE_ID =
+		#roleId# AND USER_ID = #userId# AND GRADE_ID = #gradeId# AND
+		SUBJECT_ID = #subjectId#
+	</delete>
+
+	<delete id="deleteUserGradeSubjectRoleByRole"
+		parameterClass="int">
+		DELETE FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE ROLE_ID = #value#
+	</delete>
+
+	<update id="updateUserGradeSubjectRole"
+		parameterClass="UserGradeSubjectRole">
+		UPDATE SYS_USER_GRADE_SUBJECT_ROLE_TBL SET ROLE_ID = #roleId#,
+		USER_ID = #userId#, GRADE_ID = #gradeId#, SUBJECT_ID =
+		#subjectId#, LIMIT_SCOPE_ID = #limitScopeId#, STATUS = #status#,
+		CREATE_TIME = #createTime#, UPDATE_TIME = #updateTime# WHERE
+		ROLE_ID = #roleId# AND USER_ID = #userId# AND GRADE_ID =
+		#gradeId# AND SUBJECT_ID = #subjectId#
+
+
+
+
+	</update>
+
+	<select id="getUserGradeSubjectRoleById"
+		resultMap="UserGradeSubjectRole_NS.UserGradeSubjectRoleResult"
+		parameterClass="java.util.Map">
+		SELECT
+		<include
+			refid="UserGradeSubjectRole_NS.SYS_USER_GRADE_SUBJECT_ROLE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE ROLE_ID = #roleId#
+		AND USER_ID = #userId# AND GRADE_ID = #gradeId# AND SUBJECT_ID =
+		#subjectId#
+
+
+
+
+	</select>
+
+	<select id="getUserGradeSubjectRoleByUserIdRoleId"
+		resultMap="UserGradeSubjectRole_NS.UserGradeSubjectRoleResult"
+		parameterClass="java.util.Map">
+		SELECT
+		<include
+			refid="UserGradeSubjectRole_NS.SYS_USER_GRADE_SUBJECT_ROLE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE ROLE_ID = #roleId#
+		AND USER_ID = #userId#
+
+	</select>
+
+	<select id="getUserGradeSubjectRoleList"
+		resultMap="UserGradeSubjectRole_NS.UserGradeSubjectRoleResult"
+		parameterClass="QueryUserGradeSubjectRoleCondition">
+		SELECT
+		<include
+			refid="UserGradeSubjectRole_NS.SYS_USER_GRADE_SUBJECT_ROLE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL
+	</select>
+
+	<select id="getUGSRByUserId"
+		resultMap="UserGradeSubjectRole_NS.UserGradeSubjectRoleResult"
+		parameterClass="int">
+		SELECT
+		<include
+			refid="UserGradeSubjectRole_NS.SYS_USER_GRADE_SUBJECT_ROLE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL WHERE USER_ID = #userId#
+	</select>
+	<!--end-->
+</sqlMap>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Professional_NS">
+        <!--table:KB_PROFESSIONAL_TBL-->
+        <typeAlias alias="Professional" type="com.shangde.edu.kb.domain.Professional"/>
+        <typeAlias alias="QueryProfessionalCondition" type="com.shangde.edu.kb.condition.QueryProfessionalCondition"/>
+
+        <resultMap id="ProfessionalResult" class="Professional">
+            <result property="pId" column="P_ID"/>
+            <result property="pIndex" column="P_INDEX"/>
+            <result property="pName" column="P_NAME"/>
+            <result property="pCSubject" column="P_C_SUBJECT"/>
+            <result property="pVersion" column="P_VERSION"/>
+            <result property="pCreatetime" column="P_CREATETIME"/>
+            <result property="pUpdatetime" column="P_UPDATETIME"/>
+            <result property="pNote" column="P_NOTE"/>
+        </resultMap>
+
+        <sql id="KB_PROFESSIONAL_TBL_columns">
+            KB_PROFESSIONAL_TBL.P_ID,
+            KB_PROFESSIONAL_TBL.P_INDEX,
+            KB_PROFESSIONAL_TBL.P_NAME,
+            KB_PROFESSIONAL_TBL.P_C_SUBJECT,
+            KB_PROFESSIONAL_TBL.P_VERSION,
+            KB_PROFESSIONAL_TBL.P_CREATETIME,
+            KB_PROFESSIONAL_TBL.P_UPDATETIME,
+            KB_PROFESSIONAL_TBL.P_NOTE
+        </sql>
+
+        <sql id="KB_PROFESSIONAL_TBL_properties">
+            #pId#,
+            #pIndex#,
+            #pName#,
+            #pCSubject#,
+            #pVersion#,
+            #pCreatetime#,
+            #pUpdatetime#,
+            #pNote#
+        </sql>
+
+        <insert id="createProfessional" parameterClass="Professional">
+            INSERT INTO KB_PROFESSIONAL_TBL (<include refid="Professional_NS.KB_PROFESSIONAL_TBL_columns"/>) VALUES (<include refid="Professional_NS.KB_PROFESSIONAL_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="pId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <delete id="deleteProfessionalById" parameterClass="int">
+            DELETE FROM KB_PROFESSIONAL_TBL
+            WHERE
+                P_ID = #value#
+        </delete>
+        <update id="updateProfessional" parameterClass="Professional">
+            UPDATE KB_PROFESSIONAL_TBL SET
+                P_ID = #pId#,
+                P_INDEX = #pIndex#,
+                P_NAME = #pName#,
+                P_C_SUBJECT = #pCSubject#,
+                P_VERSION = #pVersion#,
+                P_CREATETIME = #pCreatetime#,
+                P_UPDATETIME = #pUpdatetime#,
+                P_NOTE=#pNote#
+            WHERE
+                P_ID = #pId#
+        </update>
+        <select id="getProfessionalById" resultMap="Professional_NS.ProfessionalResult" parameterClass="int">
+            SELECT
+            <include refid="Professional_NS.KB_PROFESSIONAL_TBL_columns"/>
+            FROM KB_PROFESSIONAL_TBL
+            WHERE
+                P_ID = #value#
+        </select>
+        <select id="getProfessionalLast" resultMap="Professional_NS.ProfessionalResult">
+            SELECT
+            <include refid="Professional_NS.KB_PROFESSIONAL_TBL_columns"/>
+            FROM KB_PROFESSIONAL_TBL ORDER BY P_ID DESC LIMIT 1
+        </select>
+        <select id="getProfessionalList" resultMap="Professional_NS.ProfessionalResult" parameterClass="QueryProfessionalCondition">
+            SELECT
+            <include refid="Professional_NS.KB_PROFESSIONAL_TBL_columns"/>
+            FROM KB_PROFESSIONAL_TBL
+        </select>
+         <select id="getProfessionalByList" resultMap="Professional_NS.ProfessionalResult" parameterClass="QueryProfessionalCondition">
+            SELECT
+            <include refid="Professional_NS.KB_PROFESSIONAL_TBL_columns"/>
+            FROM KB_PROFESSIONAL_TBL
+        </select>
+        <!--end-->
+</sqlMap>

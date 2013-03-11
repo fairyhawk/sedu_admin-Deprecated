@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="booksService" class="com.shangde.edu.res.service.BooksImpl" parent="baseService"/>
+    <bean id="booksgroupService" class="com.shangde.edu.res.service.BooksgroupImpl" parent="baseService"/>
+    <bean id="pictureService" class="com.shangde.edu.res.service.PictureImpl" parent="baseService"/>
+    <bean id="vedioService" class="com.shangde.edu.res.service.VedioImpl" parent="baseService"/>
+    <bean id="vediogroupService" class="com.shangde.edu.res.service.VediogroupImpl" parent="baseService"/>
+    <bean id="notesService" class="com.shangde.edu.res.service.NotesImpl" parent="baseService"/>
+    
+    <bean id="tvdTvdService" class="com.shangde.edu.res.service.TvdTvdImpl" parent="baseService"/>
+    <bean id="tryvedioService" class="com.shangde.edu.res.service.TryvedioImpl" parent="baseService" />
+    <bean id="vediocountService" class="com.shangde.edu.res.service.VedioCountImpl" parent="baseServiceManyDb" />
+    <bean id="vedioKnowledgeService" class="com.shangde.edu.res.service.VedioKnowledgeServiceImpl" parent="baseService" />
+    <bean id="relateKnowledgeService" class="com.shangde.edu.res.service.RelateKnowledgeServiceImpl" parent="baseService" />
+</beans>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="KnowledgeUnit_NS">
+        <!--table:KB_KNOWLEDGE_UNIT_TBL-->
+        <typeAlias alias="KnowledgeUnit" type="com.shangde.edu.kb.domain.KnowledgeUnit"/>
+        <typeAlias alias="QueryKnowledgeUnitCondition" type="com.shangde.edu.kb.condition.QueryKnowledgeUnitCondition"/>
+
+        <resultMap id="KnowledgeUnitResult" class="KnowledgeUnit">
+            <result property="kId" column="K_ID"/>
+            <result property="kIndex" column="K_INDEX"/>
+            <result property="kName" column="K_NAME"/>
+            <result property="sId" column="S_ID"/>
+            <result property="chId" column="CH_ID"/>
+            <result property="cId" column="C_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="kVersion" column="K_VERSION"/>
+            <result property="kKlNumber" column="K_KL_NUMBER"/>
+            <result property="kCreateTime" column="K_CREATE_TIME"/>
+            <result property="kModifyTime" column="K_MODIFY_TIME"/>
+            <result property="kNote" column="K_NOTE"/>
+            <result property="kType" column="K_TYPE"/>
+            <result property="dId" column="D_ID"/>
+        </resultMap>
+
+        <sql id="KB_KNOWLEDGE_UNIT_TBL_columns">
+            KB_KNOWLEDGE_UNIT_TBL.K_ID,
+            KB_KNOWLEDGE_UNIT_TBL.K_INDEX,
+            KB_KNOWLEDGE_UNIT_TBL.K_NAME,
+            KB_KNOWLEDGE_UNIT_TBL.S_ID,
+            KB_KNOWLEDGE_UNIT_TBL.CH_ID,
+            KB_KNOWLEDGE_UNIT_TBL.C_ID,
+            KB_KNOWLEDGE_UNIT_TBL.P_ID,
+            KB_KNOWLEDGE_UNIT_TBL.K_VERSION,
+            KB_KNOWLEDGE_UNIT_TBL.K_KL_NUMBER,
+            KB_KNOWLEDGE_UNIT_TBL.K_CREATE_TIME,
+            KB_KNOWLEDGE_UNIT_TBL.K_MODIFY_TIME,
+            KB_KNOWLEDGE_UNIT_TBL.K_NOTE,
+            KB_KNOWLEDGE_UNIT_TBL.K_TYPE,
+            KB_KNOWLEDGE_UNIT_TBL.D_ID
+        </sql>
+
+        <sql id="KB_KNOWLEDGE_UNIT_TBL_properties">
+            #kId#,
+            #kIndex#,
+            #kName#,
+            #sId#,
+            #chId#,
+            #cId#,
+            #pId#,
+            #kVersion#,
+            #kKlNumber#,
+            #kCreateTime#,
+            #kModifyTime#,
+            #kNote#,
+            #kType#,
+            #dId#
+        </sql>
+
+        <insert id="createKnowledgeUnit" parameterClass="KnowledgeUnit">
+            INSERT INTO KB_KNOWLEDGE_UNIT_TBL (<include refid="KnowledgeUnit_NS.KB_KNOWLEDGE_UNIT_TBL_columns"/>) VALUES (<include refid="KnowledgeUnit_NS.KB_KNOWLEDGE_UNIT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="kId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteKnowledgeUnitById" parameterClass="int">
+            DELETE FROM KB_KNOWLEDGE_UNIT_TBL
+            WHERE
+                K_ID = #value#
+
+
+
+
+
+
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateKnowledgeUnit" parameterClass="KnowledgeUnit">
+            UPDATE KB_KNOWLEDGE_UNIT_TBL SET
+                K_ID = #kId#,
+                K_INDEX = #kIndex#,
+                K_NAME = #kName#,
+                S_ID = #sId#,
+                CH_ID = #chId#,
+                C_ID = #cId#,
+                P_ID = #pId#,
+                K_VERSION = #kVersion#,
+                K_KL_NUMBER = #kKlNumber#,
+                K_CREATE_TIME = #kCreateTime#,
+                K_MODIFY_TIME = #kModifyTime#,
+                K_NOTE = #kNote#,
+                K_TYPE = #kType#,
+                D_ID =#dId#
+            WHERE
+                K_ID = #kId#
+
+
+
+
+
+
+
+
+
+
+
+
+        </update>
+
+        <select id="getKnowledgeUnitById" resultMap="KnowledgeUnit_NS.KnowledgeUnitResult" parameterClass="int">
+            SELECT
+            <include refid="KnowledgeUnit_NS.KB_KNOWLEDGE_UNIT_TBL_columns"/>
+            FROM KB_KNOWLEDGE_UNIT_TBL
+            WHERE
+                K_ID = #value#
+
+
+
+
+
+
+
+
+
+
+
+
+        </select>
+
+        <select id="getKnowledgeUnitList" resultMap="KnowledgeUnit_NS.KnowledgeUnitResult" parameterClass="QueryKnowledgeUnitCondition">
+            SELECT
+            <include refid="KnowledgeUnit_NS.KB_KNOWLEDGE_UNIT_TBL_columns"/>
+            FROM KB_KNOWLEDGE_UNIT_TBL
+        </select>
+        <!--end-->
+</sqlMap>

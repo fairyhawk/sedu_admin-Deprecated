@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<!-- 工具包 -->
+    <import resource="aContext_feed_utils.xml"/>
+
+    <bean id="subscribeUserService" class="com.shangde.edu.feed.service.impl.SubscribeUserImpl" parent="baseService"/>
+	<bean id="taskListService" class="com.shangde.edu.feed.service.impl.TaskListImpl" parent="baseService"/>
+	<bean id="taskLogService" class="com.shangde.edu.feed.service.impl.TaskLogImpl" parent="baseService"/>
+	<bean id="feedTempageService" class="com.shangde.edu.feed.service.impl.TemplateImpl" parent="baseService"/>
+	<bean id="videoLogService" class="com.shangde.edu.feed.service.impl.VideoLogImpl" parent="baseService"/>
+	<bean id="feedUniqueRecordService" class="com.shangde.edu.feed.service.impl.UniqueRecordImpl" parent="baseService"/>
+	<bean id="microVideoService" class="com.shangde.edu.feed.service.impl.MicroVideoImpl" parent="baseService"/>
+	<bean id="planningModeService" class="com.shangde.edu.feed.service.impl.PlanningModeImpl" parent="baseService" />
+	<bean id="feedCourseService" class="com.shangde.edu.feed.service.impl.CourseImpl" parent="baseService" />
+	<bean id="taskSendLogService" class="com.shangde.edu.feed.service.impl.TaskSendLogImpl" parent="baseService" />
+	<bean id="reviewService" class="com.shangde.edu.feed.service.impl.ReviewImpl" parent="baseService" />
+	<bean id="adService" class="com.shangde.edu.feed.service.impl.AdImpl" parent="baseService" />
+	<bean id="adStatService" class="com.shangde.edu.feed.service.impl.AdStatImpl" parent="baseService" />
+	<bean id="browseLogService" class="com.shangde.edu.feed.service.impl.BrowseLogImpl" parent="baseService" />	
+	<bean id="userUseService" class="com.shangde.edu.feed.service.impl.UserUseImpl" parent="baseService" />
+	<bean id="userStatService" class="com.shangde.edu.feed.service.impl.UserStatImpl" parent="baseService" />
+	<bean id="fromService" class="com.shangde.edu.feed.service.impl.FromImpl" parent="baseService" />
+	<bean id="userStatLogService" class="com.shangde.edu.feed.service.impl.UserStatLogImpl" parent="baseService" />
+	<bean id="entranceService" class="com.shangde.edu.feed.service.impl.EntranceImpl" parent="baseService" />
+	<bean id="studentStatService" class="com.shangde.edu.feed.service.impl.StudentStatImpl" parent="baseService" />
+	<bean id="feedNoticeService" class="com.shangde.edu.feed.service.impl.NoticeImpl" parent="baseService"></bean>
+	<bean id="courseCategoryService" class="com.shangde.edu.feed.service.impl.CourseCategoryImpl" parent="baseService" />
+	<bean id="courseStaticsService" class="com.shangde.edu.feed.service.impl.CourseStaticsImpl" parent="baseService" />
+	<bean id="userStatisticsService" class="com.shangde.edu.feed.service.impl.UserStatisticsImpl" parent="baseService" />
+	<bean id="downloadService" class="com.shangde.edu.feed.service.impl.DownloadImpl" parent="baseService"/>
+	<bean id="shareService" class="com.shangde.edu.feed.service.impl.ShareImpl" parent="baseService"/>
+	<bean id="appStatService" class="com.shangde.edu.feed.service.impl.AppStatImpl" parent="baseService"/>
+
+	<!-- MIME邮件服务类 -->
+	<bean id="mimeMailService" class="com.shangde.edu.feed.mail.MimeMailService">
+		<property name="velocityEngine" ref="mailVelocityEngine" />
+		<property name="templateFileName" value="mailTemplate.vm" />
+	</bean>
+
+	<!-- VelocityEngine -->
+	<bean id="mailVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="classpath:/mail/" />
+	</bean>
+
+</beans>

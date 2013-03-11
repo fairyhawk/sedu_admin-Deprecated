@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Function_NS">
+    <!--table:SYS_FUNCTION_TBL-->
+    <typeAlias alias="Function" type="com.shangde.edu.sys.domain.Function"/>
+    <typeAlias alias="QueryFunctionCondition" type="com.shangde.edu.sys.condition.QueryFunctionCondition"/>
+
+    <resultMap id="FunctionResult" class="Function">
+        <result property="functionId" column="FUNCTION_ID" nullValue="0"/>
+        <result property="parentFunctionId" column="PARENT_FUNCTION_ID" nullValue="-1"/>
+        <result property="functionName" column="FUNCTION_NAME"/>
+        <result property="functionTypeId" column="FUNCTION_TYPE_ID" nullValue="0"/>
+        <result property="functionUrl" column="FUNCTION_URL"/>
+        <result property="status" column="STATUS" nullValue="0"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="subFunctionList" column="FUNCTION_ID" select="Function_NS.getFunctionListByParentId"/>
+        <result property="level" column="LEVEL"/>
+    </resultMap>
+
+    <sql id="SYS_FUNCTION_TBL_columns">
+        SYS_FUNCTION_TBL.FUNCTION_ID,
+        SYS_FUNCTION_TBL.PARENT_FUNCTION_ID,
+        SYS_FUNCTION_TBL.FUNCTION_NAME,
+        SYS_FUNCTION_TBL.FUNCTION_TYPE_ID,
+        SYS_FUNCTION_TBL.FUNCTION_URL,
+        SYS_FUNCTION_TBL.STATUS,
+        SYS_FUNCTION_TBL.CREATE_TIME,
+        SYS_FUNCTION_TBL.UPDATE_TIME,
+        SYS_FUNCTION_TBL.FUNCTION_APPLY_SCOPE_ID,
+        SYS_FUNCTION_TBL.LEVEL
+    </sql>
+
+    <sql id="SYS_FUNCTION_TBL_properties">
+        #functionId#,
+        #parentFunctionId#,
+        #functionName#,
+        #functionTypeId#,
+        #functionUrl#,
+        #status#,
+        #createTime#,
+        #updateTime#,
+        #functionApplyScopeId#,
+        #level#
+    </sql>
+
+    <insert id="createFunction" parameterClass="Function">
+        INSERT INTO SYS_FUNCTION_TBL (<include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>) VALUES (<include
+            refid="Function_NS.SYS_FUNCTION_TBL_properties"/>)
+        <selectKey resultClass="int" type="post" keyProperty="functionId">
+            <include refid="public_sql.increment_sql"/>
+        </selectKey>
+    </insert>
+
+    <delete id="deleteFunctionById" parameterClass="int">
+        DELETE FROM SYS_FUNCTION_TBL
+        WHERE
+        FUNCTION_ID = #value#
+    </delete>
+
+    <update id="updateFunction" parameterClass="Function">
+        UPDATE SYS_FUNCTION_TBL SET
+        FUNCTION_ID = #functionId#,
+        PARENT_FUNCTION_ID = #parentFunctionId#,
+        FUNCTION_NAME = #functionName#,
+        FUNCTION_TYPE_ID = #functionTypeId#,
+        FUNCTION_URL = #functionUrl#,
+        STATUS = #status#,
+        CREATE_TIME = #createTime#,
+        UPDATE_TIME = #updateTime#,
+        FUNCTION_APPLY_SCOPE_ID = #functionApplyScopeId#,
+        LEVEL = #level#
+        WHERE
+        FUNCTION_ID = #functionId#
+    </update>
+
+    <select id="getFunctionById" resultMap="Function_NS.FunctionResult" parameterClass="int">
+        SELECT
+        <include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>
+        FROM SYS_FUNCTION_TBL
+        WHERE
+        FUNCTION_ID = #value#
+    </select>
+
+    <select id="getFunctionList" resultMap="Function_NS.FunctionResult" parameterClass="QueryFunctionCondition">
+        SELECT
+        <include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>
+        FROM SYS_FUNCTION_TBL
+        WHERE 1=1
+        <isNotNull property="functionApplyScopeId">
+            <isNotEqual property="functionApplyScopeId" compareValue="0" prepend="and">
+                SYS_FUNCTION_TBL.FUNCTION_APPLY_SCOPE_ID = #functionApplyScopeId#
+            </isNotEqual>
+        </isNotNull>
+        <isNotNull property="functionTypeId">
+            <isNotEqual property="functionTypeId" compareValue="0" prepend="and">
+                SYS_FUNCTION_TBL.FUNCTION_TYPE_ID = #functionTypeId#
+            </isNotEqual>
+        </isNotNull>
+        <isNotNull property="parentFunctionId">
+            <isNotEqual property="parentFunctionId" compareValue="0" prepend="and">
+                SYS_FUNCTION_TBL.PARENT_FUNCTION_ID = #parentFunctionId#
+            </isNotEqual>
+        </isNotNull>
+        ORDER BY FUNCTION_ID
+    </select>
+
+    <select id="getFunctionListByRoleId" resultMap="Function_NS.FunctionResult" parameterClass="int">
+        SELECT
+        <include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>
+        FROM SYS_FUNCTION_TBL,SYS_ROLE_FUNCTION_TBL
+        WHERE SYS_FUNCTION_TBL.FUNCTION_ID = SYS_ROLE_FUNCTION_TBL.FUNCTION_ID
+        AND SYS_ROLE_FUNCTION_TBL.ROLE_ID = #value#
+        ORDER BY FUNCTION_ID
+    </select>
+
+    <select id="getFunctionListByParentId" resultMap="Function_NS.FunctionResult" parameterClass="int">
+        SELECT
+        <include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>
+        FROM SYS_FUNCTION_TBL
+        WHERE SYS_FUNCTION_TBL.PARENT_FUNCTION_ID = #value#
+        ORDER BY FUNCTION_ID
+    </select>
+    
+    <select id="getFirFunction" resultMap="Function_NS.FunctionResult" parameterClass="QueryFunctionCondition">
+        SELECT
+        <include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>
+        FROM SYS_FUNCTION_TBL
+        WHERE SYS_FUNCTION_TBL.LEVEL = 1
+        ORDER BY FUNCTION_ID
+    </select>
+    
+    <select id="getChildFunctionById" resultMap="Function_NS.FunctionResult" parameterClass="int">
+        SELECT
+        <include refid="Function_NS.SYS_FUNCTION_TBL_columns"/>
+        FROM SYS_FUNCTION_TBL
+        WHERE SYS_FUNCTION_TBL.PARENT_FUNCTION_ID = #value#
+        ORDER BY FUNCTION_ID
+    </select>
+    <!--end-->
+</sqlMap>

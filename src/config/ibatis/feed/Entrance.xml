@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Entrance_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="Entrance" type="com.shangde.edu.feed.domain.Entrance" />
+	<typeAlias alias="QueryEntranceCondition" type="com.shangde.edu.feed.condition.QueryEntranceCondition" />
+
+	<resultMap id="EntranceResult" class="Entrance">
+		 <result property="id" column="ID"/>
+		 <result property="adId" column="ad_id"/>
+		 <result property="fromId" column="from_id"/>
+		 <result property="ip" column="ip"/>
+		 <result property="pubDate" column="pubdate"/>
+	</resultMap>
+
+	<sql id="FEED_ENTRANCE_TBL_columns">
+		feed_entrance_tbl.id,
+		feed_entrance_tbl.ad_id,
+		feed_entrance_tbl.from_id,
+		feed_entrance_tbl.ip,
+		feed_entrance_tbl.pubdate
+	</sql>
+
+	<sql id="FEED_ENTRANCE_TBL_properties">
+		#id#, 
+		#adId#, 
+		#fromId#,
+		#ip#,
+		#pubDate#
+	</sql>
+
+	<insert id="createEntrance" parameterClass="Entrance">
+		INSERT INTO feed_entrance_tbl (
+		<include refid="Feed_Entrance_NS.FEED_ENTRANCE_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_Entrance_NS.FEED_ENTRANCE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+	
+	<!--end-->
+</sqlMap>

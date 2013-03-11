@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Coupon_NS">
+        <!--table:COU_COUPON_TBL-->
+        <typeAlias alias="Coupon" type="com.shangde.edu.cou.domain.Coupon"/>
+        <typeAlias alias="QueryCouponCondition" type="com.shangde.edu.cou.condition.QueryCouponCondition"/>
+
+        <resultMap id="CouponResult" class="Coupon">
+            <result property="id" column="ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="cInfo" column="C_INFO"/>
+            <result property="picPath" column="PIC_PATH"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="stopTime" column="STOP_TIME"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="title" column="TITLE"/>
+            <result property="num" column="C_NUM"/>
+            <result property="toScore" column="C_TOSCORE"/>
+            <result property="course" column="COURSE_ID" select="Course_NS.getCourseById"/>
+        </resultMap>
+
+        <sql id="COU_COUPON_TBL_columns">
+            COU_COUPON_TBL.ID,
+            <!--  
+            COU_COUPON_TBL.PRICE,
+            -->
+            COU_COUPON_TBL.C_INFO,
+            COU_COUPON_TBL.PIC_PATH,
+            COU_COUPON_TBL.CREATE_TIME,
+            COU_COUPON_TBL.STOP_TIME,
+            COU_COUPON_TBL.COURSE_ID,
+            COU_COUPON_TBL.TITLE,
+            COU_COUPON_TBL.C_NUM,
+            COU_COUPON_TBL.C_TOSCORE
+        </sql>
+
+        <sql id="COU_COUPON_TBL_properties">
+            #id#,
+            #price#,
+            #cInfo#,
+            #picPath#,
+            #createTime#,
+            #stopTime#,
+            #courseId#,
+            #title#,
+            #num#,
+            #toScore#
+        </sql>
+
+        <insert id="createCoupon" parameterClass="Coupon">
+            INSERT INTO COU_COUPON_TBL (<include refid="Coupon_NS.COU_COUPON_TBL_columns"/>) VALUES (<include refid="Coupon_NS.COU_COUPON_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCouponById" parameterClass="int">
+            DELETE FROM COU_COUPON_TBL
+            WHERE
+                ID = #value#
+
+
+
+
+
+        </delete>
+
+        <update id="updateCoupon" parameterClass="Coupon">
+            UPDATE COU_COUPON_TBL SET
+                ID = #id#,
+                PRICE = #price#,
+                C_INFO = #cInfo#,
+                PIC_PATH = #picPath#,
+                CREATE_TIME = #createTime#,
+                STOP_TIME = #stopTime#,
+                COURSE_ID = #courseId#,
+                TITLE = #title#,
+                C_NUM = #num#,
+                C_TOSCORE = #toScore#
+            WHERE
+                ID = #id#
+
+
+
+
+
+        </update>
+
+        <select id="getCouponById" resultMap="Coupon_NS.CouponResult" parameterClass="int">
+            SELECT
+            <include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+            FROM COU_COUPON_TBL
+            WHERE
+                ID = #value#
+
+
+
+
+
+        </select>
+
+        <select id="getCouponList" resultMap="Coupon_NS.CouponResult" parameterClass="QueryCouponCondition">
+            SELECT
+            <include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+            FROM COU_COUPON_TBL
+        </select>
+        
+          <!-- 分页查询 -->
+        <select id="getCouponListByCondition" resultMap="Coupon_NS.CouponResult" parameterClass="QueryCouponCondition">
+        	SELECT 
+        	<include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+        	FROM COU_COUPON_TBL
+        	WHERE 1=1
+        	<isNotNull property="cInfo">
+          		AND C_INFO LIKE CONCAT('%',#cInfo#,'%')
+            </isNotNull >
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getCouponCountByCondition" resultClass="int" parameterClass="QueryCouponCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM COU_COUPON_TBL
+        	WHERE 1=1
+       		<isNotNull property="cInfo">
+          		AND C_INFO LIKE CONCAT('%',#cInfo#,'%')
+            </isNotNull >
+        </select>
+
+        <select id="getCouponCountByCus" resultClass="int" parameterClass="int">
+            SELECT COUNT(1)
+            FROM COU_CP_CUS_RECORD
+            WHERE CUS_ID = #value#
+        </select>
+        
+        <select id="getCouponListByCusCou" resultMap="Coupon_NS.CouponResult" parameterClass="QueryCouponCondition">
+        	SELECT 
+			 <include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+        	FROM COU_COUPON_TBL
+        		INNER JOIN COU_CP_CUS_RECORD CPCUS
+        		ON COU_COUPON_TBL.ID = CPCUS.ID
+        	WHERE CPCUS.CUS_ID = #cusId#
+        	<![CDATA[     
+        	AND COU_COUPON_TBL.CREATE_TIME < NOW()
+        	AND COU_COUPON_TBL.STOP_TIME > NOW()
+        	]]>
+     		AND COU_COUPON_TBL.COURSE_ID IN 
+     		(0
+				<isPropertyAvailable property="ids">
+					<iterate property="ids">
+						, #ids[]#
+					</iterate>
+				</isPropertyAvailable>
+			)
+        </select>
+
+        <select id="getCouponListByCusId" resultMap="Coupon_NS.CouponResult" parameterClass="QueryCouponCondition">
+            SELECT
+            <include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+            FROM COU_COUPON_TBL
+            INNER JOIN COU_CP_CUS_RECORD
+            ON COU_COUPON_TBL.ID = COU_CP_CUS_RECORD.ID
+            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+            <include refid="public_sql.page_end"/>
+        </select>
+
+        <select id="getCouponCountByCusId" resultClass="int" parameterClass="QueryCouponCondition">
+            SELECT	COUNT(1)
+            FROM COU_COUPON_TBL
+            INNER JOIN COU_CP_CUS_RECORD
+            ON COU_COUPON_TBL.ID = COU_CP_CUS_RECORD.ID
+            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+        </select>
+        
+        <select id="getCouponByPrice" resultMap="Coupon_NS.CouponResult" parameterClass="int">
+            SELECT
+            <include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+            FROM COU_COUPON_TBL
+            WHERE COU_COUPON_TBL.PRICE = #value#
+            LIMIT 0,1
+        </select>
+
+        <select id="getCouponListForTag" resultMap="Coupon_NS.CouponResult" parameterClass="QueryCouponCondition">
+            SELECT	<include refid="Coupon_NS.COU_COUPON_TBL_columns"/>
+            FROM COU_COUPON_TBL
+        </select>
+        <!--end-->
+</sqlMap>

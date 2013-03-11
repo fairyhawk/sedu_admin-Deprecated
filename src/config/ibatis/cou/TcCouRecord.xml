@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TcCouRecord_NS">
+        <!--table:COU_TC_COU_RECORD_TBL-->
+        <typeAlias alias="TcCouRecord" type="com.shangde.edu.cou.domain.TcCouRecord"/>
+        <typeAlias alias="QueryTcCouRecordCondition" type="com.shangde.edu.cou.condition.QueryTcCouRecordCondition"/>
+
+        <resultMap id="TcCouRecordResult" class="TcCouRecord">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="tcId" column="TC_ID"/>
+            <result property="id" column="ID"/>
+        </resultMap>
+
+        <sql id="COU_TC_COU_RECORD_TBL_columns">
+            COU_TC_COU_RECORD_TBL.COURSE_ID,
+            COU_TC_COU_RECORD_TBL.TC_ID,
+            COU_TC_COU_RECORD_TBL.ID
+        </sql>
+
+        <sql id="COU_TC_COU_RECORD_TBL_properties">
+            #courseId#,
+            #tcId#,
+            #id#
+        </sql>
+
+        <insert id="createTcCouRecord" parameterClass="TcCouRecord">
+            INSERT INTO COU_TC_COU_RECORD_TBL (<include refid="TcCouRecord_NS.COU_TC_COU_RECORD_TBL_columns"/>) VALUES (<include refid="TcCouRecord_NS.COU_TC_COU_RECORD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTcCouRecordById" parameterClass="int">
+            DELETE FROM COU_TC_COU_RECORD_TBL
+            WHERE
+                
+
+ID = #value#
+        </delete>
+
+        <delete id="deleteTcCouRecordByTcId" parameterClass="int">
+            DELETE FROM COU_TC_COU_RECORD_TBL
+            WHERE
+			TC_ID = #value#
+        </delete>
+
+        <delete id="deleteTcCouRecordByTcCou" parameterClass="QueryTcCouRecordCondition">
+            DELETE FROM COU_TC_COU_RECORD_TBL
+            WHERE
+			COURSE_ID = #courseId#
+			AND TC_ID = #tcId#
+        </delete>
+
+        <update id="updateTcCouRecord" parameterClass="TcCouRecord">
+            UPDATE COU_TC_COU_RECORD_TBL SET
+                COURSE_ID = #courseId#,
+                TC_ID = #tcId#,
+                ID = #id#
+            WHERE
+                
+
+ID = #id#
+        </update>
+
+        <select id="getTcCouRecordById" resultMap="TcCouRecord_NS.TcCouRecordResult" parameterClass="int">
+            SELECT
+            <include refid="TcCouRecord_NS.COU_TC_COU_RECORD_TBL_columns"/>
+            FROM COU_TC_COU_RECORD_TBL
+            WHERE
+                
+
+ID = #value#
+        </select>
+
+        <select id="getTcCouRecordList" resultMap="TcCouRecord_NS.TcCouRecordResult" parameterClass="QueryTcCouRecordCondition">
+            SELECT
+            <include refid="TcCouRecord_NS.COU_TC_COU_RECORD_TBL_columns"/>
+            FROM COU_TC_COU_RECORD_TBL
+        </select>
+        <!--end-->
+</sqlMap>

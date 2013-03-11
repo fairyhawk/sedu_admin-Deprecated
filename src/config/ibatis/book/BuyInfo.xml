@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="BookBuyInfo_NS">
+        <!--table:BOOK_BUYINFO_TBL-->
+        <typeAlias alias="BuyInfo" type="com.shangde.edu.book.domain.BuyInfo"/>
+        <typeAlias alias="QueryBuyInfoCondition" type="com.shangde.edu.book.condition.QueryBuyInfoCondition"/>
+
+        <resultMap id="BuyInfoResult" class="BuyInfo">
+            <result property="id" column="ID"/>
+            <result property="cusName" column="CUS_NAME"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="tel" column="TEL"/>
+            <result property="mobilephone" column="MOBILEPHONE"/>
+            <result property="postalcode" column="POSTALCODE"/>
+            <result property="remark" column="REMARK"/>
+            <result property="bookname" column="BOOKNAME"/>
+            <result property="buySum"   column="BUYSUM"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="createtime"   column="CREATE_TIME"/>
+        </resultMap>
+
+        <sql id="BOOK_BUYINFO_TBL_columns">
+            BOOK_BUYINFO_TBL.ID,
+            BOOK_BUYINFO_TBL.CUS_NAME,
+            BOOK_BUYINFO_TBL.ADDRESS,
+            BOOK_BUYINFO_TBL.TEL,
+            BOOK_BUYINFO_TBL.MOBILEPHONE,
+            BOOK_BUYINFO_TBL.POSTALCODE,
+            BOOK_BUYINFO_TBL.REMARK,
+            BOOK_BUYINFO_TBL.BOOKNAME,
+            BOOK_BUYINFO_TBL.BUYSUM,
+            BOOK_BUYINFO_TBL.CUS_ID,
+            BOOK_BUYINFO_TBL.CREATE_TIME
+        </sql>
+
+        <sql id="BOOK_BUYINFO_TBL_properties">
+            #id#,
+            #cusName#,
+            #address#,
+            #tel#,
+            #mobilephone#,
+            #postalcode#,
+            #remark#,
+            #bookname#,
+            #buySum#,
+            #cusId#,
+            #createtime#
+        </sql>
+
+        <insert id="createBook" parameterClass="BuyInfo">
+            INSERT INTO BOOK_BUYINFO_TBL (<include refid="BookBuyInfo_NS.BOOK_BUYINFO_TBL_columns"/>) VALUES (<include refid="BookBuyInfo_NS.BOOK_BUYINFO_TBL_properties"/>)
+        </insert>
+
+        <select id="getBookList" resultMap="BookBuyInfo_NS.BuyInfoResult" parameterClass="QueryBuyInfoCondition">
+            SELECT
+            <include refid="BookBuyInfo_NS.BOOK_BUYINFO_TBL_columns"/>
+            FROM BOOK_BUYINFO_TBL where BOOK_BUYINFO_TBL.STATUS!=1 order by CREATE_TIME desc 
+            <include refid="public_sql.page_end"/>
+        </select> 
+         <select id="getBookListCount" resultClass="int" parameterClass="QueryBuyInfoCondition">
+            SELECT
+            count(1)
+            FROM BOOK_BUYINFO_TBL where BOOK_BUYINFO_TBL.STATUS!=1
+        </select>
+        
+        <!-- 修改状态 wd -->
+       <update id="updateBookStatus" parameterClass="hashMap">
+        update BOOK_BUYINFO_TBL set BOOK_BUYINFO_TBL.STATUS=#status# where BOOK_BUYINFO_TBL.ID=#id#
+        </update> 
+       <!--  <delete id="deleteBookById" parameterClass="">
+            DELETE FROM BOOK_BUYINFO_TBL
+            WHERE
+                
+
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateBook" parameterClass="BuyInfo">
+            UPDATE BOOK_BUYINFO_TBL SET
+                ID = #id#,
+                CUS_NAME = #cusName#,
+                ADDRESS = #address#,
+                TEL = #tel#,
+                MOBILEPHONE = #mobilephone#,
+                POSTALCODE = #postalcode#,
+                REMARK = #remark#,
+                BOOKNAME = #bookname#,
+                BUYSUM = #buySum#
+            WHERE
+                
+
+
+
+
+
+
+
+        </update> -->
+
+        <!-- <select id="getBookById" resultMap="BookBuyInfo_NS.BuyInfoResult" parameterClass="">
+            SELECT
+            <include refid="BookBuyInfo_NS.BOOK_BUYINFO_TBL_columns"/>
+            FROM BOOK_BUYINFO_TBL
+            WHERE
+                
+
+
+
+
+
+
+
+        </select>
+
+       -->
+        <!--end-->
+</sqlMap>

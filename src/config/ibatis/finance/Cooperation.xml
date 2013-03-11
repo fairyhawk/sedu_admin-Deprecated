@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Cooperation_NS" >
+	<typeAlias alias="Cooperation" type="com.shangde.edu.finance.domain.Cooperation" />
+	
+
+
+   <resultMap id="cou_cooperation_tblResult" class="Cooperation" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="COMPANY_CODE" property="companyCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="cou_cooperation_tbl_properties">
+		#id#,
+		#companyName#,
+		#companyCode#
+	</sql>
+	<sql id="cou_cooperation_tbl_columns">
+		ID,COMPANY_NAME,COMPANY_CODE
+	</sql>
+	 <!-- 查询所有的合作商 -->
+         <select id="getselectCollaborateMen" resultMap="Cooperation_NS.cou_cooperation_tblResult">
+            SELECT 
+            	<include refid="Cooperation_NS.cou_cooperation_tbl_columns"/>
+            	 FROM cou_cooperation_tbl
+        </select>
+	
+	<!-- 根据ID查询单 -->
+        <select id="selectSingleMen" resultMap="Cooperation_NS.cou_cooperation_tblResult" parameterClass="int">
+            SELECT
+            <include refid="Cooperation_NS.cou_cooperation_tbl_columns"/>
+            FROM cou_cooperation_tbl
+            WHERE
+                ID =  #id#
+        </select>
+        <!-- 根据合作商名字的查询 -->
+        <select id="checkConponName" resultMap="Cooperation_NS.cou_cooperation_tblResult" parameterClass="String">
+            SELECT
+            <include refid="Cooperation_NS.cou_cooperation_tbl_columns"/>
+            FROM cou_cooperation_tbl
+            WHERE
+                COMPANY_NAME =  #companyName#
+        </select>
+        <!-- 根据合作商名字的查询 -->
+        <select id="checkConponCoding" resultMap="Cooperation_NS.cou_cooperation_tblResult" parameterClass="String">
+            SELECT
+            <include refid="Cooperation_NS.cou_cooperation_tbl_columns"/>
+            FROM cou_cooperation_tbl
+            WHERE
+                COMPANY_CODE =  #companyCode#
+        </select>
+</sqlMap>

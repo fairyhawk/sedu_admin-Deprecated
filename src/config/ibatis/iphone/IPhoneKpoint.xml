@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="KpointIPhone_NS">
+	<typeAlias alias="QueryKpointIPhoneCondition"
+		type="com.shangde.edu.iphone.condition.QueryKpointIPhoneCondition" />
+
+	<typeAlias alias="IphoneModel" type="com.shangde.edu.iphone.dto.IphoneModel" />
+
+	<resultMap id="KpointResult" class="IphoneModel">
+		<result property="videoId" column="POINT_ID" />
+		<result property="videoName" column="NAME" />
+	</resultMap>
+
+	<!-- 为张栋iphone端提供数据 begin-->
+	<select id="getIphoneKpointListByPid" resultMap="KpointIPhone_NS.KpointResult"
+		parameterClass="QueryKpointIPhoneCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		COU_KPOINT_TBL.POINT_ID,
+		COU_KPOINT_TBL.NAME
+		FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.P_ID = #pid# AND
+		COU_KPOINT_TBL.COURSE_ID=#courseId# AND COU_KPOINT_TBL.STATUS=0
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<select id="getIphoneKpointCountByPid" resultClass="int"
+		parameterClass="QueryKpointIPhoneCondition">
+		SELECT
+		COUNT(*)
+		FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.P_ID = #pid# AND
+		COU_KPOINT_TBL.COURSE_ID=#courseId# AND COU_KPOINT_TBL.STATUS=0
+	</select>
+
+	<select id="getKpointListByPid" resultMap="KpointIPhone_NS.KpointResult"
+		parameterClass="QueryKpointIPhoneCondition">
+		SELECT
+		COU_KPOINT_TBL.POINT_ID,
+		COU_KPOINT_TBL.NAME
+		FROM COU_KPOINT_TBL WHERE COU_KPOINT_TBL.P_ID = #pid#
+        </select>
+
+	<select id="getKpointSumByCourseId" resultClass="int"
+		parameterClass="int">
+		SELECT
+		COUNT(COU_KPOINT_TBL.LEVEL)
+		FROM COU_KPOINT_TBL
+		WHERE COU_KPOINT_TBL.COURSE_ID =#value#
+		GROUP BY COU_KPOINT_TBL.LEVEL
+		DESC LIMIT 1
+        </select>
+
+	<select id="getKpointVoUrlById" resultClass="java.lang.String"
+		parameterClass="int">
+		SELECT RES_VEDIO_TBL.VO_URL COU_KPOINT_TBL
+		FROM COU_KPOINT_TBL
+		INNER JOIN RES_VEDIO_TBL
+		WHERE COU_KPOINT_TBL.POINT_ID=RES_VEDIO_TBL.POINTID
+		AND COU_KPOINT_TBL.COURSE_ID =#value#
+		GROUP BY COU_KPOINT_TBL.LEVEL DESC LIMIT 1
+
+        </select>
+	<!-- 为张栋iphone端提供数据  end-->
+
+
+</sqlMap>

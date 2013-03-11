@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UniqueRecord_NS">
+
+	<typeAlias alias="UniqueRecord" type="com.shangde.edu.dis.domain.UniqueRecord" />
+	
+	<sql id="DIS_Unique_Record_TBL_columns">
+		DIS_Unique_Record_TBL.ID, 
+		DIS_Unique_Record_TBL.cus_id,
+		DIS_Unique_Record_TBL.object_id, 
+		DIS_Unique_Record_TBL.type,
+		DIS_Unique_Record_TBL.pubTime
+	</sql>
+	<sql id="DIS_Unique_Record_TBL_properties">
+		#id#, #cusId#, #objectId#, #type#, #pubTime#
+	</sql>
+
+	<!-- 添加标签 -->
+	<insert id="createUniqueRecord" parameterClass="UniqueRecord">
+		INSERT INTO DIS_Unique_Record_TBL (
+			<include refid="UniqueRecord_NS.DIS_Unique_Record_TBL_columns" />
+		) VALUES (
+			<include refid="UniqueRecord_NS.DIS_Unique_Record_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id" >   
+        	<include refid="public_sql.increment_sql"/>
+        </selectKey>
+	</insert>
+
+	<!-- 根据用户id，记录id，类型查询 -->
+	<select id="getUniqueRecord" resultClass="int" parameterClass="Map">
+		SELECT 
+			count(1)
+		FROM DIS_Unique_Record_TBL 
+			WHERE cus_id = #cusId# AND object_id = #objectId# AND type = #type#
+	</select>
+	<!-- 根据用户id，记录id，类型删除 -->
+	<delete id="delUniqueRecord" parameterClass="Map">
+		DELETE 
+			FROM 
+		DIS_Unique_Record_TBL 
+			WHERE object_id = #objectId# AND type = #objectTypeId#
+	</delete>
+	
+</sqlMap>

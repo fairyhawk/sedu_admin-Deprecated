@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.url.http.port" value="8080"/>
+    <constant name="struts.url.https.port" value="8443"/>
+    <constant name="struts.locale" value="zh_CN"/>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.ui.theme" value="simple"/>
+    <constant name="struts.multipart.saveDir" value="struts2_upload_temp"/>
+    <constant name="struts.multipart.maxSize" value="10485760"/>
+    <constant name="struts.custom.i18n.resources" value="config.struts.resource.globalMessages"/>
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    
+    <package name="edu-default" namespace="/" extends="struts-default,json-default">
+      <result-types>
+		 <result-type name="streamx" class="com.sunspoter.lib.web.struts2.dispatcher.StreamResultX"/>
+	 </result-types>
+        <interceptors>
+        	<interceptor name="configdebug" class="com.configdebug.interceptor.ConfigDebugInterceptor" />
+            <!--???????-->
+            <interceptor name="limit" class="com.shangde.common.intercepter.LimitIntercepter"/><!--????-->
+            <interceptor name="limitforweb" class="com.shangde.common.intercepter.LimitIntercepterForWeb"/>
+            <interceptor name="norepeat" class="com.shangde.common.intercepter.NoRepeatInterceptor"></interceptor>
+            <!--struts??????-->
+			<interceptor-stack name="eduStack">
+				<interceptor-ref name="configdebug" />
+				<interceptor-ref name="limit" />
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="debugging" />
+				<interceptor-ref name="profiling" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="actionMappingParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+			</interceptor-stack>
+			<interceptor-stack name="eduStackForWeb">				
+				<interceptor-ref name="configdebug" />
+				<interceptor-ref name="limitforweb" />
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="debugging" />
+				<interceptor-ref name="profiling" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="actionMappingParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+				<interceptor-ref name="norepeat">
+					
+					<param name="includeMethods">addProblemNew,problemContent,doAdd,doEdit,updatePlanitem</param>
+				</interceptor-ref>
+			</interceptor-stack>
+			<interceptor-stack name="loginStack">
+				<interceptor-ref name="configdebug" />
+                <interceptor-ref name="basicStack"/>
+            </interceptor-stack>
+            
+       	</interceptors>
+       	<default-interceptor-ref name="eduStack"/>
+        <global-results>
+        	<result name="error">/back/jsp/error/error.jsp</result>
+      		<result name="reLogin" type="redirect">/back/jsp/sys/login/loginOut.jsp</result>
+        	<result name="success" type="redirect">/back/jsp/sys/login/index.jsp</result>
+            <result name="login" type="redirect">/sys/login!loginInput.action</result>
+            <result name="loginError" type="redirect">login!loginInput.action?rdtType=1</result>
+            <result name="limitVerifyError" type="redirect">/back/jsp/sys/login/limitVerifyError.jsp</result>
+            <result name="changeSuccess" type="redirect">/back/jsp/common/success.jsp</result>
+            <result name="homePage" type="redirect">/</result>
+            <result name="operatorLimit" type="redirect">/static/web/global/toIndex.html</result>
+            
+            <!-- 
+            <result name="operatorLimit" type="redirect">/?loginMessage=operatorLimit&amp;back=true</result>
+             -->
+        </global-results>
+        <global-exception-mappings>
+        	<exception-mapping result="error" exception="Exception"></exception-mapping>
+        </global-exception-mappings>
+    </package>
+     <include file="/config/struts/struts-test.xml"/> 
+    <include file="/config/struts/struts-sys.xml"/>
+    <include file="/config/struts/struts-util.xml"/>
+    <include file="/config/struts/struts-res.xml"/>
+    <include file="/config/struts/struts-crm.xml"/>
+    <include file="/config/struts/struts-cms.xml"/>
+    <include file="/config/struts/struts-cou.xml"/>
+    <include file="/config/struts/struts-cus.xml"/>
+    <include file="/config/struts/struts-exam.xml"/>
+	<include file="/config/struts/struts-mail.xml"/>
+	<include file="/config/struts/struts-cusmgr.xml"/>
+	<include file="/config/struts/struts-alipay.xml"/>
+	<include file="/config/struts/struts-trolley.xml"/>
+	<include file="/config/struts/struts-finance.xml"/>
+	<include file="/config/struts/struts-task.xml"/>
+	<include file="/config/struts/struts-kb.xml"/>
+	<include file="/config/struts/struts-msg.xml"/>
+	<include file="/config/struts/struts-stu.xml"/>
+	<include file="/config/struts/struts-ass.xml"/>
+	<include file="/config/struts/struts-dis.xml"/>
+	<include file="/config/struts/struts-iphone.xml"/>
+	<include file="/config/struts/struts-count.xml"/>
+	<include file="/config/struts/struts-kno.xml"/>
+	<include file="/config/struts/struts-book.xml"></include>
+	<include file="/config/struts/struts-feed.xml"/>
+	<include file="/config/struts/struts-feedback.xml"/>
+	<include file="/config/struts/struts-velocity.xml"/>
+	
+	<include file="/config/struts/struts-vst.xml"></include>
+		<!--<include file="/config/struts/struts-testuser.xml"></include>-->
+	<!--
+    <include file="/config/struts/struts-video.xml"/>
+-->
+
+	<include file="/config/struts/struts-sp.xml"/>
+	<include file="/config/struts/struts-purse.xml"/>
+	<include file="/config/struts/struts-tmp.xml" />
+	<include file="/config/struts/struts-card.xml"/>
+	<include file="/config/struts/struts-ad.xml"/>
+</struts>
+

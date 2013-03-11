@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="kb" namespace="/kb" extends="edu-default">
+		<action name="professional"
+			class="com.shangde.edu.kb.action.ProfessionalAction">
+			<result name="professionalList">
+				/back/jsp/kb/professional/professional_list.jsp
+			</result>
+		</action>
+
+		<action name="kbsystem"
+			class="com.shangde.edu.kb.action.KnowledgeSystemAction">
+			<result name="insertSuccess">
+				/back/jsp/kb/knowledgesystem/knowledge_system_add.jsp
+			</result>
+			<result name="knowledgeSystemList">
+				/back/jsp/kb/knowledgesystem/knowledge_system_list.jsp
+			</result>
+			<result name="updateknowledgeSystem">
+				/back/jsp/kb/knowledgesystem/knowledge_system_update.jsp
+			</result>
+			<result name="Success" type="redirect">
+				/kb/kbsystem!showKnowledgeSystemList.action
+			</result>
+		</action>
+
+		<action name="difficulty"
+			class="com.shangde.edu.kb.action.DifficultyAction">
+			<result name="Success" type="redirect">
+				/kb/difficulty!showDifficultyList.action
+			</result>
+			<result name="difficultyList">
+				/back/jsp/kb/difficulty/difficulty_list.jsp
+			</result>
+			<result name="insertSuccess">
+				/back/jsp/kb/difficulty/difficulty_add.jsp
+			</result>
+			<result name="updateDifficulty">
+				/back/jsp/kb/difficulty/difficulty_update.jsp
+			</result>
+		</action>
+		<action name="kbunit"
+			class="com.shangde.edu.kb.action.KnowledgeUnitAction">
+			<result name="Success" type="redirect">
+				/kb/kbunit!getKnowledgeUnitList.action
+			</result>
+			<result name="knowledgeUnitList">
+				/back/jsp/kb/knowledgeunit/knowledge_unit_list.jsp
+			</result>
+			<result name="toAddKnowledgeUnit">
+				/back/jsp/kb/knowledgeunit/knowledge_unit_add.jsp
+			</result>
+			<result name="toUpdateKnowledgeUnit">
+				/back/jsp/kb/knowledgeunit/knowledge_unit_update.jsp
+			</result>
+		</action>
+		<!--  -->
+		<action name="professional"
+			class="com.shangde.edu.kb.action.ProfessionalAction">
+			<result name="professionalList">
+				/back/jsp/kb/professional/professional_list.jsp
+			</result>
+			<result name="professionalAdd">
+				/back/jsp/kb/professional/professional_add.jsp
+			</result>
+			<result name="professional_Add" type="redirect">
+				professional!getProfessionalList.action
+			</result>
+			<result name="professionalEdit">
+				/back/jsp/kb/professional/professional_edit.jsp
+			</result>
+		</action>
+		<action name="studyCourse"
+			class="com.shangde.edu.kb.action.StudyCourseAction">
+			<result name="studyCourseList">
+				/back/jsp/kb/studycourse/studycourse_list.jsp
+			</result>
+			<result name="studyCourseAdd">
+				/back/jsp/kb/studycourse/studycourse_add.jsp
+			</result>
+			<result name="studyCourse_Add" type="redirect">
+				studyCourse!getStudyCourseList.action?studycourse.pId=${studycourse.pId}
+			</result>
+			<result name="studycourseEdit">
+				/back/jsp/kb/studycourse/studycourse_edit.jsp
+			</result>
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		<action name="chapter"
+			class="com.shangde.edu.kb.action.ChapterAction">
+			<result name="chapterList">
+				/back/jsp/kb/chapter/chapter_list.jsp
+			</result>
+			<result name="chapterAdd">
+				/back/jsp/kb/chapter/chapter_add.jsp
+			</result>
+			<result name="chapter_Add" type="redirect">
+				chapter!getChapterList.action?chapter.cId=${chapter.cId}
+			</result>
+			<result name="chapterEdit">
+				/back/jsp/kb/chapter/chapter_edit.jsp
+			</result>
+		</action>
+		<action name="section"
+			class="com.shangde.edu.kb.action.SectionAction">
+			<result name="sectionList">
+				/back/jsp/kb/section/section_list.jsp
+			</result>
+			<result name="sectionAdd">
+				/back/jsp/kb/section/section_add.jsp
+			</result>
+			<result name="section_Add" type="redirect">
+				section!getSectionList.action?section.chId=${section.chId}
+			</result>
+			<result name="sectionEdit">
+				/back/jsp/kb/section/section_edit.jsp
+			</result>
+		</action>
+		<action name="entering"
+			class="com.shangde.edu.kb.action.EnteringAction">
+			<result name="professionalList">
+				/back/jsp/kb/entering/entering_list.jsp
+			</result>
+			<result name="Success">/back/jsp/kb/entering/course_add.jsp</result>
+			<result name="professionalList">/back/jsp/kb/entering/entering_list.jsp</result>
+            <result name="toUpdateKnowledge">/back/jsp/kb/entering/entering_update.jsp</result>
+            
+            <result name="auditList">/back/jsp/kb/entering/audit_list.jsp</result>
+		</action>
+        <action name="knowledge" class="com.shangde.edu.kb.action.KnowledgeAction">
+        	<result name="Json" type="json">
+				<param name="root">result</param>
+			</result>
+            <result name="knowledgetree">/back/jsp/kb/knowledge/knowledge_tree.jsp</result>
+            <result name="addknowledgetree" type="redirect">
+           		knowledge!getKnowledgeTree.action?knowledge.scId=${knowledge.scId}&amp;index=${knowledge.upIndex}
+            </result>
+            <result name="addknowledgetreenew" type="redirect">
+           		knowledge!getKnowledgeTree.action?knowledge.scId=${knowledge.scId}
+            </result>
+            <result name="toaddnextknowledge">/back/jsp/kb/knowledge/nextknowledge_add.jsp</result>
+            <result name="editknowledge">/back/jsp/kb/knowledge/knowledge_edit.jsp</result>
+        </action>
+        <action name="pkmanage" class="com.shangde.edu.kb.action.PresetAndKnowledgeAction">
+            <result name="prestmanage">/back/jsp/kb/pkmanage/preset_manage.jsp</result>
+            <result name="knowledgemanage">/back/jsp/kb/pkmanage/knowledge_manage.jsp</result>
+        </action>
+	</package>
+</struts>
+

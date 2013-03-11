@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TvdTvd_NS">
+        <!--table:RES_TVD_TVD_TBL-->
+        <typeAlias alias="TvdTvd" type="com.shangde.edu.res.domain.TvdTvd"/>
+        <typeAlias alias="QueryTvdTvdCondition" type="com.shangde.edu.res.condition.QueryTvdTvdCondition"/>
+
+        <resultMap id="TvdTvdResult" class="TvdTvd">
+            <result property="id" column="ID"/>
+            <result property="vdid" column="VDID"/>
+            <result property="tjvdid" column="TJVDID"/>
+        </resultMap>
+
+        <sql id="RES_TVD_TVD_TBL_columns">
+            RES_TVD_TVD_TBL.ID,
+            RES_TVD_TVD_TBL.VDID,
+            RES_TVD_TVD_TBL.TJVDID
+        </sql>
+
+        <sql id="RES_TVD_TVD_TBL_properties">
+            #id#,
+            #vdid#,
+            #tjvdid#
+        </sql>
+
+        <insert id="createTvdTvd" parameterClass="TvdTvd">
+            INSERT INTO RES_TVD_TVD_TBL (<include refid="TvdTvd_NS.RES_TVD_TVD_TBL_columns"/>) VALUES (<include refid="TvdTvd_NS.RES_TVD_TVD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTvdTvdById" parameterClass="int">
+            DELETE FROM RES_TVD_TVD_TBL
+            WHERE
+                ID = #value#
+
+
+        </delete>
+
+        <update id="updateTvdTvd" parameterClass="TvdTvd">
+            UPDATE RES_TVD_TVD_TBL SET
+                ID = #id#,
+                VDID = #vdid#,
+                TJVDID = #tjvdid#
+            WHERE
+                ID = #id#
+
+
+        </update>
+
+        <select id="getTvdTvdById" resultMap="TvdTvd_NS.TvdTvdResult" parameterClass="int">
+            SELECT
+            <include refid="TvdTvd_NS.RES_TVD_TVD_TBL_columns"/>
+            FROM RES_TVD_TVD_TBL
+            WHERE
+                ID = #value#
+
+
+        </select>
+
+        <select id="getTvdTvdList" resultMap="TvdTvd_NS.TvdTvdResult" parameterClass="QueryTvdTvdCondition">
+            SELECT
+            <include refid="TvdTvd_NS.RES_TVD_TVD_TBL_columns"/>
+            FROM RES_TVD_TVD_TBL
+           	WHERE
+            VDID = #vdid# 
+            <isNotEqual property="tjvdid" compareValue="0" prepend="and" >
+            	TJVDID = #tjvdid#            
+            </isNotEqual>
+        </select>
+        
+        <!--end-->
+</sqlMap>

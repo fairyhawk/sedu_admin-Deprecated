@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SignUp_NS">
+        <!--table:SYS_ROLE_TBL-->
+        <typeAlias alias="SignUp" type="com.shangde.edu.sys.domain.SignUp"/>
+        <typeAlias alias="QuerySignUpCondition" type="com.shangde.edu.sys.condition.QuerySignUpCondition"/>
+        <resultMap id="SignUpResult" class="SignUp">
+            <result property="id" column="id" />
+            <result property="subjectId" column="subject_id"/>
+            <result property="education" column="education"/>
+            <result property="age" column="age"/>
+            <result property="phoneNumber" column="phone_number"/>
+            <result property="createDate" column="create_date"/>
+            <result property="subjectName" column="subject_name"/>
+        </resultMap>
+
+        <sql id="SYS_EXAM_QUERY_TBL_columns">
+            SYS_EXAM_QUERY_TBL.id,
+            SYS_EXAM_QUERY_TBL.subject_id,
+            SYS_EXAM_QUERY_TBL.education,
+            SYS_EXAM_QUERY_TBL.age,
+            SYS_EXAM_QUERY_TBL.phone_number,
+            SYS_EXAM_QUERY_TBL.create_date,
+            SYS_SUBJECT_TBL.subject_name
+        </sql>
+
+        <sql id="SYS_EXAM_QUERY_TBL_properties">
+            #id#,
+            #subjectId#,
+            #education#,
+            #age#,
+            #phoneNumber#,
+            #createDate#,
+            #subjectName#
+        </sql>   
+
+        <select id="getSignUpInfoList" resultMap="SignUp_NS.SignUpResult" parameterClass="QuerySignUpCondition">
+         <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="SignUp_NS.SYS_EXAM_QUERY_TBL_columns"/>
+            FROM SYS_EXAM_QUERY_TBL,SYS_SUBJECT_TBL WHERE 1=1 AND SYS_EXAM_QUERY_TBL.SUBJECT_ID=SYS_SUBJECT_TBL.SUBJECT_ID
+           <isNotEmpty prepend="AND" property="education">
+            	 	SYS_EXAM_QUERY_TBL.education = #education#
+           </isNotEmpty> 
+           <isNotEmpty prepend="AND" property="age">
+            	 	SYS_EXAM_QUERY_TBL.age = #age#
+           </isNotEmpty> 
+           <isNotEmpty prepend="AND" property="phoneNumber">
+            	 	SYS_EXAM_QUERY_TBL.phone_number = #phoneNumber#
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="createBeginDate">
+            	<![CDATA[  SYS_EXAM_QUERY_TBL.create_date >= #createBeginDate# ]]>
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="createEndTime">
+            	<![CDATA[  SYS_EXAM_QUERY_TBL.create_date <= #createEndTime# ]]>
+           </isNotEmpty>
+           <isNotEqual property="subjectId" compareValue="-1">
+            	<isNotEqual property="subjectId" compareValue="0">
+            		and SYS_EXAM_QUERY_TBL.subject_id = #subjectId#
+            	</isNotEqual>
+            </isNotEqual>
+             ORDER BY id DESC
+            <include refid="public_sql.page_end"/>  
+        </select> 
+        
+        <select id="getSignUpInfoListCount" resultClass="int">
+            SELECT
+           		COUNT(1)
+            FROM SYS_EXAM_QUERY_TBL,SYS_SUBJECT_TBL WHERE 1=1 AND SYS_EXAM_QUERY_TBL.SUBJECT_ID=SYS_SUBJECT_TBL.SUBJECT_ID
+           <isNotEmpty prepend="AND" property="education">
+            	 	SYS_EXAM_QUERY_TBL.education = #education#
+           </isNotEmpty> 
+           <isNotEmpty prepend="AND" property="age">
+            	 	SYS_EXAM_QUERY_TBL.age = #age#
+           </isNotEmpty> 
+           <isNotEmpty prepend="AND" property="phoneNumber">
+            	 	SYS_EXAM_QUERY_TBL.phone_number = #phoneNumber#
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="createBeginDate">
+            	<![CDATA[  SYS_EXAM_QUERY_TBL.create_date >= #createBeginDate# ]]>
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="createEndTime">
+            	<![CDATA[  SYS_EXAM_QUERY_TBL.create_date <= #createEndTime# ]]>
+           </isNotEmpty>
+           <isNotEqual property="subjectId" compareValue="-1">
+            	<isNotEqual property="subjectId" compareValue="0">
+            		and SYS_EXAM_QUERY_TBL.subject_id = #subjectId#
+            	</isNotEqual>
+            </isNotEqual>
+             ORDER BY id DESC
+		</select>
+
+       
+</sqlMap>

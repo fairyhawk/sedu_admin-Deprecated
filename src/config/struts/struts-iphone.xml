@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="iphone" namespace="/iphone" extends="edu-default">
+        
+        <!--课程action 前台 -->
+        <action name="courseiphone" class="com.shangde.edu.iphone.web.IPhoneCourseWebAction">
+			<interceptor-ref name="loginStack"/>
+			
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="coursejson" type="json">
+				<param name="root">courseReult</param>
+			</result>
+ 			
+ 			<result name="updatedc" type="json">
+ 			<param name="root">result</param>
+ 			</result>
+ 			
+ 			<result name="fan">/api/createXML.jsp</result>
+          	<result name="toPreparePindao">/web/jsp/channel/pindao.jsp</result>
+          	<result name="toPreparePindaoTest">/web/jsp/channel/cpapindao.jsp</result>
+          	<result name="toPrepareCourse">/web/jsp/course/course_new.jsp</result>
+          	<result name="coursePlan">/static/usercenter/jsp/mycourse/course_plan.jsp</result>
+          	
+          	<param name="savePath">/course</param>
+          	<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+			
+			<!-- 文件下载 baiang.zhao. 2011-5-11 13:38:30-->
+			<result name="downloadFile" type="streamx">
+                <param name="contentType">application/octet-streamx;charset=ISO8859-1</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+        
+        <action name="kpointiphone" class="com.shangde.edu.iphone.web.IPhoneKpointWebAction">
+            <interceptor-ref name="loginStack"/>
+            <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="kpontjson" type="json">
+				<param name="root">result</param>
+			</result>
+        </action>
+        
+        <action name="sellwayiphone" class="com.shangde.edu.iphone.web.IPhoneSellWayWebAction">
+       		<interceptor-ref name="loginStack"/>  
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+         </action>
+    </package>
+</struts>

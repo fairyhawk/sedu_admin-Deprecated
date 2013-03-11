@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="AutoTask_NS">
+
+	<typeAlias alias="QueryAutoTaskCondition" type="com.shangde.edu.tk.condition.QueryAutoTaskCondition" />
+	<typeAlias alias="AutoTaskDTO" type="com.shangde.edu.tk.dto.AutoTaskDTO" />
+
+	<resultMap id="AutoTaskResult" class="AutoTaskDTO">
+		<result property="cusId" column="cus_id" />
+		<result property="subjectId" column="subject_id" />
+	</resultMap>
+
+
+	<!-- sql含义：查询当天用户支付成功的第一个流水的项目，并且此项目的subjectid于用户注册时的subjectid不同的 -->
+	<select id="getDataList" resultMap="AutoTask_NS.AutoTaskResult" parameterClass="QueryAutoTaskCondition">
+		SELECT newfc.cus_id,newfc.subject_id FROM ( SELECT MIN(fc.id) AS id,fc.cus_id AS cus_id,fc.cr_subject_id AS subject_id FROM
+		finance_cash_record_tbl fc WHERE fc.status=1 AND fc.shop_pay_time LIKE CONCAT('%',#nowDate#,'%') GROUP BY fc.cus_id ) AS newfc
+		,cus_customer_tbl cc WHERE newfc.cus_id = cc.cus_id AND newfc.subject_id &lt;&gt; cc.subject_id
+	</select>
+
+	<delete id="deleteFinance_Subject">delete from finance_subject_tbl</delete>
+
+	<insert id="insertFinance_Subject" parameterClass="string">
+		INSERT INTO finance_subject_tbl (SELECT newfc.cus_id,newfc.subject_id FROM ( SELECT MIN(fc.id) AS id,fc.cus_id AS
+		cus_id,fc.cr_subject_id AS subject_id FROM finance_cash_record_tbl fc WHERE fc.status=1 AND fc.shop_pay_time LIKE
+		CONCAT('%',#nowDate#,'%') GROUP BY fc.cus_id ) AS newfc ,cus_customer_tbl cc WHERE newfc.cus_id = cc.cus_id AND newfc.subject_id
+		&lt;&gt; cc.subject_id)
+	</insert>
+
+
+	<update id="updateCustomer">
+			UPDATE cus_customer_tbl,finance_subject SET cus_customer_tbl.subject_id = finance_subject.cr_subject_id
+			WHERE cus_customer_tbl.cus_id = finance_subject.cus_id AND 
+			cus_customer_tbl.subject_id &lt;&gt; finance_subject.cr_subject_id
+	</update>
+
+</sqlMap>

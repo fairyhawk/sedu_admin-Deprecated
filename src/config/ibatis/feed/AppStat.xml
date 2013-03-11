@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_AppStat_NS">
+
+	<typeAlias alias="AppStat" type="com.shangde.edu.feed.domain.AppStat"/>
+	<typeAlias alias="QueryAppStatCondition" type="com.shangde.edu.feed.condition.QueryAppStatCondition"/>
+	
+	<resultMap class="AppStat" id="AppStatResult">
+		<result property="id" column="ID"/>
+		<result property="type" column="type"/>
+		<result property="pubDate" column="PUBDATE"/>
+	</resultMap>
+	<sql id="FEED_APPSTAT_TBL_columns">
+		feed_download_tbl.ID,
+		feed_download_tbl.type,
+		feed_download_tbl.PUBDATE
+	</sql>
+	
+	<sql id="FEED_APPSTAT_TBL_properties">
+		#id#,
+		#type#,
+		#pubDate#
+	</sql>
+	
+	<insert id="createAppStat" parameterClass="AppStat">
+		INSERT INTO feed_app_stat_tbl(<include refid="FEED_APPSTAT_TBL_columns"/>)
+		VALUES(<include refid="FEED_APPSTAT_TBL_properties"/>)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql"/>
+		</selectKey>
+	</insert>
+	<!-- 提问点击总次数，根据时间段 -->
+	<select id="getAppStatCount" resultClass="int" parameterClass="QueryAppStatCondition">
+		select count(1) from feed_app_stat_tbl where 1=1 and type = #type#
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  pubdate >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  pubdate <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	<!-- 提问总人数，根据时间段 -->
+	<select id="getAppStatUserCount" resultClass="int" parameterClass="QueryAppStatCondition">
+		select count(result.cus_id) from (
+			select DISTINCT cus_id from feed_review_tbl where 1=1 
+			<isNotNull prepend="and" property="startTime">
+				<![CDATA[  pubdate >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  pubdate <= #endTime# ]]>
+			</isNotNull>
+			) result
+	</select>
+
+</sqlMap>

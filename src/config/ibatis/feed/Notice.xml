@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_NOTICE_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="Notice" type="com.shangde.edu.feed.domain.Notice" />
+	<typeAlias alias="QueryNoticeCondition"
+		type="com.shangde.edu.feed.condition.QueryNoticeCondition" />
+
+	<resultMap id="NoticeResult" class="Notice">
+		<result property="id" column="ID" />
+		<result property="courseCategoryId" column="course_category_id"/>
+		<result property="content" column="content" />
+		<result property="createUser" column="create_user" />
+		<result property="status" column="status" />
+		<result property="pubDate" column="PUBDATE" />
+		<result property="modified" column="modified" />
+	</resultMap>
+
+	<sql id="FEED_NOTICE_TBL_columns">
+		feed_notice_tbl.id,feed_notice_tbl.course_category_id,feed_notice_tbl.content,feed_notice_tbl.create_user,feed_notice_tbl.status,feed_notice_tbl.PUBDATE,feed_notice_tbl.modified
+	</sql>
+
+	<sql id="FEED_NOTICE_TBL_properties">
+		#id#,#courseCategoryId#, #content#, #createUser#,#status#, #pubDate#,#modified#
+	</sql>
+
+	<!-- 添加 -->
+	<insert id="createNotice" parameterClass="Notice">
+		INSERT INTO feed_notice_tbl (
+		<include refid="Feed_NOTICE_NS.FEED_NOTICE_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_NOTICE_NS.FEED_NOTICE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteNotice" parameterClass="int">
+		delete from feed_notice_tbl where id = #value#
+	</delete>
+
+	<!-- 修改 -->
+	<update id="updateNotice" parameterClass="Notice">
+		UPDATE feed_notice_tbl SET
+			id = #id#,
+			course_category_id = #courseCategoryId#,
+			content = #content#,
+			create_user = #createUser#,
+			status = #status#,
+			modified = #modified#
+		WHERE id = #id#
+	</update>
+	<update id="updateStatusById" parameterClass="QueryNoticeCondition">
+		UPDATE feed_notice_tbl SET
+			status = #status#,
+			modified = now()
+		WHERE id = #id#
+	</update>
+	
+	<!-- 统计 条件查询 分页 -->
+	<select id="getNoticePageList" resultMap="Feed_NOTICE_NS.NoticeResult" parameterClass="QueryNoticeCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT * FROM feed_notice_tbl WHERE 1=1
+		<isNotNull property="courseCategoryId" prepend="and">
+			course_category_id = #courseCategoryId#
+		</isNotNull>
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		<include refid="public_sql.page_end" />
+	</select>
+	<!-- 查询count -->
+	<select id="getNoticePageCountList" resultClass="int" parameterClass="QueryNoticeCondition">
+		select count(1) FROM feed_notice_tbl us where 1=1
+		<isNotNull property="courseCategoryId" prepend="and">
+			course_category_id = #courseCategoryId#
+		</isNotNull>
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	
+	<!-- 根据id查询对象 -->
+	<select id="getNoticeById" resultMap="Feed_NOTICE_NS.NoticeResult" parameterClass="int">
+		SELECT * FROM feed_notice_tbl where id = #id#
+	</select>
+	
+	<!-- 前台调用,传参status值 -->
+	<select id="getNoticeList" resultMap="Feed_NOTICE_NS.NoticeResult" parameterClass="QueryNoticeCondition">
+		SELECT * FROM feed_notice_tbl where status = #status#
+	</select>
+
+	<!--end-->
+</sqlMap>

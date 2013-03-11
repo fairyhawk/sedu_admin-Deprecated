@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    
+    <!-- 新版功能V1.1配置如下 -->
+    
+    
+    <package name="dis" namespace="/dis" extends="edu-default">
+    
+    	<interceptors>
+    		<interceptor name="disAuthForWeb" class="com.shangde.edu.dis.web.interceptor.DisInterceptor">
+    			<param name="includeMethods">goDis,toDis</param>
+    		</interceptor>
+    	</interceptors>
+    	
+    	<global-results>
+    		<!-- session失效跳转至小组首页 -->
+        	<result name="invalid" type="redirect">dis/discussion!toDisHomepage.action</result>
+        	<!-- 空页面处理 -->
+        	<result name="empty">/static/usercenter/jsp/discuss/empty.jsp</result>
+    	</global-results>
+    	
+    	<!-- 讨论小组 -->
+ 		<action name="discussion" class="com.shangde.edu.dis.web.action.DiscussionWebAction">
+ 			<result name="toDisHomepage" type="dispatcher">/static/usercenter/jsp/discuss/discuss.jsp</result>
+        	<result name="toAddDisPage" type="dispatcher">/static/usercenter/jsp/discuss/addTopic.jsp</result>
+        	<result name="dis_info" type="dispatcher">/static/usercenter/jsp/discuss/dis_info.jsp</result>
+        	<result name="area_info" type="dispatcher">/static/usercenter/jsp/discuss/area_info.jsp</result>
+        	<result name="no_auth" type="dispatcher">/static/usercenter/jsp/discuss/no_auth.jsp</result>
+        	<result name="other_dis_home" type="dispatcher">/static/usercenter/jsp/discuss/discuss.jsp</result>
+        	
+        	
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="disAuthForWeb" />
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+		
+		<!-- 话题 -->
+		<action name="topic" class="com.shangde.edu.dis.web.action.TopicWebAction">
+						 
+			<!-- 进入话题项页面，辅助前段添加功能(该页面内容：正好是列表展示时一个话题代码项) -->
+			<result name="topic_item">/static/usercenter/jsp/discuss/item/topic_item.jsp</result>
+			<!-- 进入我回复的话题页面 -->
+			<result name="myRespond">/static/usercenter/jsp/discuss/myrespond_info.jsp</result>
+			<!-- 进入我发布的帖子页面 -->
+        	<result name="dis_mytopic">/static/usercenter/jsp/discuss/dis_mytopic.jsp</result>
+        	<!-- 进入最新话题页面 -->
+        	<result name="dis_newtopic">/static/usercenter/jsp/discuss/dis_newtopic.jsp</result>
+        	<!-- 进入所有推荐的话题页面 -->
+        	<result name="dis_recommend">/static/usercenter/jsp/discuss/dis_recommend.jsp</result>
+        	<!-- 进入话题详情页 -->
+        	<result name="topic_info" type="dispatcher">/static/usercenter/jsp/discuss/topic_info.jsp</result>
+        	<!-- 进入某个小组首页 by disId -->
+        	<result name="dis_index" type="redirectAction">
+        		<param name="actionName">discussion!toDis</param>
+        		<param name="disId">${disId}</param>
+        	</result>
+        	
+        	
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<result name="topic_update" type="json">
+				<param name="includeProperties">flag,topic\.id,topic\.content,topic\.tags,tagsRelation\.tagId</param>
+			</result>
+			<result name="topic_edit" type="json">
+				<param name="includeProperties">jsonResult, content</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+		
+		<!-- 话题回复 -->
+		<action name="topicReply" class="com.shangde.edu.dis.web.action.TopicReplyWebAction">
+		
+			<!-- 进入某话题回复列表项 -->
+			<result name="topic_reply_item">/static/usercenter/jsp/discuss/item/topic_reply_item.jsp</result>
+			<!-- 进入话题详情页面中的某一项 -->
+			<result name="topic_reply_info_item">/static/usercenter/jsp/discuss/item/topic_reply_info_item.jsp</result>
+			
+			
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+		
+		<!-- 投票 暂时保留-->
+		<action name="vote" class="com.shangde.edu.dis.web.action.VoteWebAction">
+			<result name="topic_info" type="redirect">dis/discussion!getMyTopicContent.action?topic.id=${topicId}</result>
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+		
+		<!-- 前台上传请求地址 -->
+		<action name="upload" class="com.shangde.edu.dis.web.action.FileUploadAction">
+			<interceptor-ref name="eduStackForWeb" />
+		</action>
+
+		<!-- 后台上传请求地址 -->
+		<action name="uploadBack" class="com.shangde.edu.dis.web.action.FileUploadAction">
+			<interceptor-ref name="loginStack" />
+		</action>
+		
+		<!-- 后台 -->
+		<action name="back" class="com.shangde.edu.dis.web.action.DisBackAction">
+
+			<result name="dis_list">/back/jsp/dis/dis_list.jsp</result>
+			<result name="to_dis_list" type="redirect">dis/back!getDisList.action?queryDiscussionCondition.currentPage=1</result>
+			
+			<result name="dis_add">/back/jsp/dis/dis_add.jsp</result>
+			<result name="dis_edit">/back/jsp/dis/dis_edit.jsp</result>
+			<result name="toEditDis" type="redirect">back!toEditDis.action?dis.id=${dis.id}&amp;resMsg=${resMsg}</result>
+			<result name="topic_list">/back/jsp/dis/topic_list.jsp</result>
+			<result name="success">/back/jsp/dis/success.jsp</result>
+			<result name="sensitive_word">/back/jsp/dis/sensitive_word.jsp</result>
+			<result name="findSensWord" type="redirect">back!findSensWord.action?page.currentPage=${page.currentPage}</result>
+			
+			<result name="topic_edit">/back/jsp/dis/topic_edit.jsp</result>
+			<result name="topic_add">/back/jsp/dis/topic_add.jsp</result>
+			<result name="topic_show">/back/jsp/dis/topic_show.jsp</result>
+			<result name="topic_reply_list">/back/jsp/dis/topic_reply_list.jsp</result>
+			
+			
+			<result name="jsonResult" type="json">
+				<param name="root">jsonResult</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+		</action>
+    </package>
+    
+</struts>

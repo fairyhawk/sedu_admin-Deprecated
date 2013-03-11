@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VideoStatModule_NS">
+<!-- 视频统计模块配置文件 -->
+
+        <typeAlias alias="StatMicroVideo" type="com.shangde.edu.feed.domain.MicroVideo"/>
+        <typeAlias alias="StatMicroVideoDTO" type="com.shangde.edu.feed.dto.MicroVideoDTO"/>
+        <typeAlias alias="StatVideoDetailsDTO" type="com.shangde.edu.feed.dto.VideoDetailsDTO"/>
+        <typeAlias alias="StatQueryMicroVideoCondition" type="com.shangde.edu.feed.condition.QueryMicroVideoCondition"/>
+        
+        
+       	<!-- 视频统计查询结果集 -->
+       	<resultMap id="VideoStatSearchResult" class="StatMicroVideoDTO">
+        	<result property="id" column="ID"/>
+        	<result property="name" column="name"/>
+        	<result property="totalWatchTime" column="total_watch_time"/>
+        	<result property="supportNumber" column="support_number"/>
+        	<result property="antilogNumber" column="antilog_number"/>
+        	<result property="clickNum" column="clickNum"/>
+        	<result property="collectNum" column="collectNum"/>
+        </resultMap>
+        <!-- 根据条件查询不同关于视频反查的数据结果集 -->
+        <resultMap id="StatVideoDetailsCommonResult" class="StatVideoDetailsDTO">
+        	<result property="id" column="ID"/>
+        	<result property="userId" column="user_Id"/>
+        	<result property="customer" column="user_id" select="Customer_NS.getCustomerById"/>
+        	<result property="statisticsTime" column="statistics_time"/>
+        </resultMap>
+        
+        <!-- 
+        	视频统计查询，该sql语句不全
+        	未通过sq实现 视频的[观看人数、看完人数、下载人数]，不在这里体现处理，这里将用程序迭代调用实现
+        	通过sql实现  点击人数，收藏人数
+         -->
+        <select id="videoStatSearch" resultMap="VideoStatModule_NS.VideoStatSearchResult" parameterClass="StatQueryMicroVideoCondition">
+        	<include refid="public_sql.page_begin"/>
+        		select mv.id,mv.name,mv.total_watch_time,mv.support_number,mv.antilog_number,
+        			(select count(1) from feed_video_watch_stat_tbl vws where vws.video_id = mv.id 
+        				<isNotNull prepend="and" property="courseId">
+							vws.course_id = #courseId#
+						</isNotNull>
+						<isNotNull prepend="and" property="startTime">
+							<![CDATA[  vws.statistics_time >= #startTime# ]]>
+						</isNotNull>
+						<isNotNull prepend="and" property="endTime">
+							<![CDATA[  vws.statistics_time <= #endTime# ]]>
+						</isNotNull>
+					) clickNum,
+			       	(select count(1) from feed_collection_tbl coll 
+			       	where coll.video_id = mv.id
+			       		<isNotNull prepend="and" property="courseId">
+							coll.course_id = #courseId#
+						</isNotNull>
+			       		<isNotNull prepend="and" property="startTime">
+							<![CDATA[  coll.statistics_time >= #startTime# ]]>
+						</isNotNull>
+						<isNotNull prepend="and" property="endTime">
+							<![CDATA[  coll.statistics_time <= #endTime# ]]>
+						</isNotNull>
+			       	) collectNum       
+			 	from feed_micro_video_tbl mv where 1=1
+			 		<isNotNull prepend="and" property="courseId">
+						<![CDATA[  mv.course_id >= #courseId# ]]>
+					</isNotNull>
+			 <include refid="public_sql.page_end"/>
+        </select>
+        <select id="videoStatCountSearch" resultClass="int" parameterClass="StatQueryMicroVideoCondition">
+        		select count(1) from feed_micro_video_tbl mv 
+        		where 1=1
+			 		<isNotNull prepend="and" property="courseId">
+						mv.course_id = #courseId#
+					</isNotNull>
+        </select>
+        <select id="videoStatSearchExport" resultMap="VideoStatModule_NS.VideoStatSearchResult" parameterClass="StatQueryMicroVideoCondition">
+        		select mv.id,mv.name,mv.total_watch_time,mv.support_number,mv.antilog_number,
+        			(select count(1) from feed_video_watch_stat_tbl vws where vws.video_id = mv.id 
+        				<isNotNull prepend="and" property="courseId">
+							vws.course_id = #courseId#
+						</isNotNull>
+						<isNotNull prepend="and" property="startTime">
+							<![CDATA[  vws.statistics_time >= #startTime# ]]>
+						</isNotNull>
+						<isNotNull prepend="and" property="endTime">
+							<![CDATA[  vws.statistics_time <= #endTime# ]]>
+						</isNotNull>
+					) clickNum,
+			       	(select count(1) from feed_collection_tbl coll 
+			       	where coll.video_id = mv.id
+			       		<isNotNull prepend="and" property="courseId">
+							coll.course_id = #courseId#
+						</isNotNull>
+			       		<isNotNull prepend="and" property="startTime">
+							<![CDATA[  coll.statistics_time >= #startTime# ]]>
+						</isNotNull>
+						<isNotNull prepend="and" property="endTime">
+							<![CDATA[  coll.statistics_time <= #endTime# ]]>
+						</isNotNull>
+			       	) collectNum
+			 	from feed_micro_video_tbl mv where 1=1
+			 		<isNotNull prepend="and" property="courseId">
+						<![CDATA[  mv.course_id >= #courseId# ]]>
+					</isNotNull>
+        </select>
+       
+        <!-- 查询出某视频时间段观看人数 -->
+        <select id="videoWatchSearch" resultClass="int" parameterClass="StatQueryMicroVideoCondition">
+        	select count(result.user_id) from (select DISTINCT vws.user_id from feed_video_watch_stat_tbl vws where vws.video_id = #id#
+        		<isNotNull prepend="and" property="courseId">
+					vws.course_id >= #courseId#
+				</isNotNull>
+        		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  vws.statistics_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  vws.statistics_time <= #endTime# ]]>
+				</isNotNull>
+				) result
+        </select>
+        <!-- 查询出某视频时间段观看完人数 -->
+        <select id="videoWatchDoneSearch" resultClass="int" parameterClass="StatQueryMicroVideoCondition">
+        	select count(result.user_id) from (select DISTINCT vws.user_id from feed_video_watch_stat_tbl vws where vws.video_id = #id# and Is_watch_end = 2
+        		<isNotNull prepend="and" property="courseId">
+					vws.course_id = #courseId#
+				</isNotNull>
+        		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  vws.statistics_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  vws.statistics_time <= #endTime# ]]>
+				</isNotNull>
+				) result
+        </select>
+        <!-- 查询出某视频时间段下载人数 -->
+        <select id="videoDownSearch" resultClass="int" parameterClass="StatQueryMicroVideoCondition">
+        	select count(result.user_id) from(
+	        	select DISTINCT down.user_id from feed_download_tbl down 
+					where down.video_id = #id#
+					<isNotNull prepend="and" property="courseId">
+						down.course_id = #courseId#
+					</isNotNull>
+				    <isNotNull prepend="and" property="startTime">
+						<![CDATA[  down.statistics_time >= #startTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[  down.statistics_time <= #endTime# ]]>
+					</isNotNull>
+				) result
+        </select>
+        
+        <!-- 视频反查-观看人数 -->
+        <select id="videoReverseWatchSearch" resultMap="VideoStatModule_NS.StatVideoDetailsCommonResult" parameterClass="StatQueryMicroVideoCondition">
+        	select vws.id,vws.user_id,vws.statistics_time from feed_video_watch_stat_tbl vws where vws.video_id = #id# 
+        		<isNotNull prepend="and" property="courseId">
+					vws.course_id >= #courseId#
+				</isNotNull>
+        		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  vws.statistics_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  vws.statistics_time <= #endTime# ]]>
+				</isNotNull>
+        </select>
+        <!-- 视频反查-观看完人数 -->
+        <select id="videoReverseWatchDoneSearch" resultMap="VideoStatModule_NS.StatVideoDetailsCommonResult" parameterClass="StatQueryMicroVideoCondition">
+        	select vws.id,vws.user_id,vws.statistics_time from feed_video_watch_stat_tbl vws where vws.video_id = #id# and is_watch_end = 2
+        		<isNotNull prepend="and" property="courseId">
+					vws.course_id = #courseId#
+				</isNotNull>
+        		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  vws.statistics_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  vws.statistics_time <= #endTime# ]]>
+				</isNotNull>
+        </select>
+        <!-- 视频反查-下载人数 -->
+        <select id="videoReverseDownSearch" resultMap="VideoStatModule_NS.StatVideoDetailsCommonResult" parameterClass="StatQueryMicroVideoCondition">
+        	select down.id,down.user_id,down.statistics_time from feed_download_tbl down where down.video_id = #id# 
+        		<isNotNull prepend="and" property="courseId">
+					down.course_id = #courseId#
+				</isNotNull>
+        		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  down.statistics_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  down.statistics_time <= #endTime# ]]>
+				</isNotNull>
+        </select>
+        
+        <!-- 视频反查-收藏人数 -->
+        <select id="videoReverseCollectSearch" resultMap="VideoStatModule_NS.StatVideoDetailsCommonResult" parameterClass="StatQueryMicroVideoCondition">
+        	select coll.id,coll.user_id,coll.statistics_time from feed_collection_tbl coll where coll.video_id = #id#
+        		<isNotNull prepend="and" property="courseId">
+					coll.course_id = #courseId#
+				</isNotNull>
+        		<isNotNull prepend="and" property="startTime">
+					<![CDATA[  coll.statistics_time >= #startTime# ]]>
+				</isNotNull>
+				<isNotNull prepend="and" property="endTime">
+					<![CDATA[  coll.statistics_time <= #endTime# ]]>
+				</isNotNull>
+        </select>
+        
+</sqlMap>

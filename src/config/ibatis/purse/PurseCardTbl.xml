@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PurseCardTbl_NS">
+        <!--table:PURSE_CARD_TBL-->
+        <typeAlias alias="PurseCardTbl" type="com.shangde.edu.purse.domain.Card"/>
+        <typeAlias alias="QueryPurseCardTblCondition" type="com.shangde.edu.purse.condition.QueryCardCondition"/>
+
+        <resultMap id="PurseCardTblResult" class="PurseCardTbl">
+            <result property="id" column="ID"/>
+            <result property="cardName" column="CARD_NAME"/>
+            <result property="cardType" column="CARD_TYPE"/>
+            <result property="endTime" column="END_TIME"/>
+            <result property="operator" column="OPERATOR"/>
+            <result property="remark" column="REMARK"/>
+            <result property="status" column="STATUS"/>
+            <result property="money" column="MONEY"/>
+            <result property="cardSum" column="CARD_SUM"/>
+            <result property="cardUrl" column="CARD_URL"/>
+        </resultMap>
+
+        <sql id="PURSE_CARD_TBL_columns">
+            PURSE_CARD_TBL.ID,
+            PURSE_CARD_TBL.CARD_NAME,
+            PURSE_CARD_TBL.CARD_TYPE,
+            PURSE_CARD_TBL.END_TIME,
+            PURSE_CARD_TBL.OPERATOR,
+            PURSE_CARD_TBL.REMARK,
+            PURSE_CARD_TBL.STATUS,
+            PURSE_CARD_TBL.MONEY,
+            PURSE_CARD_TBL.CARD_SUM,
+            PURSE_CARD_TBL.CARD_URL
+        </sql>
+
+        <sql id="PURSE_CARD_TBL_properties">
+            #id#,
+            #cardName#,
+            #cardType#,
+            #endTime#,
+            #operator#,
+            #remark#,
+            #status#,
+            #money#,
+            #cardSum#,
+            #cardUrl#
+        </sql>
+
+    
+</sqlMap>

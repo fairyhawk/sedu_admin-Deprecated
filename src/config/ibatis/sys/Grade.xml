@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Grade_NS">
+	<!--table:SYS_GRADE_TBL-->
+	<typeAlias alias="Grade"
+		type="com.shangde.edu.sys.domain.Grade" />
+	<typeAlias alias="QueryGradeCondition"
+		type="com.shangde.edu.sys.condition.QueryGradeCondition" />
+
+	<resultMap id="GradeResult" class="Grade">
+		<result property="gradeId" column="GRADE_ID" />
+		<result property="gradeName" column="GRADE_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+	</resultMap>
+
+	<sql id="SYS_GRADE_TBL_columns">
+		SYS_GRADE_TBL.GRADE_ID, SYS_GRADE_TBL.GRADE_NAME,
+		SYS_GRADE_TBL.STATUS, SYS_GRADE_TBL.CREATE_TIME,
+		SYS_GRADE_TBL.UPDATE_TIME
+	</sql>
+
+	<sql id="SYS_GRADE_TBL_properties">
+		#gradeId#, #gradeName#, #status#, #createTime#, #updateTime#
+	</sql>
+
+	<insert id="createGrade" parameterClass="Grade">
+		INSERT INTO SYS_GRADE_TBL (
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		) VALUES (
+		<include refid="Grade_NS.SYS_GRADE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post"
+			keyProperty="gradeId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteGradeById" parameterClass="int">
+		DELETE FROM SYS_GRADE_TBL WHERE GRADE_ID = #value#
+
+
+
+
+	</delete>
+
+	<update id="updateGrade" parameterClass="Grade">
+		UPDATE SYS_GRADE_TBL SET GRADE_ID = #gradeId#, GRADE_NAME =
+		#gradeName#, STATUS = #status#, CREATE_TIME = #createTime#,
+		UPDATE_TIME = #updateTime# WHERE GRADE_ID = #gradeId#
+
+
+
+
+	</update>
+
+	<select id="getGradeById" resultMap="Grade_NS.GradeResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		FROM SYS_GRADE_TBL WHERE GRADE_ID = #value#
+
+
+
+
+	</select>
+
+	<select id="getGradeList" resultMap="Grade_NS.GradeResult"
+		parameterClass="QueryGradeCondition">
+		SELECT
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		FROM SYS_GRADE_TBL
+        WHERE STATUS = 0
+	</select>
+
+
+	<select id="getGradeListBySubjectId"
+		resultMap="Grade_NS.GradeResult"
+		parameterClass="QueryGradeCondition">
+		SELECT distinct
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL , SYS_GRADE_TBL ,
+		SYS_SUBJECT_TBL , SYS_USER_TBL, SYS_ROLE_TBL WHERE
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.SUBJECT_ID =
+		SYS_SUBJECT_TBL.SUBJECT_ID AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.GRADE_ID =
+		SYS_GRADE_TBL.GRADE_ID AND
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID = SYS_USER_TBL.USER_ID
+		AND SYS_USER_GRADE_SUBJECT_ROLE_TBL.ROLE_ID =
+		SYS_ROLE_TBL.ROLE_ID AND SYS_SUBJECT_TBL.SUBJECT_ID =
+		#subjectId# AND SYS_USER_TBL.USER_ID = #userId# AND
+		SYS_ROLE_TBL.ROLE_ID = #roleId#
+	</select>
+
+	<select id="getGradeListByUserId" resultMap="Grade_NS.GradeResult"
+		parameterClass="int">
+		SELECT DISTINCT
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		FROM SYS_USER_GRADE_SUBJECT_ROLE_TBL,SYS_GRADE_TBL
+		WHERE 
+		SYS_USER_GRADE_SUBJECT_ROLE_TBL.GRADE_ID = SYS_GRADE_TBL.GRADE_ID
+		AND SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID = #userId#
+	</select>
+	
+	<select id="getGradeListByStatus" resultMap="Grade_NS.GradeResult"
+		parameterClass="int">
+		SELECT DISTINCT
+		<include refid="Grade_NS.SYS_GRADE_TBL_columns" />
+		FROM SYS_GRADE_TBL
+		WHERE 
+		SYS_GRADE_TBL.STATUS = #status#
+	</select>
+	<!--end-->
+</sqlMap>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="stu" namespace="/stu" extends="edu-default">
+    
+        <!--学习计划 action 前台 -->
+        <action name="studyplanWeb" class="com.shangde.edu.stu.web.PlanWebAction"> 
+        
+        	<interceptor-ref name="eduStackForWeb" />    
+        	<result name="toAddPlan" type="redirectAction">
+        		<param name="actionName">/calendar!getListPlanByCalendard.action</param>
+        	</result>
+        	
+        	<result name="planAddSuccess" type="redirect">calendar!getListPlanByCalendardGoto.action?checkDay=${plan.checkDay}</result>
+        	<result name="getPlan">/static/usercenter/jsp/studyplan/plan_show.jsp</result>
+        	<result name="getPlanitemByPlanId">/static/usercenter/jsp/studyplan/plan_update.jsp</result>
+        	<result name="updatePlanitemSuc" type="redirect">calendar!getListPlanByCalendardGoto.action?checkDay=${plan.checkDay}</result>
+        	<result name="delPlanScu" type="redirect">calendar!getListPlanByCalendardGoto.action?checkDay=${plan.checkDay}</result>
+        	 
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="getPlanByDate">/static/usercenter/jsp/studyplan/plan_show.jsp</result>
+			<result name="getPlanclockListByDate">/static/usercenter/jsp/studyplan/plan_show.jsp</result>
+			<result name="getCurrentDayMsg">/static/usercenter/jsp/studyplan/plan_show.jsp</result>
+			
+			<result name="getPlanList">/static/usercenter/jsp/studyplan/plan_list.jsp</result>
+         	<!-- <result name="bathProcessPlan" type="redirect">stu/studyplanWeb!getPlanList.action</result> -->
+         	<result name="bathProcessPlan" type="redirect">calendar!getPlanListByCalendardList.action?checkDay=${plan.plantitle.substring(0,10)} &amp; queryPlanCondition.currentPage=1</result>
+         													
+         	
+        </action>
+        
+        <action name="calendar" class="com.shangde.edu.stu.web.CalendarWebAction">
+        	<interceptor-ref name="eduStackForWeb" />    
+			<!-- 生成带有学习计划的日历 -->
+        	<result name="getListPlanByCalendardChangMonth">/static/usercenter/jsp/studyplan/plan_show.jsp</result>
+        	<result name="getListPlanByCalendardGoto">/static/usercenter/jsp/studyplan/plan_show.jsp</result>
+        	<result name="getListPlanByCalendardGotoUpdate">/static/usercenter/jsp/studyplan/plan_update.jsp</result>
+        	
+        	<result name="getPlanListByCalendardList">/static/usercenter/jsp/studyplan/plan_list.jsp</result>
+        	<result name="getPlanListByCalendardChangMonth">/static/usercenter/jsp/studyplan/plan_list.jsp</result>
+        	
+        	<!-- 根据时间，得到改天的学习计划、每日提醒，每日总结 -->
+        	<!-- <result name="getPlaCloSumByDate">/back/jsp/stu/testCalendar.jsp</result> -->
+        </action>
+        
+        <!-- 生成360文件接口文件时调用的 -->
+        <action name="planXML" class="com.shangde.edu.stu.web.PlanCalendar">
+        	<interceptor-ref name="eduStackForWeb" />    
+        	<result name="createXML">/static/usercenter/jsp/studyplan/study_plan.jsp</result>
+        </action>
+        
+        <!-- 后台 -->
+        <!-- 提醒模块 -->
+       <action name="planclock" class="com.shangde.edu.stu.action.PlanClockAction">
+        	<interceptor-ref name="eduStack"/>
+        	<result name="toAddPlanClock">/back/jsp/stu/clock/planclockAdd.jsp</result>
+        	
+        	<result name="getPlanclockList">/back/jsp/stu/clock/planclock.jsp</result>
+        	<result name="getPlanclockById">/back/jsp/stu/clock/planclockShow.jsp</result>
+        	<result name="updatePlanClock" type="redirect">stu/planclock!getPlanClockList.action?queryPlanclockCondition.currentPage=1</result>
+        	<result name="addPlanClock" type="redirect">stu/planclock!getPlanClockList.action?queryPlanclockCondition.currentPage=1</result>
+        	<result name="searchPlanClock">/back/jsp/stu/clock/planclock.jsp</result>
+        	<result name="bathProcessPlanClock" type="redirect">stu/planclock!getPlanClockList.action?queryPlanclockCondition.currentPage=1</result>
+        </action>
+        
+        <!-- 后台 -->
+        <!-- 学习计划模块 -->
+        <action name="plan" class="com.shangde.edu.stu.action.PlanAction">
+        	<interceptor-ref name="eduStack"/>
+        	<result name="toGoPlansta">/back/jsp/stu/plan/plansta.jsp</result>
+        	<result name="toGoPlanList">/back/jsp/stu/plan/planlist.jsp</result>
+        	<result name="getPlanById">/back/jsp/stu/plan/planupdate.jsp</result>
+        	<result name="updatePlan" type="redirect">stu/plan!toGoPlanList.action?queryPlanCondition.currentPage=1</result>
+        	<result name="batchProcessPlan" type="redirect">stu/plan!toGoPlanList.action?queryPlanCondition.currentPage=1</result>
+        	<result name="searchPlan">/back/jsp/stu/plan/planlist.jsp</result>		
+        	
+        </action>
+
+        
+	</package>
+</struts>

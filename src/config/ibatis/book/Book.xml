@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Book_NS">
+        <!--table:BOOK_BOOK_TBL-->
+        <typeAlias alias="Book" type="com.shangde.edu.book.domain.Book"/>
+         <typeAlias alias="BookDTO" type="com.shangde.edu.book.dto.BookDTO"/>
+        <typeAlias alias="QueryBookCondition" type="com.shangde.edu.book.condition.QueryBookCondition"/>
+
+        <resultMap id="BookResult" class="Book">
+            <result property="bookId" column="BOOK_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="nowPrice" column="NOW_PRICE"/>
+            <result property="rebatePrice" column="REBATE_PRICE"/>
+            <result property="bookName" column="BOOK_NAME"/>
+            <result property="bookSubjectid" column="BOOK_SUBJECTID"/>
+            <result property="bookImg" column="BOOK_IMG"/>
+            <result property="bookSmallimg" column="BOOK_SMALLIMG"/>
+            <result property="stockNum" column="STOCK_NUM"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="press" column="PRESS"/>
+            <result property="publishTime" column="PUBLISH_TIME"/>
+            <result property="revision" column="REVISION"/>
+            <result property="printNum" column="PRINT_NUM"/>
+            <result property="pageNum" column="PAGE_NUM"/>
+            <result property="wordNum" column="WORD_NUM"/>
+            <result property="bookPackage" column="BOOK_PACKAGE"/>
+            <result property="pager" column="PAGER"/>
+            <result property="weight" column="WEIGHT"/>
+            <result property="isbn" column="ISBN"/>
+            <result property="remarks" column="REMARKS"/>
+            <result property="bookInfo" column="BOOK_INFO"/>
+            <result property="directory" column="DIRECTORY"/>
+            <result property="status" column="STATUS"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="shopState" column="SHOP_STATE"/>
+            <result property="dropTime" column="DROP_TIME"/>
+            <result property="upTime" column="UP_TIME"/>
+            <result property="disproperty" column="DISPROPERTY"/>
+            <result property="disposition" column="DISPOSITION"/>
+            <result property="validityTime" column="VALIDITY_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+            <result property="bookType" column="BOOK_TYPE"/>
+            <result property="bookSize" column="BOOK_SIZE"/>
+        </resultMap>
+        <resultMap class="BookDTO" id="BookDTOResult" extends="BookResult">
+			<result property="subject" column="book_subjectid" select="Subject_NS.getSubjectById"/>
+		</resultMap>
+        <sql id="BOOK_BOOK_TBL_columns">
+            BOOK_BOOK_TBL.BOOK_ID,
+            BOOK_BOOK_TBL.PRICE,
+            BOOK_BOOK_TBL.NOW_PRICE,
+            BOOK_BOOK_TBL.REBATE_PRICE,
+            BOOK_BOOK_TBL.BOOK_NAME,
+            BOOK_BOOK_TBL.BOOK_SUBJECTID,
+            BOOK_BOOK_TBL.BOOK_IMG,
+            BOOK_BOOK_TBL.BOOK_SMALLIMG,
+            BOOK_BOOK_TBL.STOCK_NUM,
+            BOOK_BOOK_TBL.AUTHOR,
+            BOOK_BOOK_TBL.PRESS,
+            BOOK_BOOK_TBL.PUBLISH_TIME,
+            BOOK_BOOK_TBL.REVISION,
+            BOOK_BOOK_TBL.PRINT_NUM,
+            BOOK_BOOK_TBL.PAGE_NUM,
+            BOOK_BOOK_TBL.WORD_NUM,
+            BOOK_BOOK_TBL.BOOK_PACKAGE,
+            BOOK_BOOK_TBL.PAGER,
+            BOOK_BOOK_TBL.WEIGHT,
+            BOOK_BOOK_TBL.ISBN,
+            BOOK_BOOK_TBL.REMARKS,
+            BOOK_BOOK_TBL.BOOK_INFO,
+            BOOK_BOOK_TBL.DIRECTORY,
+            BOOK_BOOK_TBL.STATUS,
+            BOOK_BOOK_TBL.ADD_TIME,
+            BOOK_BOOK_TBL.SHOP_STATE,
+            BOOK_BOOK_TBL.DROP_TIME,
+            BOOK_BOOK_TBL.UP_TIME,
+            BOOK_BOOK_TBL.DISPROPERTY,
+            BOOK_BOOK_TBL.DISPOSITION,
+            BOOK_BOOK_TBL.VALIDITY_TIME,
+            BOOK_BOOK_TBL.UPDATE_TIME,
+            BOOK_BOOK_TBL.UPDATE_USER,
+            BOOK_BOOK_TBL.BOOK_TYPE,
+            BOOK_BOOK_TBL.BOOK_SIZE
+        </sql>
+
+        <sql id="BOOK_BOOK_TBL_properties">
+            #bookId#,
+            #price#,
+            #nowPrice#,
+            #rebatePrice#,
+            #bookName#,
+            #bookSubjectid#,
+            #bookImg#,
+            #bookSmallimg#,
+            #stockNum#,
+            #author#,
+            #press#,
+            #publishTime#,
+            #revision#,
+            #printNum#,
+            #pageNum#,
+            #wordNum#,
+            #bookPackage#,
+            #pager#,
+            #weight#,
+            #isbn#,
+            #remarks#,
+            #bookInfo#,
+            #directory#,
+            #status#,
+            #addTime#,
+            #shopState#,
+            #dropTime#,
+            #upTime#,
+            #disproperty#,
+            #disposition#,
+            #validityTime#,
+            #updateTime#,
+            #updateUser#,
+            #bookType#,
+            #bookSize#
+        </sql>
+
+        <insert id="createBook" parameterClass="Book">
+            INSERT INTO BOOK_BOOK_TBL (<include refid="Book_NS.BOOK_BOOK_TBL_columns"/>) VALUES (<include refid="Book_NS.BOOK_BOOK_TBL_properties"/>)
+            <selectKey resultClass="int" type="post"  >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+         <delete id="deleteBookById" parameterClass="int">
+            DELETE FROM BOOK_BOOK_TBL
+            WHERE 1=1
+           </delete>
+
+        <update id="updateBook" parameterClass="Book">
+            UPDATE BOOK_BOOK_TBL SET
+                BOOK_ID = #bookId#,
+                PRICE = #price#,
+                NOW_PRICE = #nowPrice#,
+                REBATE_PRICE = #rebatePrice#,
+                BOOK_NAME = #bookName#,
+                BOOK_SUBJECTID = #bookSubjectid#,
+                BOOK_IMG = #bookImg#,
+                BOOK_SMALLIMG = #bookSmallimg#,
+                STOCK_NUM = #stockNum#,
+                AUTHOR = #author#,
+                PRESS = #press#,
+                PUBLISH_TIME = #publishTime#,
+                REVISION = #revision#,
+                PRINT_NUM = #printNum#,
+                PAGE_NUM = #pageNum#,
+                WORD_NUM = #wordNum#,
+                BOOK_PACKAGE = #bookPackage#,
+                PAGER = #pager#,
+                WEIGHT = #weight#,
+                ISBN = #isbn#,
+                REMARKS = #remarks#,
+                BOOK_INFO = #bookInfo#,
+                DIRECTORY = #directory#,
+                STATUS = #status#,
+                ADD_TIME=#addTime#,
+                SHOP_STATE = #shopState#,
+                DROP_TIME = #dropTime#,
+                UP_TIME = #upTime#,
+                DISPROPERTY = #disproperty#,
+                DISPOSITION = #disposition#,
+                VALIDITY_TIME = #validityTime#,
+                UPDATE_TIME = #updateTime#,
+                UPDATE_USER = #updateUser#,
+                BOOK_TYPE = #bookType#,
+                BOOK_SIZE = #bookSize#
+            WHERE book_id=#bookId#
+           </update>
+
+        <select id="getBookById" resultMap="Book_NS.BookResult" parameterClass="int">
+            SELECT
+            <include refid="Book_NS.BOOK_BOOK_TBL_columns"/>
+            FROM BOOK_BOOK_TBL
+            WHERE book_id=#value#
+           </select>
+    
+        <select id="getBookList" resultMap="Book_NS.BookDTOResult" parameterClass="QueryBookCondition">
+            SELECT
+            <include refid="Book_NS.BOOK_BOOK_TBL_columns"/>
+            FROM BOOK_BOOK_TBL where status!=3 order by BOOK_ID DESC 
+            <include refid="public_sql.page_end"/>
+        </select> 
+        
+        <select id="getBookListCount" resultClass="int" parameterClass="QueryBookCondition">
+            SELECT count(1)
+            FROM BOOK_BOOK_TBL  where status!=3
+            
+        </select>
+        <update id="updateBookStatus" parameterClass="hashMap">
+        update BOOK_BOOK_TBL set status=#status# where book_id=#bookId#
+        </update>
+        
+        <update id="updateBookShopState" parameterClass="hashMap">
+        update BOOK_BOOK_TBL set SHOP_STATE=#shopState# where book_id=#bookId#
+        </update>
+        
+        <select id="showBookListByWhere" resultMap="Book_NS.BookDTOResult" parameterClass="QueryBookCondition">
+            SELECT
+            <include refid="Book_NS.BOOK_BOOK_TBL_columns"/>
+            FROM BOOK_BOOK_TBL where  status!=3 
+           <isNotEqual property="subjectId" compareValue="-1">
+            and  book_subjectid=#subjectId# 
+            </isNotEqual>
+            <isNotEqual property="bookType" compareValue="-1">
+            and book_type=#bookType#
+            </isNotEqual>
+            <isNotEqual property="shopState" compareValue="-1" >
+            and SHOP_STATE=#shopState#
+            </isNotEqual>
+             <isNotEqual property="status" compareValue="-1" >
+            and STATUS =#status#
+            </isNotEqual>
+             <isNotEqual property="disProperty" compareValue="-1" >
+            and DISPROPERTY like CONCAT('%',#disProperty#,'%')
+            </isNotEqual>
+            <isNotEmpty property="upTime">
+            and  UP_TIME >#upTime# 
+            </isNotEmpty>
+             <isNotEmpty property="dropTime">
+             and #dropTime# >= UP_TIME 
+            </isNotEmpty>
+             <isNotEqual property="keyword" compareValue="" >
+             and ( 
+            book_id = #keyword# or 
+            book_name like CONCAT('%',#keyword#,'%') or
+            author  like CONCAT('%',#keyword#,'%') or
+            press like CONCAT('%',#keyword#,'%')
+            )
+            </isNotEqual>
+            order by UPDATE_TIME DESC 
+            <include refid="public_sql.page_end"/>
+        </select> 
+        
+         <select id="showBookListByWhereCount" resultClass="int" parameterClass="QueryBookCondition">
+            SELECT count(1)  FROM BOOK_BOOK_TBL where  status!=3 
+           <isNotEqual property="subjectId" compareValue="-1">
+            and  book_subjectid=#subjectId# 
+            </isNotEqual>
+            <isNotEqual property="bookType" compareValue="-1">
+            and book_type=#bookType#
+            </isNotEqual>
+            <isNotEqual property="shopState" compareValue="-1" >
+            and SHOP_STATE=#shopState#
+            </isNotEqual>
+             <isNotEqual property="status" compareValue="-1" >
+            and STATUS =#status#
+            </isNotEqual>
+             <isNotEqual property="disProperty" compareValue="-1" >
+            and DISPROPERTY like CONCAT('%',#disProperty#,'%')
+            </isNotEqual>
+            <isNotEmpty property="upTime">
+            and  UP_TIME >=#upTime# 
+            </isNotEmpty>
+             <isNotEmpty property="dropTime">
+            and #dropTime# >= UP_TIME 
+            </isNotEmpty>
+             <isNotEqual property="keyword" compareValue="" >
+            and ( 
+            book_id = #keyword# or 
+            book_name like CONCAT('%',#keyword#,'%') or
+            author  like CONCAT('%',#keyword#,'%') or
+            press like CONCAT('%',#keyword#,'%')
+            )
+            </isNotEqual>
+        </select> 
+</sqlMap>

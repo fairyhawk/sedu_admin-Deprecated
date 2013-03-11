@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="purseCardCodTblService" class="com.shangde.edu.purse.service.PurseCardCodTblImpl" parent="baseService"/>
+    <bean id="purseCardCodeTblService" class="com.shangde.edu.purse.service.PurseCardCodeTblImpl" parent="baseService"/>
+    <bean id="purseCardTblService" class="com.shangde.edu.purse.service.PurseCardTblImpl" parent="baseService"/>
+    <bean id="purseMoneyTblService" class="com.shangde.edu.purse.service.PurseMoneyTblImpl" parent="baseService"/>
+    <bean id="purseRecordTblService" class="com.shangde.edu.purse.service.PurseRecordTblImpl" parent="baseService"/>
+</beans>

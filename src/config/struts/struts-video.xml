@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<constant name="struts.i18n.encoding" value="UTF-8"/><!-- 设置编码格式为UTF-8 -->
+<constant name="struts.objectFactory" value="spring"/> <!--Spring 为接管文件  -->
+    <package name="video" namespace="/video" extends="struts-default">
+        <action name="videoBooksUrlAction" class="videoCommonAction" method="queryVideoInfo"/><!-- 返回讲义下载地址-->
+        <action name="videolistAction" class="videocourseWebAction"  method="getJSONVedioCourseInfo"/><!-- 已经购买的视频-->
+        <action name="SaveOrUpdateNotesAction" class="videonotesAction" method="saveOrUpdateNotes"/><!-- 新建和保存笔记方法 -->
+        <action name="DeleteNotesAction" class="videonotesAction" method="deleteNotes"/><!-- 删除笔记的方法 -->
+        <action name="IDUpdateNotesAction" class="videonotesAction" method="getNotesById"/><!-- 根据笔记的ID取得笔记并且修改保存 -->
+    </package>
+</struts>

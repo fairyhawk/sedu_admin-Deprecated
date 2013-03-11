@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<!-- 话题状态选项 -->
+	<bean id="statusTopicList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="0" />
+					<property name="text" value="正常" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="未审" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="新稿" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="删除" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 话题类型选项 -->
+	<bean id="typeTopicList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="0" />
+					<property name="text" value="普通话题" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="置顶话题" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="公告信息" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 检索条件选项 -->
+	<bean id="searchCriteriaList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="小组名称" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="话题" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="回复" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="4" />
+					<property name="text" value="发布人" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 小组类型选项 -->
+	<bean id="typeDisList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="0" />
+					<property name="text" value="固定小组" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="自创建小组" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 小组状态 -->
+	<bean id="statusDisList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="0" />
+					<property name="text" value="启用" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="禁用" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 检索条件选项,小组搜索时使用 -->
+	<bean id="searchCriteriaByDisList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="小组名称" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="创建人" />
+				</bean>
+				<bean class="com.shangde.edu.dis.utils.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="小组简介" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 工具包 -->
+	<bean id="utils" class="com.shangde.edu.dis.utils.Utils">
+		<!-- 配置系统参数 -->
+		<property name="sysParam">
+			<map>
+				<!-- 后台添加话题时使用cusId值 -->
+				<entry key="cusId" value="5131"/>
+			</map>
+		</property>
+	</bean>
+	
+</beans>

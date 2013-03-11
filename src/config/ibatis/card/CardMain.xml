@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CardMain_NS">
+        <!--table:PURSE_RECORD_TBL-->
+        <typeAlias alias="CardMain" type="com.shangde.edu.card.domain.CardMain"/>
+        <typeAlias alias="CardMainModel" type="com.shangde.edu.card.domain.CardMainModel"/>
+		<typeAlias alias="CardMainDTO" type="com.shangde.edu.card.dto.CardMainDTO"/>
+		<typeAlias alias="QueryCardMainCondition" type="com.shangde.edu.card.condition.QueryCardMainCondition"/>
+        <resultMap id="CardMainResult" class="CardMain">
+            <result property="cardMainId" column="CARD_MAIN_ID"/>
+            <result property="cardName" column="CARD_NAME"/>
+            <result property="cardMoney" column="CARD_MONEY"/>
+             <result property="agentMoney" column="AGENT_MONEY"/>
+            <result property="cardType" column="CARD_TYPE"/>
+            <result property="cardCount" column="CARD_COUNT"/>
+            <result property="cardUserStatus" column="CARD_USER_STATUS"/>
+            <result property="validBeginTime" column="VALID_BEGIN_TIME"/>
+            <result property="validEndTime" column="VALID_END_TIME"/>
+            <result property="remark" column="REMARK"/>
+            <result property="activateRemark" column="ACTIVATE_REMARK"/>
+            <result property="activateUser" column="ACTIVATE_USER"/>
+            <result property="imageUrl" column="IMAGE_URL"/>
+            <result property="creator" column="CREATOR"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+        	<result property="updateTime" column="UPDATE_TIME"/>
+        </resultMap>
+        <resultMap id="CardMainDTOResult" class="CardMainDTO" extends="CardMainResult">
+        	<result property="cardUserStatusContent" column="CARD_USER_STATUS_CONTENT"/>
+        </resultMap>
+        <resultMap id="CardMainModelResult" class="CardMainModel" extends="CardMainResult">
+        	<result property="cardUserStatusContent" column="CARD_USER_STATUS_CONTENT"/>
+        </resultMap>
+        <sql id="CARD_MAIN_TBL_columns">
+            CARD_MAIN_TBL.CARD_MAIN_ID,
+            CARD_MAIN_TBL.CARD_NAME,
+            CARD_MAIN_TBL.CARD_MONEY,
+            CARD_MAIN_TBL.AGENT_MONEY,
+            CARD_MAIN_TBL.CARD_TYPE,
+            CARD_MAIN_TBL.CARD_COUNT,
+            CARD_MAIN_TBL.CARD_USER_STATUS,
+            CARD_MAIN_TBL.VALID_BEGIN_TIME,
+            CARD_MAIN_TBL.VALID_END_TIME,
+            CARD_MAIN_TBL.REMARK,
+            CARD_MAIN_TBL.ACTIVATE_REMARK,
+            CARD_MAIN_TBL.ACTIVATE_USER,
+            CARD_MAIN_TBL.IMAGE_URL,
+            CARD_MAIN_TBL.CREATOR,
+            CARD_MAIN_TBL.CREATE_TIME,
+            CARD_MAIN_TBL.UPDATE_USER,
+            CARD_MAIN_TBL.UPDATE_TIME
+        </sql>
+        <sql id="CARD_MAIN_TBL_properties">
+            #cardMainId#,
+            #cardName#,
+            #cardMoney#,
+            #agentMoney#,
+            #cardType#,
+            #cardCount#,
+            #cardUserStatus#,
+            #validBeginTime#,
+            #validEndTime#,
+            #remark#,
+            #activateRemark#, 
+            #activateUser#,
+            #imageUrl#,
+            #creator#,
+            #createTime#,
+            #updateUser#,
+            #updateTime#
+        </sql>
+        <insert id="insert" parameterClass="CardMain" >
+			INSERT INTO CARD_MAIN_TBL (
+			<include refid="CardMain_NS.CARD_MAIN_TBL_columns" />
+			) values (
+			<include refid="CardMain_NS.CARD_MAIN_TBL_properties" />
+			)
+			<selectKey resultClass="int" type="post" keyProperty="cardMainId">
+				<include refid="public_sql.increment_sql" />
+			</selectKey>
+		</insert>
+		<select id="getCardMainList" parameterClass="QueryCardMainCondition" resultMap="CardMainDTOResult">
+			SELECT
+				<include refid="CardMain_NS.CARD_MAIN_TBL_columns" />, 
+				(
+					SELECT
+						SYS_DICTIONARY_TBL.DIC_CONTENT
+					FROM
+						SYS_DICTIONARY_TBL
+					WHERE
+						SYS_DICTIONARY_TBL.DIC_CODE = CARD_MAIN_TBL.CARD_USER_STATUS
+					AND SYS_DICTIONARY_TBL.DIC_TYPE = 'CARD_USER_STATUS'
+				) AS CARD_USER_STATUS_CONTENT
+			FROM
+				CARD_MAIN_TBL WHERE 1=1
+			<isNotEmpty prepend="AND" property="cardMoney">
+				CARD_MAIN_TBL.CARD_MONEY=#cardMoney#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardUserStatus">
+				CARD_MAIN_TBL.CARD_USER_STATUS=#cardUserStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardName">
+				CARD_MAIN_TBL.CARD_NAME  like CONCAT('%',#cardName#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="updateUser">
+				CARD_MAIN_TBL.UPDATE_USER  like CONCAT('%',#updateUser#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createBeginTime">
+				DATE(DATE_FORMAT(CARD_MAIN_TBL.CREATE_TIME,'%Y-%m-%d'))>=DATE(DATE_FORMAT(#createBeginTime#,'%Y-%m-%d'))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEndTime">
+				<![CDATA[DATE(DATE_FORMAT(CARD_MAIN_TBL.CREATE_TIME,'%Y-%m-%d'))<=DATE(DATE_FORMAT(#createEndTime#,'%Y-%m-%d'))]]>
+			</isNotEmpty>
+			ORDER BY CARD_MAIN_TBL.UPDATE_TIME DESC
+			<include refid="public_sql.page_end"/>
+		</select>
+		<select id="getCardMainCount" parameterClass="QueryCardMainCondition" resultClass="int">
+			SELECT
+				COUNT(1)
+			FROM
+				CARD_MAIN_TBL WHERE 1=1
+			<isNotEmpty prepend="AND" property="cardMoney">
+				CARD_MAIN_TBL.CARD_MONEY=#cardMoney#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardUserStatus">
+				CARD_MAIN_TBL.CARD_USER_STATUS=#cardUserStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cardName">
+				CARD_MAIN_TBL.CARD_NAME  like CONCAT('%',#cardName#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="updateUser">
+				CARD_MAIN_TBL.UPDATE_USER  like CONCAT('%',#updateUser#,'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createBeginTime">
+				DATE(DATE_FORMAT(CARD_MAIN_TBL.CREATE_TIME,'%Y-%m-%d'))>=DATE(DATE_FORMAT(#createBeginTime#,'%Y-%m-%d'))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEndTime">
+				<![CDATA[DATE(DATE_FORMAT(CARD_MAIN_TBL.CREATE_TIME,'%Y-%m-%d'))<=DATE(DATE_FORMAT(#createEndTime#,'%Y-%m-%d'))]]>
+			</isNotEmpty>
+			ORDER BY CARD_MAIN_TBL.UPDATE_TIME DESC
+		</select>
+		<select id="getCardMainInfo" parameterClass="CardMain" resultMap="CardMainModelResult">
+			SELECT
+				<include refid="CardMain_NS.CARD_MAIN_TBL_columns" />, 
+				(
+					SELECT
+						SYS_DICTIONARY_TBL.DIC_CONTENT
+					FROM
+						SYS_DICTIONARY_TBL
+					WHERE
+						SYS_DICTIONARY_TBL.DIC_CODE = CARD_MAIN_TBL.CARD_USER_STATUS
+					AND SYS_DICTIONARY_TBL.DIC_TYPE = 'CARD_USER_STATUS'
+				) AS CARD_USER_STATUS_CONTENT
+			FROM
+				CARD_MAIN_TBL WHERE CARD_MAIN_TBL.CARD_MAIN_ID=#cardMainId#
+		</select>
+		<update id="updateCardMain" parameterClass="CardMain">
+			UPDATE CARD_MAIN_TBL SET CARD_MAIN_TBL.CARD_MAIN_ID=#cardMainId#
+			<isNotEmpty prepend="," property="activateRemark">
+				CARD_MAIN_TBL.ACTIVATE_REMARK=#activateRemark#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="activateUser">
+				CARD_MAIN_TBL.ACTIVATE_USER=#activateUser#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="cardUserStatus">
+				CARD_MAIN_TBL.CARD_USER_STATUS=#cardUserStatus#
+			</isNotEmpty>
+			WHERE CARD_MAIN_TBL.CARD_MAIN_ID=#cardMainId#
+		</update>
+		<select id="getOutDateCard"  resultMap="CardMainResult">
+			SELECT <include refid="CardMain_NS.CARD_MAIN_TBL_columns"/>
+				FROM CARD_MAIN_TBL WHERE DATE_FORMAT(VALID_END_TIME,'%Y-%c-%d')=DATE_FORMAT(NOW(),'%Y-%c-%d')
+		</select>
+		
+</sqlMap>

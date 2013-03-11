@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="ass" namespace="/ass" extends="edu-default">
+    	<action name="assess" class="com.shangde.edu.ass.action.AssAction">
+    		<interceptor-ref name="eduStackForWeb"/>
+    		<result name="assList">/back/jsp/ass/assList.jsp</result>
+    		<result name="toAssess">/back/jsp/ass/updateAssess.jsp</result>
+    		<result name="ViewAssess">/back/jsp/ass/ViewAssess.jsp</result>
+    		<result name="success">/back/jsp/common/success.jsp</result>
+    		<result name="getPageAssList" type="redirect">/ass/assess!getPageAssList.action?queryAssessCondition.currentPage=1</result>
+    		<interceptor-ref name="defaultStack" />
+    		 
+    		<result name="toAssessList">/back/jsp/ass/assess/assess_list.jsp</result>
+    		
+    	</action>
+
+    	<action name="assweb" class="com.shangde.edu.ass.web.AssWebAction">
+    		<interceptor-ref name="loginStack"/>
+			<result name="toAssess">/static/usercenter/jsp/ass/ass_center.jsp</result>
+			<result name="toAddAssess">/static/usercenter/jsp/ass/ass_page.jsp</result>
+			<result name="AddAssess" type="redirect">/ass/assweb!toAddAssess.action?assess.id=${assess.id }&amp;assess.subjectId=${assess.subjectId }&amp;assess.courseId=${assess.courseId }&amp;assess.sellwayId=${assess.sellwayId }&amp;assess.cusId=${assess.cusId }&amp;assess.kpointId=${assess.kpointId }</result>
+			<result name="toMoreAssess">/static/usercenter/jsp/ass/ass_rat.jsp</result>
+			<result name="toMoreUnAssess">/static/usercenter/jsp/ass/ass_norat.jsp</result>
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb"></interceptor-ref>
+	</action>
+
+    </package>
+</struts>

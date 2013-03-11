@@ -1,0 +1,149 @@
+/* ���� */
+.clear { 
+	clear:both; 
+	margin:0; 
+	padding:0; 
+	overflow:hidden;
+}
+.show {
+	display:block;
+	}
+
+/* ��� */
+.tables {
+	width:95%;
+	margin:10px 12px;
+	background:#bebebe;
+	}
+.tables tr {
+	background:#fff;
+	}
+.tables tr td {
+	line-height:30px;
+	padding:0 12px;
+	}
+.tables .tables_title td {
+	height:30px;
+	line-height:30px;
+	background:url(../images/tables_title_bg.gif) repeat-x;	
+	color:#545454;
+	font-weight:bold;
+	}
+.tables .tables_h {
+	background:#f0f0f0;
+	}
+.tables .btn_enter {
+	width:71px;
+	height:30px;
+	color:#fff;
+	background:url(../images/btn_enter.gif) no-repeat;
+	border:0;
+	cursor:pointer;
+	}
+.tables .btn_cancel {
+	width:71px;
+	height:30px;
+	color:#fff;
+	background:url(../images/btn_cancel.gif) no-repeat;
+	border:0;
+	cursor:pointer;
+	}
+/* ��� --*/
+/* �? */
+.froms {
+	margin:10px 12px;
+	}
+.froms ul {
+	}
+.froms input {
+	height:20px;
+	line-height:20px;
+	border:1px #848484 solid;
+	}
+.froms ul li {
+	line-height:37px;
+	}
+.froms ul li span {	
+	width:100px;
+	margin-right:10px;
+	text-align:right;
+	display:-moz-inline-box;  
+	display:inline-block;	
+	}
+.froms_btn {
+	margin:8px 10px 0 110px;
+	}
+.froms .btn_enter {
+	width:71px;
+	height:30px;
+	color:#fff;
+	background:url(../images/btn_enter.gif) no-repeat;
+	border:0;
+	cursor:pointer;
+	}
+.froms .btn_cancel {
+	width:71px;
+	height:30px;
+	color:#fff;
+	background:url(../images/btn_cancel.gif) no-repeat;
+	border:0;
+	cursor:pointer;
+	}
+/* �? */
+/* ��ť */
+.btn_edit {
+	width:41px;
+	height:23px;
+	color:#fff;
+	background:url(../images/btn_edit.gif) no-repeat;
+	border:0;
+	cursor:pointer;
+	}
+.btn_del {
+	width:41px;
+	height:23px;
+	color:#fff;
+	background:url(../images/btn_del.gif) no-repeat;
+	border:0;
+	cursor:pointer;
+	}
+/* ��ť --*/
+/* ҳ�� */
+DIV.quotes {
+	padding: 3px;
+	MARGIN: 7px 10px;
+	TEXT-ALIGN: right;
+	text-align: left;
+	}
+DIV.quotes A {
+	COLOR: #aaa; 
+	MARGIN-RIGHT: 2px; 
+	TEXT-DECORATION: none;
+	padding:2px 5px 5px 5px;
+	border: #ddd 1px solid;
+}
+DIV.quotes A:hover {
+	MARGIN-RIGHT: 2px; 
+	padding: 2px 5px;
+	border: #a0a0a0 1px solid;
+}
+DIV.quotes A:active {
+	MARGIN-RIGHT: 2px; 
+	padding: 2px 5px;
+	border: #a0a0a0 1px solid;
+}
+DIV.quotes SPAN.current {
+	FONT-WEIGHT: bold; 
+	COLOR: #aaa; MARGIN-RIGHT: 2px;
+	BACKGROUND-COLOR: #f0f0f0;
+	padding: 2px 5px;
+	border: #e0e0e0 1px solid; 
+}
+DIV.quotes SPAN.disabled {
+	COLOR: #ccc; 
+	MARGIN-RIGHT: 2px; 
+	padding: 2px 5px 5px 2px;
+	border: #f3f3f3 1px solid;
+}
+/* ҳ�� --*/
+/* ���� --*/

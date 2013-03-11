@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="baseService" abstract="true" class="com.shangde.common.service.BaseService">
+        <property name="simpleDao" ref="simpleDao"/>
+        <property name="configurator" ref="configurator"/>
+    </bean>
+     <bean id="baseServiceManyDb" abstract="true" class="com.shangde.common.service.BaseServiceManyDb">
+        <property name="simpleDao" ref="simpleDao"/>
+        <property name="simpleDaoRead" ref="simpleDaoRead"/>
+        <property name="simpleDaoHaData" ref="simpleDaoHaData"/>
+        <property name="configurator" ref="configurator"/>
+    </bean>
+    <bean id="singletonService" parent="baseService" scope="singleton" class="com.shangde.common.service.SingletonService"/>
+      <!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
+    <bean class="com.shangde.common.util.SpringContextHolder" lazy-init="false"/>
+    
+</beans>

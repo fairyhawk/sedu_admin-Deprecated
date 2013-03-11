@@ -1,0 +1,130 @@
+/* CSS Document */
+
+body, h1, h2, h3, h4, h5, h6, hr, p, dl, dt, dd, ul, ol, li, table,form { margin:0; padding:0;}
+body{ color:#040404; font-size:12px; font-family:\5B8B\4F53; width:100%; height:100%}		/*宋体*/
+ul, ol{ list-style-type:none}
+img{ border:none}
+input{ vertical-align:middle}
+a{ text-decoration:none; color:#0d79ba}
+a:hover{ text-decoration:underline}
+
+/*输入框样式*/
+.inp_txt{ height:22px; line-height:22px; vertical-align:middle; padding:0 5px; border:1px solid #719bbf}
+.inp_sel{ height:24px; padding-left:5px; border:1px solid #719bbf; font-size:12px; line-height:24px;  font-family:\5B8B\4F53; line-height:22px; vertical-align:middle; font-size:14px;}
+.inp_texare{ padding:5px; overflow:auto}
+.inp_radio{ width:15px; height:15px; vertical-align:-2px}
+
+/*浮动方式float*/
+.fl{ float:left}
+.fr{ float:right}
+
+/*浮动清除clear两种方式*/
+.fix {*zoom:1;}
+.fix:after {display:block;content:"$";height:0;clear:both;overflow:hidden;visibility:hidden;}
+.cl{ clear:both;}
+.clnull{ font-size:0px; line-height:0px; height:0px; clear:both;}
+
+/*定位方式position*/
+.posr{ position:relative}
+.posa{ position:absolute}
+
+
+/*显示方式display*/
+.db{ display:block}
+.di{ display:inline}
+.dib{ display:inline-block}
+.dn{ display:none}
+
+/*字体样式font*/
+.f12{ font-size:12px;}
+.f14{ font-size:14px;}
+.f16{ font-size:16px;}
+.f18{ font-size:18px;}
+.f20{ font-size:20px;}
+.fw{ font-weight:bold;}
+.fn{ font-weight:normal}
+.ffamily{ font-family:\5FAE\8F6F\96C5\9ED1}	/*雅黑*/
+.txtc{ text-align:center}
+.txtl{ text-align:right;padding-right:20px;}
+.txtr{ text-align:left}
+.overh .mt14,.overh #infoWrap,.overh #moreopts{ font-size:12px;}
+
+/*溢出处理overflow*/
+.overh{ overflow:hidden}
+.overy{overflow-y:scroll}
+.overx{ overflow-x:hidden}
+
+/*上边距*/
+.mt7{ margin-top:7px;}
+.mt10{ margin-top:10px;}
+.mt14{ margin-top:14px;}
+.mt20{ margin-top:20px}
+
+/*下边距*/
+.mb20{ margin-bottom:20px;}
+
+/*右边距*/
+.mr5{ margin-right:5px;}
+.mr15{ margin-right:15px;}
+.mr20{ margin-right:20px;}
+
+/*左边距*/
+.ml2{ margin-left:2px;}
+.ml5{ margin-left:5px;}
+.ml17{ margin-left:17px;}
+.ml20{ margin-left:20px;}
+.ml25{ margin-left:25px;}
+.ml15{ margin-left:15px;}
+.ml70{ margin-left:70px;}
+
+/*右内边距*/
+.padl17{ padding-left:17px;}
+.padl15{ padding-left:15px;}
+
+/*宽度*/
+.width40{ width:40px;}
+.width60{ width:60px;}
+.width95{ width:95px;}
+.width130{ width:130px;}
+.width161{ width:161px;}
+.width210{ width:210px;}
+.width220{ width:222px;}
+.width200{ width:200px;}
+.width255{ width:255px;}
+.width300{ width:300px;}
+.width315{ width:315px;}
+
+.height150{ height:150px}
+
+/*table样式*/
+table{ border:0; border-collapse:collapse; width:100%}
+td{ border:#d2d2d2 solid 1px; }
+td{ height:30px; text-align:center}
+th{ height:35px;}
+thead{ font-size:14px; border:#d2d2d2 solid 1px;/* background:url(../images/attach_rep.png) repeat-x 0 -46px; */background:url(../images/lists_bg.gif) repeat-x scroll left bottom #fff;color:#333;}
+.flip{ background: url(../images/tab_19.gif) repeat scroll 0 0 transparent; font-size: 12px; padding: 0 3px;}
+.flip td{border:0px;}
+
+/*按钮样式*/
+.pub_btn{ background:url(../images/allbtn_bj.png) no-repeat; border:0 none; cursor:pointer; font-size:12px}
+
+.bigYellow{ width:67px; height:27px; background-position:0 0; color:#ffffff;}
+.bigYellow:hover{ background-position:-67px 0; }
+
+.bigGray{width:67px; height:27px; background-position:0 -37px; color:#444444;}
+.bigGray:hover{ background-position:-67px -37px; }
+
+.bigBlue{width:67px; height:27px; background-position:0 -74px; color:#ffffff;}
+.bigBlue:hover{ background-position:-67px -74px; }
+
+.smallYellow{width:67px; height:21px; background-position:0 -111px; color:#ffffff;}
+.smallYellow:hover{ background-position:-67px -111px; }
+
+.smallGray{width:67px; height:21px; background-position:0 -142px; color:#444444;}
+.smallGray:hover{ background-position:-67px -142px; color:#444444}
+
+.smallBlue{width:67px; height:21px; background-position:0 -173px; color:#ffffff;}
+.smallBlue:hover{ background-position:-67px -173px; }
+
+.sureYellow{width:47px; height:21px; background-position:0 -204px; color:#ffffff;}
+.sureYellow:hover{ background-position:-47px -204px; }

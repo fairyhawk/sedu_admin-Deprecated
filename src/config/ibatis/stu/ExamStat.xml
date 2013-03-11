@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ExamStat_NS">
+        <!--table:STU_EXAM_STAT_TBL-->
+        <typeAlias alias="ExamStat" type="com.shangde.edu.stu.domain.ExamStat"/>
+        <typeAlias alias="QueryExamStatCondition" type="com.shangde.edu.stu.condition.QueryExamStatCondition"/>
+
+        <resultMap id="ExamStatResult" class="ExamStat">
+            <result property="eStatId" column="E_STAT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="examCode" column="EXAM_CODE"/>
+            <result property="lastexamdate" column="LASTEXAMDATE"/>
+            <result property="lastexamid" column="LASTEXAMID"/>
+            <result property="lastexamname" column="LASTEXAMNAME"/>
+        </resultMap>
+
+        <sql id="STU_EXAM_STAT_TBL_columns">
+            STU_EXAM_STAT_TBL.E_STAT_ID,
+            STU_EXAM_STAT_TBL.CUS_ID,
+            STU_EXAM_STAT_TBL.COURSE_ID,
+            STU_EXAM_STAT_TBL.EXAM_CODE,
+            STU_EXAM_STAT_TBL.LASTEXAMDATE,
+            STU_EXAM_STAT_TBL.LASTEXAMID,
+            STU_EXAM_STAT_TBL.LASTEXAMNAME
+        </sql>
+
+        <sql id="STU_EXAM_STAT_TBL_properties">
+            #eStatId#,
+            #cusId#,
+            #courseId#,
+            #examCode#,
+            #lastexamdate#,
+            #lastexamid#,
+            #lastexamname#
+        </sql>
+
+        <insert id="createExamStat" parameterClass="ExamStat">
+            INSERT INTO STU_EXAM_STAT_TBL (<include refid="ExamStat_NS.STU_EXAM_STAT_TBL_columns"/>) VALUES (<include refid="ExamStat_NS.STU_EXAM_STAT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="eStatId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+	<!-- 暂时先注释，启用的时候  再开启
+        <delete id="deleteExamStatById" parameterClass="">
+            DELETE FROM STU_EXAM_STAT_TBL
+            WHERE
+                
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateExamStat" parameterClass="ExamStat">
+            UPDATE STU_EXAM_STAT_TBL SET
+                E_STAT_ID = #eStatId#,
+                CUS_ID = #cusId#,
+                COURSE_ID = #courseId#,
+                EXAM_CODE = #examCode#,
+                LASTEXAMDATE = #lastexamdate#,
+                LASTEXAMID = #lastexamid#,
+                LASTEXAMNAME = #lastexamname#
+            WHERE
+                
+
+
+
+
+
+
+        </update>
+
+        <select id="getExamStatById" resultMap="ExamStat_NS.ExamStatResult" parameterClass="">
+            SELECT
+            <include refid="ExamStat_NS.STU_EXAM_STAT_TBL_columns"/>
+            FROM STU_EXAM_STAT_TBL
+            WHERE
+                
+
+
+
+
+
+
+        </select>
+
+        <select id="getExamStatList" resultMap="ExamStat_NS.ExamStatResult" parameterClass="QueryExamStatCondition">
+            SELECT
+            <include refid="ExamStat_NS.STU_EXAM_STAT_TBL_columns"/>
+            FROM STU_EXAM_STAT_TBL
+        </select>
+        
+        -->
+        <!--end-->
+</sqlMap>

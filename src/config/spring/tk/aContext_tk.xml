@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="taskCusService" class="com.shangde.edu.tk.service.TaskCusImpl" parent="baseService"/>
+    <bean id="taskService" class="com.shangde.edu.tk.service.TaskImpl" parent="baseService"/>
+    <bean id="autoTaskService" class="com.shangde.edu.tk.service.AutoTaskImpl" parent="baseService"/>
+</beans>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="OptPic_NS">
+        <!--table:EXAM_OPT_PIC_TBL-->
+        <typeAlias alias="OptPic" type="com.shangde.edu.exam.domain.OptPic"/>
+        <typeAlias alias="QueryOptPicCondition" type="com.shangde.edu.exam.condition.QueryOptPicCondition"/>
+
+        <resultMap id="OptPicResult" class="OptPic">
+            <result property="picId" column="PIC_ID"/>
+            <result property="qstId" column="QST_ID"/>
+            <result property="picName" column="PIC_NAME"/>
+            <result property="picSize" column="PIC_SIZE"/>
+            <result property="picType" column="PIC_TYPE"/>
+            <result property="picPath" column="PIC_PATH"/>
+            <result property="creatTime" column="CREAT_TIME"/>
+        </resultMap>
+
+        <sql id="EXAM_OPT_PIC_TBL_columns">
+            EXAM_OPT_PIC_TBL.PIC_ID,
+            EXAM_OPT_PIC_TBL.QST_ID,
+            EXAM_OPT_PIC_TBL.PIC_NAME,
+            EXAM_OPT_PIC_TBL.PIC_SIZE,
+            EXAM_OPT_PIC_TBL.PIC_TYPE,
+            EXAM_OPT_PIC_TBL.PIC_PATH,
+            EXAM_OPT_PIC_TBL.CREAT_TIME
+        </sql>
+
+        <sql id="EXAM_OPT_PIC_TBL_properties">
+            #picId#,
+            #qstId#,
+            #picName#,
+            #picSize#,
+            #picType#,
+            #picPath#,
+            #creatTime#
+        </sql>
+
+        <insert id="createOptPic" parameterClass="OptPic">
+            INSERT INTO EXAM_OPT_PIC_TBL (<include refid="OptPic_NS.EXAM_OPT_PIC_TBL_columns"/>) VALUES (<include refid="OptPic_NS.EXAM_OPT_PIC_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="picId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteOptPicById" parameterClass="int">
+            DELETE FROM EXAM_OPT_PIC_TBL
+            WHERE
+                PIC_ID = #value#
+        </delete>
+
+        <update id="updateOptPic" parameterClass="OptPic">
+            UPDATE EXAM_OPT_PIC_TBL SET
+                PIC_ID = #picId#,
+                QST_ID = #qstId#,
+                PIC_NAME = #picName#,
+                PIC_SIZE = #picSize#,
+                PIC_TYPE = #picType#,
+                PIC_PATH = #picPath#,
+                CREAT_TIME = #creatTime#
+            WHERE
+                PIC_ID = #picId#
+        </update>
+
+        <select id="getOptPicById" resultMap="OptPic_NS.OptPicResult" parameterClass="int">
+            SELECT
+            <include refid="OptPic_NS.EXAM_OPT_PIC_TBL_columns"/>
+            FROM EXAM_OPT_PIC_TBL
+            WHERE
+                PIC_ID = #value#
+        </select>
+
+        <select id="getOptPicList" resultMap="OptPic_NS.OptPicResult" parameterClass="QueryOptPicCondition">
+            SELECT
+            <include refid="OptPic_NS.EXAM_OPT_PIC_TBL_columns"/>
+            FROM EXAM_OPT_PIC_TBL
+        </select>
+        <!--end-->
+</sqlMap>

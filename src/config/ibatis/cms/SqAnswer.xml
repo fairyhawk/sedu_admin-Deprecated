@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SqAnswer_NS">
+        <!--table:CMS_SQ_ANSWER_TBL-->
+        <typeAlias alias="SqAnswer" type="com.shangde.edu.cms.domain.SqAnswer"/>
+        <typeAlias alias="QuerySqAnswerCondition" type="com.shangde.edu.cms.condition.QuerySqAnswerCondition"/>
+
+        <resultMap id="SqAnswerResult" class="SqAnswer">
+            <result property="asId" column="AS_ID"/>
+            <result property="sqId" column="SQ_ID"/>
+            <result property="asContent" column="AS_CONTENT"/>
+            <result property="email" column="EMAIL"/>
+        </resultMap>
+
+        <sql id="CMS_SQ_ANSWER_TBL_columns">
+            CMS_SQ_ANSWER_TBL.AS_ID,
+            CMS_SQ_ANSWER_TBL.SQ_ID,
+            CMS_SQ_ANSWER_TBL.AS_CONTENT,
+            CMS_SQ_ANSWER_TBL.EMAIL
+        </sql>
+
+        <sql id="CMS_SQ_ANSWER_TBL_properties">
+            #asId#,
+            #sqId#,
+            #asContent#,
+            #email#
+        </sql>
+
+        <insert id="createSqAnswer" parameterClass="SqAnswer">
+            INSERT INTO CMS_SQ_ANSWER_TBL (<include refid="SqAnswer_NS.CMS_SQ_ANSWER_TBL_columns"/>) VALUES (<include refid="SqAnswer_NS.CMS_SQ_ANSWER_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="asId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSqAnswerById" parameterClass="int">
+            DELETE FROM CMS_SQ_ANSWER_TBL
+            WHERE
+                AS_ID = #value#
+
+
+
+        </delete>
+
+        <update id="updateSqAnswer" parameterClass="SqAnswer">
+            UPDATE CMS_SQ_ANSWER_TBL SET
+                AS_ID = #asId#,
+                SQ_ID = #sqId#,
+                AS_CONTENT = #asContent#,
+                EMAIL = #email#
+            WHERE
+                AS_ID = #asId#
+
+
+
+        </update>
+
+        <select id="getSqAnswerById" resultMap="SqAnswer_NS.SqAnswerResult" parameterClass="int">
+            SELECT
+            <include refid="SqAnswer_NS.CMS_SQ_ANSWER_TBL_columns"/>
+            FROM CMS_SQ_ANSWER_TBL
+            WHERE
+                AS_ID = #value#
+
+
+
+        </select>
+
+        <select id="getSqAnswerList" resultMap="SqAnswer_NS.SqAnswerResult" parameterClass="QuerySqAnswerCondition">
+            SELECT
+            <include refid="SqAnswer_NS.CMS_SQ_ANSWER_TBL_columns"/>
+            FROM CMS_SQ_ANSWER_TBL
+        </select>
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="StudyPlan_NS">
+        <!--table:CUS_STUDY_PLAN_TBL-->
+        <typeAlias alias="StudyPlan" type="com.shangde.edu.cus.domain.StudyPlan"/>
+        <typeAlias alias="QueryStudyPlanCondition" type="com.shangde.edu.cus.condition.QueryStudyPlanCondition"/>
+
+        <resultMap id="StudyPlanResult" class="StudyPlan">
+            <result property="id" column="ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="spInfo" column="SP_INFO"/>
+            <result property="spDate" column="SP_DATE"/>
+        </resultMap>
+
+        <sql id="CUS_STUDY_PLAN_TBL_columns">
+            CUS_STUDY_PLAN_TBL.ID,
+            CUS_STUDY_PLAN_TBL.CUS_ID,
+            CUS_STUDY_PLAN_TBL.SP_INFO,
+            CUS_STUDY_PLAN_TBL.SP_DATE
+        </sql>
+
+        <sql id="CUS_STUDY_PLAN_TBL_properties">
+            #id#,
+            #cusId#,
+            #spInfo#,
+            #spDate#
+        </sql>
+
+        <insert id="createStudyPlan" parameterClass="StudyPlan">
+            INSERT INTO CUS_STUDY_PLAN_TBL (<include refid="StudyPlan_NS.CUS_STUDY_PLAN_TBL_columns"/>) VALUES (<include refid="StudyPlan_NS.CUS_STUDY_PLAN_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <delete id="deleteStudyPlanById" parameterClass="int">
+            DELETE FROM CUS_STUDY_PLAN_TBL
+            WHERE
+                ID = #value#
+        </delete>
+         <delete id="deleteStudyPlanByCusId" parameterClass="int">
+            DELETE FROM CUS_STUDY_PLAN_TBL
+            WHERE
+                CUS_ID = #value#
+        </delete>
+        <update id="updateStudyPlan" parameterClass="StudyPlan">
+            UPDATE CUS_STUDY_PLAN_TBL SET
+                ID = #id#,
+                CUS_ID = #cusId#,
+                SP_INFO = #spInfo#,
+                SP_DATE = #spDate#
+            WHERE
+                ID = #id#
+        </update>
+        <select id="getStudyPlanById" resultMap="StudyPlan_NS.StudyPlanResult" parameterClass="int">
+            SELECT
+            <include refid="StudyPlan_NS.CUS_STUDY_PLAN_TBL_columns"/>
+            FROM CUS_STUDY_PLAN_TBL
+            WHERE
+                ID = #value#
+
+
+
+        </select>
+
+        <select id="getStudyPlanList" resultMap="StudyPlan_NS.StudyPlanResult" parameterClass="QueryStudyPlanCondition">
+            SELECT
+            <include refid="StudyPlan_NS.CUS_STUDY_PLAN_TBL_columns"/>
+            FROM CUS_STUDY_PLAN_TBL
+        </select>
+
+        <select id="getMonthStudyPlan" resultClass="int" parameterClass="QueryStudyPlanCondition">
+            SELECT  DATE_FORMAT(SP_DATE, '%d')
+			FROM CUS_STUDY_PLAN_TBL
+			WHERE CUS_STUDY_PLAN_TBL.CUS_ID = #cusId#
+			<![CDATA[     
+	        	AND SP_DATE >= #startTime#
+				AND SP_DATE < #endTime#
+        	]]>
+        	ORDER BY SP_DATE
+        </select>
+        
+        <select id="getStudyPlanByDate" resultMap="StudyPlan_NS.StudyPlanResult" parameterClass="QueryStudyPlanCondition">
+            SELECT
+            <include refid="StudyPlan_NS.CUS_STUDY_PLAN_TBL_columns"/>
+            FROM CUS_STUDY_PLAN_TBL
+            WHERE
+                CUS_ID = #cusId#
+                AND SP_DATE = #timeStr#
+            LIMIT 0,1
+        </select>
+        <!-- Yangning 2011/12/6 后台删除用户时 批量删除学习计划-->
+         <delete id="deleteStudyPlanByCusIds" parameterClass="String">
+            DELETE FROM CUS_STUDY_PLAN_TBL
+            WHERE
+                CUS_ID IN ($value$)
+        </delete>
+        <!--end-->
+</sqlMap>

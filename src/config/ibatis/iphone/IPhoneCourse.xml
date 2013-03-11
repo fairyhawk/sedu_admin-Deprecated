@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CourseIPhone_NS">
+
+	<!-- 为张栋提供iphone端数据  根据售卖方式ID 查询课程 begin-->
+
+	<typeAlias alias="QueryCourseIPhoneCondition"
+		type="com.shangde.edu.iphone.condition.QueryCourseIPhoneCondition" />
+
+	<typeAlias alias="QueryCourseCondition"
+		type="com.shangde.edu.cou.condition.QueryCourseCondition" />
+	
+	<typeAlias alias="IphoneModel" type="com.shangde.edu.iphone.dto.IphoneModel" />
+	
+	<resultMap id="CourseSellWayResult" class="IphoneModel">
+		<result property="videoId" column="COURSE_ID" />
+		<result property="videoName" column="TITLE" />
+	</resultMap>
+
+	<select id="getCourseListBySellWayId" resultMap="CourseIPhone_NS.CourseSellWayResult"
+		parameterClass="QueryCourseIPhoneCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		COU_COURSE_TBL.COURSE_ID,
+		COU_COURSE_TBL.TITLE 
+		FROM COU_COURSE_TBL
+		WHERE COU_COURSE_TBL.COURSE_ID
+		IN(SELECT
+		COU_SELL_COU_TBL.COURSE_ID FROM COU_SELL_COU_TBL WHERE
+		COU_SELL_COU_TBL.SELL_ID=#sellWayId#)
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<!-- 为张栋提供iphone端数据  根据售卖方式ID 查询课程 end-->
+
+	<!-- 为张栋提供iphone端数据  根据售卖方式ID 查询课程总数 begin-->
+
+	<select id="getCourseCountBySellWayId" resultClass="int"
+		parameterClass="QueryCourseIPhoneCondition">
+		SELECT COUNT(*)
+		FROM COU_COURSE_TBL
+		WHERE
+		COU_COURSE_TBL.COURSE_ID
+		IN(SELECT COU_SELL_COU_TBL.COURSE_ID FROM
+		COU_SELL_COU_TBL WHERE
+		COU_SELL_COU_TBL.SELL_ID=#sellWayId#)
+        </select>
+
+	<!-- 为张栋提供iphone端数据  根据售卖方式ID 查询课程总数 end-->
+
+	<!-- 为张栋 iphone端 提供最新课程数据  begin-->
+
+	<select id="getNewCourse" resultMap="CourseIPhone_NS.CourseSellWayResult"
+		parameterClass="QueryCourseIPhoneCondition">
+		SELECT
+		COU_COURSE_TBL.COURSE_ID,
+		COU_COURSE_TBL.TITLE
+		FROM COU_COURSE_TBL
+		WHERE
+		COU_COURSE_TBL.NEW_COURSE = #newCourse#
+	</select>
+
+	<select id="getNewCourseCount" resultClass="int"
+		parameterClass="QueryCourseIPhoneCondition">
+		select
+		count(*)
+		from cou_course_tbl
+		where
+		cou_course_tbl.NEW_COURSE = #newCourse#
+ 		</select>
+
+	<!-- 为张栋 iphone端 提供最新课程数据  end-->
+
+</sqlMap>

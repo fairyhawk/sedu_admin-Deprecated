@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SubjectUrl_NS">
+	<typeAlias alias="SubjectUrl" type="com.shangde.edu.sys.domain.SubjectUrl" />
+	<resultMap id="SubjectUrlResult" class="SubjectUrl">
+		<result property="id" column="ID" />
+		<result property="subjectId" column="SUBJECTID" />
+		<result property="subjectUrl" column="SUBJECTURL" />
+	</resultMap>
+
+	<!-- 添加 -->
+	<sql id="SYS_SUBJECT_URL_TBL_columns">
+		SYS_SUBJECT_URL_TBL.SUBJECTID, SYS_SUBJECT_URL_TBL.SUBJECTURL
+	</sql>
+
+	<sql id="SYS_SUBJECT_URL_TBL_properties">
+		#subjectId#, #subjectUrl#
+	</sql>
+
+	<select id="getSubjectUrlById" resultMap="SubjectUrl_NS.SubjectUrlResult" parameterClass="int">
+		SELECT * FROM SYS_SUBJECT_URL_TBL WHERE SUBJECTID = #value#
+	</select>
+	
+	<insert id="insertSubject" parameterClass="SubjectUrl">
+		INSERT INTO SYS_SUBJECT_URL_TBL (
+		<include refid="SubjectUrl_NS.SYS_SUBJECT_URL_TBL_columns" />
+		) VALUES (
+		<include refid="SubjectUrl_NS.SYS_SUBJECT_URL_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+</sqlMap>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="testGroup_NS">
+        <!--table:SYS_GROUP_TBL-->
+        <typeAlias alias="testGroup" type="com.shangde.edu.test.domain.Group"/>
+        <typeAlias alias="testQueryGroupCondition" type="com.shangde.edu.test.condition.QueryGroupCondition"/>
+
+        <resultMap id="GroupResult" class="Group">
+            <result property="groupId" column="GROUP_ID" nullValue="0"/>
+            <result property="parentGroupId" column="PARENT_GROUP_ID" nullValue="0"/>
+            <result property="groupName" column="GROUP_NAME"/>
+            <result property="status" column="STATUS" nullValue="0"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="level" column="LEVEL"/>
+            <result property="groupList" column="GROUP_ID" select="testGroup_NS.getChildGroupById"/>
+        </resultMap>
+
+        <sql id="SYS_GROUP_TBL_columns">
+            GROUP_ID,
+            PARENT_GROUP_ID,
+            GROUP_NAME,
+            STATUS,
+            CREATE_TIME,
+            UPDATE_TIME,
+            LEVEL
+        </sql>
+
+        <sql id="SYS_GROUP_TBL_properties">
+            #groupId#,
+            #parentGroupId#,
+            #groupName#,
+            #status#,
+            #createTime#,
+            #updateTime#,
+            #level#
+        </sql>
+
+        <insert id="createGroup" parameterClass="testGroup">
+            INSERT INTO SYS_GROUP_TBL (<include refid="testGroup_NS.SYS_GROUP_TBL_columns"/>) VALUES (<include refid="testGroup_NS.SYS_GROUP_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="groupId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteGroupById" parameterClass="int">
+            DELETE FROM SYS_GROUP_TBL
+            WHERE
+                GROUP_ID = #value#
+
+
+
+
+
+        </delete>
+
+        <update id="updateGroup" parameterClass="testGroup">
+            UPDATE SYS_GROUP_TBL SET
+                GROUP_ID = #groupId#,
+                PARENT_GROUP_ID = #parentGroupId#,
+                GROUP_NAME = #groupName#,
+                STATUS = #status#,
+                CREATE_TIME = #createTime#,
+                UPDATE_TIME = #updateTime#,
+                LEVEL = #level#
+            WHERE
+                GROUP_ID = #groupId#
+
+
+
+
+
+        </update>
+
+        <select id="getGroupById" resultMap="testGroup_NS.GroupResult" parameterClass="int">
+            SELECT
+            <include refid="testGroup_NS.SYS_GROUP_TBL_columns"/>
+            FROM SYS_GROUP_TBL
+            WHERE
+                GROUP_ID = #value#
+
+
+
+
+
+        </select>
+
+        <select id="getGroupList" resultMap="testGroup_NS.GroupResult" parameterClass="QueryGroupCondition">
+            SELECT
+            <include refid="testGroup_NS.SYS_GROUP_TBL_columns"/>
+            FROM SYS_GROUP_TBL
+        </select>
+        
+        <select id="getGroupListForTechTree" resultMap="testGroup_NS.GroupResult" parameterClass="QueryGroupCondition">
+            SELECT
+            <include refid="testGroup_NS.SYS_GROUP_TBL_columns"/>
+            FROM SYS_GROUP_TBL
+            WHERE SYS_GROUP_TBL.PARENT_GROUP_ID IS NOT NUll
+                  AND SYS_GROUP_TBL.STATUS = 0;
+        </select>
+        
+        <select id="getFirGroup" resultMap="testGroup_NS.GroupResult" parameterClass="QueryGroupCondition">
+            SELECT
+            <include refid="testGroup_NS.SYS_GROUP_TBL_columns"/>
+            FROM SYS_GROUP_TBL
+            WHERE SYS_GROUP_TBL.PARENT_GROUP_ID = -1
+            AND SYS_GROUP_TBL.STATUS = 0
+                 <isNotNull property="thirdGroupId">
+                 	<isNotEqual property="thirdGroupId" compareValue="0">
+                       AND SYS_GROUP_TBL.GROUP_ID =
+                              (SELECT G1.PARENT_GROUP_ID
+                                 FROM SYS_GROUP_TBL G1
+                                WHERE G1.GROUP_ID = (SELECT G2.PARENT_GROUP_ID
+                                                       FROM SYS_GROUP_TBL G2
+                                                      WHERE G2.GROUP_ID = #thirdGroupId#))
+                 	</isNotEqual>
+	       		 </isNotNull>
+        </select>
+        
+         <select id="getChildGroupById" resultMap="testGroup_NS.GroupResult" parameterClass="int">
+            SELECT
+            <include refid="testGroup_NS.SYS_GROUP_TBL_columns"/>
+            FROM SYS_GROUP_TBL
+            WHERE
+                PARENT_GROUP_ID = #value#
+                  AND SYS_GROUP_TBL.STATUS = 0;
+        </select>
+        <!--end-->
+</sqlMap>

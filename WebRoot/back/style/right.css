@@ -1,0 +1,77 @@
+/* manage */
+.manage {
+	background:#fff;
+	}
+/* 中间右边 */
+.main_right {
+	width:100%;
+	height:auto;
+	text-align:left;
+	}
+.path {
+	width:100%;
+	height:28px;
+	line-height:28px;
+	text-indent:27px;
+	background:#d9d9d9 url(../images/icon_path.gif) left no-repeat;}
+.main_right h1 {
+	width:100%;
+	height:30px;
+	line-height:35px;
+	font-size:12px;
+	color:#fff;
+	text-indent:29px;
+	background:url(../images/title_bg.gif) repeat-x;}
+.work {
+	}
+/* 中间右边 --*/
+/*切换开始*/
+.dispnone{display:none;}
+.dispblock{display:block;}
+.spa_tab {
+	width:100%;
+	height:30px;
+	_margin-bottom:-1px;
+	line-height:30px;
+	font-size:14px;	
+	}
+.spa_tab ul {margin-left:17px;	}
+.spa_tab ul li {
+	width:107px;
+	height:30px;
+	margin-left:3px;	
+	text-align:center;
+	color:#343233;
+	background:#ccc;
+	border:1px #cccccc solid;
+	border-bottom:0;
+	display:block;
+	cursor:pointer;
+	float:left;
+}
+.spa_tab ul li.hover, .spa_tab ul li.hover a , .spa_tab ul li.hover a:visited{color:#fff;background:#cccccc;cursor:default;}
+.spa_tab a:link, .spa_tab a:visited {width:107px;height:30px;color:#343233;float:left;	}
+.spa_tab a:hover {color:#006699;}
+.spa_tabcon {margin:0;padding:0;border:0;	}
+.spa_tabcon table {width:100%;border:0;	color:#333;	}
+.spa_tabcon table tr th{
+	height:25px;
+	line-height:25px;
+	padding-left:5px;	
+	color:#333;
+	font-size:12px;
+	font-weight:normal;
+	background:#eaeaea;
+	border-top:3px #ccc solid;
+}
+.spa_tabcon table tr td {height:34px;line-height:25px;border-bottom:1px #CCC solid; font-size:12px;}
+.spa_tabcon table tr td[scope] {padding:20px 0;}
+.spa_tabcon table a:link, .spa_tabcon table a:visited {color:#0034fe;}
+.spa_tabcon table a:hover {color:#656565;}
+.spa_tabcon table .spa_tabcon_title td {padding-top:17px;height:24px;font-weight:bold;line-height:24px;font-size:14px;}
+.spa_tabconbor table{width:95%; color:#333;	margin:0 12px; border:1px solid #ccc; border-bottom:none;}
+.spa_tabconbor table tr{border:none;}
+.spa_tabconbor table tr td{height:34px;line-height:25px;border-bottom:1px #CCC solid; font-size:12px; padding-left:10px;}
+/*切换结束*/
+
+/* manage --*/

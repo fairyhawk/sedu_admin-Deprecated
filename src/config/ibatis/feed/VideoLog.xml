@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VideoLog_NS">
+        <!--table:FEED_VIDEO_LOG_TBL-->
+        <typeAlias alias="VideoLog" type="com.shangde.edu.feed.domain.VideoLog"/>
+        <typeAlias alias="QueryVideoLogCondition" type="com.shangde.edu.feed.condition.QueryVideoLogCondition"/>
+
+        <resultMap id="VideoLogResult" class="VideoLog">
+            <result property="id" column="ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="videoId" column="VIDEO_ID"/>
+            <result property="videoName" column="VIDEO_NAME"/>
+            <result property="total" column="TOTAL"/>
+            <result property="activeNum" column="ACTIVE_NUM"/>
+            <result property="clickNum" column="CLICK_NUM"/>
+            <result property="clickBuyNum" column="CLICK_BUY_NUM"/>
+            <result property="buyNum" column="BUY_NUM"/>
+            <result property="pubdate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+        </resultMap>
+
+        <sql id="FEED_VIDEO_LOG_TBL_columns">
+            FEED_VIDEO_LOG_TBL.ID,
+            FEED_VIDEO_LOG_TBL.SUBJECT_ID,
+            FEED_VIDEO_LOG_TBL.VIDEO_ID,
+            FEED_VIDEO_LOG_TBL.VIDEO_NAME,
+            FEED_VIDEO_LOG_TBL.TOTAL,
+            FEED_VIDEO_LOG_TBL.ACTIVE_NUM,
+            FEED_VIDEO_LOG_TBL.CLICK_NUM,
+            FEED_VIDEO_LOG_TBL.CLICK_BUY_NUM,
+            FEED_VIDEO_LOG_TBL.BUY_NUM,
+            FEED_VIDEO_LOG_TBL.PUBDATE,
+            FEED_VIDEO_LOG_TBL.MODIFIED
+        </sql>
+
+        <sql id="FEED_VIDEO_LOG_TBL_properties">
+            #id#,
+            #subjectId#,
+            #videoId#,
+            #videoName#,
+            #total#,
+            #activeNum#,
+            #clickNum#,
+            #clickBuyNum#,
+            #buyNum#,
+            #pubdate#,
+            #modified#
+        </sql>
+
+        <insert id="createVideoLog" parameterClass="VideoLog">
+            INSERT INTO FEED_VIDEO_LOG_TBL (<include refid="VideoLog_NS.FEED_VIDEO_LOG_TBL_columns"/>) VALUES (<include refid="VideoLog_NS.FEED_VIDEO_LOG_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteVideoLogById" parameterClass="int">
+            DELETE FROM FEED_VIDEO_LOG_TBL
+            WHERE ID = #id#
+        </delete>
+
+        <update id="updateVideoLog" parameterClass="VideoLog">
+            UPDATE FEED_VIDEO_LOG_TBL SET
+                ID = #id#,
+                SUBJECT_ID = #subjectId#,
+                VIDEO_ID = #videoId#,
+                VIDEO_NAME = #videoName#,
+                TOTAL = #total#,
+                ACTIVE_NUM = #activeNum#,
+                CLICK_NUM = #clickNum#,
+                CLICK_BUY_NUM = #clickBuyNum#,
+                BUY_NUM = #buyNum#,
+                PUBDATE = #pubdate#,
+                MODIFIED = #modified#
+            WHERE ID = #id#
+        </update>
+
+		<!-- 根据id取得记录 -->
+        <select id="getVideoLogById" resultMap="VideoLog_NS.VideoLogResult" parameterClass="int">
+            SELECT
+            <include refid="VideoLog_NS.FEED_VIDEO_LOG_TBL_columns"/>
+            FROM FEED_VIDEO_LOG_TBL
+            WHERE ID = #id#
+        </select>
+        <!-- 根据视频id取得记录 -->
+        <select id="getVideoLogByVideoId" resultMap="VideoLog_NS.VideoLogResult" parameterClass="int">
+            SELECT
+            <include refid="VideoLog_NS.FEED_VIDEO_LOG_TBL_columns"/>
+            FROM FEED_VIDEO_LOG_TBL
+            WHERE video_Id = #videoId#
+        </select>
+        
+		<!-- 查询数据 -->
+        <select id="getVideoLogList" resultMap="VideoLog_NS.VideoLogResult" parameterClass="QueryVideoLogCondition">
+        	<include refid="public_sql.page_begin" />
+            SELECT
+            <include refid="VideoLog_NS.FEED_VIDEO_LOG_TBL_columns"/>
+            FROM FEED_VIDEO_LOG_TBL 
+            <include refid="public_sql.page_end" />
+        </select>
+        <select id="getVideoLogCount" resultClass="int" parameterClass="QueryVideoLogCondition">
+            SELECT count(1) FROM FEED_VIDEO_LOG_TBL
+        </select>
+        
+        <!-- 修改激活次数 -->
+        <update id="updateActiveNum" parameterClass="int">
+       		UPDATE FEED_VIDEO_LOG_TBL set active_num = active_num + 1 where video_id = #value#
+        </update>
+        <!-- 修改点击次数（观看次数） -->
+        <update id="updateClickNum" parameterClass="int">
+       		UPDATE FEED_VIDEO_LOG_TBL set click_num = click_num + 1 where video_id = #value#
+        </update>
+        <!-- 修改点击购买次数 -->
+        <update id="updateClickBuyNum" parameterClass="int">
+       		UPDATE FEED_VIDEO_LOG_TBL set click_buy_num = click_buy_num + 1 where subject_id = #value#
+        </update>
+        <!-- 修改购买成功次数 -->
+        <update id="updateBuyNum" parameterClass="int">
+       		UPDATE FEED_VIDEO_LOG_TBL set buy_num = buy_num + 1 where video_id = #value#
+        </update>
+        
+        <!--end-->
+</sqlMap>

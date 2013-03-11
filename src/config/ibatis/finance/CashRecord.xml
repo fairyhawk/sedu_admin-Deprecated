@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CashRecord_NS">
+	<!--table:FINANCE_CASH_RECORD_TBL -->
+	<typeAlias alias="CashRecord" type="com.shangde.edu.finance.domain.CashRecord" />
+	<typeAlias alias="CashRecordDTO"
+		type="com.shangde.edu.finance.domain.CashRecordDTO" />
+	<typeAlias alias="QueryCashRecordCondition"
+		type="com.shangde.edu.finance.condition.QueryCashRecordCondition" />
+		<!-- 配置缓存模型 -->
+		<cacheModel id="CashRecord_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="CashRecord_NS.createCashRecord" />
+			<flushOnExecute statement="CashRecord_NS.updateCashRecord" />
+			<flushOnExecute statement="CashRecord_NS.updateCashRecordPackId" />
+			<flushOnExecute statement="CashRecord_NS.updateStopTime" />
+			<flushOnExecute statement="CashRecord_NS.updateCashRecordStatus" />
+			<flushOnExecute statement="CashRecord_NS.updateCashReocrdStatusByCtId" />
+			<flushOnExecute statement="CashRecord_NS.updateStatusForRefud"/>
+			<flushOnExecute statement="CashRecord_NS.deleteCashRecordById"/>
+			<flushOnExecute statement="CashRecord_NS.deleteCashRecordByCtId"/>
+			<flushOnExecute statement="CashRecord_NS.deleteCashRecordByCusId"/>
+			<flushOnExecute statement="CashRecord_NS.delCashRecordByCusIds"/>
+			<flushOnExecute statement="CashRecord_NS.delCashRecordExceptCtId"/>
+			<property value="1000" name="size" />
+		</cacheModel>
+	<resultMap class="CashRecord" id="CashRecordSimpleResult">
+			<result property="cusId" column="CUS_ID"/>
+	            <result property="type" column="TYPE"/>
+	            <result property="price" column="PRICE"/>
+	            <result property="crInfo" column="CR_INFO"/>
+	            <result property="createTime" column="CREATE_TIME"/>
+	            <result property="id" column="ID"/>
+	            <result property="contractId" column="CONTRACT_ID"/>
+	            <result property="courseId" column="COURSE_ID"/>
+	            <result property="packId" column="PACK_ID"/>
+	            <result property="ctId" column="CT_ID"/>
+	            <result property="status" column="STATUS"/>
+	            
+	            <result property="reliefPrice" column="RELIEF_PRICE"/>
+	            <result property="couponMoney" column="COUPON_MONEY"/>
+	            <result property="shopStatus" column="SHOP_STATUS"/>
+	            <result property="shopPayType" column="SHOP_PAY_TYPE"/>
+	            <result property="shopPayTime" column="SHOP_PAY_TIME"/>
+	            <result property="refundTime" column="REFUND_TIME"/>
+	            <result property="validityTime" column="VALIDITY_TIME"/>
+	            <result property="stopTime" column="STOP_TIME"/>
+	            <result property="delayTime" column="DELAY_TIME"/>
+	            <result property="shopType" column="SHOP_TYPE"/>
+	            <result property="cashRecordPrice" column="CASH_RECORD_PRICE"/>
+	            <result property="crSubjectId" column="CR_SUBJECT_ID"/>
+			</resultMap>
+        <resultMap id="CashRecordResult" class="CashRecord">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="type" column="TYPE"/>
+            <result property="price" column="PRICE"/>
+            <result property="crInfo" column="CR_INFO"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="id" column="ID"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="packId" column="PACK_ID"/>
+            <result property="ctId" column="CT_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById"/>
+            
+            <result property="reliefPrice" column="RELIEF_PRICE"/>
+            <result property="couponMoney" column="COUPON_MONEY"/>
+            <result property="shopStatus" column="SHOP_STATUS"/>
+            <result property="shopPayType" column="SHOP_PAY_TYPE"/>
+            <result property="shopPayTime" column="SHOP_PAY_TIME"/>
+            <result property="refundTime" column="REFUND_TIME"/>
+            <result property="validityTime" column="VALIDITY_TIME"/>
+            <result property="stopTime" column="STOP_TIME"/>
+            <result property="delayTime" column="DELAY_TIME"/>
+            <result property="shopType" column="SHOP_TYPE"/>
+            <result property="cashRecordPrice" column="CASH_RECORD_PRICE"/>
+            <result property="crSubjectId" column="CR_SUBJECT_ID"/>
+        </resultMap>
+	
+	<resultMap id="CashRecordDTOSINGResult" class="CashRecordDTO">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="type" column="TYPE"/>
+            <result property="price" column="PRICE"/>
+            <result property="crInfo" column="CR_INFO"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="id" column="ID"/>
+            <result property="contractId" column="CONTRACT_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="packId" column="PACK_ID"/>
+            <result property="ctId" column="CT_ID"/>
+            <result property="status" column="STATUS"/>
+             <result property="cashRecordPrice" column="CASH_RECORD_PRICE"/>
+            <result property="delayTime" column="DELAY_TIME" />
+            <result property="reliefPrice" column="RELIEF_PRICE"/>
+            <result property="couponMoney" column="COUPON_MONEY"/>
+            <result property="shopType" column="SHOP_TYPE"/>
+            <result property="shopPayTime" column="SHOP_PAY_TIME"/>
+            <result property="validityTime" column="VALIDITY_TIME"/>
+            <result property="stopTime" column="STOP_TIME"/>
+            <result property="couponMoney" column="COUPON_MONEY"/>
+            <result property="shopStatus" column="SHOP_STATUS"/>
+            <result property="refundTime" column="REFUND_TIME"/>
+            <result property="email" column="EMAIL"/>
+            <result property="packName" column="SELL_NAME" />
+             <result property="shopPayType" column="SHOP_PAY_TYPE"/>
+            <result property="subjectName" column="CR_SUBJECT_ID" select="CashRecord_NS.getSubNameById"/>
+        </resultMap>
+
+	<resultMap id="CashRecordDTOResult" class="CashRecordDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="type" column="TYPE" />
+		<result property="price" column="PRICE" />
+		<result property="crInfo" column="CR_INFO" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="id" column="ID" />
+		<result property="contractId" column="CONTRACT_ID" />
+		<result property="courseId" column="COURSE_ID" />
+		<result property="packId" column="PACK_ID" />
+		<result property="ctId" column="CT_ID" />
+		<result property="status" column="STATUS" />
+		<result property="cashRecordPrice" column="CASH_RECORD_PRICE" />
+		<result property="shopStatus" column="SHOP_STATUS" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="packName" column="SELL_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="shopType" column="SHOP_TYPE" />
+		<result property="shopPayTime" column="SHOP_PAY_TIME"/>
+		 <result property="validityTime" column="VALIDITY_TIME"/>
+		 <result property="delayTime" column="DELAY_TIME" />
+		 <result property="stopTime" column="STOP_TIME"/>
+		 <result property="subjectName" column="CR_SUBJECT_ID" select="CashRecord_NS.getSubNameById"/>
+	</resultMap>
+	
+	<resultMap id="CashRecordDTOListResult" class="CashRecordDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="packId" column="PACK_ID" />
+		<result property="status" column="STATUS" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="email" column="EMAIL" />
+		 <result property="subjectName" column="CR_SUBJECT_ID" select="CashRecord_NS.getSubNameById"/>
+	</resultMap>
+	
+	<resultMap id="CashRecordDTODTOResult" class="CashRecordDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="type" column="TYPE" />
+		<result property="price" column="PRICE" />
+		<result property="crInfo" column="CR_INFO" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="id" column="ID" />
+		<result property="contractId" column="CONTRACT_ID" />
+		<result property="courseId" column="COURSE_ID" />
+		<result property="packId" column="PACK_ID" />
+		<result property="ctId" column="CT_ID" />
+		<result property="status" column="STATUS" />
+		<result property="cashRecordPrice" column="CASH_RECORD_PRICE" />
+		<result property="shopStatus" column="SHOP_STATUS" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="packName" column="SELL_NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="shopType" column="SHOP_TYPE" />
+		<result property="shopPayTime" column="SHOP_PAY_TIME"/>
+		 <result property="validityTime" column="VALIDITY_TIME"/>
+		 <result property="delayTime" column="DELAY_TIME" />
+		 <result property="stopTime" column="STOP_TIME"/>
+		 <result property="subjectName" column="SUBJECT_NAME"/>
+	</resultMap>
+
+	<resultMap id="CashRecordDTOResultWeb" class="CashRecordDTO">
+		<result property="cusId" column="CUS_ID" />
+		<result property="type" column="TYPE" />
+		<result property="price" column="PRICE" />
+		<result property="crInfo" column="CR_INFO" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="id" column="ID" />
+		<result property="contractId" column="CONTRACT_ID" />
+		<result property="courseId" column="COURSE_ID" />
+		<result property="packId" column="PACK_ID" />
+		<result property="ctId" column="CT_ID" />
+		<result property="status" column="STATUS" />
+		<result property="course" column="COURSE_ID"
+			select="Course_NS.getAllCourseInfoByIdWeb" />
+		 <result property="validityTime" column="VALIDITY_TIME"/>
+		 <result property="shopPayTime" column="SHOP_PAY_TIME"/>
+		 <result property="validityTime" column="VALIDITY_TIME"/>
+		 <result property="delayTime" column="DELAY_TIME" />
+		 <result property="stopTime" column="STOP_TIME"/>
+	</resultMap>
+
+	 <sql id="FINANCE_CASH_RECORD_TBL_columns">
+            FINANCE_CASH_RECORD_TBL.CUS_ID,
+            FINANCE_CASH_RECORD_TBL.TYPE,
+            FINANCE_CASH_RECORD_TBL.PRICE,
+            FINANCE_CASH_RECORD_TBL.CR_INFO,
+            FINANCE_CASH_RECORD_TBL.CREATE_TIME,
+            FINANCE_CASH_RECORD_TBL.ID,
+            FINANCE_CASH_RECORD_TBL.CONTRACT_ID,
+            FINANCE_CASH_RECORD_TBL.COURSE_ID,
+            FINANCE_CASH_RECORD_TBL.PACK_ID,
+            FINANCE_CASH_RECORD_TBL.CT_ID,
+            FINANCE_CASH_RECORD_TBL.STATUS,
+            FINANCE_CASH_RECORD_TBL.RELIEF_PRICE,
+            FINANCE_CASH_RECORD_TBL.COUPON_MONEY,
+            FINANCE_CASH_RECORD_TBL.SHOP_STATUS,
+            FINANCE_CASH_RECORD_TBL.SHOP_PAY_TYPE,
+            FINANCE_CASH_RECORD_TBL.SHOP_PAY_TIME,
+            FINANCE_CASH_RECORD_TBL.REFUND_TIME,
+            FINANCE_CASH_RECORD_TBL.VALIDITY_TIME,
+            FINANCE_CASH_RECORD_TBL.STOP_TIME,
+            FINANCE_CASH_RECORD_TBL.DELAY_TIME,
+            FINANCE_CASH_RECORD_TBL.SHOP_TYPE,
+            FINANCE_CASH_RECORD_TBL.CASH_RECORD_PRICE,
+            FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID
+   
+        </sql>
+ 
+        <sql id="FINANCE_CASH_RECORD_TBL_properties">
+           #cusId#,
+            #type#,
+            #price#,
+            #crInfo#,
+            #createTime#,
+            #id#,
+            #contractId#,
+            #courseId#,
+            #packId#,
+            #ctId#,
+            #status#,
+			#reliefPrice#,
+			#couponMoney#,
+			#shopStatus#, 
+			#shopPayType#,
+			#shopPayTime#, 
+			#refundTime#,
+			#validityTime#,
+			#stopTime#,
+			#delayTime#,
+			#shopType#,  
+			#cashRecordPrice#,
+			#crSubjectId#
+        </sql>
+
+	<insert id="createCashRecord" parameterClass="CashRecord">
+		INSERT INTO FINANCE_CASH_RECORD_TBL (
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		) VALUES (
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteCashRecordById" parameterClass="int">
+		DELETE FROM FINANCE_CASH_RECORD_TBL
+		WHERE ID = #value#
+	</delete>
+	<delete id="deleteCashRecordByCtId" parameterClass="int">
+		DELETE FROM FINANCE_CASH_RECORD_TBL
+		WHERE CT_ID = #value#
+	</delete>
+	<delete id="deleteCashRecordByCusId" parameterClass="int">
+		DELETE FROM FINANCE_CASH_RECORD_TBL
+		WHERE CUS_ID = #value#
+	</delete>
+	<update id="updateCashRecord" parameterClass="CashRecord">
+		UPDATE FINANCE_CASH_RECORD_TBL SET
+		CUS_ID = #cusId#,
+		TYPE = #type#,
+		PRICE = #price#,
+		CR_INFO = #crInfo#,
+		CREATE_TIME = #createTime#,
+		ID = #id#,
+		CONTRACT_ID = #contractId#,
+		COURSE_ID= #courseId#,
+		PACK_ID=#packId#,
+		CT_ID=#ctId#,
+		STATUS=#status#,
+		RELIEF_PRICE = #reliefPrice#,
+		COUPON_MONEY = #couponMoney#,
+		SHOP_STATUS = #shopStatus#, 
+		SHOP_PAY_TYPE =	#shopPayType#,
+		SHOP_PAY_TIME =	#shopPayTime#, 
+		REFUND_TIME = #refundTime#,
+		VALIDITY_TIME =	#validityTime#,
+		STOP_TIME =	#stopTime#,
+		DELAY_TIME = #delayTime#,
+		SHOP_TYPE =	#shopType#,  
+		CASH_RECORD_PRICE =	#cashRecordPrice#,
+		CR_SUBJECT_ID =	#crSubjectId#
+
+		WHERE ID = #id#
+
+	</update>
+
+	<update id="updateCashRecordPackId" parameterClass="CashRecord">
+		UPDATE FINANCE_CASH_RECORD_TBL SET
+		PACK_ID=#packId#,
+		CR_INFO = #crInfo#
+		WHERE ID = #id# and CUS_ID = #cusId#
+
+	</update>
+
+	<select id="getCashRecordById" resultMap="CashRecord_NS.CashRecordResult"
+		parameterClass="int" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		WHERE
+		ID = #value#
+
+	</select>
+
+	<!-- 查询所有流水 -->
+	<select id="getAllCash" resultMap="CashRecord_NS.CashRecordResult"
+		parameterClass="java.lang.String" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		WHERE
+		CONTRACT_ID = #contractId#
+	</select>
+
+
+
+
+	<select id="getCashRecordListByCusId" resultMap="CashRecord_NS.CashRecordDTOListResult" parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		select cus_customer_tbl.CUS_ID,cus_customer_tbl.CUS_NAME, finance_cash_record_tbl.PACK_ID,cus_customer_tbl.EMAIL,finance_cash_record_tbl.CR_SUBJECT_ID,finance_cash_record_tbl.STATUS
+		from cus_customer_tbl 
+		left join finance_cash_record_tbl 
+		on cus_customer_tbl.CUS_ID =finance_cash_record_tbl.CUS_ID 
+		where    cus_customer_tbl.CUS_ID=#cusId#
+		and finance_cash_record_tbl.STATUS=#status#
+	</select>
+	
+	<select id="getCashRecordCountByCusId" resultClass="int" parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache"> 
+		select count(*)
+		from cus_customer_tbl 
+		left join finance_cash_record_tbl 
+		on cus_customer_tbl.CUS_ID =finance_cash_record_tbl.CUS_ID 
+		where    cus_customer_tbl.CUS_ID=#cusId#
+		and finance_cash_record_tbl.STATUS=#status#
+	</select>
+
+	<!-- 查询流水packId -->
+	<select id="getCashPackId" resultClass="Integer" parameterClass="java.lang.String" cacheModel="CashRecord_NS-cache">
+		SELECT DISTINCT
+		FINANCE_CASH_RECORD_TBL.PACK_ID
+		FROM FINANCE_CASH_RECORD_TBL
+		WHERE
+		CONTRACT_ID = #contractId#
+		
+	</select>
+
+	<select id="getCashRecordList" resultMap="CashRecord_NS.CashRecordResult"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="0"
+					prepend="and">
+					CONTRACT_ID = #contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="ctId">
+				<isNotEqual property="ctId" compareValue="0" prepend="and">
+					CT_ID=#ctId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="type">
+				<isNotEqual property="type" compareValue="0" prepend="and">
+					TYPE =#type#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="createTimeBegin">
+			    <![CDATA[  CREATE_TIME >= #createTimeBegin# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="createTimeEnd">
+				<![CDATA[  CREATE_TIME <= #createTimeEnd# ]]>
+			</isNotNull>
+		</dynamic>
+		ORDER BY ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+	<!-- 谢更改2011-10-26 -->
+	<select id="getCashRecordListAndSellWay" resultMap="CashRecord_NS.CashRecordDTODTOResult"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		,cus.CUS_NAME,cus.EMAIL,sellway.SELL_NAME, syssjbect.SUBJECT_NAME
+		FROM 
+		FINANCE_CASH_RECORD_TBL
+		left join
+		cus_customer_tbl as cus
+		on FINANCE_CASH_RECORD_TBL.CUS_ID=cus.CUS_ID 
+		 join
+			cou_sell_way_tbl as sellway 
+				on FINANCE_CASH_RECORD_TBL.PACK_ID=sellway.SELL_ID
+		left join sys_subject_tbl as syssjbect
+				on FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID=syssjbect.SUBJECT_ID
+			<!-- FINANCE_CASH_RECORD_TBL.CUS_ID=cus.CUS_ID and -->
+				<!--FINANCE_CASH_RECORD_TBL.PACK_ID=sellway.SELL_ID  -->
+				<dynamic prepend="WHERE">
+				 1=1
+				 <isNotNull property="sellType"> 
+				 	<isNotEqual property="sellType" compareValue="0">
+						and sellway.sell_Type=#sellType# 
+					</isNotEqual>	
+				</isNotNull>
+			<isNotNull property="shopName">
+				<isNotEqual property="shopName" compareValue="">
+					and sellway.SELL_NAME like CONCAT('%',#shopName#,'%')
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="0">
+					and FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID = #subjectId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="packId">
+				<isNotEqual property="packId" compareValue="0">
+					and FINANCE_CASH_RECORD_TBL.PACK_ID = #packId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="">
+					and FINANCE_CASH_RECORD_TBL.CONTRACT_ID = #contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="email">
+				<isNotEqual property="email" compareValue="">
+					and cus.email like  CONCAT('%',#email#,'%')
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="createTimeBegin">
+				<isNotEqual property="createTimeBegin" compareValue="">
+			    <![CDATA[ and   FINANCE_CASH_RECORD_TBL.CREATE_TIME >= #createTimeBegin# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="createTimeEnd">
+				<isNotEqual property="createTimeEnd" compareValue="">
+				<![CDATA[ and  FINANCE_CASH_RECORD_TBL.CREATE_TIME <= #createTimeEnd# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payTimeBegin">
+				<isNotEqual property="payTimeBegin" compareValue="">
+			    <![CDATA[ and  FINANCE_CASH_RECORD_TBL.SHOP_PAY_TIME >= #payTimeBegin# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payTimeEnd">
+				<isNotEqual property="payTimeEnd" compareValue="">
+				<![CDATA[ and FINANCE_CASH_RECORD_TBL.SHOP_PAY_TIME <= #payTimeEnd# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="carecordshopStatus">
+				<isNotEqual property="carecordshopStatus" compareValue="-1">
+					and FINANCE_CASH_RECORD_TBL.SHOP_STATUS = #carecordshopStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="carecorstatus">
+				<isNotEqual property="carecorstatus" compareValue="-1">
+					and FINANCE_CASH_RECORD_TBL.STATUS = #carecorstatus#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		ORDER BY FINANCE_CASH_RECORD_TBL.ID DESC
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<!-- 谢更改2011-10-26 -->
+	<select id="getCashRecordCount" resultClass="int"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+			SELECT count(*)
+		FROM FINANCE_CASH_RECORD_TBL left join cus_customer_tbl as cus on FINANCE_CASH_RECORD_TBL.CUS_ID=cus.CUS_ID  join cou_sell_way_tbl sellway on 	FINANCE_CASH_RECORD_TBL.PACK_ID=sellway.SELL_ID 
+		<dynamic prepend="WHERE">
+		 1=1
+		 <isNotNull property="sellType"> 
+		 	<isNotEqual property="sellType" compareValue="0">
+						and sellway.sell_Type=#sellType# 
+			</isNotEqual>			
+		</isNotNull>
+			<isNotNull property="shopName">
+				<isNotEqual property="shopName" compareValue="">
+					and sellway.SELL_NAME like CONCAT('%',#shopName#,'%')
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="subjectId">
+				<isNotEqual property="subjectId" compareValue="0">
+					and FINANCE_CASH_RECORD_TBL.CR_SUBJECT_ID = #subjectId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="packId">
+				<isNotEqual property="packId" compareValue="0">
+					and FINANCE_CASH_RECORD_TBL.PACK_ID = #packId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="contractId">
+				<isNotEqual property="contractId" compareValue="">
+					and FINANCE_CASH_RECORD_TBL.CONTRACT_ID = #contractId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="email">
+				<isNotEqual property="email" compareValue="">
+					and cus.email like  CONCAT('%',#email#,'%')
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="createTimeBegin">
+				<isNotEqual property="createTimeBegin" compareValue="">
+			    <![CDATA[ and   FINANCE_CASH_RECORD_TBL.CREATE_TIME >= #createTimeBegin# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="createTimeEnd">
+				<isNotEqual property="createTimeEnd" compareValue="">
+				<![CDATA[ and  FINANCE_CASH_RECORD_TBL.CREATE_TIME <= #createTimeEnd# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payTimeBegin">
+				<isNotEqual property="payTimeBegin" compareValue="">
+			    <![CDATA[ and  FINANCE_CASH_RECORD_TBL.SHOP_PAY_TIME >= #payTimeBegin# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="payTimeEnd">
+				<isNotEqual property="payTimeEnd" compareValue="">
+				<![CDATA[ and FINANCE_CASH_RECORD_TBL.SHOP_PAY_TIME <= #payTimeEnd# ]]>
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="carecordshopStatus">
+				<isNotEqual property="carecordshopStatus" compareValue="-1">
+					and FINANCE_CASH_RECORD_TBL.SHOP_STATUS = #carecordshopStatus#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="carecorstatus">
+				<isNotEqual property="carecorstatus" compareValue="-1">
+					and FINANCE_CASH_RECORD_TBL.STATUS = #carecorstatus#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	
+
+	<select id="getShuid" resultClass="int" parameterClass="CashRecord" cacheModel="CashRecord_NS-cache">
+		SELECT COUNT(*)
+		FROM `finance_cash_record_tbl`,`finance_contract_tbl` where
+		`finance_cash_record_tbl`.CONTRACT_ID=`finance_contract_tbl`.CONTRACT_ID
+		and `finance_cash_record_tbl`.CUS_ID=#cusId#
+		and `finance_cash_record_tbl`.PACK_ID=#packId#
+		and `finance_contract_tbl`.STATUS=1;
+	</select>
+
+	<select id="getcashexam" resultClass="int" parameterClass="CashRecord" cacheModel="CashRecord_NS-cache">
+		SELECT COUNT(1)
+		FROM `finance_cash_record_tbl`,`finance_contract_tbl` where
+		`finance_cash_record_tbl`.CONTRACT_ID=`finance_contract_tbl`.CONTRACT_ID
+		and `finance_cash_record_tbl`.CUS_ID=#cusId#
+		and `finance_cash_record_tbl`.COURSE_ID= #courseId#
+		and `finance_cash_record_tbl`.STATUS=1;
+	</select>
+
+	<select id="getSendCount" resultClass="int" parameterClass="CashRecord" cacheModel="CashRecord_NS-cache">
+		SELECT COUNT(*)
+		FROM `finance_cash_record_tbl`,
+		`finance_contract_tbl`
+		where
+		`finance_cash_record_tbl`.CONTRACT_ID=`finance_contract_tbl`.CONTRACT_ID
+		and `finance_cash_record_tbl`.CUS_ID=#cusId#
+		and `finance_cash_record_tbl`.PACK_ID=#packId#
+		and `finance_contract_tbl`.STATUS = 0
+		and `finance_contract_tbl`.PAY_TYPE = 2;
+	</select>
+
+	<select id="getCashRecordByList" resultMap="CashRecord_NS.CashRecordResult"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="ctId">
+				<isNotEqual property="ctId" compareValue="0" prepend="and">
+					CT_ID=#ctId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0" prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="status">
+				<isNotEqual property="status" compareValue="0" prepend="and">
+					status=#status#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="packId">
+				<isNotEqual property="packId" compareValue="0" prepend="and">
+					PACK_ID=#packId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="type">
+				<isNotEqual property="type" compareValue="0" prepend="and">
+					TYPE=#type#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="courseId">
+				<isNotEqual property="courseId" compareValue="0" prepend="and">
+					COURSE_ID=#courseId#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		ORDER BY ID DESC
+	</select>
+	<select id="getSimpleCashRecordByList" resultMap="CashRecord_NS.CashRecordSimpleResult"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="ctId">
+				<isNotEqual property="ctId" compareValue="0" prepend="and">
+					CT_ID=#ctId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="userId">
+				<isNotEqual property="userId" compareValue="0" prepend="and">
+					CUS_ID=#userId#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		ORDER BY ID DESC
+	</select>
+
+	<select id="getuseroderid" resultClass="String" parameterClass="CashRecord" cacheModel="CashRecord_NS-cache">
+		SELECT FINANCE_CASH_RECORD_TBL.CONTRACT_ID
+		FROM FINANCE_CASH_RECORD_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="cusId">
+				<isNotEqual property="cusId" compareValue="0" prepend="and">
+					CUS_ID =#cusId#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="packId">
+				<isNotEqual property="packId" compareValue="0" prepend="and">
+					PACK_ID=#packId#
+				</isNotEqual>
+			</isNotNull>
+			LIMIT 0,1
+		</dynamic>
+	</select>
+
+	<delete id="delCashRecordExceptCtId" parameterClass="QueryCashRecordCondition">
+		DELETE FROM FINANCE_CASH_RECORD_TBL
+		WHERE CUS_ID = #userId#
+		AND CT_ID != #ctId#
+	</delete>
+
+	<select id="getCashRecordByWebFromAgentList" resultMap="CashRecord_NS.CashRecordDTOResult"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="ctId">
+				<isNotEqual property="ctId" compareValue="0" prepend="and">
+					CT_ID=#ctId#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="getCashRecordByWebFromAgentListWeb" resultMap="CashRecord_NS.CashRecordDTOResultWeb"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="ctId">
+				<isNotEqual property="ctId" compareValue="0" prepend="and">
+					CT_ID=#ctId#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="getCashRecordByCtId" resultMap="CashRecord_NS.CashRecordResult"
+		parameterClass="int" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		INNER JOIN
+		FINANCE_CONTRACT_TBL
+		ON FINANCE_CASH_RECORD_TBL.CT_ID=FINANCE_CONTRACT_TBL.ID
+		WHERE
+		CT_ID=#value#
+		AND
+		FINANCE_CONTRACT_TBL.PAY_TYPE=2
+
+
+
+	</select>
+
+	<select id="getCashRecordByCtIdForFanli" resultMap="CashRecord_NS.CashRecordResult"
+		parameterClass="String" cacheModel="CashRecord_NS-cache">
+		SELECT
+		<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		FROM FINANCE_CASH_RECORD_TBL
+		WHERE
+		CONTRACT_ID=#value#
+	</select>
+	
+	<!--查看单个流水 Liming-->       
+       <select id="getSingleCommodity" resultMap="CashRecord_NS.CashRecordDTOSINGResult"
+		parameterClass="QueryCashRecordCondition" cacheModel="CashRecord_NS-cache">
+		
+		SELECT
+	<include refid="CashRecord_NS.FINANCE_CASH_RECORD_TBL_columns" />
+		,cus.CUS_NAME,cus.EMAIL,sellway.SELL_NAME
+		FROM 
+		FINANCE_CASH_RECORD_TBL
+		left join
+		cus_customer_tbl as cus
+		on FINANCE_CASH_RECORD_TBL.CUS_ID=cus.CUS_ID 
+		left join
+			cou_sell_way_tbl as sellway 
+				on FINANCE_CASH_RECORD_TBL.PACK_ID=sellway.SELL_ID where
+			FINANCE_CASH_RECORD_TBL.CUS_ID=cus.CUS_ID and FINANCE_CASH_RECORD_TBL.ID=#id#   
+        </select> 
+            <!-- 根据ID修改延期时间 -->
+         <update id="updateStopTime" parameterClass="QueryCashRecordCondition">
+            UPDATE FINANCE_CASH_RECORD_TBL SET
+                 VALIDITY_TIME = #delayTimeString#
+            WHERE ID = #id#
+        </update>
+	
+		<!--end -->
+	
+		<!-- 王迪 开始-->
+	        <update id="updateCashRecordStatus" parameterClass="hashMap">
+            UPDATE FINANCE_CASH_RECORD_TBL SET
+                STATUS=#status#              
+            WHERE  CONTRACT_ID=#contractid#
+        </update>  
+        <!-- 王迪结束-->
+		<!-- 谢 -->
+		<select id="getSubNameById" resultClass="String" parameterClass="int"  cacheModel="CashRecord_NS-cache">
+			select subject_name from sys_subject_tbl where SUBJECT_ID=#value#
+		</select>
+		<!-- 谢结束 -->
+
+		<!-- fanxin 后台货到付款 退费 strat -->
+		<update id="updateCashReocrdStatusByCtId" parameterClass="CashRecord">
+            UPDATE FINANCE_CASH_RECORD_TBL SET
+            	FINANCE_CASH_RECORD_TBL.STATUS = #status#,
+            	FINANCE_CASH_RECORD_TBL.REFUND_TIME = NOW()
+            WHERE 
+          		FINANCE_CASH_RECORD_TBL.CT_ID = #ctId# 
+        </update>
+        <!-- fanxin 后台货到付款 退费 end --> 
+        
+        <!--Yangning 后台退费 更改状态 -->
+		<update id="updateStatusForRefud" parameterClass="java.lang.Integer">
+            UPDATE FINANCE_CASH_RECORD_TBL SET
+            	FINANCE_CASH_RECORD_TBL.STATUS = 3,
+            	FINANCE_CASH_RECORD_TBL.SHOP_STATUS = 3, 
+            	FINANCE_CASH_RECORD_TBL.REFUND_TIME = NOW()
+            WHERE 
+          		FINANCE_CASH_RECORD_TBL.ID = #value# 
+        </update>
+        
+        <!--Yangning 后台退费 统计订单下的流水数量 -->
+		<select id="getConCountRefund" parameterClass="java.lang.String" resultClass="java.lang.Integer" cacheModel="CashRecord_NS-cache">
+			SELECT COUNT(1) FROM FINANCE_CASH_RECORD_TBL WHERE CONTRACT_ID = #value#
+        </select>
+        
+        <!--Yangning 批量删除用户时批量删除流水-->
+        <delete id="delCashRecordByCusIds" parameterClass="java.lang.String">
+        	DELETE FROM FINANCE_CASH_RECORD_TBL WHERE CUS_ID IN ($value$)
+        </delete>
+        <!--Yangning 后台赠送课程前判断此课程是否之前以存在-->
+        <select id="existCashRecordBath" parameterClass="CashRecord" resultClass="java.lang.Integer" cacheModel="CashRecord_NS-cache">
+			SELECT COUNT(1) FROM FINANCE_CASH_RECORD_TBL WHERE CUS_ID = #cusId# AND PACK_ID = #packId# AND STATUS = 1
+        </select>
+        
+         <!-- Yangning 后台关闭课程-->
+	     <update id="updateCash4Close" parameterClass="QueryCashRecordCondition">
+            UPDATE FINANCE_CASH_RECORD_TBL SET SHOP_STATUS = 3  WHERE  ID = #id#
+        </update>
+        <!-- Yangning 后台关闭课程-->  
+</sqlMap>

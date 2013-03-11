@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Picture_NS">
+        <!--table:RES_PICTURE_TBL-->
+        <typeAlias alias="Picture" type="com.shangde.edu.res.domain.Picture"/>
+        <typeAlias alias="QueryPictureCondition" type="com.shangde.edu.res.condition.QueryPictureCondition"/>
+
+        <resultMap id="PictureResult" class="Picture">
+            <result property="picId" column="PIC_ID"/>
+            <result property="bkId" column="BK_ID"/>
+            <result property="voId" column="VO_ID"/>
+            <result property="picName" column="PIC_NAME"/>
+            <result property="picSize" column="PIC_SIZE"/>
+            <result property="picType" column="PIC_TYPE"/>
+            <result property="isIndex" column="IS_INDEX"/>
+            <result property="picUrl" column="PIC_URL"/>
+            <result property="creatTime" column="CREAT_TIME"/>
+            <result property="picContent" column="PIC_CONTENT"/>
+            <result property="picInfo" column="PIC_INFO"/>
+        </resultMap>
+
+        <sql id="RES_PICTURE_TBL_columns">
+            RES_PICTURE_TBL.PIC_ID,
+            RES_PICTURE_TBL.BK_ID,
+            RES_PICTURE_TBL.VO_ID,
+            RES_PICTURE_TBL.PIC_NAME,
+            RES_PICTURE_TBL.PIC_SIZE,
+            RES_PICTURE_TBL.PIC_TYPE,
+            RES_PICTURE_TBL.IS_INDEX,
+            RES_PICTURE_TBL.PIC_URL,
+            RES_PICTURE_TBL.CREAT_TIME,
+            RES_PICTURE_TBL.PIC_CONTENT,
+            RES_PICTURE_TBL.PIC_INFO
+        </sql>
+
+        <sql id="RES_PICTURE_TBL_properties">
+            #picId#,
+            #bkId#,
+            #voId#,
+            #picName#,
+            #picSize#,
+            #picType#,
+            #isIndex#,
+            #picUrl#,
+            #creatTime#,
+            #picContent#,
+            #picInfo#
+        </sql>
+
+        <insert id="createPicture" parameterClass="Picture">
+            INSERT INTO RES_PICTURE_TBL (<include refid="Picture_NS.RES_PICTURE_TBL_columns"/>) VALUES (<include refid="Picture_NS.RES_PICTURE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="picId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deletePictureById" parameterClass="int">
+            DELETE FROM RES_PICTURE_TBL
+            WHERE
+                PIC_ID = #value#
+
+        </delete>
+
+        <update id="updatePicture" parameterClass="Picture">
+            UPDATE RES_PICTURE_TBL SET
+                PIC_ID = #picId#,
+                BK_ID = #bkId#,
+                VO_ID = #voId#,
+                PIC_NAME = #picName#,
+                PIC_SIZE = #picSize#,
+                PIC_TYPE = #picType#,
+                IS_INDEX = #isIndex#,
+                PIC_URL = #picUrl#,
+                CREAT_TIME = #creatTime#,
+                PIC_CONTENT = #picContent#,
+                PIC_INFO = #picInfo#
+            WHERE
+                PIC_ID = #picId#
+
+        </update>
+
+        <select id="getPictureById" resultMap="Picture_NS.PictureResult" parameterClass="int">
+            SELECT
+            <include refid="Picture_NS.RES_PICTURE_TBL_columns"/>
+            FROM RES_PICTURE_TBL
+            WHERE
+                PIC_ID = #value#
+
+        </select>
+          <select id="getPictureListCount" resultClass="int" parameterClass="QueryPictureCondition">
+            SELECT COUNT(1)
+            FROM RES_PICTURE_TBL
+           
+        </select>
+        <select id="getPictureList" resultMap="Picture_NS.PictureResult" parameterClass="QueryPictureCondition">
+            SELECT
+            <include refid="Picture_NS.RES_PICTURE_TBL_columns"/>
+            FROM RES_PICTURE_TBL
+        </select>
+       <select id="getPictureByVoId" resultMap="Picture_NS.PictureResult" parameterClass="int">
+
+		SELECT
+		  <include refid="Picture_NS.RES_PICTURE_TBL_columns"/>
+		FROM RES_PICTURE_TBL WHERE VO_ID = #value#
+
+	</select>
+	   <select id="getPictureByBkId" resultMap="Picture_NS.PictureResult" parameterClass="int">
+
+		SELECT
+		  <include refid="Picture_NS.RES_PICTURE_TBL_columns"/>
+		FROM RES_PICTURE_TBL WHERE BK_ID = #value#
+
+	</select>
+        <!--end-->
+</sqlMap>

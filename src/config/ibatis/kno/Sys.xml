@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Sys_NS">
+        <!--table:KNO_SYS_TBL-->
+        <typeAlias alias="Sys" type="com.shangde.edu.kno.domain.Sys"/>
+        <typeAlias alias="SysDTO" type="com.shangde.edu.kno.dto.SysDTO"/>
+        <typeAlias alias="QuerySysCondition" type="com.shangde.edu.kno.condition.QuerySysCondition"/>
+
+        <resultMap id="SysResult" class="Sys">
+            <result property="ksId" column="KS_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+            <result property="versionTime" column="VERSION_TIME"/>
+            <result property="keyWord" column="KEY_WORD"/>
+            <result property="content" column="CONTENT"/>
+            <result property="status" column="STATUS"/>
+            <result property="reason" column="REASON"/>
+            <result property="reviewer" column="REVIEWER"/>
+        </resultMap>
+		<resultMap class="SysDTO" id="SysNodeDto">
+        	<result property="subjectId" column="SUBJECT_ID"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+            <result property="ksnId" column="KSN_ID"/>
+            <result property="nodeId" column="NODE_ID"/>
+            <result property="nodeName" column="NODE_NAME"/>
+        </resultMap>
+        <resultMap id="SysListDto" class="SysDTO">
+            <result property="ksId" column="KS_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+            <result property="versionTime" column="VERSION_TIME"/>
+            <result property="keyWord" column="KEY_WORD"/>
+            <result property="content" column="CONTENT"/>
+            <result property="status" column="STATUS"/>
+            <result property="reason" column="REASON"/>
+            <result property="reviewer" column="REVIEWER"/>
+            <result property="counts" column="COUNTS"/>
+        </resultMap>
+        <resultMap id="SysResultDto" class="Sys">
+            <result property="ksId" column="KS_ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>
+            <result property="versionTime" column="VERSION_TIME"/>
+            <result property="keyWord" column="KEY_WORD"/>
+            <result property="content" column="CONTENT"/>
+            <result property="status" column="STATUS"/>
+            <result property="reason" column="REASON"/>
+            <result property="reviewer" column="REVIEWER"/>
+            <result property="author" column="AUTHOR"/>
+        </resultMap>
+
+        <sql id="KNO_SYS_TBL_columns">
+            KNO_SYS_TBL.KS_ID,
+            KNO_SYS_TBL.SUBJECT_ID,
+            KNO_SYS_TBL.SUBJECT_NAME,
+            KNO_SYS_TBL.VERSION_TIME,
+            KNO_SYS_TBL.KEY_WORD,
+            KNO_SYS_TBL.CONTENT,
+            KNO_SYS_TBL.STATUS,
+            KNO_SYS_TBL.REASON,
+            KNO_SYS_TBL.REVIEWER
+        </sql>
+
+        <sql id="KNO_SYS_TBL_properties">
+            #ksId#,
+            #subjectId#,
+            #subjectName#,
+            #versionTime#,
+            #keyWord#,
+            #content#,
+            #status#,
+            #reason#,
+            #reviewer#
+        </sql>
+
+        <insert id="createSys" parameterClass="Sys">
+            INSERT INTO KNO_SYS_TBL (<include refid="Sys_NS.KNO_SYS_TBL_columns"/>) VALUES (<include refid="Sys_NS.KNO_SYS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="ksId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSysById" parameterClass="int">
+            DELETE FROM KNO_SYS_TBL
+            WHERE
+                KS_ID = #value#
+
+
+
+
+
+        </delete>
+
+        <update id="updateSys" parameterClass="Sys">
+            UPDATE KNO_SYS_TBL SET
+                KS_ID = #ksId#
+                <isNotNull property="subjectId">
+             	,SUBJECT_ID = #subjectId#
+           		 </isNotNull>
+           		 <isNotNull property="subjectId">
+             	,SUBJECT_NAME = #subjectName#
+           		 </isNotNull>
+           		 <isNotNull property="subjectId">
+             	,VERSION_TIME = #versionTime#
+           		 </isNotNull>
+             	,KEY_WORD = #keyWord#
+             	,CONTENT = #content#
+           		 <isNotNull property="subjectId">
+             	,STATUS=#status#
+           		 </isNotNull>
+           		 <isNotNull property="reason">
+           		 <isNotEmpty property="reason">
+             	,reason=#reason#
+             	</isNotEmpty>
+           		 </isNotNull>
+           		 <isNotNull property="reviewer">
+           		 <isNotEmpty property="reviewer">
+             	,reviewer=#reviewer#
+             	</isNotEmpty>
+           		 </isNotNull>
+                
+            WHERE
+                KS_ID = #ksId#
+
+
+
+
+
+        </update>
+
+        <select id="getSysById" resultMap="Sys_NS.SysResult" parameterClass="int">
+            SELECT
+            <include refid="Sys_NS.KNO_SYS_TBL_columns"/>
+            FROM KNO_SYS_TBL
+            WHERE
+                KS_ID = #value# 
+
+
+
+
+
+        </select>
+		<!-- 获取知识树列表 -->
+        <select id="getSysList" resultMap="Sys_NS.SysListDto" parameterClass="QuerySysCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Sys_NS.KNO_SYS_TBL_columns"/>,cou.counts COUNTS
+            FROM KNO_SYS_TBL,
+            ( SELECT COUNT(1) counts,KS_ID 
+            FROM `kno_sys_node_tbl` 
+            GROUP BY kno_sys_node_tbl.`KS_ID`) cou 
+			WHERE cou.ks_id=kno_sys_tbl.`KS_ID`
+            <isNotNull property="subjectId">
+             <isGreaterThan prepend="and" property="subjectId" compareValue="0">
+	                		KNO_SYS_TBL.SUBJECT_ID=#subjectId#
+	                </isGreaterThan>
+            </isNotNull>
+            <isNotNull property="status">
+             <isGreaterThan prepend="and" property="status" compareValue="0">
+	                		KNO_SYS_TBL.STATUS=#status#
+	                </isGreaterThan>
+            </isNotNull>
+            ORDER BY KNO_SYS_TBL.VERSION_TIME DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+        <!-- 获取知识树列表数量 -->
+        <select id="getSysListCount" resultClass="int" parameterClass="QuerySysCondition">
+            SELECT count(1)
+            FROM KNO_SYS_TBL,
+            ( SELECT COUNT(1) counts,KS_ID 
+            FROM `kno_sys_node_tbl` 
+            GROUP BY kno_sys_node_tbl.`KS_ID`) cou 
+			WHERE cou.ks_id=kno_sys_tbl.`KS_ID`
+            <isNotNull property="subjectId">
+             <isGreaterThan prepend="and" property="subjectId" compareValue="0">
+	                		KNO_SYS_TBL.SUBJECT_ID=#subjectId#
+	                </isGreaterThan>
+            </isNotNull>
+            <isNotNull property="status">
+             <isGreaterThan prepend="and" property="status" compareValue="0">
+	                		KNO_SYS_TBL.STATUS=#status#
+	                </isGreaterThan>
+            </isNotNull>
+        </select>
+        <!--end-->
+        
+        
+        <!-- 获取消息列表，只获取审核中（2），发布（3），返工的状态的数据（5） -->
+        <select id="getSysInFoList"  resultMap="Sys_NS.SysResultDto">
+        	SELECT
+            <include refid="Sys_NS.KNO_SYS_TBL_columns"/>,KNO_SYS_NODE_TBL.AUTHOR
+            FROM KNO_SYS_TBL INNER JOIN KNO_SYS_NODE_TBL 
+            ON KNO_SYS_TBL.KS_ID=KNO_SYS_NODE_TBL.KS_ID
+            WHERE
+                KNO_SYS_TBL.STATUS=2 || KNO_SYS_TBL.STATUS=3 || KNO_SYS_TBL.STATUS=5
+                GROUP BY KNO_SYS_TBL.`KS_ID`
+                ORDER BY KNO_SYS_TBL.VERSION_TIME
+        </select>
+        
+         <select id="getSysInFoByKsId"  resultMap="Sys_NS.SysResultDto" parameterClass="int">
+        	SELECT
+            <include refid="Sys_NS.KNO_SYS_TBL_columns"/>,KNO_SYS_NODE_TBL.AUTHOR
+            FROM KNO_SYS_TBL INNER JOIN KNO_SYS_NODE_TBL 
+            ON KNO_SYS_TBL.KS_ID=KNO_SYS_NODE_TBL.KS_ID
+            WHERE
+                KNO_SYS_TBL.KS_ID=#value# 
+                GROUP BY KNO_SYS_TBL.KS_ID
+        </select>
+        <select id="getFaBuSysList"  resultMap="Sys_NS.SysResult">
+        	SELECT
+            <include refid="Sys_NS.KNO_SYS_TBL_columns"/>
+            FROM KNO_SYS_TBL 
+            WHERE
+                KNO_SYS_TBL.STATUS=3
+        </select>
+		
+		<select id="getSysBySubjectId" resultMap="SysResult" parameterClass="int">
+	        SELECT 
+			  <include refid="KNO_SYS_TBL_columns"/>
+			FROM
+			  kno_sys_tbl 
+			WHERE kno_sys_tbl.SUBJECT_ID = #value#  AND STATUS=3
+			  
+        </select>
+        
+        <!-- 根据知识点ID查询知识树 -->
+        <select id="getSysByKsnId" resultMap="SysNodeDto" parameterClass="int">
+	        SELECT 
+			  kno_sys_tbl.SUBJECT_NAME,
+			  kno_sys_tbl.SUBJECT_ID,
+			  kno_sys_node_tbl.NODE_NAME,
+			  kno_sys_node_tbl.NODE_ID,
+			  kno_sys_node_tbl.KSN_ID
+			FROM
+			  kno_sys_node_tbl 
+			  LEFT JOIN kno_sys_tbl 
+			    ON kno_sys_node_tbl.KS_ID = kno_sys_tbl.KS_ID
+			WHERE kno_sys_node_tbl.KSN_ID = #value#
+        </select>
+        
+         <!-- 王超 开始 -->
+		<!-- 通过专业id获取知识库 -->
+		<select id="getFabuSysBySubjectId" resultMap="Sys_NS.SysResult" parameterClass="int">
+			 SELECT
+            <include refid="Sys_NS.KNO_SYS_TBL_columns"/>
+            FROM KNO_SYS_TBL
+            WHERE
+                subject_id = #value# and status=3 limit 1
+		</select>
+<!-- 王超 结束 -->
+</sqlMap>

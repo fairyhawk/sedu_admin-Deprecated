@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PurseRecordTbl_NS">
+        <!--table:PURSE_RECORD_TBL-->
+        <typeAlias alias="PurseRecordTbl" type="com.shangde.edu.purse.domain.Record"/>
+        <typeAlias alias="PurseRecordDTO" type="com.shangde.edu.purse.dto.RecordDTO"/>
+        <typeAlias alias="QueryPurseRecordTblCondition" type="com.shangde.edu.purse.condition.QueryRecordCondition"/>
+
+        <resultMap id="PurseRecordTblResult" class="PurseRecordTbl">
+            <result property="id" column="ID"/>
+            <result property="recordId" column="RECORD_ID"/>
+            <result property="recordType" column="RECORD_TYPE"/>
+            <result property="szStatus" column="SZ_STATUS"/>
+            <result property="money" column="MONEY"/>
+            <result property="payType" column="PAY_TYPE"/>
+            <result property="payStatus" column="PAY_STATUS"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="cardId" column="CARD_ID"/>
+            <result property="remark" column="REMARK"/>
+            <result property="creator" column="CREATOR"/>
+            <result property="recordUrl" column="RECORD_URL"/>
+            <result property="updateUser" column="UPDATE_USER"/>
+            <result property="updateTime" column="UPDATE_TIME"/> 
+            <result property="userAccountId" column="USER_ACCOUNT_ID"/>
+            <result property="bank" column="BANK"/>
+            <result property="orderCode" column="ORDER_CODE"/>
+            <result property="userAccount" column="USER_ACCOUNT"/>
+        	<result property="recordTypeName" column="RECORD_TYPE_NAME"/>
+        	<result property="payTypeName" column="PAY_TYPE_NAME"/>
+        	<result property="szStatusName" column="SZ_STATUS_NAME"/>
+        	<result property="payStatusName" column="PAY_STATUS_NAME"/>
+        </resultMap>
+        <resultMap id="PurseRecordDTOResult" class="PurseRecordDTO" extends="PurseRecordTblResult">
+    	</resultMap>
+
+        <sql id="PURSE_RECORD_TBL_columns">
+            PURSE_RECORD_TBL.ID,
+            PURSE_RECORD_TBL.RECORD_ID,
+            PURSE_RECORD_TBL.RECORD_TYPE,
+            PURSE_RECORD_TBL.SZ_STATUS,
+            PURSE_RECORD_TBL.MONEY,
+            PURSE_RECORD_TBL.PAY_TYPE,
+            PURSE_RECORD_TBL.PAY_STATUS,
+            PURSE_RECORD_TBL.CREATE_TIME,
+            PURSE_RECORD_TBL.CARD_ID,
+            PURSE_RECORD_TBL.REMARK,
+            PURSE_RECORD_TBL.CREATOR,
+            PURSE_RECORD_TBL.RECORD_URL,
+            PURSE_RECORD_TBL.UPDATE_USER,
+            PURSE_RECORD_TBL.UPDATE_TIME,
+            PURSE_RECORD_TBL.USER_ACCOUNT_ID,
+            PURSE_RECORD_TBL.BANK,
+            PURSE_RECORD_TBL.ORDER_CODE
+        </sql>
+
+        <sql id="PURSE_RECORD_TBL_properties">
+            #id#,
+            #recordId#,
+            #recordType#,
+            #szStatus#,
+            #money#,
+            #payType#,
+            #payStatus#,
+            #createTime#,
+            #cardId#,
+            #remark#,
+            #creator#,
+            #recordUrl#,
+            #updateUser#,
+            #updateTime#,
+            #userAccountId#,
+            #bank#,
+            #orderCode#
+        </sql>
+           <select id="getPurseRecordTblList" resultMap="PurseRecordTbl_NS.PurseRecordDTOResult" parameterClass="QueryPurseRecordTblCondition">
+            <include refid="public_sql.page_begin"/>
+	            SELECT
+					 <include refid="PurseRecordTbl_NS.PURSE_RECORD_TBL_columns"/>,
+					 (
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.RECORD_TYPE
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "RECORD_TYPE"
+					) AS RECORD_TYPE_NAME,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.PAY_TYPE
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "PAY_TYPE"
+					) AS PAY_TYPE_NAME,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.SZ_STATUS
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "SZ_STATUS"
+					) AS SZ_STATUS_NAME,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.PAY_STATUS
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "PAY_STATUS"
+					) AS PAY_STATUS_NAME,CUS_CUSTOMER_TBL.EMAIL AS USER_ACCOUNT
+					FROM
+						PURSE_RECORD_TBL JOIN  CUS_CUSTOMER_TBL ON CUS_CUSTOMER_TBL.CUS_ID=PURSE_RECORD_TBL.USER_ACCOUNT_ID WHERE 1=1
+						<isNotEmpty prepend="AND" property="recordId">
+							PURSE_RECORD_TBL.RECORD_ID like CONCAT('%',#recordId#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="userAccount">
+							CUS_CUSTOMER_TBL.EMAIL like CONCAT('%',#userAccount#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="recordType">
+							PURSE_RECORD_TBL.RECORD_TYPE =#recordType#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="remark">
+							PURSE_RECORD_TBL.REMARK  like CONCAT('%',#remark#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="payType">
+							PURSE_RECORD_TBL.PAY_TYPE =#payType#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="creator">
+							PURSE_RECORD_TBL.CREATOR  like CONCAT('%',#creator#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="szStatus">
+							PURSE_RECORD_TBL.SZ_STATUS =#szStatus#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="createBeginDate">
+				            PURSE_RECORD_TBL.CREATE_TIME >= #createBeginDate#
+				        </isNotEmpty>
+				        <isNotEmpty prepend="and" property="createEndDate">
+				            <![CDATA[PURSE_RECORD_TBL.CREATE_TIME <= #createEndDate# ]]>
+				        </isNotEmpty> 
+				        ORDER BY  PURSE_RECORD_TBL.ID DESC
+			<include refid="public_sql.page_end"/>
+        </select>
+         <select id="getPurseRecordTblCount" resultClass="int" parameterClass="QueryPurseRecordTblCondition">
+            SELECT
+					COUNT(1)
+					FROM
+						PURSE_RECORD_TBL WHERE 1=1
+						<isNotEmpty prepend="AND" property="recordId">
+							PURSE_RECORD_TBL.RECORD_ID like CONCAT('%',#recordId#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="userAccount">
+							CUS_CUSTOMER_TBL.EMAIL like CONCAT('%',#userAccount#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="recordType">
+							PURSE_RECORD_TBL.RECORD_TYPE =#recordType#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="remark">
+							PURSE_RECORD_TBL.REMARK  like CONCAT('%',#remark#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="payType">
+							PURSE_RECORD_TBL.PAY_TYPE =#payType#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="creator">
+							PURSE_RECORD_TBL.CREATOR  like CONCAT('%',#creator#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="szStatus">
+							PURSE_RECORD_TBL.SZ_STATUS =#szStatus#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="createBeginDate">
+				            PURSE_RECORD_TBL.CREATE_TIME >= #createBeginDate#
+				        </isNotEmpty>
+				        <isNotEmpty prepend="and" property="createEndDate">
+				            <![CDATA[PURSE_RECORD_TBL.CREATE_TIME <= #createEndDate# ]]>
+				         </isNotEmpty> 
+        </select>
+        
+         <select id="getPurseRecordInfo" resultMap="PurseRecordTbl_NS.PurseRecordTblResult" parameterClass="PurseRecordTbl">
+	            SELECT
+					 <include refid="PurseRecordTbl_NS.PURSE_RECORD_TBL_columns"/>,
+					 (
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.RECORD_TYPE
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "RECORD_TYPE"
+					) AS RECORD_TYPE_NAME,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.PAY_TYPE
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "PAY_TYPE"
+					) AS PAY_TYPE_NAME,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.SZ_STATUS
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "SZ_STATUS"
+					) AS SZ_STATUS_NAME,
+					(
+						SELECT
+							SYS_DICTIONARY_TBL.DIC_CONTENT
+						FROM
+							SYS_DICTIONARY_TBL
+						WHERE
+							SYS_DICTIONARY_TBL.DIC_CODE = PURSE_RECORD_TBL.PAY_STATUS
+						AND SYS_DICTIONARY_TBL.DIC_TYPE = "PAY_STATUS"
+					) AS PAY_STATUS_NAME,CUS_CUSTOMER_TBL.EMAIL AS USER_ACCOUNT
+					FROM
+						PURSE_RECORD_TBL JOIN  CUS_CUSTOMER_TBL ON CUS_CUSTOMER_TBL.CUS_ID=PURSE_RECORD_TBL.USER_ACCOUNT_ID WHERE PURSE_RECORD_TBL.ID=#id#
+						
+        </select>
+        
+        <select id="getMoneySum" resultClass="decimal" parameterClass="QueryPurseRecordTblCondition">
+	            SELECT
+					IFNULL(SUM(PURSE_RECORD_TBL.MONEY),0.00) AS MONEY_SUM
+					FROM
+						PURSE_RECORD_TBL  WHERE 1=1
+						<isNotEmpty prepend="AND" property="recordId">
+							PURSE_RECORD_TBL.RECORD_ID like CONCAT('%',#recordId#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="userAccount">
+							CUS_CUSTOMER_TBL.EMAIL like CONCAT('%',#userAccount#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="recordType">
+							PURSE_RECORD_TBL.RECORD_TYPE =#recordType#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="remark">
+							PURSE_RECORD_TBL.REMARK  like CONCAT('%',#remark#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="payType">
+							PURSE_RECORD_TBL.PAY_TYPE =#payType#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="creator">
+							PURSE_RECORD_TBL.CREATOR  like CONCAT('%',#creator#,'%')
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="szStatus">
+							PURSE_RECORD_TBL.SZ_STATUS =#szStatus#
+						</isNotEmpty>
+						<isNotEmpty prepend="AND" property="createBeginDate">
+				            PURSE_RECORD_TBL.CREATE_TIME >= #createBeginDate#
+				        </isNotEmpty>
+				        <isNotEmpty prepend="and" property="createEndDate">
+				            <![CDATA[PURSE_RECORD_TBL.CREATE_TIME <= #createEndDate# ]]>
+				         </isNotEmpty> 
+        </select>
+</sqlMap>

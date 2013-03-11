@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TaskSendLog_NS">
+
+        <!--table:FEED_TASK_SEND_LOG_TBL-->
+        <typeAlias alias="TaskSendLog" type="com.shangde.edu.feed.domain.TaskSendLog"/>
+        <typeAlias alias="QueryTaskSendLogCondition" type="com.shangde.edu.feed.condition.QueryTaskSendLogCondition"/>
+
+        <resultMap id="TaskSendLogResult" class="TaskSendLog">
+            <result property="id" column="ID"/>
+            <result property="taskListId" column="TASK_LIST_ID"/>
+            <result property="email" column="EMAIL"/>
+            <result property="pubDate" column="PUBDATE"/>
+        </resultMap>
+
+        <sql id="FEED_TASK_SEND_LOG_TBL_columns">
+            FEED_TASK_SEND_LOG_TBL.ID,
+            FEED_TASK_SEND_LOG_TBL.TASK_LIST_ID,
+            FEED_TASK_SEND_LOG_TBL.EMAIL,
+            FEED_TASK_SEND_LOG_TBL.PUBDATE
+        </sql>
+
+        <sql id="FEED_TASK_SEND_LOG_TBL_properties">
+            #id#,
+            #taskListId#,
+            #email#,
+            #pubDate#
+        </sql>
+
+		<!-- 添加 -->
+        <insert id="createTaskSendLog" parameterClass="TaskSendLog">
+            INSERT INTO FEED_TASK_SEND_LOG_TBL (<include refid="TaskSendLog_NS.FEED_TASK_SEND_LOG_TBL_columns"/>) VALUES (<include refid="TaskSendLog_NS.FEED_TASK_SEND_LOG_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+		<!-- 根据id查询记录 -->
+        <select id="getTaskSendLogById" resultMap="TaskSendLog_NS.TaskSendLogResult" parameterClass="int">
+            SELECT
+            <include refid="TaskSendLog_NS.FEED_TASK_SEND_LOG_TBL_columns"/>
+            FROM FEED_TASK_SEND_LOG_TBL
+            WHERE id = #id#
+        </select>
+        
+        <!--end-->
+</sqlMap>

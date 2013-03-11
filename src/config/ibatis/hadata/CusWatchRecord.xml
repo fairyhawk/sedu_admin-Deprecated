@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CusWatchRecord_NS">
+        <typeAlias alias="CusWatchRecord" type="com.shangde.edu.hadata.domain.CusWatchRecord"/>
+        <sql id="cus_watch_record_tbl_columns">
+            cus_watch_record_tbl.id,
+            cus_watch_record_tbl.cusId,
+            cus_watch_record_tbl.email,
+            cus_watch_record_tbl.sellWayId, 
+            cus_watch_record_tbl.courseId,
+            cus_watch_record_tbl.videoPointId,
+            cus_watch_record_tbl.videoName,
+            cus_watch_record_tbl.teacher,
+            cus_watch_record_tbl.startTime,
+            cus_watch_record_tbl.endTime,
+            cus_watch_record_tbl.watchAllTime,
+            cus_watch_record_tbl.subjectId
+        </sql>
+        <sql id="cus_watch_record_tbl_properties">
+            #id#,
+            #cusId#,
+            #email#,
+            #sellWayId#,
+            #courseId#,
+            #videoPointId#,
+            #videoName#,
+            #teacher#,
+            #startTime#,
+            #endTime#,
+            #watchAllTime#,
+            #subjectId#
+        </sql>
+        <select id="getCusWatchRecordById" parameterClass="int" resultClass="CusWatchRecord">
+        	select <include refid="cus_watch_record_tbl_columns"/> 
+        		from cus_watch_record_tbl
+        			where cus_watch_record_tbl.id>#VALUE# and cus_watch_record_tbl.watchAllTime>30 and LENGTH(cus_watch_record_tbl.videoName)>16 order by cus_watch_record_tbl.id desc
+        </select>
+</sqlMap>

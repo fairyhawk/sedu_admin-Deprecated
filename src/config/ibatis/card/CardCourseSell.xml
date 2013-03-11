@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CardCourseSell_NS">
+        <!--table:PURSE_RECORD_TBL-->
+        <typeAlias alias="CardCourseSell" type="com.shangde.edu.card.domain.CardCourseSell"/>
+
+        <resultMap id="CardCourseSellResult" class="CardCourseSell">
+            <result property="id" column="ID"/>
+            <result property="cardMainId" column="CARD_MAIN_ID"/>
+            <result property="sellId" column="SELL_ID"/>
+        </resultMap>
+        <sql id="CARD_COURSE_SELL_TBL_columns">
+            CARD_COURSE_SELL_TBL.ID,
+            CARD_COURSE_SELL_TBL.CARD_MAIN_ID,
+            CARD_COURSE_SELL_TBL.SELL_ID
+        </sql>
+        <sql id="CARD_COURSE_TBL_properties">
+            #id#,
+            #cardMainId#,
+            #sellId#
+        </sql>
+        <insert id="insert" parameterClass="CardCourseSell" >
+			INSERT INTO CARD_COURSE_SELL_TBL (
+			<include refid="CardCourseSell_NS.CARD_COURSE_SELL_TBL_columns" />
+			) values (
+			<include refid="CardCourseSell_NS.CARD_COURSE_TBL_properties" />
+			)
+			<selectKey resultClass="int" type="post" keyProperty="id">
+				<include refid="public_sql.increment_sql" />
+			</selectKey>
+		</insert>
+</sqlMap>

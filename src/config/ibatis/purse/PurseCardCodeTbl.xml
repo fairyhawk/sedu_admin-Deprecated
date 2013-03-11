@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PurseCardCodeTbl_NS">
+        <!--table:PURSE_CARD_CODE_TBL-->
+        <typeAlias alias="PurseCardCodeTbl" type="com.shangde.edu.purse.domain.CardCode"/>
+        <typeAlias alias="QueryCardCodeCondition" type="com.shangde.edu.purse.condition.QueryCardCodeCondition"/>
+
+        <resultMap id="PurseCardCodeTblResult" class="PurseCardCodeTbl">
+            <result property="id" column="ID"/>
+            <result property="code" column="CODE"/>
+            <result property="password" column="PASSWORD"/>
+            <result property="cardType" column="CARD_TYPE"/>
+            <result property="status" column="STATUS"/>
+        </resultMap>
+
+        <sql id="PURSE_CARD_CODE_TBL_columns">
+            PURSE_CARD_CODE_TBL.ID,
+            PURSE_CARD_CODE_TBL.CODE,
+            PURSE_CARD_CODE_TBL.PASSWORD,
+            PURSE_CARD_CODE_TBL.CARD_TYPE,
+            PURSE_CARD_CODE_TBL.STATUS
+        </sql>
+
+        <sql id="PURSE_CARD_CODE_TBL_properties">
+            #id#,
+            #code#,
+            #password#,
+            #cardType#,
+            #status#
+        </sql>
+
+       
+</sqlMap>

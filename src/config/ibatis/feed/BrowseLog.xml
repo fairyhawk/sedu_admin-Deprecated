@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Browse_Log_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="BrowseLog" type="com.shangde.edu.feed.domain.BrowseLog" />
+	<typeAlias alias="QueryBrowseLogCondition" type="com.shangde.edu.feed.condition.QueryBrowseLogCondition" />
+	<typeAlias alias="QueryStatCommonCondition" type="com.shangde.edu.feed.condition.QueryStatCommonCondition" />
+	
+
+	<resultMap id="BrowseLogResult" class="BrowseLog">
+		 <result property="id" column="ID"/>
+		 <result property="cusId" column="CUS_ID"/>
+		 <result property="ip" column="IP"/>
+		 <result property="ua" column="UA"/>
+		 <result property="type" column="TYPE"/>
+		 <result property="fromId" column="from_id"/>
+		 <result property="pubDate" column="PUBDATE"/>
+	</resultMap>
+	<resultMap id="BrowseLogResultIds" class="BrowseLog">
+		<result property="id" column="ID" />
+ 	</resultMap>
+	
+	<sql id="FEED_BROWSE_LOG_TBL_columns">
+		feed_browse_log_tbl.id,
+		feed_browse_log_tbl.cus_id,
+		feed_browse_log_tbl.ip,
+		feed_browse_log_tbl.ua,
+		feed_browse_log_tbl.type,
+		feed_browse_log_tbl.from_id,
+		feed_browse_log_tbl.pubdate
+	</sql>
+
+	<sql id="FEED_BROWSE_LOG_TBL_properties">
+		#id#, #cusId#, #ip#,#ua#, #type#,#fromId#, #pubDate#
+	</sql>
+
+	<insert id="createBrowseLog" parameterClass="BrowseLog">
+		INSERT INTO feed_browse_log_tbl (
+		<include refid="Feed_Browse_Log_NS.FEED_BROWSE_LOG_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_Browse_Log_NS.FEED_BROWSE_LOG_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<select id="getBrowseLogList" resultMap="Feed_Browse_Log_NS.BrowseLogResult" parameterClass="QueryStatCommonCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_browse_log_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getBrowseLogListCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		SELECT count(1) FROM feed_browse_log_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+	</select>
+	<select id="getBrowseLogGroupCount" resultClass="int" parameterClass="QueryStatCommonCondition">
+		select count(groupResult.ip) from (
+		SELECT DISTINCT ip FROM feed_browse_log_tbl
+		where 1=1
+		<isNotNull prepend="and" property="startTime">
+			<![CDATA[  PUBDATE >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+			<![CDATA[  PUBDATE <= #endTime# ]]>
+		</isNotNull>
+		) groupResult
+	</select>
+	
+	
+	<!-- 条件，今日数据查询List -->
+	<select id="getBrowseLogDATEList" resultMap="Feed_Browse_Log_NS.BrowseLogResult" parameterClass="QueryBrowseLogCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_browse_log_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()
+		<include refid="public_sql.page_end"/>
+	</select>
+	<!-- 条件，今日数据查询List.size -->
+	<select id="getBrowseLogDATEListCount" resultClass="int" parameterClass="QueryBrowseLogCondition">
+		SELECT count(1) FROM feed_browse_log_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()
+	</select>
+	<select id="getBrowseLogDATEGroupCount" resultClass="int" parameterClass="QueryBrowseLogCondition">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_browse_log_tbl where DATE_FORMAT(pubdate,'%Y%m%d') = CURDATE()) groupResult
+	</select>
+	
+	<!-- 条件，本周数据查询List -->
+	<select id="getBrowseLogWEEKList" resultMap="Feed_Browse_Log_NS.BrowseLogResult" parameterClass="QueryBrowseLogCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_browse_log_tbl where WEEK(pubdate,1) = WEEK(CURDATE())
+		<include refid="public_sql.page_end"/>
+	</select>
+	<!-- 条件，本周数据查询List.size -->
+	<select id="getBrowseLogWEEKListCount" resultClass="int" parameterClass="QueryBrowseLogCondition">
+		SELECT count(1) FROM feed_browse_log_tbl where WEEK(pubdate,1) = WEEK(CURDATE())
+	</select>
+	<select id="getBrowseLogWEEKGroupCount" resultClass="int" parameterClass="QueryBrowseLogCondition">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_browse_log_tbl where WEEK(pubdate,1) = WEEK(CURDATE())) groupResult
+	</select>
+	
+	<!-- 条件，本月数据查询List -->
+	<select id="getBrowseLogMONTHList" resultMap="Feed_Browse_Log_NS.BrowseLogResult" parameterClass="QueryBrowseLogCondition">
+		<include refid="public_sql.page_begin"/>
+		SELECT * FROM feed_browse_log_tbl where MONTH(pubdate) = MONTH(CURDATE())
+		<include refid="public_sql.page_end"/>
+	</select>
+	<!-- 条件，本月数据查询List.size -->
+	<select id="getBrowseLogMONTHListCount" resultClass="int" parameterClass="QueryBrowseLogCondition">
+		SELECT count(1) FROM feed_browse_log_tbl where MONTH(pubdate) = MONTH(CURDATE())
+	</select>
+	<select id="getBrowseLogMONTHGroupCount" resultClass="int" parameterClass="QueryBrowseLogCondition">
+		select count(groupResult.ip) from (select DISTINCT ip from feed_browse_log_tbl where MONTH(pubdate) = MONTH(CURDATE())) groupResult
+	</select>
+	<!--end-->
+</sqlMap>

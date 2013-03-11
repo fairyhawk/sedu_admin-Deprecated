@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 2010/08/24 Mod By ZhangDong Start -->
+<beans xmlns="http://www.springframework.org/schema/beans"     
+		xmlns:flex="http://www.springframework.org/schema/flex"    
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"     
+       xsi:schemaLocation="      
+           http://www.springframework.org/schema/beans      
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd      
+           http://www.springframework.org/schema/flex       
+           http://www.springframework.org/schema/flex/spring-flex-1.0.xsd" default-autowire="byName">  
+<!-- 2010/08/24 Mod By ZhangDong End -->	
+	
+	<bean id="courseService" class="com.shangde.edu.cou.service.CourseImpl" parent="baseService" />
+    <bean id="coursepicService" class="com.shangde.edu.cou.service.CoursepicImpl" parent="baseService"/>
+    <bean id="coursesortService" class="com.shangde.edu.cou.service.CoursesortImpl" parent="baseService"/>
+    <bean id="gmrecordService" class="com.shangde.edu.cou.service.GmrecordImpl" parent="baseService"/>
+    <bean id="kpointService" class="com.shangde.edu.cou.service.KpointImpl" parent="baseService"/>
+    <bean id="tjcourseService" class="com.shangde.edu.cou.service.TjcourseImpl" parent="baseService"/>
+    <bean id="tcCouRecordService" class="com.shangde.edu.cou.service.TcCouRecordImpl" parent="baseService"/>
+    <bean id="teacherService" class="com.shangde.edu.cou.service.TeacherImpl" parent="baseService"/>
+    <bean id="historyPriceService" class="com.shangde.edu.cou.service.HistoryPriceImpl" parent="baseService"/>
+    <bean id="couponService" class="com.shangde.edu.cou.service.CouponImpl" parent="baseService"/>
+    <bean id="cpCusService" class="com.shangde.edu.cou.service.CpCusImpl" parent="baseService"/>
+    <bean id="uncouponService" class="com.shangde.edu.cou.service.UncouponImpl" parent="baseService"/>
+    <bean id="clazzCouService" class="com.shangde.edu.cou.service.ClazzCouImpl" parent="baseService"/>
+    <bean id="clazzService" class="com.shangde.edu.cou.service.ClazzImpl" parent="baseService"/>
+	
+	<bean id="sellCouService" class="com.shangde.edu.cou.service.SellCouImpl" parent="baseService"/>
+    <bean id="sellWayService" class="com.shangde.edu.cou.service.SellWayImpl" parent="baseService"/>
+    <bean id="contractCountService" class="com.shangde.edu.count.service.ContractCountImpl" parent="baseService"/>
+    <bean id="sellWayCountService" class="com.shangde.edu.count.service.SellWayCountImpl" parent="baseService"/>
+</beans>	

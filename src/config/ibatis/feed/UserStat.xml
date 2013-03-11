@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_UserStat_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="UserStat" type="com.shangde.edu.feed.domain.UserStat" />
+	<typeAlias alias="UserStatDTO" type="com.shangde.edu.feed.dto.UserStatDTO" />
+	<typeAlias alias="QueryUserStatCondition" type="com.shangde.edu.feed.condition.QueryUserStatCondition" />
+	
+	
+	
+	<resultMap id="UserStatResult" class="UserStat">
+		 <result property="id" column="ID"/>
+		 <result property="cusId" column="CUS_ID"/>
+		 <result property="email" column="email" />
+		 <result property="subjectId" column="subject_id"/>
+		 <result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectById"/>
+		 <result property="regTime" column="reg_time"/>
+		 <result property="regLocation" column="reg_location"/>
+		 <result property="useNum" column="use_num"/>
+		 <result property="useClickNum" column="use_click_num"/>
+		 <result property="totalLength" column="total_length"/>
+		 <result property="pubDate" column="PUBDATE"/>
+		 <result property="modified" column="modified"/>
+	</resultMap>
+	
+	<resultMap id="UserStatDTOResult" class="UserStatDTO">
+		 <result property="id" column="ID"/>
+		 <result property="cusId" column="CUS_ID"/>
+		 <result property="email" column="email" />
+		 <result property="subjectId" column="subject_id"/>
+		 <result property="subject" column="SUBJECT_ID" select="Subject_NS.getSubjectById"/>
+		 <result property="regTime" column="reg_time"/>
+		 <result property="regLocation" column="reg_location"/>
+		 <result property="useNum" column="use_num"/>
+		 <result property="useClickNum" column="use_click_num"/>
+		 <result property="totalLength" column="total_length"/>
+		 <result property="pubDate" column="PUBDATE"/>
+		 <result property="modified" column="modified"/>
+		 <result property="notWatchNum" column="notWatchNum"/>
+		 <!-- 
+		 <result property="notWatchNum" column="email" select="Feed_UserStat_NS.getUserStatCountByEmail"/>
+		  -->
+	</resultMap>
+	
+
+	<sql id="FEED_USER_STAT_TBL_columns">
+		feed_user_stat_tbl.id,
+		feed_user_stat_tbl.cus_id,
+		feed_user_stat_tbl.email,
+		feed_user_stat_tbl.subject_id,
+		feed_user_stat_tbl.reg_time,
+		feed_user_stat_tbl.reg_location,
+		feed_user_stat_tbl.use_num,
+		feed_user_stat_tbl.use_click_num,
+		feed_user_stat_tbl.total_length,
+		feed_user_stat_tbl.pubDate,
+		feed_user_stat_tbl.modified
+	</sql>
+
+	<sql id="FEED_USER_STAT_TBL_properties">
+		#id#,#cusId#,#email#,#subjectId#,#regTime#,#regLocation#,#useNum#,#useClickNum#,#totalLength#,#pubDate#,#modified#
+	</sql>
+
+	<insert id="createUserStat" parameterClass="UserStat">
+		INSERT INTO feed_user_stat_tbl (
+		<include refid="Feed_UserStat_NS.FEED_USER_STAT_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_UserStat_NS.FEED_USER_STAT_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+	
+	<update id="updateUserStat" parameterClass="UserStat">
+		UPDATE feed_user_stat_tbl SET 
+			ID = #id#,
+			cus_id = #cusId#,
+			email = #email#,
+		    SUBJECT_ID = #subjectId#,
+		    reg_time = #regTime#,
+		    reg_location = #regLocation#,
+		    use_num = #useNum#,
+		    use_click_num = #useClickNum#,
+		    total_length = #totalLength#,
+		    PUBDATE = #pubDate#,
+		    MODIFIED = #modified#
+        WHERE ID = #id#
+	</update>
+	
+	<!-- 根据id查询 -->
+	<select id="getUserStatById" resultClass="int" parameterClass="int">
+		select count(1) from feed_user_stat_tbl where id = #value#
+	</select>
+	
+	<!-- 根据cus_id,email查询, -->
+	<select id="getUserStatCountByCusIdEmail" resultMap="Feed_UserStat_NS.UserStatResult" parameterClass="QueryUserStatCondition">
+		select * from feed_user_stat_tbl where cus_id = #cusId# and email = #email# limit 1
+	</select>
+	
+	
+	<!-- 未观看视频数,这里需要添加专业查询 暂时不使用 -->
+	<select id="getUserStatCountByEmail" resultClass="int" parameterClass="String">
+		select count(1) from feed_micro_video_tbl where id not in 
+				(select object_id from feed_unique_record_tbl where type = 2 and email = #email#)
+	</select>
+	
+	<!-- 2011-12-2  统计查询  分页-->
+	<select id="getUserStatList" resultMap="Feed_UserStat_NS.UserStatDTOResult" parameterClass="QueryUserStatCondition">
+		<include refid="public_sql.page_begin"/>
+					SELECT  us.id,us.cus_id,us.email,us.subject_id,us.reg_time,us.reg_location,COUNT(1) AS use_num,us.use_click_num,us.total_length,us.PUBDATE,us.modified,
+							(SELECT COUNT(1) FROM feed_micro_video_tbl mv 
+								WHERE mv.subject_id =  us.subject_id AND mv.id 
+									NOT IN (SELECT ur.object_id FROM feed_unique_record_tbl ur 
+								WHERE ur.type = 2 AND ur.email = us.email)) AS notWatchNum
+								FROM 
+									feed_user_stat_tbl us LEFT JOIN  feed_user_stat_log_tbl ul
+								ON  
+									(us.cus_id = ul.cus_id) 
+								WHERE  ul.cus_id IS NOT NULL GROUP BY us.cus_id
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getUserStatListCount" resultClass="int" parameterClass="QueryUserStatCondition">
+					SELECT COUNT(result.cus_id) FROM (SELECT DISTINCT us.cus_id
+						FROM 
+						feed_user_stat_tbl us LEFT JOIN  feed_user_stat_log_tbl ul
+						ON  (us.cus_id = ul.cus_id) 
+						WHERE ul.cus_id IS NOT NULL) result
+	</select>
+	
+	
+	
+	<!-- 导出所有的用户统计信息 -->
+	<select id="ExportUserStatistics" resultMap="UserStatDTOResult">
+			  SELECT  us.id,us.cus_id,us.email,us.subject_id,us.reg_time,us.reg_location,COUNT(1) AS use_num,us.use_click_num,us.total_length,us.PUBDATE,us.modified,
+							(SELECT COUNT(1) FROM feed_micro_video_tbl mv 
+								WHERE mv.subject_id =  us.subject_id AND mv.id 
+									NOT IN (SELECT ur.object_id FROM feed_unique_record_tbl ur 
+								WHERE ur.type = 2 AND ur.email = us.email)) AS notWatchNum
+								FROM 
+									feed_user_stat_tbl us LEFT JOIN  feed_user_stat_log_tbl ul
+								ON  
+									(us.cus_id = ul.cus_id) 
+								WHERE  ul.cus_id IS NOT NULL GROUP BY us.cus_id
+	</select>
+	
+	<!-- 导出 条件查询后的所有结果集 -->
+	<select id="ExportSearchUserStatList" resultMap="UserStatDTOResult"  parameterClass="QueryUserStatCondition">
+			SELECT  us.id,us.cus_id,us.email,us.subject_id,us.reg_time,us.reg_location,COUNT(1) AS use_num,us.use_click_num,us.total_length,us.PUBDATE,us.modified,
+								(SELECT COUNT(1) FROM feed_micro_video_tbl mv 
+							WHERE mv.subject_id =  us.subject_id AND mv.id 
+								NOT IN (SELECT ur.object_id FROM feed_unique_record_tbl ur 
+							WHERE ur.type = 2 AND ur.email = us.email)) AS notWatchNum
+							FROM 
+								feed_user_stat_tbl us LEFT JOIN  feed_user_stat_log_tbl ul
+							ON  
+							(us.cus_id = ul.cus_id) 
+								WHERE 1=1 
+								  <isNotNull property="subjectId" prepend="and">
+								     	us.SUBJECT_ID = #subjectId#
+								  </isNotNull>
+								  <isNotNull prepend="and" property="startTime">
+										<![CDATA[  ul.PUBDATE >= #startTime# ]]>
+								  </isNotNull>
+								  <isNotNull prepend="and" property="endTime">
+									    <![CDATA[  ul.PUBDATE <= #endTime# ]]>
+								  </isNotNull>
+					        AND ul.cus_id IS NOT NULL GROUP BY us.cus_id
+	</select>
+	
+	<!-- 统计 条件查询 分页 -->
+	<select id="getUserStatListByTerm" resultMap="Feed_UserStat_NS.UserStatDTOResult" parameterClass="QueryUserStatCondition">
+		<include refid="public_sql.page_begin"/>
+			SELECT  us.id,us.cus_id,us.email,us.subject_id,us.reg_time,us.reg_location,COUNT(1) AS use_num,us.use_click_num,us.total_length,us.PUBDATE,us.modified,
+								(SELECT COUNT(1) FROM feed_micro_video_tbl mv 
+							WHERE mv.subject_id =  us.subject_id AND mv.id 
+								NOT IN (SELECT ur.object_id FROM feed_unique_record_tbl ur 
+							WHERE ur.type = 2 AND ur.email = us.email)) AS notWatchNum
+							FROM 
+								feed_user_stat_tbl us LEFT JOIN  feed_user_stat_log_tbl ul
+							ON  
+							(us.cus_id = ul.cus_id) 
+								WHERE 1=1 
+								  <isNotNull property="subjectId" prepend="and">
+								     	us.SUBJECT_ID = #subjectId#
+								  </isNotNull>
+								  <isNotNull prepend="and" property="startTime">
+										<![CDATA[  ul.PUBDATE >= #startTime# ]]>
+								  </isNotNull>
+								  <isNotNull prepend="and" property="endTime">
+									    <![CDATA[  ul.PUBDATE <= #endTime# ]]>
+								  </isNotNull>
+					       		 AND ul.cus_id IS NOT NULL GROUP BY us.cus_id
+		<include refid="public_sql.page_end"/>
+	</select>
+	
+	<select id="getUserStatListCountByTerm" resultClass="int" parameterClass="QueryUserStatCondition">
+		select COUNT(result.cus_id) from
+		      (
+		      SELECT  DISTINCT us.cus_id AS cus_id
+							FROM 
+								feed_user_stat_tbl us LEFT JOIN  feed_user_stat_log_tbl ul
+							ON  
+							(us.cus_id = ul.cus_id) 
+						where 1=1 
+						  <isNotNull property="subjectId" prepend="and">
+						     	us.SUBJECT_ID = #subjectId#
+						  </isNotNull>
+						  <isNotNull prepend="and" property="startTime">
+								<![CDATA[  ul.PUBDATE >= #startTime# ]]>
+						  </isNotNull>
+						  <isNotNull prepend="and" property="endTime">
+							    <![CDATA[  ul.PUBDATE <= #endTime# ]]>
+						  </isNotNull>
+			   				and ul.cus_id IS NOT NULL
+			   				) result
+	</select>
+	
+	<!-- 
+	<select id="getUserStatListCountByTerm" resultClass="int" parameterClass="QueryUserStatCondition">
+			SELECT COUNT(result.cus_id) FROM (SELECT DISTINCT us.cus_id
+				FROM 
+					feed_user_stat_tbl us
+					WHERE 1=1  
+						  <isNotNull property="subjectId" prepend="and">
+						     	us.SUBJECT_ID = #subjectId#
+						  </isNotNull>
+						  <isNotNull prepend="and" property="startTime">
+								<![CDATA[  ul.PUBDATE >= #startTime# ]]>
+						  </isNotNull>
+						  <isNotNull prepend="and" property="endTime">
+							    <![CDATA[  ul.PUBDATE <= #endTime# ]]>
+						  </isNotNull>
+			   				) result
+	</select>
+	 -->
+	
+	
+	
+	
+	
+	
+	<!-- 统计查询  分页
+	<select id="getUserStatList" resultMap="Feed_UserStat_NS.UserStatDTOResult" parameterClass="QueryUserStatCondition">
+		<include refid="public_sql.page_begin"/>
+			SELECT 
+				us.*,
+				(select count(1) from feed_micro_video_tbl mv where mv.subject_id = us.subject_id and mv.id not in (select ur.object_id from feed_unique_record_tbl ur where ur.type = 2 and ur.email = us.email)) as notWatchNum
+			 FROM feed_user_stat_tbl us order by us.pubdate desc
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getUserStatListCount" resultClass="int" parameterClass="QueryUserStatCondition">
+			SELECT count(1) FROM feed_user_stat_tbl
+	</select>
+	-->
+	<!-- 
+	<select id="ExportUserStatistics" resultMap="UserStatDTOResult">
+			SELECT 
+				us.*,
+				(select count(1) from feed_micro_video_tbl mv where mv.subject_id = us.subject_id and mv.id not in (select ur.object_id from feed_unique_record_tbl ur where ur.type = 2 and ur.email = us.email)) as notWatchNum
+			 FROM feed_user_stat_tbl us order by us.pubdate desc
+	</select>
+	 -->
+	<!-- 导出 条件查询后的所有结果集 
+	<select id="ExportSearchUserStatList" resultMap="UserStatDTOResult"  parameterClass="QueryUserStatCondition">
+		SELECT 
+				 	us.*,
+				    (select count(1) from feed_micro_video_tbl mv where mv.subject_id = us.subject_id and mv.id not in (select ur.object_id from feed_unique_record_tbl ur where ur.type = 2 and ur.email = us.email)) as notWatchNum
+			   FROM feed_user_stat_tbl us where  1=1 
+			  <isNotNull property="subjectId" prepend="and">
+			     	SUBJECT_ID = #subjectId#
+			  </isNotNull>
+			  <isNotNull prepend="and" property="startTime">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			  </isNotNull>
+			  <isNotNull prepend="and" property="endTime">
+				    <![CDATA[  PUBDATE <= #endTime# ]]>
+			  </isNotNull>
+			  order by pubdate desc
+	</select>
+	-->
+	
+	<!-- 统计 条件查询 分页
+	<select id="getUserStatListByTerm" resultMap="Feed_UserStat_NS.UserStatDTOResult" parameterClass="QueryUserStatCondition">
+		<include refid="public_sql.page_begin"/>
+			SELECT 
+				 	us.*,
+				    (select count(1) from feed_micro_video_tbl mv where mv.subject_id = us.subject_id and mv.id not in (select ur.object_id from feed_unique_record_tbl ur where ur.type = 2 and ur.email = us.email)) as notWatchNum
+			   FROM feed_user_stat_tbl us where  1=1 
+			  <isNotNull property="subjectId" prepend="and">
+			     	SUBJECT_ID = #subjectId#
+			  </isNotNull>
+			  <isNotNull prepend="and" property="startTime">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			  </isNotNull>
+			  <isNotNull prepend="and" property="endTime">
+				    <![CDATA[  PUBDATE <= #endTime# ]]>
+			  </isNotNull>
+			  order by pubdate desc
+		<include refid="public_sql.page_end"/>
+	</select> 
+	<select id="getUserStatListCountByTerm" resultClass="int" parameterClass="QueryUserStatCondition">
+			SELECT count(1)  FROM feed_user_stat_tbl where 1=1 
+			  <isNotNull property="subjectId" prepend="and">
+			     	SUBJECT_ID = #subjectId#
+			  </isNotNull>
+			  <isNotNull prepend="and" property="startTime">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			  </isNotNull>
+			  <isNotNull prepend="and" property="endTime">
+				    <![CDATA[  PUBDATE <= #endTime# ]]>
+			  </isNotNull>
+			  order by pubdate desc
+	</select>-->
+	<!--end-->
+</sqlMap>

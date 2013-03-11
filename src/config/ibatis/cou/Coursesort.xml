@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Coursesort_NS">
+        <!--table:COU_COURSESORT_TBL-->
+        <typeAlias alias="Coursesort" type="com.shangde.edu.cou.domain.Coursesort"/>
+        <typeAlias alias="QueryCoursesortCondition" type="com.shangde.edu.cou.condition.QueryCoursesortCondition"/>
+
+        <resultMap id="CoursesortResult" class="Coursesort">
+            <result property="coursesortId" column="COURSESORT_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="coursesortName" column="COURSESORT_NAME"/>
+            <result property="addTime" column="ADD_TIME"/>
+            <result property="sortNum" column="SORT_NUM"/>
+            <result property="status" column="STATUS"/>
+            <result property="level" column="LEVEL"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="sortPicUrl" column="SORT_PIC_URL"/>
+            <result property="courseIdList" column="COURSESORT_ID" select="Coursesort_NS.getCourseIDsBySortId"/>
+        </resultMap>
+
+        <sql id="COU_COURSESORT_TBL_columns">
+            COU_COURSESORT_TBL.COURSESORT_ID,
+            COU_COURSESORT_TBL.P_ID,
+            COU_COURSESORT_TBL.COURSESORT_NAME,
+            COU_COURSESORT_TBL.ADD_TIME,
+            COU_COURSESORT_TBL.SORT_NUM,
+            COU_COURSESORT_TBL.STATUS,
+            COU_COURSESORT_TBL.LEVEL,
+            COU_COURSESORT_TBL.SUBJECT_ID,
+            COU_COURSESORT_TBL.SORT_PIC_URL
+        </sql>
+
+        <sql id="COU_COURSESORT_TBL_properties">
+            #coursesortId#,
+            #pId#,
+            #coursesortName#,
+            #addTime#,
+            #sortNum#,
+            #status#,
+            #level#,
+            #subjectId#,
+            #sortPicUrl#
+        </sql>
+
+        <insert id="createCoursesort" parameterClass="Coursesort">
+            INSERT INTO COU_COURSESORT_TBL (<include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>) VALUES (<include refid="Coursesort_NS.COU_COURSESORT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="coursesortId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCoursesortById" parameterClass="int">
+            DELETE FROM COU_COURSESORT_TBL
+            WHERE
+                COURSESORT_ID = #value#
+        </delete>
+
+        <update id="updateCoursesort" parameterClass="Coursesort">
+            UPDATE COU_COURSESORT_TBL SET
+                COURSESORT_ID = #coursesortId#,
+                P_ID = #pId#,
+                COURSESORT_NAME = #coursesortName#,
+                ADD_TIME = #addTime#,
+                SORT_NUM = #sortNum#,
+                STATUS = #status#,
+                LEVEL = #level#,
+                SUBJECT_ID = #subjectId#,
+                SORT_PIC_URL = #sortPicUrl#
+            WHERE
+                COURSESORT_ID = #coursesortId#
+        </update>
+
+        <select id="getCoursesortById" resultMap="Coursesort_NS.CoursesortResult" parameterClass="int">
+            SELECT
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+            WHERE
+                COURSESORT_ID = #value#
+        </select>
+        
+        <select id="getCourseIDsBySortId" resultClass="int" parameterClass="int">
+            SELECT
+            	COU_COURSE_TBL.COURSE_ID
+            FROM COU_COURSE_TBL
+            WHERE
+                SORT_ID = #value# order by COU_COURSE_TBL.lession_time;
+        </select>
+
+        <select id="getCoursesortList" resultMap="Coursesort_NS.CoursesortResult" parameterClass="QueryCoursesortCondition">
+            SELECT
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+        </select>
+        <!-- ��ȡ�ӷ����б� -->
+        <select id="getCoursesortListByPid" resultMap="Coursesort_NS.CoursesortResult" parameterClass="QueryCoursesortCondition">
+            SELECT
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+            	WHERE
+            		P_ID = #pId# AND  COU_COURSESORT_TBL.P_ID IS NOT NUll
+                  AND (COU_COURSESORT_TBL.STATUS = 0 or COU_COURSESORT_TBL.STATUS = 3)
+                  <isNotNull property="subjectId">
+	           	<isNotEqual property="subjectId" compareValue="0" prepend="and">
+		                  SUBJECT_ID = #subjectId#
+		          		
+			    </isNotEqual>
+	        </isNotNull>
+        </select>
+        
+        <select id="getCourseSortListForTechTree" resultMap="Coursesort_NS.CoursesortResult" parameterClass="QueryCoursesortCondition">
+            SELECT
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+            WHERE COU_COURSESORT_TBL.P_ID IS NOT NUll
+                  AND COU_COURSESORT_TBL.STATUS = 0;
+        </select>
+        
+        <select id="getLastCourseSortList" resultMap="Coursesort_NS.CoursesortResult" parameterClass="QueryCoursesortCondition">
+            SELECT
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+            WHERE COU_COURSESORT_TBL.P_ID IS NOT NUll
+                  AND COU_COURSESORT_TBL.LEVEL = 3 AND COU_COURSESORT_TBL.STATUS = 0;
+        </select>
+        
+        <select id="getCourseSortList" resultMap="Coursesort_NS.CoursesortResult" parameterClass="QueryCoursesortCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+              WHERE
+                COU_COURSESORT_TBL.STATUS  != 2 AND COU_COURSESORT_TBL.P_ID IS NOT NULL 
+                
+            <isNotNull property="searchKey">
+	           	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                  COU_COURSESORT_TBL.COURSESORT_NAME like  CONCAT('%',#searchKey#,'%')
+		          		
+			    </isNotEqual>
+	        </isNotNull>
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getCoursesortListCount" resultClass="int" parameterClass="QueryCoursesortCondition">
+            SELECT COUNT(1)
+            FROM COU_COURSESORT_TBL
+            WHERE
+                COU_COURSESORT_TBL.STATUS  != 2 AND COU_COURSESORT_TBL.P_ID IS NOT NULL
+            <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                  COU_COURSESORT_TBL.COURSESORT_NAME like  CONCAT('%',#searchKey#,'%')
+		          		
+			    </isNotEqual>
+	        </isNotNull>
+        </select>
+        
+        <!--end-->
+        
+        <select id="getCoursesortListForTag" resultMap="Coursesort_NS.CoursesortResult" parameterClass="QueryCoursesortCondition">
+            SELECT 
+            <include refid="Coursesort_NS.COU_COURSESORT_TBL_columns"/>
+            FROM COU_COURSESORT_TBL
+            WHERE
+                COU_COURSESORT_TBL.STATUS  = 0 AND COU_COURSESORT_TBL.P_ID IS NOT NULL AND COU_COURSESORT_TBL.LEVEL = 3
+           		
+        </select>
+</sqlMap>

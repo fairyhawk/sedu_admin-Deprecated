@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Announcement_NS">
+        <!--table:CMS_ARTICLE_TBL-->
+        <typeAlias alias="Announcement" type="com.shangde.edu.cms.domain.Announcement"/>
+        <typeAlias alias="QueryAcmentCondition" type="com.shangde.edu.cms.condition.QueryAcmentCondition"/>
+        <typeAlias alias="PageQuery" type="com.shangde.common.vo.PageQuery"/>
+
+		<resultMap class="Announcement" id="AcmentResult">
+			<result property="id" column="ID"/>
+			<result property="subjectId" column="SUBJECT_ID"/>
+			<result property="title" column="TITLE"/>
+			<result property="content" column="CONTENT"/>
+			<result property="author" column="AUTHOR"/>
+			<result property="clickNum" column="CLICK_NUM"/>
+			<result property="status" column="STATUS"/>
+			<result property="addTime" column="ADD_TIME"/>
+		</resultMap>
+
+		<resultMap class="Announcement" id="AcmentResultList">
+			<result property="id" column="ID"/>
+			<result property="subjectId" column="SUBJECT_ID"/>
+			<result property="title" column="TITLE"/>
+			<result property="content" column="CONTENT"/>
+			<result property="author" column="AUTHOR"/>
+			<result property="clickNum" column="CLICK_NUM"/>
+			<result property="status" column="STATUS"/>
+			<result property="addTime" column="ADD_TIME"/>
+			<result property="subjectName" column="SUBJECT_NAME"/>
+		</resultMap>
+		
+		<sql id="VIEW_columns">
+			  CMS_ANNOUNCEMENT_TBL.ID,
+			  CMS_ANNOUNCEMENT_TBL.SUBJECT_ID,
+			  CMS_ANNOUNCEMENT_TBL.TITLE,
+			  CMS_ANNOUNCEMENT_TBL.CONTENT,
+			  CMS_ANNOUNCEMENT_TBL.AUTHOR,
+			  CMS_ANNOUNCEMENT_TBL.CLICK_NUM,
+			  CMS_ANNOUNCEMENT_TBL.STATUS,
+			  CMS_ANNOUNCEMENT_TBL.ADD_TIME,
+			  SYS_SUBJECT_TBL.SUBJECT_NAME 
+		</sql>
+
+		<sql id="CMS_ANNOUNCEMENT_TBL_columns">
+			CMS_ANNOUNCEMENT_TBL.ID,
+			CMS_ANNOUNCEMENT_TBL.SUBJECT_ID,
+			CMS_ANNOUNCEMENT_TBL.TITLE,
+			CMS_ANNOUNCEMENT_TBL.CONTENT,
+			CMS_ANNOUNCEMENT_TBL.AUTHOR,
+			CMS_ANNOUNCEMENT_TBL.CLICK_NUM,
+			CMS_ANNOUNCEMENT_TBL.STATUS,
+			CMS_ANNOUNCEMENT_TBL.ADD_TIME
+		</sql>
+
+		<sql id="GETONE_columns">
+			CMS_ANNOUNCEMENT_TBL.ID as id,
+			CMS_ANNOUNCEMENT_TBL.SUBJECT_ID as subjectId,
+			CMS_ANNOUNCEMENT_TBL.TITLE as title,
+			CMS_ANNOUNCEMENT_TBL.CONTENT as content,
+			CMS_ANNOUNCEMENT_TBL.AUTHOR as author,
+			CMS_ANNOUNCEMENT_TBL.STATUS as status,
+			CMS_ANNOUNCEMENT_TBL.CLICK_NUM as clickNum,
+			CMS_ANNOUNCEMENT_TBL.ADD_TIME as addTime
+		</sql>
+		
+		<insert id="add" parameterClass="Announcement">
+			INSERT INTO CMS_ANNOUNCEMENT_TBL (
+			  CMS_ANNOUNCEMENT_TBL.SUBJECT_ID,
+			  CMS_ANNOUNCEMENT_TBL.TITLE,
+			  CMS_ANNOUNCEMENT_TBL.CONTENT,
+			  CMS_ANNOUNCEMENT_TBL.AUTHOR,
+			  CMS_ANNOUNCEMENT_TBL.CLICK_NUM,
+			  CMS_ANNOUNCEMENT_TBL.STATUS,
+			  CMS_ANNOUNCEMENT_TBL.ADD_TIME
+			) 
+			VALUES
+			  (#subjectId#, #title#, #content#, #author#, #clickNum#, #status#, #addTime#)
+		</insert>
+
+		<select id="getById" parameterClass="int" resultClass="Announcement">
+				SELECT 
+				  <include refid="GETONE_columns"/>
+				FROM
+				  CMS_ANNOUNCEMENT_TBL 
+				WHERE CMS_ANNOUNCEMENT_TBL.ID = #id#
+		</select>
+		
+		<delete id="delete" parameterClass="String">
+			DELETE 
+			FROM
+			  CMS_ANNOUNCEMENT_TBL 
+			WHERE CMS_ANNOUNCEMENT_TBL.ID IN ($ids$)
+		</delete>
+		
+		<update id="update" parameterClass="Announcement">
+			UPDATE CMS_ANNOUNCEMENT_TBL
+			SET
+			  CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = #subjectId#,
+			  CMS_ANNOUNCEMENT_TBL.TITLE = #title#,
+			  CMS_ANNOUNCEMENT_TBL.CONTENT = #content#,
+			  CMS_ANNOUNCEMENT_TBL.AUTHOR = #author#,
+			  CMS_ANNOUNCEMENT_TBL.STATUS = #status#
+			WHERE CMS_ANNOUNCEMENT_TBL.ID = #id#
+		</update>
+		
+		<update id="editStatus" parameterClass="Map">
+			UPDATE CMS_ANNOUNCEMENT_TBL
+			SET
+			  CMS_ANNOUNCEMENT_TBL.STATUS = #status#
+			WHERE CMS_ANNOUNCEMENT_TBL.ID IN ($ids$)
+		</update>
+		
+		<select id="getAll" resultMap="AcmentResultList" parameterClass="PageQuery">
+			SELECT 
+			  <include refid="VIEW_columns"/>
+			FROM
+			  CMS_ANNOUNCEMENT_TBL 
+			  LEFT JOIN SYS_SUBJECT_TBL 
+			    ON CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = SYS_SUBJECT_TBL.SUBJECT_ID 
+			ORDER BY CMS_ANNOUNCEMENT_TBL.ADD_TIME DESC
+        		<include refid="public_sql.page_end"/>			
+		</select>
+		
+		<select id="getAllCount" resultClass="int">
+			SELECT 
+			  COUNT(1) 
+			FROM
+			  CMS_ANNOUNCEMENT_TBL
+		</select>
+		
+		<select id="search" resultMap="AcmentResultList" parameterClass="QueryAcmentCondition">
+			SELECT 
+			  <include refid="VIEW_columns"/>
+			FROM
+			  CMS_ANNOUNCEMENT_TBL 
+			  LEFT JOIN SYS_SUBJECT_TBL 
+			    ON CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = SYS_SUBJECT_TBL.SUBJECT_ID
+			WHERE 1=1
+			<isNotNull property="title" prepend="and">
+				CMS_ANNOUNCEMENT_TBL.TITLE LIKE '%$title$%'
+			</isNotNull>
+			<isNotNull property="subjectId" prepend="and">
+				CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull property="startTime" prepend="and">
+				CMS_ANNOUNCEMENT_TBL.ADD_TIME >= #startTime#
+			</isNotNull>
+			<isNotNull property="endTime" prepend="and">
+				<![CDATA[ CMS_ANNOUNCEMENT_TBL.ADD_TIME <= #endTime# ]]>
+			</isNotNull>
+			ORDER BY CMS_ANNOUNCEMENT_TBL.ADD_TIME DESC
+        		<include refid="public_sql.page_end"/>	
+		</select>
+		
+		<select id="searchCount" resultClass="int" parameterClass="QueryAcmentCondition">
+			SELECT 
+			  COUNT(1)
+			FROM
+			  CMS_ANNOUNCEMENT_TBL
+			WHERE 1=1
+			<isNotNull property="title" prepend="and">
+				CMS_ANNOUNCEMENT_TBL.TITLE LIKE '%$title$%'
+			</isNotNull>
+			<isNotNull property="subjectId" prepend="and">
+				CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = #subjectId#
+			</isNotNull>
+			<isNotNull property="startTime" prepend="and">
+				CMS_ANNOUNCEMENT_TBL.ADD_TIME >= #startTime#
+			</isNotNull>
+			<isNotNull property="endTime" prepend="and">
+				<![CDATA[ CMS_ANNOUNCEMENT_TBL.ADD_TIME <= #endTime# ]]>
+			</isNotNull>
+		</select>
+		
+		<select id="getUp" resultClass="Announcement" parameterClass="Map">
+			SELECT 
+			  <include refid="GETONE_columns"/> 
+			FROM
+			  CMS_ANNOUNCEMENT_TBL 
+			WHERE CMS_ANNOUNCEMENT_TBL.STATUS = 1 
+			  AND CMS_ANNOUNCEMENT_TBL.ID > #id# 
+			<isNotEqual property="subjectIds" compareValue="" prepend="and">
+			  (CMS_ANNOUNCEMENT_TBL.SUBJECT_ID IN ($subjectIds$) 
+			  OR CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = 0)
+			</isNotEqual>
+			LIMIT 1
+		</select>
+		
+		<select id="getDown" resultClass="Announcement" parameterClass="Map">
+			SELECT 
+			  <include refid="GETONE_columns"/> 
+			FROM
+			  CMS_ANNOUNCEMENT_TBL 
+			WHERE CMS_ANNOUNCEMENT_TBL.STATUS = 1 
+			  <![CDATA[ AND CMS_ANNOUNCEMENT_TBL.ID < #id# ]]>
+			<isNotEqual property="subjectIds" compareValue="" prepend="and">
+			  (CMS_ANNOUNCEMENT_TBL.SUBJECT_ID IN ($subjectIds$)
+			  OR CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = 0)
+			</isNotEqual>
+			ORDER BY CMS_ANNOUNCEMENT_TBL.ID DESC 
+			LIMIT 1
+		</select>
+		
+		<select id="getTop10" resultMap="AcmentResult" parameterClass="String">
+			SELECT 
+			  <include refid="CMS_ANNOUNCEMENT_TBL_columns"/>
+			FROM
+			  CMS_ANNOUNCEMENT_TBL 
+			WHERE (CMS_ANNOUNCEMENT_TBL.SUBJECT_ID IN ($subjectIds:String$) 
+			  OR CMS_ANNOUNCEMENT_TBL.SUBJECT_ID = 0)
+			  AND CMS_ANNOUNCEMENT_TBL.STATUS = 1
+			  ORDER BY CMS_ANNOUNCEMENT_TBL.ADD_TIME DESC
+			LIMIT 10
+		</select>
+		
+		<update id="updateClickNum" parameterClass="int">
+			UPDATE 
+			  CMS_ANNOUNCEMENT_TBL 
+			SET
+			  CMS_ANNOUNCEMENT_TBL.CLICK_NUM = CMS_ANNOUNCEMENT_TBL.CLICK_NUM + 1 
+			WHERE CMS_ANNOUNCEMENT_TBL.ID = #id#
+		</update>
+        <!--end-->
+</sqlMap>

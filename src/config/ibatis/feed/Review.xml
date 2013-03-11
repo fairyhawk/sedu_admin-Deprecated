@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Review_NS">
+
+	<!--table:FEED_Review_TBL-->
+	<typeAlias alias="Review" type="com.shangde.edu.feed.domain.Review" />
+	<typeAlias alias="QueryReviewCondition" type="com.shangde.edu.feed.condition.QueryReviewCondition" />
+
+	<resultMap id="ReviewResult" class="Review">
+		<result property="id" column="ID" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="courseId" column="COURSE_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="targetCusId" column="TARGET_CUS_ID" />
+		<result property="targetReviewId" column="TARGET_REVIEW_ID" />
+		<result property="counts" column="COUNTS"/>
+		<result property="detail" column="DETAIL"/>
+		<result property="status" column="STATUS" />
+		<result property="pubDate" column="PUBDATE" />
+		<result property="modified" column="MODIFIED" />
+		<result property="videoId" column="VIDEO_ID" />
+		<result property="antilogNumber" column="antilog_number" />
+		<result property="supportNumber" column="support_number" />
+		
+		<!-- 引用实体对象,关联查询 -->
+		<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById" />
+		<result property="targetCustomer" column="target_cus_id" select="Customer_NS.getCustomerById" />
+	</resultMap>
+	
+	<resultMap id="ReviewResultBack" class="Review">
+		<result property="id" column="ID" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="courseId" column="COURSE_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="cusId" column="CUS_ID" />
+		<result property="targetCusId" column="TARGET_CUS_ID" />
+		<result property="targetReviewId" column="TARGET_REVIEW_ID" />
+		<result property="counts" column="COUNTS"/>
+		<result property="detail" column="DETAIL"/>
+		<result property="status" column="STATUS" />
+		<result property="pubDate" column="PUBDATE" />
+		<result property="modified" column="MODIFIED" />
+		<result property="videoId" column="VIDEO_ID" />
+		<result property="antilogNumber" column="antilog_number" />
+		<result property="supportNumber" column="support_number" />
+		
+		<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById" />
+	</resultMap>
+
+
+	<sql id="FEED_REVIEW_TBL_columns">
+		FEED_REVIEW_TBL.ID,
+		FEED_REVIEW_TBL.SUBJECT_ID,
+		FEED_REVIEW_TBL.COURSE_ID,
+		FEED_REVIEW_TBL.CONTENT,
+		FEED_REVIEW_TBL.CUS_ID,
+		FEED_REVIEW_TBL.TARGET_CUS_ID,
+		FEED_REVIEW_TBL.TARGET_REVIEW_ID,
+		FEED_REVIEW_TBL.COUNTS,
+		FEED_REVIEW_TBL.DETAIL,
+		FEED_REVIEW_TBL.STATUS,
+		FEED_REVIEW_TBL.PUBDATE,
+		FEED_REVIEW_TBL.MODIFIED,
+		FEED_REVIEW_TBL.VIDEO_ID,
+		FEED_REVIEW_TBL.antilog_number,
+		FEED_REVIEW_TBL.support_number
+	</sql>
+
+	<sql id="FEED_REVIEW_TBL_properties">
+		#id#,
+		#subjectId#, 
+		#courseId#,
+		#content#,
+		#customer.cusId#,
+		#targetCustomer.cusId#, 
+		#targetReviewId#,
+		#counts#,
+		#detail#,
+		#status#,
+		#pubDate#,
+		#modified#,
+		#videoId#,
+		#antilogNumber#,
+		#supportNumber#
+	</sql>
+
+	<!-- 添加 -->
+	<insert id="createReview" parameterClass="Review">
+		INSERT INTO FEED_REVIEW_TBL (
+		<include refid="Review_NS.FEED_REVIEW_TBL_columns" />
+		) VALUES (
+		<include refid="Review_NS.FEED_REVIEW_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateReview" parameterClass="Review">
+		UPDATE FEED_REVIEW_TBL 
+		SET 
+			ID = #id#, 
+			SUBJECT_ID = #subjectId#,
+			COURSE_ID = #courseId#, 
+			CONTENT = #content#, 
+			CUS_ID = #customer.cusId#, 
+			TARGET_CUS_ID = #targetCustomer.cusId#, 
+			TARGET_REVIEW_ID = #targetReview.id#,
+			COUNTS = #counts#,
+			DETAIL = #detail#,
+			STATUS = #status#, 
+			MODIFIED = #modified#,
+			VIDEO_ID = #videoId#,
+			antilog_number = #antilogNumber#,
+			support_number = #supportNumber#
+		WHERE ID = #id#
+	</update>
+
+	<!-- 根据id查询记录 -->
+	<select id="getReviewById" resultMap="Review_NS.ReviewResult" parameterClass="int">
+		SELECT
+		<include refid="Review_NS.FEED_REVIEW_TBL_columns" />
+		FROM FEED_REVIEW_TBL WHERE id = #id#
+	</select>
+	
+	<!-- 根据id删除记录 -->
+	<delete id="delReviewByid" parameterClass="int">
+		delete from FEED_REVIEW_TBL where id = #value#
+	</delete>
+	
+	<!-- 修改回复次数字段 -->
+   	<update id="updateReviewCounts" parameterClass="Map">
+		UPDATE FEED_REVIEW_TBL SET
+		counts = counts + #incremental#
+		WHERE ID = #id# 
+   	</update>
+   	
+   	<!-- 修改状态+detail值 -->
+   	<update id="updateReviewStatusDetail" parameterClass="Review">
+		UPDATE FEED_REVIEW_TBL SET
+		status = #status#,detail = #detail#
+		WHERE ID = #id# 
+   	</update>
+   	
+   	<!-- 后台查询 -->
+   	<select id="getReviewListBack" resultMap="Review_NS.ReviewResultBack" parameterClass="QueryReviewCondition">
+   		<include refid="public_sql.page_begin" />
+   			select * 
+   				from 
+   			FEED_REVIEW_TBL
+   			where 1=1
+   			<dynamic>
+   				<isNotEqual prepend="and" property="courseId" compareValue="-1">
+			    	course_Id = #courseId#
+			    </isNotEqual>
+			    <isNotEqual prepend="and" property="videoId" compareValue="-1">
+			    	video_Id = #videoId#
+			    </isNotEqual>
+			    <isNotNull property="startTime" prepend="and">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			    </isNotNull>
+			    <isNotNull property="endTime" prepend="and">
+					<![CDATA[  PUBDATE <= #endTime# ]]>
+			    </isNotNull>
+   			</dynamic>
+   			order by pubdate desc
+   		<include refid="public_sql.page_end" />
+   	</select>
+   	<select id="getReviewListPageCountBack" resultClass="int" parameterClass="QueryReviewCondition">
+   		select
+   			count(1)
+   		from FEED_REVIEW_TBL
+   		where 1=1
+   			<dynamic>
+			   <isNotEqual prepend="and" property="courseId" compareValue="-1">
+			    	course_Id = #courseId#
+			    </isNotEqual>
+			    <isNotEqual prepend="and" property="videoId" compareValue="-1">
+			    	video_Id = #videoId#
+			    </isNotEqual>
+			    <isNotNull property="startTime" prepend="and">
+					<![CDATA[  PUBDATE >= #startTime# ]]>
+			    </isNotNull>
+			    <isNotNull property="endTime" prepend="and">
+					<![CDATA[  PUBDATE <= #endTime# ]]>
+			    </isNotNull>
+   			</dynamic>
+   	</select>
+   	
+   	
+   	
+   	<!-- 前台-分页查询 -->
+   	<select id="getReviewList" resultMap="Review_NS.ReviewResult" parameterClass="QueryReviewCondition">
+   		<include refid="public_sql.page_begin" />
+   			select * from FEED_REVIEW_TBL 
+   			where status = 1
+   			order by pubdate desc
+   		<include refid="public_sql.page_end" />
+   	</select>
+   	<select id="getReviewListPageCount" resultClass="int" parameterClass="QueryReviewCondition">
+   		select
+   			count(1)
+   		from FEED_REVIEW_TBL
+   			where status = 1
+   	</select>
+   	
+   	<!-- 获取留言记录总数 -->
+   	<select id="getTotalReviewNum" resultClass="int">
+   		select count(1) from feed_review_tbl where status = 1
+   	</select>
+   	
+   	<!-- 修改支持数 -->
+   	<update id="updateSupportNumber" parameterClass="int">
+   		update feed_review_tbl set support_number = support_number + 1 where id = #value#
+   	</update>
+   	<!-- 修改反对数 -->
+   	<update id="updateAntilogNumber" parameterClass="int">
+   		update feed_review_tbl set antilog_number = antilog_number + 1 where id = #value#
+   	</update>
+   	<!-- 修改状态 -->
+   	<update id="updateReviewStatus" parameterClass="QueryReviewCondition">
+   		update feed_review_tbl set status = #status# where id = #id#
+   	</update>
+   	
+	<!--end-->
+</sqlMap>

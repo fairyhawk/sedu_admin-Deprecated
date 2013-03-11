@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DicCode_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="DicCode" type="com.shangde.edu.sys.domain.DicCode" />
+
+	<resultMap id="DicCodeResult" class="DicCode">
+		<result property="dicType" column="dic_type" />
+		<result property="dicCode" column="dic_code" />
+		<result property="dicContent" column="dic_content" />
+		<result property="dicSorts" column="dic_sorts" />
+	</resultMap>
+
+	<sql id="sys_dictionary_tbl_columns">
+		sys_dictionary_tbl.dic_type, 
+		sys_dictionary_tbl.dic_code, 
+		sys_dictionary_tbl.dic_content,
+		sys_dictionary_tbl.dic_sorts
+	</sql>
+
+	<sql id="sys_dictionary_tbl_properties">
+		#dicType#, #dicCode#, #dicContent#, #dicSorts#
+	</sql>
+	<select id="getDic" resultMap="DicCode_NS.DicCodeResult"
+		parameterClass="DicCode">
+		select
+		<include refid="DicCode_NS.sys_dictionary_tbl_columns" />
+		FROM sys_dictionary_tbl WHERE 1=1
+		<isNotEmpty prepend="and" property="dicType">
+		dic_type = #dicType#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="dicCode">
+			 dic_code=#dicCode#
+		</isNotEmpty>
+		  
+	</select>
+	<select id="getDicList" resultMap="DicCode_NS.DicCodeResult">
+		select
+		<include refid="DicCode_NS.sys_dictionary_tbl_columns" />
+		FROM sys_dictionary_tbl
+	</select>
+</sqlMap>

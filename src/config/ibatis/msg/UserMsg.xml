@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserMsg_NS">
+        <!--table:MSG_USER_MSG_TBL-->
+        <typeAlias alias="UserMsg" type="com.shangde.edu.msg.domain.UserMsg"/>
+        <typeAlias alias="QueryUserMsgCondition" type="com.shangde.edu.msg.condition.QueryUserMsgCondition"/>
+
+        <resultMap id="UserMsgResult" class="UserMsg">
+            <result property="msgId" column="MSG_ID"/>
+            <result property="id" column="ID"/>
+            <result property="senderId" column="SENDER_ID"/>
+            <result property="receiverId" column="RECEIVER_ID"/>
+            <result property="msgStatus" column="MSG_STATUS"/>
+            <result property="sendTime" column="SEND_TIME"/>
+            <result property="checkTime" column="CHECK_TIME"/>
+            <result property="isExpired" column="IS_EXPIRED"/>
+            <result property="senderType" column="SENDER_TYPE"/>
+            <result property="receiverType" column="RECEIVER_TYPE"/>
+            <result property="senderName" column="SENDER_NAME"/>
+            <result property="receiverName" column="RECEIVER_NAME"/>
+        </resultMap>
+        
+        <resultMap id="AllUserMsgResult" class="UserMsg" extends="UserMsgResult">
+        	<result property="msg" column="MSG_ID" select="Message_NS.getMessageById"/>
+        </resultMap>
+
+        <sql id="MSG_USER_MSG_TBL_columns">
+            MSG_USER_MSG_TBL.MSG_ID,
+            MSG_USER_MSG_TBL.ID,
+            MSG_USER_MSG_TBL.SENDER_ID,
+            MSG_USER_MSG_TBL.RECEIVER_ID,
+            MSG_USER_MSG_TBL.MSG_STATUS,
+            MSG_USER_MSG_TBL.SEND_TIME,
+            MSG_USER_MSG_TBL.CHECK_TIME,
+            MSG_USER_MSG_TBL.IS_EXPIRED,
+            MSG_USER_MSG_TBL.SENDER_TYPE,
+            MSG_USER_MSG_TBL.RECEIVER_TYPE,
+            MSG_USER_MSG_TBL.SENDER_NAME,
+            MSG_USER_MSG_TBL.RECEIVER_NAME
+            
+        </sql>
+
+        <sql id="MSG_USER_MSG_TBL_properties">
+            #msgId#,
+            #id#,
+            #senderId#,
+            #receiverId#,
+            #msgStatus#,
+            #sendTime#,
+            #checkTime#,
+            #isExpired#,
+            #senderType#,
+            #receiverType#,
+            #senderName#,
+            #receiverName#
+        </sql>
+
+        <insert id="createUserMsg" parameterClass="UserMsg">
+            INSERT INTO MSG_USER_MSG_TBL (<include refid="UserMsg_NS.MSG_USER_MSG_TBL_columns"/>) VALUES (<include refid="UserMsg_NS.MSG_USER_MSG_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteUserMsgById" parameterClass="int">
+            DELETE FROM MSG_USER_MSG_TBL
+            WHERE
+                ID = #value#
+        </delete>
+        
+        <delete id="deleteUserMsgByMsgId" parameterClass="java.util.ArrayList">
+            DELETE FROM MSG_USER_MSG_TBL
+            <dynamic prepend="WHERE MSG_ID IN">
+            	<iterate open="(" close=")" conjunction=",">
+            		#ids[]#
+            	</iterate>            
+            </dynamic>           
+        </delete>
+
+        <update id="updateUserMsg" parameterClass="UserMsg">
+            UPDATE MSG_USER_MSG_TBL SET
+                MSG_ID = #msgId#,
+                ID = #id#,
+                SENDER_ID = #senderId#,
+                RECEIVER_ID = #receiverId#,
+                MSG_STATUS = #msgStatus#,
+                SEND_TIME = #sendTime#,
+                CHECK_TIME = #checkTime#,
+                IS_EXPIRED = #isExpired#,
+                SENDER_TYPE = #senderType#,
+            	RECEIVER_TYPE = #receiverType#,
+            	SENDER_NAME = #senderName#,
+            	RECEIVER_NAME = #receiverName#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getUserMsgById" resultMap="UserMsg_NS.UserMsgResult" parameterClass="int">
+            SELECT
+            <include refid="UserMsg_NS.MSG_USER_MSG_TBL_columns"/>
+            FROM MSG_USER_MSG_TBL
+            WHERE
+                ID = #value#
+        </select>
+        
+        <!-- get the count of unreadMsgs -->
+        <select id="getCountUnreadMsgs" resultClass="int" parameterClass="int">
+            SELECT 
+            count(1)
+            FROM MSG_USER_MSG_TBL
+            WHERE
+                MSG_USER_MSG_TBL.RECEIVER_ID=#value# and MSG_STATUS = 0 ;
+        </select>
+        
+        <!-- set the status of unreadMsgs -->
+        <update id="updateReadStatus"  parameterClass="int">
+            update MSG_USER_MSG_TBL SET
+             MSG_STATUS = 1
+            WHERE
+                MSG_USER_MSG_TBL.RECEIVER_ID=#value# and MSG_STATUS = 0 ;
+        </update>
+
+        <select id="getUserMsgList" resultMap="UserMsg_NS.UserMsgResult" parameterClass="QueryUserMsgCondition">
+            SELECT
+            <include refid="UserMsg_NS.MSG_USER_MSG_TBL_columns"/>
+            FROM MSG_USER_MSG_TBL
+        </select>
+        
+        <!-- fen ye search  -->
+        <select id="getUserMsgListByConditon" resultMap="UserMsg_NS.AllUserMsgResult" parameterClass="QueryUserMsgCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="UserMsg_NS.MSG_USER_MSG_TBL_columns"/>
+            FROM MSG_USER_MSG_TBL
+              WHERE
+                1 = 1  
+            	<isNotEqual property="senderId" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.SENDER_ID = #senderId#
+			    </isNotEqual>
+			    <isNotEqual property="receiverId" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.RECEIVER_ID = #receiverId#
+			    </isNotEqual>
+			    <isNotEqual property="senderType" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.SENDER_TYPE = #senderType#
+			    </isNotEqual>
+			    <isNotEqual property="receiverType" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.RECEIVER_TYPE = #receiverType#
+			    </isNotEqual>
+			    order by MSG_USER_MSG_TBL.MSG_ID desc
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getUserMsgListByConditonCount" resultClass="int" parameterClass="QueryUserMsgCondition">
+            SELECT COUNT(1)
+           		FROM MSG_USER_MSG_TBL
+              WHERE
+                1 = 1
+               <isNotEqual property="senderId" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.SENDER_ID = #senderId#
+			    </isNotEqual>
+			    <isNotEqual property="receiverId" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.RECEIVER_ID = #receiverId#
+			    </isNotEqual>
+			    <isNotEqual property="senderType" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.SENDER_TYPE = #senderType#
+			    </isNotEqual>
+			    <isNotEqual property="receiverType" compareValue="0" prepend="and">
+		                  MSG_USER_MSG_TBL.RECEIVER_TYPE = #receiverType#
+			    </isNotEqual>
+        </select>
+        
+        <!--  -->
+        <select id="getMsgSizeByUserIdAndUserMsgId" resultClass="int" parameterClass="QueryUserMsgCondition">
+            SELECT COUNT(1)
+           		FROM MSG_USER_MSG_TBL
+              WHERE
+                MSG_USER_MSG_TBL.ID=#id# 
+                 <isNotEqual property="senderId" compareValue="0" prepend="and">
+		                  MSG_MESSAGE_TBL.SENDER_ID = #senderId#
+			    </isNotEqual>
+                <isNotEqual property="receiverId" compareValue="0" prepend="and">
+		                  MSG_MESSAGE_TBL.RECEIVER_ID = #receiverId#
+			    </isNotEqual>
+        </select>
+        
+        <select id="getApplicationUserMsgByConditon" resultMap="UserMsg_NS.AllUserMsgResult" parameterClass="QueryUserMsgCondition">
+            SELECT 
+           		<include refid="UserMsg_NS.MSG_USER_MSG_TBL_columns"/>
+           		FROM MSG_USER_MSG_TBL,MSG_MESSAGE_TBL
+              WHERE
+                1 = 1 and MSG_MESSAGE_TBL.MSG_SORT = 1 and receiver_type = #receiverType# and MSG_STATUS = 0 and MSG_MESSAGE_TBL.MSG_ID = MSG_USER_MSG_TBL.MSG_ID
+	            	<isNotEqual property="receiverId" compareValue="0" prepend="and">
+			                  MSG_USER_MSG_TBL.receiver_id =#receiverId#
+				    </isNotEqual>
+				    limit 1;
+        </select>
+        <!--end-->
+</sqlMap>

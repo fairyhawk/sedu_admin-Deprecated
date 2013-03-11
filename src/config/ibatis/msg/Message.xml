@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Message_NS">
+        <!--table:MSG_MESSAGE_TBL-->
+        <typeAlias alias="Message" type="com.shangde.edu.msg.domain.Message"/>
+        <typeAlias alias="QueryMessageCondition" type="com.shangde.edu.msg.condition.QueryMessageCondition"/>
+
+        <resultMap id="MessageResult" class="Message">
+            <result property="msgId" column="MSG_ID"/>
+            <result property="msgType" column="MSG_TYPE"/>
+            <result property="msgSort" column="MSG_SORT"/>
+            <result property="msgContent" column="MSG_CONTENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="msgTitle" column="MSG_TITLE"/>
+            <result property="senderType" column="SENDER_TYPE"/>
+            <result property="senderId" column="SENDER_ID"/>
+            <result property="senderName" column="SENDER_NAME"/>
+            <result property="keyWord" column="key_word"/>
+        </resultMap>
+        <resultMap class="Message" id="MessageDtoResult">
+        <result property="msgId" column="MSG_ID"/>
+            <result property="msgType" column="MSG_TYPE"/>
+            <result property="msgSort" column="MSG_SORT"/>
+            <result property="msgContent" column="MSG_CONTENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="msgTitle" column="MSG_TITLE"/>
+            <result property="senderType" column="SENDER_TYPE"/>
+            <result property="senderId" column="SENDER_ID"/>
+            <result property="senderName" column="SENDER_NAME"/>
+            <result property="keyWord" column="key_word"/>
+            <result property="cmtId" column="CMT_ID"/>
+            <result property="repId" column="REP_ID"/>
+        </resultMap>
+
+        <sql id="MSG_MESSAGE_TBL_columns">
+            MSG_MESSAGE_TBL.MSG_ID,
+            MSG_MESSAGE_TBL.MSG_TYPE,
+            MSG_MESSAGE_TBL.MSG_SORT,
+            MSG_MESSAGE_TBL.MSG_CONTENT,
+            MSG_MESSAGE_TBL.CREATE_TIME,
+            MSG_MESSAGE_TBL.MSG_TITLE,
+            MSG_MESSAGE_TBL.SENDER_TYPE,
+            MSG_MESSAGE_TBL.SENDER_ID,
+            MSG_MESSAGE_TBL.SENDER_NAME,
+            MSG_MESSAGE_TBL.key_word,
+            MSG_MESSAGE_TBL.CMT_ID,
+            MSG_MESSAGE_TBL.REP_ID
+        </sql>
+
+        <sql id="MSG_MESSAGE_TBL_properties">
+            #msgId#,
+            #msgType#,
+            #msgSort#,
+            #msgContent#,
+            #createTime#,
+            #msgTitle#,
+            #senderType#,
+            #senderId#,
+            #senderName#,
+            #keyWord#,
+            #cmtId#,
+            #repId#
+        </sql>
+
+        <insert id="createMessage" parameterClass="Message">
+            INSERT INTO MSG_MESSAGE_TBL (<include refid="Message_NS.MSG_MESSAGE_TBL_columns"/>) VALUES (<include refid="Message_NS.MSG_MESSAGE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="msgId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteMessageById" parameterClass="int">
+            DELETE FROM MSG_MESSAGE_TBL
+            WHERE
+                MSG_ID = #value#
+        </delete>
+        
+        <delete id="deleteMessageByCmtIdAndType" parameterClass="java.util.Map">
+        	DELETE FROM MSG_MESSAGE_TBL WHERE CMT_ID=#tid# AND (MSG_TYPE=#type# OR MSG_TYPE=0)
+        </delete>
+
+        <update id="updateMessage" parameterClass="Message">
+            UPDATE MSG_MESSAGE_TBL SET
+                MSG_ID = #msgId#,
+                MSG_TYPE = #msgType#,
+                MSG_SORT = #msgSort#,
+                MSG_CONTENT = #msgContent#,
+                CREATE_TIME = #createTime#,
+                MSG_TITLE = #msgTitle#,
+                SENDER_TYPE = #senderType#,
+                SENDER_ID = #senderId#,
+                SENDER_NAME = #senderName#,
+                key_word = #keyWord#
+            WHERE
+                MSG_ID = #msgId#
+        </update>
+
+        <select id="getMessageById" resultMap="Message_NS.MessageResult" parameterClass="int">
+            SELECT
+            <include refid="Message_NS.MSG_MESSAGE_TBL_columns"/>
+            FROM MSG_MESSAGE_TBL
+            WHERE
+                MSG_ID = #value#
+        </select>
+        
+        <select id="getMessageByKey" resultMap="Message_NS.MessageResult" parameterClass="String">
+            SELECT
+            <include refid="Message_NS.MSG_MESSAGE_TBL_columns"/>
+            FROM MSG_MESSAGE_TBL
+            WHERE
+                key_word = #value#
+        </select>
+
+        <select id="getMessageList" resultMap="Message_NS.MessageResult" parameterClass="QueryMessageCondition">
+            SELECT
+            <include refid="Message_NS.MSG_MESSAGE_TBL_columns"/>
+            FROM MSG_MESSAGE_TBL
+        </select>
+        
+        <!-- fen ye search  -->
+        <select id="getMsgListByConditon" resultMap="Message_NS.MessageResult" parameterClass="QueryMessageCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Message_NS.MSG_MESSAGE_TBL_columns"/>
+            FROM MSG_MESSAGE_TBL
+              WHERE
+                1 = 1 and MSG_MESSAGE_TBL.MSG_TYPE != 0
+                <isNotNull property="searchKey">
+	            	<isNotEqual property="searchKey" compareValue="" prepend="and">
+			                  MSG_MESSAGE_TBL.msg_title like  CONCAT('%',#searchKey#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+	        	order by MSG_MESSAGE_TBL.MSG_ID desc      
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getMsgListByConditonCount" resultClass="int" parameterClass="QueryMessageCondition">
+            SELECT COUNT(1)
+           		FROM MSG_MESSAGE_TBL
+              WHERE
+                1 = 1 and MSG_MESSAGE_TBL.MSG_TYPE != 0
+                <isNotNull property="searchKey">
+	            	<isNotEqual property="searchKey" compareValue="" prepend="and">
+			                  MSG_MESSAGE_TBL.msg_title like  CONCAT('%',#searchKey#,'%')
+				    </isNotEqual>
+	        	</isNotNull>
+        </select>
+        <select id="getMsgIdByCmtIdAndType" resultMap="Message_NS.MessageDtoResult" parameterClass="java.util.Map">
+        	SELECT 
+        	<include refid="Message_NS.MSG_MESSAGE_TBL_columns"/> 
+        	FROM MSG_MESSAGE_TBL WHERE CMT_ID=#tid# AND (MSG_TYPE=#type# OR MSG_TYPE=0)
+        </select>
+        <select id="getMsgIdByRepIdAndType" resultClass="int" parameterClass="java.util.Map">
+        	SELECT MSG_ID FROM MSG_MESSAGE_TBL WHERE REP_ID=#rid# AND (MSG_TYPE=#type# OR MSG_TYPE=0)
+        </select>
+        <!--end-->
+</sqlMap>

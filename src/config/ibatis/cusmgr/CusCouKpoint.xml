@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CusCouKpoint_NS">
+        <!--table:CUS_CUS_COU_KPOINT_TBL-->
+        <typeAlias alias="CusCouKpoint" type="com.shangde.edu.cusmgr.domain.CusCouKpoint"/>
+        <typeAlias alias="QueryCusCouKpointCondition" type="com.shangde.edu.cusmgr.condition.QueryCusCouKpointCondition"/>
+        <typeAlias alias="QueryCusMgrCondition" type="com.shangde.edu.cusmgr.condition.QueryCusMgrCondition"/>
+        <typeAlias alias="UserKpointDTO" type="com.shangde.edu.cou.dto.UserKpointDTO"/>
+		<typeAlias alias="UserCenterKpointDTO" type="com.shangde.edu.cou.webdto.UserCenterKpointDTO"/>
+		<typeAlias alias="LearnBuyInfoDTO" type="com.shangde.edu.cusmgr.dto.LearnBuyInfoDTO"/>
+		
+        <resultMap id="CusCouKpointResult" class="CusCouKpoint">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="pointId" column="POINT_ID"/>
+            <result property="rdState" column="RD_STATE"/>
+            <result property="id" column="ID"/>
+            <result property="lastTime" column="LAST_TIME"/>
+            <result property="kpoint" column="POINT_ID" select="Kpoint_NS.getKpointById"/>
+        </resultMap>
+        
+         <resultMap id="CusCouKpointResultFixDTO" class="CusCouKpoint">
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="pointId" column="POINT_ID"/>
+            <result property="rdState" column="RD_STATE"/>
+            <result property="id" column="ID"/>
+        </resultMap>
+        
+        <resultMap id="UserCenterKpointDTOResult" class="UserCenterKpointDTO">
+            <result property="id" column="COU_KPOINT_TBL.POINT_ID"/>
+            <result property="name" column="COU_KPOINT_TBL.NAME"/>
+            <result property="sortNum" column="COU_KPOINT_TBL.SORT_NUM"/>
+            <result property="vedioUrl" column="RES_VEDIO_TBL.VO_URL"/>
+            <!-- <result property="cusCouKpointId" column="CUS_CUS_COU_KPOINT_TBL.ID"/>
+            <result property="rdState" column="CUS_CUS_COU_KPOINT_TBL.RD_STATE"/> -->
+        </resultMap>
+        
+        <resultMap id="UserKpoointDTOWebResult" class="UserKpointDTO">
+            <result property="id" column="COU_KPOINT_TBL.POINT_ID"/>
+            <result property="pId" column="COU_KPOINT_TBL.P_ID"/>
+            <result property="name" column="COU_KPOINT_TBL.NAME"/>
+            <result property="sortNum" column="COU_KPOINT_TBL.SORT_NUM"/>
+            <result property="vedioUrl" column="RES_VEDIO_TBL.VO_URL"/>
+			 <result property="vedioTeacher" column="RES_VEDIO_TBL.LECTURE"/>
+            <!-- <result property="cusCouKpointId" column="CUS_CUS_COU_KPOINT_TBL.ID"/>-->
+            <result property="isAudition" column="IS_AUDITION"/>
+            <!-- <result property="rdState" column="RD_STATE"/> -->
+            <result property="type" column="TYPE"/>
+            <result property="lecture" column="LECTURE"/>
+            <result property="level" column="LEVEL"/>
+            <result property="leaf" column="LEAF"/>
+            <result property="voId" column="VO_ID"/>
+            <result property="ccUrl" column="RES_VEDIO_TBL.CC_URL"/>
+            <result property="playType" column="RES_VEDIO_TBL.PLAY_TYPE"/>
+        </resultMap>
+        
+        <resultMap id="LearnBuyInfoDTOResult" class="LearnBuyInfoDTO">
+            <result property="photo" column="PHOTO"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="infoContent" column="INFO_CONTENT"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+        </resultMap>
+
+        <sql id="CUS_CUS_COU_KPOINT_TBL_columns">
+            CUS_CUS_COU_KPOINT_TBL.COURSE_ID,
+            CUS_CUS_COU_KPOINT_TBL.CUS_ID,
+            CUS_CUS_COU_KPOINT_TBL.POINT_ID,
+            CUS_CUS_COU_KPOINT_TBL.RD_STATE,
+            CUS_CUS_COU_KPOINT_TBL.ID,
+            CUS_CUS_COU_KPOINT_TBL.LAST_TIME
+        </sql>
+
+        <sql id="CUS_CUS_COU_KPOINT_TBL_properties">
+            #courseId#,
+            #cusId#,
+            #pointId#,
+            #rdState#,
+            #id#,
+            #lastTime#
+        </sql>
+
+        <insert id="createCusCouKpoint" parameterClass="CusCouKpoint">
+            INSERT INTO CUS_CUS_COU_KPOINT_TBL (<include refid="CusCouKpoint_NS.CUS_CUS_COU_KPOINT_TBL_columns"/>) VALUES (<include refid="CusCouKpoint_NS.CUS_CUS_COU_KPOINT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCusCouKpointById" parameterClass="int">
+            DELETE FROM CUS_CUS_COU_KPOINT_TBL
+            WHERE
+
+			ID = #value#
+        </delete>
+        
+        <delete id="deleteCusCouKpointByCourseId" parameterClass="int">
+            DELETE FROM CUS_CUS_COU_KPOINT_TBL
+            WHERE
+			course_id = #value#
+        </delete>
+        
+        <delete id="deleteCusCouKpointByPointId" parameterClass="int">
+            DELETE FROM CUS_CUS_COU_KPOINT_TBL
+            WHERE
+			point_id = #value#
+        </delete>
+
+        <delete id="deleteCusCouKpointByCus" parameterClass="QueryCusMgrCondition">
+            DELETE FROM CUS_CUS_COU_KPOINT_TBL
+            WHERE
+            CUS_ID = #cusId#
+            AND COURSE_ID = #courseId#
+				
+        </delete>
+
+        <update id="updateCusCouKpoint" parameterClass="CusCouKpoint">
+            UPDATE CUS_CUS_COU_KPOINT_TBL SET
+                COURSE_ID = #courseId#,
+                CUS_ID = #cusId#,
+                POINT_ID = #pointId#,
+                RD_STATE = #rdState#,
+                ID = #id#,
+                LAST_TIME = now()
+            WHERE ID = #id#
+        </update>
+
+        <select id="getCusCouKpointById" resultMap="CusCouKpoint_NS.CusCouKpointResult" parameterClass="int">
+            SELECT
+            <include refid="CusCouKpoint_NS.CUS_CUS_COU_KPOINT_TBL_columns"/>
+            FROM CUS_CUS_COU_KPOINT_TBL
+            WHERE
+			ID = #value#
+        </select>
+
+        <select id="getCusCouKpointList" resultMap="CusCouKpoint_NS.CusCouKpointResult" parameterClass="QueryCusCouKpointCondition">
+            SELECT
+            <include refid="CusCouKpoint_NS.CUS_CUS_COU_KPOINT_TBL_columns"/>
+            FROM CUS_CUS_COU_KPOINT_TBL 
+             <dynamic prepend="WHERE"> 
+             <isNotNull property="cusId">
+            	<isNotEqual property="cusId" compareValue="0" prepend="and">
+		              CUS_ID=#cusId#
+			    </isNotEqual>
+			  </isNotNull>
+			  <isNotNull property="courseId">
+            	<isNotEqual property="courseId" compareValue="0" prepend="and">
+		            COURSE_ID=#courseId#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+        </select>
+        
+        <!-- for fix cus_cus_cou_kpoint_tbl -->
+         <select id="getCusCouKpointListByCourseId" resultMap="CusCouKpoint_NS.CusCouKpointResultFixDTO" parameterClass="QueryCusCouKpointCondition">
+            SELECT distinct
+            CUS_CUS_COU_KPOINT_TBL.COURSE_ID,
+            CUS_CUS_COU_KPOINT_TBL.CUS_ID,
+            #pointId# as POINT_ID,
+            0 as RD_STATE,
+            0 as ID
+            FROM CUS_CUS_COU_KPOINT_TBL  where CUS_CUS_COU_KPOINT_TBL.course_id = #courseId#;
+             
+        </select>
+        <!-- for fix cus_cus_cou_kpoint_tbl end -->
+        
+        <select id="getCusCouKpointListByCusId" resultMap="CusCouKpoint_NS.CusCouKpointResult" parameterClass="int">
+            SELECT DISTINCT 
+            <include refid="CusCouKpoint_NS.CUS_CUS_COU_KPOINT_TBL_columns"/>
+            FROM CUS_CUS_COU_KPOINT_TBL WHERE CUS_CUS_COU_KPOINT_TBL.CUS_ID = #value#  GROUP BY CUS_CUS_COU_KPOINT_TBL.COURSE_ID
+            order by CUS_CUS_COU_KPOINT_TBL.COURSE_ID;
+        </select>
+        
+        <select id="getReadedCusCouKpointCountByCondition" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+            SELECT count(1)
+            FROM CUS_CUS_COU_KPOINT_TBL WHERE CUS_CUS_COU_KPOINT_TBL.CUS_ID = #cusId#  and CUS_CUS_COU_KPOINT_TBL.COURSE_ID = #courseId#
+            	and CUS_CUS_COU_KPOINT_TBL.RD_STATE = 1
+        </select>
+        
+        <select id="isAllReadByCondition" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+            SELECT count(1)
+            FROM CUS_CUS_COU_KPOINT_TBL,cou_kpoint_tbl 
+            	WHERE CUS_CUS_COU_KPOINT_TBL.CUS_ID = #cusId# and cou_kpoint_tbl.leaf = 1 and CUS_CUS_COU_KPOINT_TBL.RD_STATE = 0
+            	and CUS_CUS_COU_KPOINT_TBL.COURSE_ID = #courseId# and 
+            		 CUS_CUS_COU_KPOINT_TBL.point_id = cou_kpoint_tbl.point_id 
+        </select>
+
+        <delete id="deleteCusCouKpointByCusId" parameterClass="int">
+            DELETE FROM CUS_CUS_COU_KPOINT_TBL
+            WHERE
+			CUS_ID = #value#
+			
+        </delete>
+        
+
+        
+        <!-- ZhengShi ting ke kpoint tree 视频获取用-->
+        <select id="getKpointListByCusIdAndCourseId" resultMap="CusCouKpoint_NS.UserKpoointDTOWebResult" parameterClass="QueryCusCouKpointCondition">
+			 select 
+				COU_KPOINT_TBL.POINT_ID,
+				COU_KPOINT_TBL.P_ID,
+				COU_KPOINT_TBL.NAME,
+				COU_KPOINT_TBL.SORT_NUM, 
+				RES_VEDIO_TBL.VO_URL,
+				RES_VEDIO_TBL.LECTURE,
+				case when res_vedio_tbl.IS_AUDITION is null then 2 
+				 	else 2 end IS_AUDITION, 
+	            #type# as TYPE,
+	           COU_KPOINT_TBL.lecture as lecture,
+	           COU_KPOINT_TBL.level,
+	           COU_KPOINT_TBL.leaf,
+	           case when RES_VEDIO_TBL.VO_ID is null then 0  
+	           else RES_VEDIO_TBL.VO_ID end VO_ID,
+	           RES_VEDIO_TBL.CC_URL,
+	           RES_VEDIO_TBL.PLAY_TYPE
+			FROM  	cou_kpoint_tbl  left join res_vedio_tbl 
+				on cou_kpoint_tbl.POINT_ID=res_vedio_tbl.POINTID
+			where	
+				cou_kpoint_tbl.status = 0 
+				and cou_kpoint_tbl.COURSE_ID = #courseId#
+			order by cou_kpoint_tbl.sort_num 
+		</select>
+         <!-- ZhengShi ting ke kpoint tree -->
+         
+          <!-- userCenter kpointList -->
+        <select id="getUserCenterKpointDTOByCusIdAndCourseId" resultMap="CusCouKpoint_NS.UserCenterKpointDTOResult" parameterClass="QueryCusCouKpointCondition">
+			select 
+				COU_KPOINT_TBL.POINT_ID,
+				COU_KPOINT_TBL.NAME,
+				COU_KPOINT_TBL.SORT_NUM,
+				RES_VEDIO_TBL.VO_URL 
+			FROM  	cou_kpoint_tbl  left join res_vedio_tbl 
+					on cou_kpoint_tbl.POINT_ID=res_vedio_tbl.POINTID
+			where	cou_kpoint_tbl.LEAF = 1 
+					and cou_kpoint_tbl.status = 0 
+					and cou_kpoint_tbl.COURSE_ID = #courseId# 
+				order by cou_kpoint_tbl.sort_num 
+        </select>
+         <!-- userCenter kpointList -->
+         
+         <select id="getUserLastPointIdByCusId" resultClass="Integer" parameterClass="queryCusCouKpointCondition">
+           select 
+           	cus_cus_cou_kpoint_tbl.point_id  
+           		from res_vedio_tbl ,cou_course_tbl, cus_cus_cou_kpoint_tbl left join cou_kpoint_tbl on  cus_cus_cou_kpoint_tbl.POINT_ID = cou_kpoint_tbl.POINT_ID
+				where res_vedio_tbl.POINTID = cou_kpoint_tbl.POINT_ID and cou_course_tbl.COURSE_ID =  cou_kpoint_tbl.COURSE_ID and       
+				cus_cus_cou_kpoint_tbl.CUS_ID = #cusId# and cou_kpoint_tbl.LEAF = 1 and res_vedio_tbl.VO_URL != '' and res_vedio_tbl.VO_URL is not null 
+				and cus_cus_cou_kpoint_tbl.last_time is not null
+					<isNotEqual property="subjectId" compareValue="0" prepend="and">
+		            	cou_course_tbl.SUBJECT_ID=#subjectId#
+			    	</isNotEqual>
+					order by cus_cus_cou_kpoint_tbl.last_time desc, cou_kpoint_tbl.sort_num limit 1;
+        </select>
+        
+        <select id="getUserCourseLastIdByCusId" resultClass="Integer" parameterClass="QueryCusCouKpointCondition">
+           select 
+           cus_cus_cou_kpoint_tbl.id
+           		from res_vedio_tbl, cus_cus_cou_kpoint_tbl left join cou_kpoint_tbl on  cus_cus_cou_kpoint_tbl.POINT_ID = cou_kpoint_tbl.POINT_ID
+				where       
+				cou_kpoint_tbl.LEAF = 1 and cus_cus_cou_kpoint_tbl.course_id = #courseId# and cus_cus_cou_kpoint_tbl.CUS_ID = #cusId#   
+					and res_vedio_tbl.VO_URL != '' and res_vedio_tbl.VO_URL is not null and cus_cus_cou_kpoint_tbl.last_time is not null
+					order by cus_cus_cou_kpoint_tbl.last_time desc,cou_kpoint_tbl.sort_num limit 1;
+        </select>
+        
+        <!-- study map  -->
+        <select id="getCountUserStudyTodayByCourseId" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+           select count(1) from cus_cus_cou_kpoint_tbl  where cus_cus_cou_kpoint_tbl.COURSE_ID = #courseId# 
+           		and cus_cus_cou_kpoint_tbl.cus_id = #cusId#
+ 				and cus_cus_cou_kpoint_tbl.last_time > DATE_FORMAT(now(),'%Y-%m-%d') and
+			    	<![CDATA[  cus_cus_cou_kpoint_tbl.last_time < now() ]]>
+        </select>
+        
+        <select id="getCountLargerThanUserStudyToday" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+          select count(distinct cus_cus_cou_kpoint_tbl.CUS_ID) from cus_cus_cou_kpoint_tbl where 
+			(select count(1) from cus_cus_cou_kpoint_tbl  where cus_cus_cou_kpoint_tbl.COURSE_ID = #courseId# and 
+				cus_cus_cou_kpoint_tbl.last_time > DATE_FORMAT(now(),'%Y-%m-%d') and
+			    	<![CDATA[  cus_cus_cou_kpoint_tbl.last_time < now() ]]>
+			 
+			 ) > #studyNum#;
+	     </select>
+	     
+	     <select id="getCountlessThanUserStudyToday" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+          select count(distinct cus_cus_cou_kpoint_tbl.CUS_ID) from cus_cus_cou_kpoint_tbl where 
+			(select count(1) from cus_cus_cou_kpoint_tbl  where cus_cus_cou_kpoint_tbl.COURSE_ID = #courseId# and 
+				cus_cus_cou_kpoint_tbl.last_time > DATE_FORMAT(now(),'%Y-%m-%d') and
+			    <![CDATA[  cus_cus_cou_kpoint_tbl.last_time < now() ]]>
+			 
+			 ) <![CDATA[  <= #studyNum# ]]>;
+	     </select>
+	     
+	     <select id="getCountEqualNumThanUserStudyToday" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+          select count(distinct cus_cus_cou_kpoint_tbl.CUS_ID) from cus_cus_cou_kpoint_tbl where 
+			(select count(1) from cus_cus_cou_kpoint_tbl  where cus_cus_cou_kpoint_tbl.COURSE_ID = #courseId# and 
+				cus_cus_cou_kpoint_tbl.last_time > DATE_FORMAT(now(),'%Y-%m-%d') and
+			    	<![CDATA[  cus_cus_cou_kpoint_tbl.last_time < now() ]]>
+			 
+			 ) = #studyNum#;
+	     </select>
+	     
+	     <select id="getCusSizeByCourseId" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+         	SELECT count(CUS_ID) as count from 	finance_cash_record_tbl where  status=1 and	COURSE_ID =#courseId#   group by COURSE_ID
+	     </select>
+	     
+	     <select id="getUserCenterSubjectListByCusId" resultMap="Subject_NS.SubjectResult" parameterClass="QueryCusCouKpointCondition">
+          	     select  
+          	     	<include refid="Subject_NS.SYS_SUBJECT_TBL_columns" />
+					from  SYS_SUBJECT_TBL,finance_cash_record_tbl, cou_sell_way_tbl
+					where finance_cash_record_tbl.STATUS = 1  and 
+					finance_cash_record_tbl.CUS_ID=#cusId# and
+					finance_cash_record_tbl.PACK_ID=cou_sell_way_tbl.SELL_ID 
+					and cou_sell_way_tbl.SUBJECT_ID=SYS_SUBJECT_TBL.SUBJECT_ID
+					group by SYS_SUBJECT_TBL.SUBJECT_ID
+         </select>
+	     
+	     <select id="isReadCourse" resultClass="int" parameterClass="QueryCusCouKpointCondition">
+          	    select count(*) from cus_cus_cou_kpoint_tbl where cus_cus_cou_kpoint_tbl.CUS_ID = #cusId# and cus_cus_cou_kpoint_tbl.last_time != null
+         </select>
+         
+         <select id="getEarliestSubjectIdByCusId" resultClass="Integer" parameterClass="QueryCusCouKpointCondition">
+			SELECT 
+				cou_course_tbl.SUBJECT_ID
+			from 
+				(SELECT  
+					finance_cash_record_tbl.COURSE_ID 
+				from 
+					finance_cash_record_tbl
+				where 	 
+					   finance_cash_record_tbl.STATUS=1  
+					and finance_cash_record_tbl.CUS_ID= #cusId#
+				order by finance_cash_record_tbl.id limit 1)  as   ma 
+			join cou_course_tbl 
+			on ma.COURSE_ID = cou_course_tbl.COURSE_ID
+         </select>
+         
+         <select id="getCourseVedioSizeByCourseId" resultClass="int" parameterClass="int">
+           select count(1) from cou_kpoint_tbl left join  
+           		res_vedio_tbl on cou_kpoint_tbl.POINT_ID = res_vedio_tbl.POINTID  
+           		where cou_kpoint_tbl.COURSE_ID = #value# and cou_kpoint_tbl.LEAF = 1  and res_vedio_tbl.VO_URL is not null and res_vedio_tbl.VO_URL != '';
+         </select>
+         <!-- study map  -->
+         
+         <select id="isExistCusCouKpointByCusIdAndPointId" resultClass="int" parameterClass="CusCouKpoint">
+           select count(1) from cus_cus_cou_kpoint_tbl where cus_cus_cou_kpoint_tbl.cus_id = #cusId# and cus_cus_cou_kpoint_tbl.point_id = #pointId#;
+         </select>
+         
+         
+	     
+	     <select id="getLearningInfoInTime" resultMap="CusCouKpoint_NS.LearnBuyInfoDTOResult" parameterClass="QueryCusCouKpointCondition">
+	     	SELECT 
+			UPDATE_TIME,
+			USER_NAME,
+			PHOTO,
+			INFO_CONTENT
+			FROM 
+				(
+			     	(
+					SELECT 
+						CUS_CUS_COU_KPOINT_TBL.LAST_TIME AS UPDATE_TIME,
+						CASE WHEN CUS_CUSTOMER_TBL.CUS_NAME IS NULL THEN CUS_CUSTOMER_TBL.EMAIL
+						ELSE CUS_CUSTOMER_TBL.CUS_NAME
+						END AS USER_NAME,
+						CUS_CUSTOMER_TBL.PHOTO AS PHOTO, 
+						CONCAT('学习了',COU_COURSE_TBL.TITLE) AS INFO_CONTENT
+							FROM CUS_CUS_COU_KPOINT_TBL
+							INNER JOIN CUS_CUSTOMER_TBL
+							ON CUS_CUS_COU_KPOINT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID
+							INNER JOIN COU_COURSE_TBL
+							ON CUS_CUS_COU_KPOINT_TBL.COURSE_ID = COU_COURSE_TBL.COURSE_ID
+								WHERE LAST_TIME IS NOT NULL
+									AND COU_COURSE_TBL.SUBJECT_ID = #subjectId#
+									AND COU_COURSE_TBL.STATUS = 0
+									ORDER BY LAST_TIME DESC
+					)
+					UNION
+					(
+					SELECT 
+						FINANCE_CONTRACT_TBL.PAY_TIME AS UPDATE_TIME,
+						CASE WHEN CUS_CUSTOMER_TBL.CUS_NAME IS NULL THEN CUS_CUSTOMER_TBL.EMAIL
+						ELSE CUS_CUSTOMER_TBL.CUS_NAME
+						END AS USER_NAME,
+						CUS_CUSTOMER_TBL.PHOTO AS PHOTO, 
+						CONCAT('购买了',COU_COURSE_TBL.TITLE) AS INFO_CONTENT
+							FROM FINANCE_CONTRACT_TBL 
+							INNER JOIN CUS_CUSTOMER_TBL
+							ON FINANCE_CONTRACT_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID
+							INNER JOIN FINANCE_CASH_RECORD_TBL 
+							ON FINANCE_CONTRACT_TBL.CONTRACT_ID = FINANCE_CASH_RECORD_TBL.CONTRACT_ID
+							INNER JOIN COU_COURSE_TBL 
+							ON FINANCE_CASH_RECORD_TBL.COURSE_ID = COU_COURSE_TBL.COURSE_ID
+								WHERE PAY_TIME IS NOT NULL
+									AND COU_COURSE_TBL.SUBJECT_ID = #subjectId#
+									AND COU_COURSE_TBL.STATUS = 0
+									GROUP BY FINANCE_CASH_RECORD_TBL.COURSE_ID
+									ORDER BY PAY_TIME DESC
+					)
+				) AS T
+				ORDER BY UPDATE_TIME DESC
+				LIMIT 0, 20
+         </select>
+         <!-- 获取最近学习和购买的信息，供滚动显示用 Add By liuqinggang  -->
+	 <select id="getLearningInfoInTimeAllSubject" resultMap="CusCouKpoint_NS.LearnBuyInfoDTOResult" parameterClass="QueryCusCouKpointCondition">
+		SELECT 
+					COU_SELL_WAY_TBL.SUBJECT_ID AS SUBJECT_ID,
+					ma.UPDATE_TIME AS UPDATE_TIME,
+					CASE WHEN CUS_CUSTOMER_TBL.CUS_NAME IS NULL THEN CUS_CUSTOMER_TBL.EMAIL
+					ELSE CUS_CUSTOMER_TBL.CUS_NAME
+					END AS USER_NAME,
+					IFNULL(CUS_CUSTOMER_TBL.PHOTO,'') AS PHOTO, 	
+					CONCAT('购买了',COU_SELL_WAY_TBL.SELL_NAME) AS INFO_CONTENT
+				FROM 
+					(
+					SELECT  
+					FINANCE_CONTRACT_TBL.PAY_TIME AS UPDATE_TIME ,
+					FINANCE_CONTRACT_TBL.CUS_ID AS CUS_ID, 
+					FINANCE_CASH_RECORD_TBL.COURSE_ID AS COURSE_ID,
+					
+					FINANCE_CASH_RECORD_TBL.PACK_ID AS PACK_ID
+					
+					FROM  FINANCE_CASH_RECORD_TBL INNER JOIN FINANCE_CONTRACT_TBL ON
+					finance_cash_record_tbl.CT_ID=FINANCE_CONTRACT_TBL.id  AND  
+					FINANCE_CASH_RECORD_TBL.CUS_ID=  FINANCE_CONTRACT_TBL.CUS_ID AND
+					FINANCE_CONTRACT_TBL.PAY_TIME !=''  
+					AND FINANCE_CONTRACT_TBL.PAY_TIME   IS NOT NULL 
+					ORDER BY FINANCE_CONTRACT_TBL.PAY_TIME DESC LIMIT 0,5000 )  AS ma 
+					
+					INNER JOIN  CUS_CUSTOMER_TBL 
+					ON ma.CUS_ID=CUS_CUSTOMER_TBL.CUS_ID 
+					
+					INNER JOIN  COU_SELL_WAY_TBL  ON  
+					ma.PACK_ID= COU_SELL_WAY_TBL.SELL_ID 
+		
+				GROUP   BY SUBJECT_ID ,UPDATE_TIME
+				
+				ORDER BY   SUBJECT_ID, UPDATE_TIME DESC   LIMIT 0,1000
+
+	 </select>
+         
+</sqlMap>

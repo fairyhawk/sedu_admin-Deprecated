@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Cod_NS">
+        <!--table:FINANCE_COD_TBL-->
+        <typeAlias alias="Cod" type="com.shangde.edu.finance.domain.Cod"/>
+        <typeAlias alias="QueryCodCondition" type="com.shangde.edu.finance.condition.QueryCodCondition"/>
+
+        <resultMap id="CodResult" class="Cod">
+            <result property="codRemark" column="COD_REMARK"/>
+            <result property="codContent" column="COD_CONTENT"/>
+            <result property="codAuditId" column="COD_AUDIT_ID"/>
+            <result property="codTime" column="COD_TIME"/>
+            <result property="codStatus" column="COD_STATUS"/>
+            <result property="codCtId" column="COD_CT_ID"/>
+            <result property="codId" column="COD_ID"/>
+            <result property="user" column="COD_AUDIT_ID" select="User_NS.getUserById"/>
+        </resultMap>
+
+        <sql id="FINANCE_COD_TBL_columns">
+            FINANCE_COD_TBL.COD_REMARK,
+            FINANCE_COD_TBL.COD_CONTENT,
+            FINANCE_COD_TBL.COD_AUDIT_ID,
+            FINANCE_COD_TBL.COD_TIME,
+            FINANCE_COD_TBL.COD_STATUS,
+            FINANCE_COD_TBL.COD_CT_ID,
+            FINANCE_COD_TBL.COD_ID
+        </sql>
+
+        <sql id="FINANCE_COD_TBL_properties">
+            #codRemark#,
+            #codContent#,
+            #codAuditId#,
+            #codTime#,
+            #codStatus#,
+            #codCtId#,
+            #codId#
+        </sql>
+
+        <insert id="createCod" parameterClass="Cod">
+            INSERT INTO FINANCE_COD_TBL (<include refid="Cod_NS.FINANCE_COD_TBL_columns"/>) VALUES (<include refid="Cod_NS.FINANCE_COD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="codId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCodById" parameterClass="int">
+            DELETE FROM FINANCE_COD_TBL
+            WHERE
+		COD_ID = #value#
+        </delete>
+
+        <update id="updateCod" parameterClass="Cod">
+            UPDATE FINANCE_COD_TBL SET
+                COD_REMARK = #codRemark#,
+                COD_CONTENT = #codContent#,
+                COD_AUDIT_ID = #codAuditId#,
+                COD_TIME = #codTime#,
+                COD_STATUS = #codStatus#,
+                COD_CT_ID = #codCtId#,
+                COD_ID = #codId#
+            WHERE
+			COD_ID = #codId#
+        </update>
+
+        <select id="getCodById" resultMap="Cod_NS.CodResult" parameterClass="int">
+            SELECT
+            <include refid="Cod_NS.FINANCE_COD_TBL_columns"/>
+            FROM FINANCE_COD_TBL
+            WHERE
+			COD_ID = #value#
+        </select>
+
+        <select id="getCodList" resultMap="Cod_NS.CodResult" parameterClass="QueryCodCondition">
+            SELECT
+            <include refid="Cod_NS.FINANCE_COD_TBL_columns"/>
+            FROM FINANCE_COD_TBL
+        </select>
+        
+        <select id="getContractCodList" resultMap="Cod_NS.CodResult" parameterClass="int">
+            SELECT
+            <include refid="Cod_NS.FINANCE_COD_TBL_columns"/>
+            FROM FINANCE_COD_TBL WHERE COD_CT_ID = #codCtId#
+        </select>
+        <!--end-->
+</sqlMap>

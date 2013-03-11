@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_From_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="From" type="com.shangde.edu.feed.domain.From" />
+	<typeAlias alias="QueryFromCondition" type="com.shangde.edu.feed.condition.QueryFromCondition" />
+
+	<resultMap id="FromResult" class="From">
+		 <result property="id" column="ID"/>
+		 <result property="name" column="name"/>
+		 <result property="remark" column="remark"/>
+		 <result property="pubDate" column="pubdate"/>
+	</resultMap>
+
+	<sql id="FEED_FROM_TBL_columns">
+		feed_from_tbl.id,
+		feed_from_tbl.name,
+		feed_from_tbl.remark,
+		feed_from_tbl.pubdate
+	</sql>
+
+	<sql id="FEED_FROM_TBL_properties">
+		#id#, 
+		#name#, 
+		#remark#,
+		#pubDate#
+	</sql>
+
+	<insert id="createFrom" parameterClass="From">
+		INSERT INTO feed_from_tbl (
+		<include refid="Feed_From_NS.FEED_FROM_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_From_NS.FEED_FROM_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<update id="updateFrom" parameterClass="From">
+		UPDATE feed_from_tbl SET 
+			ID = #id#,
+			NAME = #name#,
+			REMARK = #remark#
+		WHERE ID = #id#
+	</update>
+	
+	<!-- 查询某个id的个数 -->
+	<select id="getFromCount" resultClass="int" parameterClass="int">
+		SELECT count(1) FROM feed_from_tbl where id = #value#
+	</select>
+	<!-- 查询所有的来源 -->
+	<select id="queryFromList" resultClass="From">
+		select * from feed_from_tbl
+	</select>
+	<!--end-->
+</sqlMap>

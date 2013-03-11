@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HistoryPrice_NS">
+        <!--table:COU_HISTORY_PRICE_TBL-->
+        <typeAlias alias="HistoryPrice" type="com.shangde.edu.cou.domain.HistoryPrice"/>
+        <typeAlias alias="QueryHistoryPriceCondition" type="com.shangde.edu.cou.condition.QueryHistoryPriceCondition"/>
+
+        <resultMap id="HistoryPriceResult" class="HistoryPrice">
+            <result property="id" column="ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="price" column="PRICE"/>
+            <result property="creadeTime" column="CREADE_TIME"/>
+            <result property="stopTime" column="STOP_TIME"/>
+            <result property="umanId" column="UMAN_ID"/>
+            <result property="sellId" column="SELL_ID"/>
+        </resultMap>
+
+        <sql id="COU_HISTORY_PRICE_TBL_columns">
+            COU_HISTORY_PRICE_TBL.ID,
+            COU_HISTORY_PRICE_TBL.COURSE_ID,
+            COU_HISTORY_PRICE_TBL.PRICE,
+            COU_HISTORY_PRICE_TBL.CREADE_TIME,
+            COU_HISTORY_PRICE_TBL.STOP_TIME,
+            COU_HISTORY_PRICE_TBL.UMAN_ID,
+            COU_HISTORY_PRICE_TBL.SELL_ID
+        </sql>
+
+        <sql id="COU_HISTORY_PRICE_TBL_properties">
+            #id#,
+            #courseId#,
+            #price#,
+            #creadeTime#,
+            #stopTime#,
+            #umanId#,
+            #sellId#            
+        </sql>
+
+        <insert id="createHistoryPrice" parameterClass="HistoryPrice">
+            INSERT INTO COU_HISTORY_PRICE_TBL (<include refid="HistoryPrice_NS.COU_HISTORY_PRICE_TBL_columns"/>) VALUES (<include refid="HistoryPrice_NS.COU_HISTORY_PRICE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteHistoryPriceById" parameterClass="int">
+            DELETE FROM COU_HISTORY_PRICE_TBL
+            WHERE
+                ID = #value#
+        </delete>
+        
+         <delete id="deleteHistoryPriceByCourseId" parameterClass="int">
+            DELETE FROM COU_HISTORY_PRICE_TBL
+            WHERE
+                COURSE_ID = #value#
+        </delete>
+
+        <update id="updateHistoryPrice" parameterClass="HistoryPrice">
+            UPDATE COU_HISTORY_PRICE_TBL SET
+                ID = #id#,
+                COURSE_ID = #courseId#,
+                PRICE = #price#,
+                CREADE_TIME = #creadeTime#,
+                STOP_TIME = #stopTime#,
+                UMAN_ID = #umanId#,
+                SELL_ID=#sellId#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getHistoryPriceById" resultMap="HistoryPrice_NS.HistoryPriceResult" parameterClass="int">
+            SELECT
+            <include refid="HistoryPrice_NS.COU_HISTORY_PRICE_TBL_columns"/>
+            FROM COU_HISTORY_PRICE_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getHistoryPriceList" resultMap="HistoryPrice_NS.HistoryPriceResult" parameterClass="QueryHistoryPriceCondition">
+            SELECT
+            <include refid="HistoryPrice_NS.COU_HISTORY_PRICE_TBL_columns"/>
+            FROM COU_HISTORY_PRICE_TBL 
+            <dynamic prepend="where">
+	            <isNotNull property="courseId">
+	            	 <isGreaterThan prepend="and" property="courseId" compareValue="0">
+	                		COU_HISTORY_PRICE_TBL.COURSE_ID=#courseId#
+	                </isGreaterThan>
+		        </isNotNull>
+	        </dynamic>
+	        
+	        ORDER BY COU_HISTORY_PRICE_TBL.ID DESC;
+        </select>
+        
+         <!-- fen ye search  -->
+        <select id="getHistoryListByCourseId" resultMap="HistoryPrice_NS.HistoryPriceResult" parameterClass="QueryHistoryPriceCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="HistoryPrice_NS.COU_HISTORY_PRICE_TBL_columns"/>
+            FROM COU_HISTORY_PRICE_TBL
+              WHERE
+                1=1
+	            	<isNotEqual property="courseId" compareValue="0" prepend="and">
+			                  COU_HISTORY_PRICE_TBL.course_Id = #courseId#
+				    </isNotEqual>
+	        	order by COU_HISTORY_PRICE_TBL.id desc
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getHistoryListCountByCourseId" resultClass="int" parameterClass="QueryHistoryPriceCondition">
+           SELECT
+            count(1)
+            FROM COU_HISTORY_PRICE_TBL
+              WHERE
+                1=1
+	            	<isNotEqual property="courseId" compareValue="0" prepend="and">
+			                  COU_HISTORY_PRICE_TBL.course_Id = #courseId#
+				    </isNotEqual>
+	        	order by COU_HISTORY_PRICE_TBL.id desc
+        </select>
+        <!-- fen ye search end -->
+        
+        <select id="getHistoryPriceCourseNum" resultClass="int" parameterClass="QueryHistoryPriceCondition">
+           select count(1) p_num   from finance_contract_tbl, finance_cash_record_tbl , cou_course_tbl  
+				where finance_contract_tbl.CONTRACT_ID = finance_cash_record_tbl.CONTRACT_ID 
+					and finance_cash_record_tbl.COURSE_ID = cou_course_tbl.COURSE_ID and finance_contract_tbl.STATUS = 1
+					and cou_course_tbl.COURSE_ID = #courseId# and finance_contract_tbl.PAY_TIME > #startTime# and
+					 <![CDATA[  finance_contract_tbl.PAY_TIME < #endTime# ]]>
+        </select>
+        
+       
+        <!--end-->
+</sqlMap>

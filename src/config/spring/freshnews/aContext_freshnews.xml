@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="actionRecordService" class="com.shangde.edu.freshnews.service.ActionRecordImpl" parent="baseService">
+    	<property name="cusWatchRecordService" ref="cusWatchRecordService"/>
+    	<property name="customerService" ref="customerService"/>
+    </bean>
+    <bean id="actionReplyService" class="com.shangde.edu.freshnews.service.ActionReplyImpl" parent="baseService">
+    	<property name="actionRecordService" ref="actionRecordService"/>
+    </bean>
+</beans>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Chapter_NS">
+        <!--table:KB_CHAPTER_TBL-->
+        <typeAlias alias="Chapter" type="com.shangde.edu.kb.domain.Chapter"/>
+        <typeAlias alias="QueryChapterCondition" type="com.shangde.edu.kb.condition.QueryChapterCondition"/>
+
+        <resultMap id="ChapterResult" class="Chapter">
+            <result property="chId" column="CH_ID"/>
+            <result property="chIndex" column="CH_INDEX"/>
+            <result property="cId" column="C_ID"/>
+            <result property="chName" column="CH_NAME"/>
+            <result property="pId" column="P_ID"/>
+            <result property="chVersion" column="CH_VERSION"/>
+            <result property="chStSubject" column="CH_ST_SUBJECT"/>
+            <result property="chCreatetime" column="CH_CREATETIME"/>
+            <result property="chUpdatetime" column="CH_UPDATETIME"/>
+            <result property="chNote" column="CH_NOTE"/>
+        </resultMap>
+
+        <sql id="KB_CHAPTER_TBL_columns">
+            KB_CHAPTER_TBL.CH_ID,
+            KB_CHAPTER_TBL.CH_INDEX,
+            KB_CHAPTER_TBL.C_ID,
+            KB_CHAPTER_TBL.CH_NAME,
+            KB_CHAPTER_TBL.P_ID,
+            KB_CHAPTER_TBL.CH_VERSION,
+            KB_CHAPTER_TBL.CH_ST_SUBJECT,
+            KB_CHAPTER_TBL.CH_CREATETIME,
+            KB_CHAPTER_TBL.CH_UPDATETIME,
+            KB_CHAPTER_TBL.CH_NOTE
+        </sql>
+
+        <sql id="KB_CHAPTER_TBL_properties">
+            #chId#,
+            #chIndex#,
+            #cId#,
+            #chName#,
+            #pId#,
+            #chVersion#,
+            #chStSubject#,
+            #chCreatetime#,
+            #chUpdatetime#,
+            #chNote#
+        </sql>
+
+        <insert id="createChapter" parameterClass="Chapter">
+            INSERT INTO KB_CHAPTER_TBL (<include refid="Chapter_NS.KB_CHAPTER_TBL_columns"/>) VALUES (<include refid="Chapter_NS.KB_CHAPTER_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="chId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteChapterById" parameterClass="int">
+            DELETE FROM KB_CHAPTER_TBL
+            WHERE
+                CH_ID = #value#
+        </delete>
+        <update id="updateChapter" parameterClass="Chapter">
+            UPDATE KB_CHAPTER_TBL SET
+                CH_ID = #chId#,
+                CH_INDEX = #chIndex#,
+                C_ID = #cId#,
+                CH_NAME = #chName#,
+                P_ID = #pId#,
+                CH_VERSION = #chVersion#,
+                CH_ST_SUBJECT = #chStSubject#,
+                CH_CREATETIME = #chCreatetime#,
+                CH_UPDATETIME = #chUpdatetime#,
+                CH_NOTE= #chNote#
+            WHERE
+                CH_ID = #chId#
+        </update>
+
+        <select id="getChapterById" resultMap="Chapter_NS.ChapterResult" parameterClass="int">
+            SELECT
+            <include refid="Chapter_NS.KB_CHAPTER_TBL_columns"/>
+            FROM KB_CHAPTER_TBL
+            WHERE
+                CH_ID = #value#
+        </select>
+        <select id="getChapterList" resultMap="Chapter_NS.ChapterResult" parameterClass="QueryChapterCondition">
+            SELECT
+            <include refid="Chapter_NS.KB_CHAPTER_TBL_columns"/>
+            FROM KB_CHAPTER_TBL
+        </select>
+        <select id="getChapterByList" resultMap="Chapter_NS.ChapterResult" parameterClass="QueryChapterCondition">
+            SELECT
+            <include refid="Chapter_NS.KB_CHAPTER_TBL_columns"/>
+            FROM KB_CHAPTER_TBL
+            <dynamic prepend="WHERE">
+	            <isNotEqual property="cId" compareValue="0" prepend="and">
+	            C_ID = #cId#
+	            </isNotEqual>
+            </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	
+    <package name="crm" namespace="/crm" extends="edu-default">
+    
+        <action name="crmChance" class="com.shangde.edu.crm.action.CrmChanceAction" >
+        	
+        	<result name="success">/back/jsp/crm/success.jsp</result>
+        	
+        	<result name="salesChanceList">/back/jsp/crm/salesChanceList.jsp</result>
+        	
+        	<result name="manageChanceList">/back/jsp/crm/manageChanceList.jsp</result>
+        	
+        	<result name="chanceList">/back/jsp/crm/chanceList.jsp</result>
+        	
+        	<result name="toChanceAdd">/back/jsp/crm/salesUserAdd.jsp</result>
+        	
+        	<result name="toUserCardList">/back/jsp/crm/userCardList.jsp</result>
+        	<result name="seachUserCardList">/back/jsp/crm/userCardList.jsp</result>
+        	<result name="getUserCardById">/back/jsp/crm/userCardDetai.jsp</result>
+        	<result name="getUserCard">/back/jsp/crm/userCardUpdate.jsp</result>
+        	<result name="updateUserCard" type="redirect">crm/crmChance!getAllUserCardList.action?queryUsersCondition.currentPage=1</result>
+        	
+        	<result name="tosalesAddRecord">/back/jsp/crm/salesRecordAdd.jsp</result>
+        	
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="exportExcelCrm" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			   <param name="contentDisposition">attachment;filename="${excelName}"</param>
+			    <param name="bufferSize">1024</param>
+			</result>
+        </action>
+        
+        <action name="selfDefine" class="com.shangde.edu.crm.action.SeatsDefineSelfAction" >
+      	    <result name="success">/back/jsp/crm/success.jsp</result>
+        	<result name="toSeatsDefine">/back/jsp/crm/defineUsers.jsp</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+        </action>
+        
+        
+         <action name="salesStat" class="com.shangde.edu.crm.action.SalesStatAction" >
+         
+      	    <result name="success">/back/jsp/crm/success.jsp</result>
+      	    
+      	     <result name="toUndesignedInfo">/back/jsp/crm/first_undesignedInfo.jsp</result>
+      	     <result name="toAllUndesignedInfo">/back/jsp/crm/undesignedInfo.jsp</result>
+      	     <result name="toFirstUndesignedInfo">/back/jsp/crm/first_undesignedInfo.jsp</result>
+      	    <result name="toSelectSalesStat">/back/jsp/crm/salesStat.jsp</result>
+        	<result name="toSalesStat">/back/jsp/crm/first_salesStat.jsp</result>
+        	<!-- xsadmin跳转页面 begin -->
+        	<result name="toXSSalesStat">/back/jsp/crm/xs_salesStat.jsp</result>
+        	<result name="toXSfirstSalesStat">/back/jsp/crm/xs_salesStat.jsp</result>
+        	<!-- xsadmin跳转页面 end-->
+        	<result name="toAllSalesStat">/back/jsp/crm/salesStat.jsp</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			
+			<result name="simStatExportExcelFile" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${excelName}"</param>
+			    <param name="bufferSize">1024</param>
+			</result>
+        </action>
+        
+        <action name="naturalMsg" class="com.shangde.edu.crm.action.CrmNaturalMsgAction" >
+        	<result name="toNaturalMsg">/back/jsp/crm/NaturalMsg.jsp</result>
+        </action>
+    </package>
+</struts>
+

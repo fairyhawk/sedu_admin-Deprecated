@@ -1,0 +1,86 @@
+@charset "utf-8";
+.STYLE1 { font-size: 12px; }
+.STYLE3 { font-size: 12px; font-weight: bold; }
+.STYLE4 { color: #03515d; font-size: 12px; }
+body { margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; }
+/*table---nei*/
+.lists { }
+.lists td { font-size:12px; height:30px; }
+.lists td img { border:none; display:inline; }
+.lists td a { color:#03515D; text-decoration:none; }
+.lists td a:hover { text-decoration:underline; }
+.lists_info { background:#779dc2;/*table-layout:fixed;*/ }
+.lists_info td a { color:#03515D; text-decoration:none; }
+.lists_info td a:hover { text-decoration:underline; }
+.lists_info td { background:#ffffff; text-align:center; height:18px; line-height:18px; overflow:auto; padding:4px 0; }
+.lists_info td .dtree { text-align:left; }
+.lists_top { padding:0 3px; background:url("../images/tab_05.gif"); }
+.lists_bottom { padding:0 3px; background:url("../images/tab_19.gif"); }
+.lists_fleft { float:left; padding-left:5px; line-height: 30px; font-weight:bold; }
+.lists_fright { float:right; padding-right:5px; padding-top: 8px; }
+.lists_fright img { vertical-align: middle; }
+.lists_info .lists_infobg td { /*background:#fff url(../images/lists_bg.gif) repeat-x left bottom;*/ padding:4px 0; font-weight: bold; color:#fff; background: url(../images/table_header_options.png) repeat-x left bottom; height:34px; font-size:14px; }
+.lists .lists_bor { background:url("../images/tab_17.gif") repeat-y; }
+.lists .lists_bor2 { background:url("../images/tab_17_1.gif") repeat-y right; }
+.lists .lists_tleft { text-align:left; word-wrap: break-word; }
+.lists .lists_tright { text-align:right; }
+.lists_info tr td .lists_nowrap { height:18px; overflow:hidden; word-wrap: break-word; }
+.spa_tjleft { display:block; width:100%; height:30px; }
+.spa_tjleft ul { display:block; padding:0; margin:0; }
+.spa_tjleft ul li { float:left; list-style:none; margin:0 3px 0 0; width:100px; text-align:center; }
+.spa_tjleft ul li a { background:#6699bb; color:#ffffff; display:block; padding:0 10px; height:24px; line-height:24px; }
+.spa_tjleft ul li #spa_kc_t5 { background:#eeeeee; color:#333333; }
+.lists_td_ablock tr td a { display:block; }
+.lists_td_ablock tr td { vertical-align:middle }
+/*------学习计划统计页面-------*/
+.tabletj { background:#00ccff; }
+.tabletj td { background:#fff; }
+.lists_td_ablock tr td { vertical-align:middle }
+/*---------知识库管理--------*/
+.zs_gl { position:absolute; left:30%; top:7%; width:700px; height:650px; background-color:#FFF; z-index:5; display:none; padding:6px 1px 1px; border:solid 2px #aad3eb; }
+.zs_gl .tit { width:100%; height:28px; background:url("../images/tab_05.gif") repeat-x 0 -2px; border-bottom:solid 1px #aad3eb; }
+.zs_gl .tie { display:block; line-height:28px; text-align:left; padding:0 0 0 30px; font-weight: bold; font-size: 16px; }
+.zs_gl .con { width:100%; display:block; margin:0 auto; height: 550px; background-color: transparent; overflow: auto }
+/*显示信息区*/
+.zs_box { position:absolute; left:40%; top:27%; width:300px; height:250px; background-color:#FFF; z-index:5; display:none; border:solid 1px #aad3eb; padding:1px; }
+.zs_info { height:28px; background:url("../images/tab_05.gif") repeat-x 0 -2px; border-bottom:solid 1px #aad3eb }
+.zs_info .tit { display:block; line-height:28px; text-align:left; padding-left: 30px; font-weight: bold; font-size: 14px; }
+.zs_fro { width:80%; display:block; margin:0 auto; padding-top:10px; }
+/*table td img*/
+.lists td.td_wid_l, .lists_info td.td_wid_l, .td_wid_l { font-size: 0px; width: 12px; }
+.lists td.td_wid_r, .lists_info td.td_wid_r, .td_wid_r { font-size: 0px; width: 16px; }
+/*---------WEB-FROM-AGENT统计推广来源--------*/
+.web_fa_box { font-size:12px; position:absolute; left:30%; top:7%; width:450px; height:500px; background-color:#FFF; z-index:5; display:block; background-color:#FFF; border:solid 1px #aad3eb; padding:1px; }
+.web_fa_info { width:100%; height:28px; background:url("../images/tab_05.gif") repeat-x 0 -2px; border-bottom:solid 1px #aad3eb }
+.web_fa_tit { display:block; width:100%; line-height:28px; text-align:left; padding-left: 30px; font-weight: bold; font-size:14px; }
+.web_fa_in { width:89%; display:block; margin:0 auto; font-size:12px }
+.web_fa_in table, .web_fa_in table td { font-size:12px; }
+.web_fa_add, #addWebfa { display:none; position:absolute; left:35%; top:16%; z-index:5; width:420px; background-color:#FFF; z-index:5; padding:6px 1px 1px; border:solid 2px #aad3eb; }
+.web_fa_add .tit { width:100%; height:28px; background:url("../images/tab_05.gif") repeat-x 0 -2px; border-bottom:solid 1px #aad3eb; line-height:28px; text-align:left; font-weight: bold; font-size: 16px; }
+.web_fa_add .con { width:400px; display:block; margin:0 auto; }
+/*---------CRM--------*/
+.lists_info td.crm_tableFL { text-align:left; }
+.lists_info td.crm_tableFR { text-align:right; }
+.crm_tit { background:url(../images/attach_rep.png) repeat-x; height:28px; background-position:0 -194px; line-height:28px; vertical-align:middle; overflow:hidden; margin:8px 0 4px; padding-left:10px; }
+.crm_lineh { }
+.crm_lineh td { padding:4px 0 }
+.excelout { position:absolute; left:40%; top:30%; width:300px; height:200px; background-color:#FFF; z-index:5; display:none; padding:6px 1px 1px; border:solid 2px #aad3eb; }
+.excelout .tit { width:100%; height:28px; background:url("../images/tab_05.gif") repeat-x 0 -2px; border-bottom:solid 1px #aad3eb; }
+.excelout .con { width:100%; display:block; margin:0 auto; height: 88px; background-color: transparent; overflow: auto; padding-top: 34px; }
+/***************************************************************要用********************************************************************/
+.msg-cw,.msg-yw,.msg-xt,.msg-zy,.msg-app{ padding: 5px 10px; margin: 0 0 10px; border: 2px solid #DDDDDD; }
+
+.msg-yw{ background:#e8f1f8;color:#2176bd; border-color:#2176bd}/*业务管理淡蓝绿*/
+.msg-xt{ background:#f0f7e9;color:#339900; border-color:#6db526}/*系统管理*/
+.msg-zy{ background:#fff4db;color:#cc6600; border-color:#ffcc00}/*资源管理*/
+.msg-app{ background:#f1ebfb;color:#9236d9; border-color:#9236d9}/*App管理*/
+.msg-cw{ background:#ffe3cc;color:#ff7300; border-color:#ff9d4c;}/*财务管理*/
+.msg-error { background: #FBE3E4; color: #8A1F11; border-color: #FBC2C4; }
+.msg-alert { background: #FFF6BF; color: #514721; border-color: #FFD324; }
+.msg-ok { background: #e0f2cb; color: #6DA827; border-color: #ccebac; }
+.msg-info { background: #fff4cc; color:#E79300; border-color: #f8e3ac; }
+.msg-loading { background: #FFFFFF url('../img/ajax-loader.gif') 5px 50% no-repeat; padding: 5px 10px 5px 31px; color: #333333; border-color: #EEEEEE; }
+/*----动态标题-----*/
+.titlefloat {
+	Z-INDEX: 100; POSITION: fixed; MARGIN: 0px auto; TOP: 0px; _position: absolute;
+	}

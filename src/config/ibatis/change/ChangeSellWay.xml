@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChangeSellWay_NS">
+	<typeAlias alias="ChangeSellWay" type="com.shangde.edu.change.domain.ChangeSellWay"/>
+	
+	<sql id="COU_CHANGESELLWAY_columns">
+		COU_CHANGE_SELL_WAY_TBL.id,
+		COU_CHANGE_SELL_WAY_TBL.CUS_ID,
+		COU_CHANGE_SELL_WAY_TBL.CASH_ID,
+		COU_CHANGE_SELL_WAY_TBL.CONTRACT_ID,
+		COU_CHANGE_SELL_WAY_TBL.NEW_PACK_ID,
+		COU_CHANGE_SELL_WAY_TBL.PACK_ID,
+		COU_CHANGE_SELL_WAY_TBL.TYPE,
+		COU_CHANGE_SELL_WAY_TBL.UPDATE_TIME,
+		COU_CHANGE_SELL_WAY_TBL.USER_NAME
+	
+	</sql>
+	
+	<sql id="COU_CHANGESELLWAY__properties">
+		#id#,
+		#cusId#,
+		#cashId#,
+		#contractId#,
+		#newPackId#,
+		#packId#,
+		#type#,
+		#updateTime#,
+		#userName#
+	</sql>
+	
+	<insert id="addChangeSellWay" parameterClass="ChangeSellWay">
+		INSERT INTO COU_CHANGE_SELL_WAY_TBL (<include refid="ChangeSellWay_NS.COU_CHANGESELLWAY_columns"/>) VALUES (<include refid="ChangeSellWay_NS.COU_CHANGESELLWAY__properties"/>)
+		<selectKey resultClass="int" type="post" keyProperty="id" >   
+        	<include refid="public_sql.increment_sql"/>
+        </selectKey>
+	</insert>
+
+</sqlMap>

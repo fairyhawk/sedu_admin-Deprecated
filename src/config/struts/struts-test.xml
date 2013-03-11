@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="test" namespace="/" extends="edu-default">
+        <action name="test" class="exp.action.TestStruts2">
+            <result>/jsp/test-list.jsp</result>
+            <result name="input">/jsp/input.jsp</result>
+            <result name="list">/jsp/list.jsp</result>
+            <result name="jsonTest" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack"/>
+			
+			
+			<!-- 上传下载开始 -->
+			<interceptor-ref name="defaultStack" />
+			<param name="savePath">/test</param>
+			<interceptor-ref name="fileUpload">  
+                <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <!-- 配置允许上传的文件大小，单位字节 -->  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            <result name="reupload">/jsp/test_pic_upload.jsp</result>
+			<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+            <result name="toViewDownload">/jsp/test_view_download.jsp</result>
+            <!-- 上传下载结束 -->
+        </action>
+    </package>
+</struts>

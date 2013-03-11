@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_UserStatLog_NS">
+	<!--table:FEED_Ad_TBL-->
+	<typeAlias alias="UserStatLog" type="com.shangde.edu.feed.domain.UserStatLog" />
+	<typeAlias alias="QueryUserStatLogCondition" type="com.shangde.edu.feed.condition.QueryUserStatLogCondition" />
+
+	<resultMap id="UserStatLogResult" class="UserStatLog">
+		 <result property="id" column="ID"/>
+		 <result property="cusId" column="cus_id"/>
+		 <result property="email" column="email"/>
+		 <result property="fromId" column="from_id"/>
+		 <result property="status" column="status"/>
+		 <result property="pubDate" column="pubdate"/>
+	</resultMap>
+
+	<sql id="FEED_USERSTATLOG_TBL_columns">
+		feed_user_stat_log_tbl.id,
+		feed_user_stat_log_tbl.cus_id,
+		feed_user_stat_log_tbl.email,
+		feed_user_stat_log_tbl.from_id,
+		feed_user_stat_log_tbl.status,
+		feed_user_stat_log_tbl.pubdate
+	</sql>
+
+	<sql id="FEED_USERSTATLOG_TBL_properties">
+		#id#, 
+		#cusId#, 
+		#email#,
+		#fromId#,
+		#status#,
+		#pubDate#
+	</sql>
+
+	<insert id="createUserStatLog" parameterClass="UserStatLog">
+		INSERT INTO feed_user_stat_log_tbl (
+		<include refid="Feed_UserStatLog_NS.FEED_USERSTATLOG_TBL_columns" />
+		) VALUES (
+		<include refid="Feed_UserStatLog_NS.FEED_USERSTATLOG_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+	
+	<!-- 根据用户id/邮箱/日期[yyyy-MM-dd]/fromId查询记录数 -->
+	<select id="getByCusIdEmailDateCount" resultClass="int" parameterClass="QueryUserStatLogCondition">
+		select count(1) from feed_user_stat_log_tbl where cus_id = #cusId# and email = #email# and date(pubdate) = #date# and from_id = #fromId#
+	</select>
+	
+	<!--end-->
+</sqlMap>

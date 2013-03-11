@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Coursepic_NS">
+        <!--table:COU_COURSEPIC_TBL-->
+        <typeAlias alias="Coursepic" type="com.shangde.edu.cou.domain.Coursepic"/>
+        <typeAlias alias="QueryCoursepicCondition" type="com.shangde.edu.cou.condition.QueryCoursepicCondition"/>
+
+        <resultMap id="CoursepicResult" class="Coursepic">
+            <result property="picId" column="PIC_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="size" column="SIZE"/>
+            <result property="type" column="TYPE"/>
+            <result property="homeFlag" column="HOME_FLAG"/>
+            <result property="picUrl" column="PIC_URL"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="introduce" column="INTRODUCE"/>
+        </resultMap>
+
+        <sql id="COU_COURSEPIC_TBL_columns">
+            COU_COURSEPIC_TBL.PIC_ID,
+            COU_COURSEPIC_TBL.COURSE_ID,
+            COU_COURSEPIC_TBL.NAME,
+            COU_COURSEPIC_TBL.SIZE,
+            COU_COURSEPIC_TBL.TYPE,
+            COU_COURSEPIC_TBL.HOME_FLAG,
+            COU_COURSEPIC_TBL.PIC_URL,
+            COU_COURSEPIC_TBL.ADDTIME,
+            COU_COURSEPIC_TBL.INTRODUCE
+        </sql>
+
+        <sql id="COU_COURSEPIC_TBL_properties">
+            #picId#,
+            #courseId#,
+            #name#,
+            #size#,
+            #type#,
+            #homeFlag#,
+            #picUrl#,
+            #addtime#,
+            #introduce#
+        </sql>
+
+        <insert id="createCoursepic" parameterClass="Coursepic">
+            INSERT INTO COU_COURSEPIC_TBL (<include refid="Coursepic_NS.COU_COURSEPIC_TBL_columns"/>) VALUES (<include refid="Coursepic_NS.COU_COURSEPIC_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="picId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCoursepicById" parameterClass="int">
+            DELETE FROM COU_COURSEPIC_TBL
+            WHERE
+                PIC_ID = #value#
+
+        </delete>
+        
+        <delete id="deleteCoursepicByCourseId" parameterClass="int">
+            DELETE FROM COU_COURSEPIC_TBL
+            WHERE
+                COURSE_ID = #value#
+
+        </delete>
+
+        <update id="updateCoursepic" parameterClass="Coursepic">
+            UPDATE COU_COURSEPIC_TBL SET
+                PIC_ID = #picId#,
+                COURSE_ID = #courseId#,
+                NAME = #name#,
+                SIZE = #size#,
+                TYPE = #type#,
+                HOME_FLAG = #homeFlag#,
+                PIC_URL = #picUrl#,
+                ADDTIME = #addtime#,
+                INTRODUCE = #introduce#
+            WHERE
+                PIC_ID = #picId#
+
+        </update>
+
+        <select id="getCoursepicById" resultMap="Coursepic_NS.CoursepicResult" parameterClass="int">
+            SELECT
+            <include refid="Coursepic_NS.COU_COURSEPIC_TBL_columns"/>
+            FROM COU_COURSEPIC_TBL
+            WHERE
+                PIC_ID = #value#
+
+        </select>
+
+        <select id="getCoursepicList" resultMap="Coursepic_NS.CoursepicResult" parameterClass="QueryCoursepicCondition">
+            SELECT
+            <include refid="Coursepic_NS.COU_COURSEPIC_TBL_columns"/>
+            FROM COU_COURSEPIC_TBL
+        </select>
+        
+        <select id="getMyCoursepicList" resultMap="Coursepic_NS.CoursepicResult" parameterClass="QueryCoursepicCondition">
+            SELECT
+            <include refid="Coursepic_NS.COU_COURSEPIC_TBL_columns"/>
+            FROM COU_COURSEPIC_TBL WHERE COU_COURSEPIC_TBL.COURSE_ID = #courseId#
+	             AND   		COU_COURSEPIC_TBL.HOME_FLAG=#homeFlag#
+	       
+        </select>
+        <!--end-->
+</sqlMap>

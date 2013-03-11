@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VideoRel_NS">
+        <!--table:KNO_VIDEO_REL_TBL-->
+        <typeAlias alias="VideoRel" type="com.shangde.edu.kno.domain.VideoRel"/>
+        <typeAlias alias="QueryVideoRelCondition" type="com.shangde.edu.kno.condition.QueryVideoRelCondition"/>
+
+        <resultMap id="VideoRelResult" class="VideoRel">
+            <result property="vrId" column="VR_ID"/>
+            <result property="ksnId" column="KSN_ID"/>
+            <result property="nodeId" column="NODE_ID"/>
+            <result property="voId" column="VO_ID"/>
+            <result property="voName" column="VO_NAME"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="courseName" column="COURSE_NAME"/>
+            <result property="title" column="TITLE"/>
+        </resultMap>
+
+        <sql id="KNO_VIDEO_REL_TBL_columns">
+            KNO_VIDEO_REL_TBL.VR_ID,
+            KNO_VIDEO_REL_TBL.KSN_ID,
+            KNO_VIDEO_REL_TBL.NODE_ID,
+            KNO_VIDEO_REL_TBL.VO_ID,
+            KNO_VIDEO_REL_TBL.VO_NAME,
+            KNO_VIDEO_REL_TBL.COURSE_ID,
+            KNO_VIDEO_REL_TBL.COURSE_NAME,
+            KNO_VIDEO_REL_TBL.TITLE
+        </sql>
+
+        <sql id="KNO_VIDEO_REL_TBL_properties">
+            #vrId#,
+            #ksnId#,
+            #nodeId#,
+            #voId#,
+            #voName#,
+            #courseId#,
+            #courseName#,
+            #title#
+        </sql>
+
+        <insert id="createVideoRel" parameterClass="VideoRel">
+            INSERT INTO KNO_VIDEO_REL_TBL (<include refid="VideoRel_NS.KNO_VIDEO_REL_TBL_columns"/>) VALUES (<include refid="VideoRel_NS.KNO_VIDEO_REL_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="vrId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteVideoRelById" parameterClass="int">
+            DELETE FROM KNO_VIDEO_REL_TBL
+            WHERE
+                VR_ID = #value#
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateVideoRel" parameterClass="VideoRel">
+            UPDATE KNO_VIDEO_REL_TBL SET
+                VR_ID = #vrId#,
+                KSN_ID = #ksnId#,
+                NODE_ID = #nodeId#,
+                VO_ID = #voId#,
+                VO_NAME = #voName#,
+                COURSE_ID = #courseId#,
+                COURSE_NAME = #courseName#,
+                TITLE=#title#
+            WHERE
+                VR_ID = #vrId#
+
+
+
+
+
+
+        </update>
+
+        <select id="getVideoRelById" resultMap="VideoRel_NS.VideoRelResult" parameterClass="int">
+            SELECT
+            <include refid="VideoRel_NS.KNO_VIDEO_REL_TBL_columns"/>
+            FROM KNO_VIDEO_REL_TBL
+            WHERE
+                VR_ID = #value#
+
+
+
+
+
+
+        </select>
+		
+        
+        <select id="getVideoRelList" resultMap="VideoRel_NS.VideoRelResult" parameterClass="QueryVideoRelCondition">
+            SELECT
+            <include refid="VideoRel_NS.KNO_VIDEO_REL_TBL_columns"/>
+            FROM KNO_VIDEO_REL_TBL
+            WHERE 1=1
+            <isNotNull>
+            <isGreaterThan prepend="and" property="ksnId" compareValue="0">
+             KSN_ID=#ksnId#
+            </isGreaterThan>
+            </isNotNull>
+        </select>
+        
+        <!-- 根据知识树节点Id ksnId 获取关联列表 -->
+		<select id="getVideoRelListByKsnId" resultMap="VideoRel_NS.VideoRelResult" parameterClass="int">
+            SELECT
+            <include refid="VideoRel_NS.KNO_VIDEO_REL_TBL_columns"/>
+            FROM KNO_VIDEO_REL_TBL
+            WHERE KSN_ID=#value#
+        </select>
+        <!--end-->
+</sqlMap>

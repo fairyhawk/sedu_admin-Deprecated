@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Notes_NS">
+        <!--table:RES_NOTES_TBL-->
+        <typeAlias alias="Notes" type="com.shangde.edu.res.domain.Notes"/>
+        <typeAlias alias="QueryNotesCondition" type="com.shangde.edu.res.condition.QueryNotesCondition"/>
+
+        <resultMap id="NotesResult" class="Notes">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="pointId" column="POINT_ID"/>
+            <result property="noteId" column="NOTE_ID"/>
+            <result property="noteInfo" column="NOTE_INFO"/>
+            <result property="noteHTML" column="NOTE_HTML"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="recordTime" column="RECORD_TIME"/>
+        </resultMap>
+
+        <resultMap id="MyNotesResult" class="Notes" extends="NotesResult">
+            <result property="vedio.voId" column="VO_ID"/>
+            <result property="vedio.voName" column="VO_NAME"/>
+            <result property="kpoint" column="POINT_ID" select="Kpoint_NS.getKpointById"/>
+        </resultMap>
+        
+        <resultMap class="Notes" id="NotesDTOResult" extends="NotesResult">
+        	<result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById"/>
+        </resultMap>
+
+        <sql id="RES_NOTES_TBL_columns">
+            RES_NOTES_TBL.CUS_ID,
+            RES_NOTES_TBL.POINT_ID,
+            RES_NOTES_TBL.NOTE_ID,
+            RES_NOTES_TBL.NOTE_INFO,
+            RES_NOTES_TBL.NOTE_HTML,
+            RES_NOTES_TBL.UPDATE_TIME,
+            RES_NOTES_TBL.RECORD_TIME
+        </sql>
+
+        <sql id="RES_NOTES_TBL_properties">
+        	#cusId#,
+            #pointId#,
+            #noteId#,
+            #noteInfo#,
+            #noteHTML#,
+            #updateTime#,
+            #recordTime#
+        </sql>
+
+        <insert id="createNotes" parameterClass="Notes">
+            INSERT INTO RES_NOTES_TBL (<include refid="Notes_NS.RES_NOTES_TBL_columns"/>) VALUES (<include refid="Notes_NS.RES_NOTES_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="noteId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteNotesById" parameterClass="int">
+            DELETE FROM RES_NOTES_TBL
+            WHERE
+			NOTE_ID = #value#
+        </delete>
+        <delete id="deleteNotesByCusId" parameterClass="int">
+            DELETE FROM RES_NOTES_TBL
+            WHERE
+			CUS_ID = #value#
+        </delete>
+        
+        <delete id="deleteNotesByPointId" parameterClass="int">
+            DELETE FROM RES_NOTES_TBL
+            WHERE
+			point_id = #value#
+        </delete>
+
+        <update id="updateNotes" parameterClass="Notes">
+            UPDATE RES_NOTES_TBL SET
+                CUS_ID = #cusId#,
+                POINT_ID = #pointId#,
+                NOTE_ID = #noteId#,
+                NOTE_INFO = #noteInfo#,
+                NOTE_HTML = #noteHTML#,
+                UPDATE_TIME = #updateTime#,
+                RECORD_TIME = #recordTime#
+            WHERE
+                
+NOTE_ID = #noteId#
+
+
+        </update>
+
+        <select id="getNotesById" resultMap="Notes_NS.NotesResult" parameterClass="int">
+            SELECT
+            <include refid="Notes_NS.RES_NOTES_TBL_columns"/>
+            FROM RES_NOTES_TBL
+            WHERE
+                
+NOTE_ID = #value#
+
+
+        </select>
+
+        <select id="getNotesList" resultMap="Notes_NS.NotesResult" parameterClass="QueryNotesCondition">
+            SELECT
+            <include refid="Notes_NS.RES_NOTES_TBL_columns"/>
+            FROM RES_NOTES_TBL
+            <dynamic prepend="WHERE">
+            	<isNotNull property="cusId">
+            		<isNotEqual property="cusId" compareValue="0">
+            			CUS_ID = #cusId#
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotNull property="pointId">
+            		<isNotEqual property="pointId" compareValue="0" >
+            			AND POINT_ID = #pointId#
+            		</isNotEqual>
+            	</isNotNull>
+            </dynamic>
+            ORDER BY RECORD_TIME
+        </select>
+        
+		<select id="getNotesListByCondition" resultMap="Notes_NS.NotesDTOResult" parameterClass="QueryNotesCondition">
+			SELECT 
+        		<include refid="Notes_NS.RES_NOTES_TBL_columns"/>,
+				RES_VEDIO_TBL.VO_NAME,
+				RES_VEDIO_TBL.VO_ID
+        	FROM RES_NOTES_TBL
+			INNER JOIN RES_VEDIO_TBL
+			ON RES_NOTES_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+        	WHERE 1 = 1
+        	 <isNotNull property="noteId" >
+            	<isNotEqual property="noteId" compareValue="0" prepend="and">
+            	RES_NOTES_TBL.NOTE_ID=#noteId#  
+            	</isNotEqual>
+           	</isNotNull>
+           	 ORDER BY UPDATE_TIME DESC
+        	<include refid="public_sql.page_end"/>
+
+        </select>
+        <select id="getNotesCountByCondition" resultClass="int" parameterClass="QueryNotesCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM RES_NOTES_TBL
+        	INNER JOIN RES_VEDIO_TBL
+			ON RES_NOTES_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+        	WHERE 1=1
+        	 <isNotNull property="noteId" >
+            	<isNotEqual property="noteId" compareValue="0" prepend="and">
+            	RES_NOTES_TBL.NOTE_ID=#noteId#
+            	</isNotEqual>
+           	</isNotNull>
+        </select>
+        <select id="getNotesByPoint" resultMap="Notes_NS.NotesResult" parameterClass="QueryNotesCondition">
+            SELECT
+            <include refid="Notes_NS.RES_NOTES_TBL_columns"/>
+            FROM RES_NOTES_TBL
+            WHERE CUS_ID = #cusId#
+            AND POINT_ID = #pointId#
+        </select>
+        
+		<select id="getNotesListByCourse" resultMap="Notes_NS.MyNotesResult" parameterClass="QueryNotesCondition">
+			SELECT 
+        		<include refid="Notes_NS.RES_NOTES_TBL_columns"/>,
+				RES_VEDIO_TBL.VO_NAME,
+				RES_VEDIO_TBL.VO_ID
+        	FROM RES_NOTES_TBL
+			INNER JOIN RES_VEDIO_TBL
+			ON RES_NOTES_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+			INNER JOIN COU_KPOINT_TBL 
+			ON  COU_KPOINT_TBL.POINT_ID = RES_NOTES_TBL.POINT_ID
+			INNER JOIN COU_COURSE_TBL
+			ON COU_COURSE_TBL.COURSE_ID = COU_KPOINT_TBL.COURSE_ID
+        	WHERE CUS_ID = #cusId#
+        	AND COU_KPOINT_TBL.COURSE_ID = #courseId#
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getNotesCountByCourse" resultClass="int" parameterClass="QueryNotesCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM RES_NOTES_TBL
+			INNER JOIN RES_VEDIO_TBL
+			ON RES_NOTES_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+			INNER JOIN COU_KPOINT_TBL 
+			ON  COU_KPOINT_TBL.POINT_ID = RES_NOTES_TBL.POINT_ID
+			INNER JOIN COU_COURSE_TBL
+			ON COU_COURSE_TBL.COURSE_ID = COU_KPOINT_TBL.COURSE_ID
+        	WHERE CUS_ID = #cusId#
+        	AND COU_KPOINT_TBL.COURSE_ID = #courseId#
+        </select>
+        
+		<select id="getNotesListByPointId" resultMap="Notes_NS.MyNotesResult" parameterClass="QueryNotesCondition">
+			SELECT 
+        		<include refid="Notes_NS.RES_NOTES_TBL_columns"/>,
+				RES_VEDIO_TBL.VO_NAME,
+				RES_VEDIO_TBL.VO_ID
+        	FROM RES_NOTES_TBL
+			INNER JOIN RES_VEDIO_TBL
+			ON RES_NOTES_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+			INNER JOIN COU_KPOINT_TBL 
+			ON  COU_KPOINT_TBL.POINT_ID = RES_NOTES_TBL.POINT_ID
+			INNER JOIN COU_COURSE_TBL
+			ON COU_COURSE_TBL.COURSE_ID = COU_KPOINT_TBL.COURSE_ID
+			WHERE RES_NOTES_TBL.CUS_ID = #cusId#
+			AND RES_NOTES_TBL.POINT_ID = #pointId#
+			ORDER BY RES_NOTES_TBL.RECORD_TIME
+        	<include refid="public_sql.page_end"/>
+        </select>
+        <select id="getNotesCountByPointId" resultClass="int" parameterClass="QueryNotesCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM RES_NOTES_TBL
+			INNER JOIN RES_VEDIO_TBL
+			ON RES_NOTES_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+			INNER JOIN COU_KPOINT_TBL 
+			ON  COU_KPOINT_TBL.POINT_ID = RES_NOTES_TBL.POINT_ID
+			INNER JOIN COU_COURSE_TBL
+			ON COU_COURSE_TBL.COURSE_ID = COU_KPOINT_TBL.COURSE_ID
+			WHERE RES_NOTES_TBL.CUS_ID = #cusId#
+			AND RES_NOTES_TBL.POINT_ID = #pointId#
+			ORDER BY RES_NOTES_TBL.RECORD_TIME
+        </select>
+        <!-- Yang ning 2011-12-6 批量删除用户 时级联删除-->
+         <delete id="deleteBathNotesByCusIds" parameterClass="String">
+            DELETE FROM RES_NOTES_TBL
+            WHERE
+			CUS_ID IN ($value$)
+        </delete>
+        <!--end-->
+</sqlMap>

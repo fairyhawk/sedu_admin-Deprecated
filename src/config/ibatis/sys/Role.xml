@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Role_NS">
+        <!--table:SYS_ROLE_TBL-->
+        <typeAlias alias="Role" type="com.shangde.edu.sys.domain.Role"/>
+        <typeAlias alias="QueryRoleCondition" type="com.shangde.edu.sys.condition.QueryRoleCondition"/>
+
+        <resultMap id="RoleResult" class="Role">
+            <result property="roleId" column="ROLE_ID" nullValue="0"/>
+            <result property="roleName" column="ROLE_NAME"/>
+            <result property="status" column="STATUS" nullValue="0"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="functionList" column="ROLE_ID" select="Function_NS.getFunctionListByRoleId"/>
+            <result property="roleTypeId" column="ROLE_TYPE_ID" nullValue="0"/>
+            <result property="roleApplyScopeId" column="ROLE_APPLY_SCOPE_ID" nullValue="0"/>
+        </resultMap>
+
+        <sql id="SYS_ROLE_TBL_columns">
+            SYS_ROLE_TBL.ROLE_ID,
+            SYS_ROLE_TBL.ROLE_NAME,
+            SYS_ROLE_TBL.STATUS,
+            SYS_ROLE_TBL.CREATE_TIME,
+            SYS_ROLE_TBL.UPDATE_TIME,
+            SYS_ROLE_TBL.ROLE_TYPE_ID,
+            SYS_ROLE_TBL.ROLE_APPLY_SCOPE_ID
+        </sql>
+
+        <sql id="SYS_ROLE_TBL_properties">
+            #roleId#,
+            #roleName#,
+            #status#,
+            #createTime#,
+            #updateTime#,
+            #roleTypeId#,
+            #roleApplyScopeId#
+        </sql>
+
+        <insert id="createRole" parameterClass="Role">
+            INSERT INTO SYS_ROLE_TBL (<include refid="Role_NS.SYS_ROLE_TBL_columns"/>)
+            VALUES
+            (<include refid="Role_NS.SYS_ROLE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="roleId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteRoleById" parameterClass="int">
+            DELETE FROM SYS_ROLE_TBL
+            WHERE
+                ROLE_ID = #value#
+        </delete>
+
+        <update id="updateRole" parameterClass="Role">
+            UPDATE SYS_ROLE_TBL SET
+                ROLE_ID = #roleId#,
+                ROLE_NAME = #roleName#,
+                STATUS = #status#,
+                CREATE_TIME = #createTime#,
+                UPDATE_TIME = #updateTime#,
+                ROLE_APPLY_SCOPE_ID = #roleApplyScopeId#
+            WHERE
+                ROLE_ID = #roleId#
+        </update>
+
+        <select id="getRoleById" resultMap="Role_NS.RoleResult" parameterClass="int">
+            SELECT
+            <include refid="Role_NS.SYS_ROLE_TBL_columns"/>
+            FROM SYS_ROLE_TBL
+            WHERE
+                ROLE_ID = #value#
+        </select>
+
+        <select id="getRoleList" resultMap="Role_NS.RoleResult" parameterClass="QueryRoleCondition">
+            SELECT
+            <include refid="Role_NS.SYS_ROLE_TBL_columns"/>
+            FROM SYS_ROLE_TBL
+            WHERE 1=1
+        </select>
+        
+        <select id="getRoleListByUserId" resultMap="Role_NS.RoleResult" parameterClass="int">
+            SELECT
+            distinct
+            <include refid="Role_NS.SYS_ROLE_TBL_columns"/>
+            FROM SYS_ROLE_TBL,SYS_USER_TBL,SYS_USER_GRADE_SUBJECT_ROLE_TBL
+            WHERE SYS_ROLE_TBL.ROLE_ID = SYS_USER_GRADE_SUBJECT_ROLE_TBL.ROLE_ID
+               AND SYS_USER_TBL.USER_ID = SYS_USER_GRADE_SUBJECT_ROLE_TBL.USER_ID
+               AND SYS_USER_TBL.USER_ID = #value#
+        </select>
+        <!--end-->
+</sqlMap>

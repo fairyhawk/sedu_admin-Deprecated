@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<!-- 发送模式选项 -->
+	<bean id="sendModeList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="计划发送" />
+				</bean>
+				 -->
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="定时发送" />
+				</bean>
+				<!-- 
+					<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="手动发送" />
+					</bean>
+				-->
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 计划模式选项 
+	<bean id="planningModeList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="用户填写邮箱后立即发送" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="用户注册后立即发送" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="每天/24小时发送" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="4" />
+					<property name="text" value="每两天发送" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="5" />
+					<property name="text" value="每周发送" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="6" />
+					<property name="text" value="每月发送" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	-->
+
+	<!-- 任务状态选项 -->	
+	<bean id="taskStatusList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="正常" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="发送" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="删除" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 发送对象选项 -->	
+	<bean id="sendObjectList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="订阅用户" />
+				</bean>
+				 -->
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="购买用户" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="注册用户" />
+				</bean>
+				<!-- 如下选项测试使用 -->
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="99" />
+					<property name="text" value="测试用户" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="100" />
+					<property name="text" value="默认用户列表" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 视频讲义重要性 -->
+	<bean id="importanceList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="1" />
+					<property name="text" value="一星级" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="2" />
+					<property name="text" value="二星级" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="3" />
+					<property name="text" value="三星级" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="4" />
+					<property name="text" value="四星级" />
+				</bean>
+				<bean class="com.shangde.common.vo.SelectModel">
+					<property name="value" value="5" />
+					<property name="text" value="五星级" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+
+</beans>

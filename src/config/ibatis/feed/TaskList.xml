@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TaskList_NS">
+        <!--table:FEED_TASK_LIST_TBL-->
+        <typeAlias alias="TaskList" type="com.shangde.edu.feed.domain.TaskList"/>
+        <typeAlias alias="QueryTaskListCondition" type="com.shangde.edu.feed.condition.QueryTaskListCondition"/>
+        <typeAlias alias="TaskListDTO" type="com.shangde.edu.feed.dto.TaskListDTO"/>
+
+        <resultMap id="TaskListResult" class="TaskList">
+            <result property="id" column="ID"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="templateId" column="TEMPLATE_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="userData" column="USER_DATA"/>
+            <result property="sendMode" column="SEND_MODE"/>
+            <result property="planningModeId" column="PLANNING_MODE_ID"/>
+            <result property="planningMode" column="PLANNING_MODE_ID" select="PlanningMode_NS.getPlanningModeById"/>
+            <result property="sendTime" column="SEND_TIME"/>
+            <result property="regularlySentTime" column="REGULARLY_SENT_TIME"/>
+            <result property="sendObject" column="SEND_OBJECT"/>
+            <result property="videoId" column="VIDEO_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="pubdate" column="PUBDATE"/>
+            <result property="modified" column="MODIFIED"/>
+        </resultMap>
+        <resultMap id="TaskIdRegularlySentTimeResult" class="TaskList">
+            <result property="id" column="ID"/>
+            <result property="regularlySentTime" column="REGULARLY_SENT_TIME"/>
+        </resultMap>
+
+        <sql id="FEED_TASK_LIST_TBL_columns">
+            FEED_TASK_LIST_TBL.ID,
+            FEED_TASK_LIST_TBL.SUBJECT_ID,
+            FEED_TASK_LIST_TBL.TEMPLATE_ID,
+            FEED_TASK_LIST_TBL.NAME,
+            FEED_TASK_LIST_TBL.CONTENT,
+            FEED_TASK_LIST_TBL.USER_DATA,
+            FEED_TASK_LIST_TBL.SEND_MODE,
+            FEED_TASK_LIST_TBL.PLANNING_MODE_ID,
+            FEED_TASK_LIST_TBL.SEND_TIME,
+            FEED_TASK_LIST_TBL.REGULARLY_SENT_TIME,
+            FEED_TASK_LIST_TBL.SEND_OBJECT,
+            FEED_TASK_LIST_TBL.VIDEO_ID,
+            FEED_TASK_LIST_TBL.STATUS,
+            FEED_TASK_LIST_TBL.PUBDATE,
+            FEED_TASK_LIST_TBL.MODIFIED
+        </sql>
+
+        <sql id="FEED_TASK_LIST_TBL_properties">
+            #id#,
+            #subjectId#,
+            #templateId#,
+            #name#,
+            #content#,
+            #userData#,
+            #sendMode#,
+            #planningMode.id#,
+            #sendTime#,
+            #regularlySentTime#,
+            #sendObject#,
+            #videoId#,
+            #status#,
+            #pubdate#,
+            #modified#
+        </sql>
+
+        <insert id="createTaskList" parameterClass="TaskList">
+            INSERT INTO FEED_TASK_LIST_TBL (<include refid="TaskList_NS.FEED_TASK_LIST_TBL_columns"/>) VALUES (<include refid="TaskList_NS.FEED_TASK_LIST_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTaskListById" parameterClass="int">
+            DELETE FROM FEED_TASK_LIST_TBL
+            WHERE ID = #id#
+        </delete>
+
+        <update id="updateTaskList" parameterClass="TaskList">
+            UPDATE FEED_TASK_LIST_TBL SET
+                ID = #id#,
+                SUBJECT_ID = #subjectId#,
+                TEMPLATE_ID = #templateId#,
+                NAME = #name#,
+                CONTENT = #content#,
+                USER_DATA = #userData#,
+                SEND_MODE = #sendMode#,
+                PLANNING_MODE_id = #planningModeid#,
+                SEND_TIME = #sendTime#,
+                REGULARLY_SENT_TIME = #regularlySentTime#,
+                SEND_OBJECT = #sendObject#,
+                VIDEO_ID = #videoId#,
+                STATUS = #status#,
+                PUBDATE = #pubdate#,
+                MODIFIED = #modified#
+            WHERE ID = #id#
+        </update>
+
+        <select id="getTaskListById" resultMap="TaskList_NS.TaskListResult" parameterClass="int">
+            SELECT
+            <include refid="TaskList_NS.FEED_TASK_LIST_TBL_columns"/>
+            FROM FEED_TASK_LIST_TBL
+            WHERE ID = #id#
+        </select>
+		
+		<select id="getTaskListByIdEmail" resultClass="int" parameterClass="Map">
+            SELECT
+            count(1)
+            FROM FEED_TASK_LIST_TBL
+            WHERE ID = #id# and user_data like '%$email$%'
+        </select>
+        
+        <select id="getTaskListList" resultMap="TaskList_NS.TaskListResult" parameterClass="QueryTaskListCondition">
+        	<include refid="public_sql.page_begin" />
+            SELECT
+            <include refid="TaskList_NS.FEED_TASK_LIST_TBL_columns"/>
+            FROM FEED_TASK_LIST_TBL
+            <include refid="public_sql.page_end" />
+        </select>
+        <select id="getTaskListCount" resultClass="int" parameterClass="QueryTaskListCondition">
+            SELECT count(1) FROM FEED_TASK_LIST_TBL
+        </select>
+        
+        <update id="updateTaskListStatus" parameterClass="Map">
+        	update FEED_TASK_LIST_TBL SET STATUS = #status# WHERE ID = #id#
+        </update>
+        
+        
+        <!-- 查询详细统计 -->
+        <select id="getTaskListPageList" resultClass="TaskListDTO" parameterClass="QueryTaskListCondition">
+            <include refid="public_sql.page_begin" />
+            select 
+		       DISTINCT
+		       task_list.id as id,task_list.name as name,task_log.total as planTotal, 
+		       (select count(1) from feed_task_send_log_tbl as task_send_log1 where task_send_log1.task_list_id = task_list.id and task_send_log1.pubdate BETWEEN task_list.regularly_sent_time and date_add(task_list.regularly_sent_time, interval 24 hour)) as day24Count,       
+		       (select count(1) from feed_task_send_log_tbl as task_send_log2 where task_send_log2.task_list_id = task_list.id and task_send_log2.pubdate BETWEEN task_list.regularly_sent_time and date_add(task_list.regularly_sent_time, interval 48 hour)) as day48Count,
+		       (select count(1) from feed_task_send_log_tbl as task_send_log3 where task_send_log3.task_list_id = task_list.id and task_send_log3.pubdate BETWEEN task_list.regularly_sent_time and date_add(task_list.regularly_sent_time, interval 72 hour)) as day72Count,
+		       (select count(1) from feed_unique_record_tbl as unique_record where unique_record.type = 1 and unique_record.object_id = task_list.id and pubtime BETWEEN task_list.regularly_sent_time and date_add(task_list.regularly_sent_time, interval 24 hour)) as uac24Count,       
+		       (select count(1) from feed_unique_record_tbl as unique_record where unique_record.type = 1 and unique_record.object_id = task_list.id and pubtime BETWEEN task_list.regularly_sent_time and date_add(task_list.regularly_sent_time, interval 48 hour)) as uac48Count,
+		       (select count(1) from feed_unique_record_tbl as unique_record where unique_record.type = 1 and unique_record.object_id = task_list.id and pubtime BETWEEN task_list.regularly_sent_time and date_add(task_list.regularly_sent_time, interval 72 hour)) as uac72Count,       
+		       (select count(1) from feed_unique_record_tbl as unique_record where unique_record.type = 1 and unique_record.object_id = task_list.id) as totals       
+		       from feed_task_list_tbl as task_list inner join feed_task_log_tbl as task_log       
+		       where       
+		       (task_list.status = 1 or task_list.status = 2) and task_log.task_list_id = task_list.id
+            <include refid="public_sql.page_end" />
+        </select>
+        <select id="getTaskListPageCount" resultClass="int" parameterClass="QueryTaskListCondition">
+        	select 
+		       count(1)       
+		       from feed_task_list_tbl       
+		       where
+		       	(status = 1 or status = 2)
+        </select>
+        
+        <!-- 根据taskId集，查询数据 -->
+        <select id="getTaskIdRegularlySentTime" resultMap="TaskList_NS.TaskIdRegularlySentTimeResult" parameterClass="Map">
+        	select id,regularly_sent_time from feed_task_list_tbl 
+        	where 
+        	<iterate property="idsList" open="(" close=")" conjunction="or">
+	          id=$idsList[].id$
+	        </iterate>
+        </select>
+        
+        
+        
+        <!--end-->
+</sqlMap>

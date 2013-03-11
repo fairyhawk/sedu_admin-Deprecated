@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RebatePrice_NS">
+	
+	<typeAlias alias="RebatePrice" type="com.shangde.edu.cou.domain.RebatePrice"/>
+
+	<resultMap id="RebatePriceResult" class="RebatePrice">
+		<result property="rebateId" column="rebate_id" />
+		<result property="sellId" column="sell_id" />
+		<result property="rebatePrice" column="rebate_price" />
+		<result property="rebateBeginTime" column="rebate_begin_time" />
+		<result property="rebateEndTime" column="rebate_end_time" />
+	</resultMap>
+
+	<sql id="COU_REBATE_TBL_columns">
+		cou_rebate_tbl.rebate_id, 
+		cou_rebate_tbl.sell_id, 
+		cou_rebate_tbl.rebate_price,
+		cou_rebate_tbl.rebate_begin_time,
+		cou_rebate_tbl.rebate_end_time
+	</sql>
+
+	<sql id="COU_REBATE_TBL_properties">
+		#rebateId#, #sellId#, #rebatePrice#, #rebateBeginTime#, #rebateEndTime#
+	</sql>
+
+	<insert id="createRebatePrice" parameterClass="RebatePrice" >
+		INSERT INTO cou_rebate_tbl (
+		<include refid="RebatePrice_NS.COU_REBATE_TBL_columns" />
+		) VALUES (
+		<include refid="RebatePrice_NS.COU_REBATE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="rebateId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteRebatePriceById" parameterClass="int">
+		DELETE FROM cou_rebate_tbl WHERE rebate_id = #value#
+	</delete>
+	
+	<delete id="deleteRebatePriceBySellId" parameterClass="int">
+		DELETE FROM cou_rebate_tbl WHERE sell_id = #value#
+	</delete>
+	<update id="updateRebatePrice" parameterClass="RebatePrice">
+		UPDATE cou_rebate_tbl SET sell_id = #sellId#, rebate_price = #rebatePrice#, rebate_begin_time
+		= #rebateBeginTime# , rebate_end_time
+		= #rebateEndTime# 
+		 WHERE rebate_id = #rebateId#
+	</update>
+	
+	<select id="getRebatePriceById" resultMap="RebatePrice_NS.RebatePriceResult"
+		parameterClass="int">
+		SELECT
+		<include refid="RebatePrice_NS.COU_REBATE_TBL_columns" />
+		FROM cou_rebate_tbl WHERE rebate_id = #value#
+	</select>
+	<select id="getRebatePriceBySellId" resultMap="RebatePrice_NS.RebatePriceResult" parameterClass="int">
+		SELECT
+		<include refid="RebatePrice_NS.COU_REBATE_TBL_columns" />
+		FROM cou_rebate_tbl WHERE sell_id = #value# ORDER BY cou_rebate_tbl.rebate_id
+	</select>
+</sqlMap>

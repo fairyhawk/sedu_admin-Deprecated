@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CpCus_NS">
+        <!--table:COU_CP_CUS_RECORD-->
+        <typeAlias alias="CpCus" type="com.shangde.edu.cou.domain.CpCus"/>
+        <typeAlias alias="QueryCpCusCondition" type="com.shangde.edu.cou.condition.QueryCpCusCondition"/>
+
+        <resultMap id="CpCusResult" class="CpCus">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="id" column="ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="serialNumber" column="SERIAL_NUMBER"/>
+            <result property="coupon" column="ID" select="Coupon_NS.getCouponById"/>
+        </resultMap>
+
+        <sql id="COU_CP_CUS_RECORD_columns">
+            COU_CP_CUS_RECORD.CUS_ID,
+            COU_CP_CUS_RECORD.ID,
+            COU_CP_CUS_RECORD.STATUS,
+            COU_CP_CUS_RECORD.SERIAL_NUMBER
+        </sql>
+
+        <sql id="COU_CP_CUS_RECORD_properties">
+            #cusId#,
+            #id#,
+            #status#,
+            #serialNumber#
+        </sql>
+
+        <insert id="createCpCus" parameterClass="CpCus">
+            INSERT INTO COU_CP_CUS_RECORD (<include refid="CpCus_NS.COU_CP_CUS_RECORD_columns"/>) VALUES (<include refid="CpCus_NS.COU_CP_CUS_RECORD_properties"/>)
+        </insert>
+
+        <delete id="deleteCpCusById" parameterClass="int">
+            DELETE FROM COU_CP_CUS_RECORD
+	            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+	            AND COU_CP_CUS_RECORD.ID = #id#
+        </delete>
+
+        <update id="updateCpCus" parameterClass="CpCus">
+            UPDATE COU_CP_CUS_RECORD SET
+                CUS_ID = #cusId#,
+                ID = #id#,
+                STATUS = #status#,
+                SERIAL_NUMBER = #serialNumber#
+        </update>
+
+        <select id="getCpCusById" resultMap="CpCus_NS.CpCusResult" parameterClass="int">
+            SELECT
+            <include refid="CpCus_NS.COU_CP_CUS_RECORD_columns"/>
+            FROM COU_CP_CUS_RECORD
+	            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+	            AND COU_CP_CUS_RECORD.ID = #id#
+        </select>
+
+        <select id="getCpCusList" resultMap="CpCus_NS.CpCusResult" parameterClass="QueryCpCusCondition">
+            SELECT
+            <include refid="CpCus_NS.COU_CP_CUS_RECORD_columns"/>
+            FROM COU_CP_CUS_RECORD
+        </select>
+        
+        <select id="getCpCusByCusId" resultMap="CpCus_NS.CpCusResult" parameterClass="int">
+            SELECT
+            <include refid="CpCus_NS.COU_CP_CUS_RECORD_columns"/>
+            FROM COU_CP_CUS_RECORD
+	            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+	            AND COU_CP_CUS_RECORD.STATUS = 0
+        </select>
+
+        <delete id="deleteCpCusBySN" parameterClass="java.lang.String">
+            DELETE FROM COU_CP_CUS_RECORD
+	        	WHERE COU_CP_CUS_RECORD.SERIAL_NUMBER = #value#
+        </delete>
+         <delete id="delCpCusByCusId" parameterClass="int">
+            DELETE FROM COU_CP_CUS_RECORD
+	        	WHERE CUS_ID = #value#
+        </delete>
+        
+        <select id="getCpCusBySN" resultMap="CpCus_NS.CpCusResult" parameterClass="java.lang.String">
+            SELECT
+            <include refid="CpCus_NS.COU_CP_CUS_RECORD_columns"/>
+            FROM COU_CP_CUS_RECORD
+	        	WHERE COU_CP_CUS_RECORD.SERIAL_NUMBER = #value#
+        </select>
+        
+        <select id="getUserCpCusList" resultMap="CpCus_NS.CpCusResult" parameterClass="QueryCpCusCondition">
+            SELECT
+            <include refid="CpCus_NS.COU_CP_CUS_RECORD_columns"/>
+            FROM COU_CP_CUS_RECORD
+            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+            <include refid="public_sql.page_end"/>
+        </select>
+
+        <select id="getUserCpCusCount" resultClass="int" parameterClass="QueryCpCusCondition">
+            SELECT	COUNT(1)
+            FROM COU_CP_CUS_RECORD
+            WHERE COU_CP_CUS_RECORD.CUS_ID = #cusId#
+        </select>
+        <!-- Yangning 2011-12-6 后台批量删除用户时级联删除CpCus -->
+        <delete id="delCpCusByCusIds" parameterClass="String">
+        	 DELETE FROM COU_CP_CUS_RECORD
+	        	WHERE CUS_ID IN ($value$)
+        </delete>
+        <!--end-->
+</sqlMap>

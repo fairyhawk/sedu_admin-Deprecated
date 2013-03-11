@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="User_NS">
+        <!--table:SYS_USER_TBL-->
+        <typeAlias alias="User" type="com.shangde.edu.sys.domain.User"/>
+        <typeAlias alias="QueryUserCondition" type="com.shangde.edu.sys.condition.QueryUserCondition"/>
+
+        <resultMap id="UserResult" class="User">
+            <result property="userId" column="USER_ID"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+            <result property="loginPwd" column="LOGIN_PWD"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="userTypeId" column="USER_TYPE_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="lastLoginTime" column="LAST_LOGIN_TIME"/>
+            <result property="lastLoginIp" column="LAST_LOGIN_IP"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="email" column="EMAIL"/>
+            <result property="tel" column="TEL"/>
+            <result property="zip" column="ZIP"/>
+            <result property="address" column="ADDRESS"/>
+            <result property="groupId" column="GROUP_ID"/>
+            <result property="userType" column="USER_TYPE"/>
+            <result property="userContentRole" column="USER_CONTENT_ROLE"/>
+            <result property="group" column="GROUP_ID" select="Group_NS.getGroupById"/>
+            <result property="roleList" column="USER_ID" select="Role_NS.getRoleListByUserId"/>
+        </resultMap>
+
+        <sql id="SYS_USER_TBL_columns">
+            USER_ID,
+            LOGIN_NAME,
+            LOGIN_PWD,
+            USER_NAME,
+            USER_TYPE_ID,
+            STATUS,
+            LAST_LOGIN_TIME,
+            LAST_LOGIN_IP,
+            CREATE_TIME,
+            UPDATE_TIME,
+            EMAIL,
+            TEL,
+            ZIP,
+            ADDRESS,
+            GROUP_ID,
+            USER_TYPE,
+            USER_CONTENT_ROLE
+        </sql>
+
+        <sql id="SYS_USER_TBL_properties">
+            #userId#,
+            #loginName#,
+            #loginPwd#,
+            #userName#,
+            #userTypeId#,
+            #status#,
+            #lastLoginTime#,
+            #lastLoginIp#,
+            #createTime#,
+            #updateTime#,
+            #email#,
+            #tel#,
+            #zip#,
+            #address#,
+            #groupId#,
+            #userType#,
+            #userContentRole#
+        </sql>
+
+        <insert id="createUser" parameterClass="User">
+            INSERT INTO SYS_USER_TBL (<include refid="User_NS.SYS_USER_TBL_columns"/>) VALUES (<include refid="User_NS.SYS_USER_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="userId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteUserById" parameterClass="int">
+            DELETE FROM SYS_USER_TBL
+            WHERE
+                USER_ID = #value#
+        </delete>
+
+        <update id="updateUser" parameterClass="User">
+            UPDATE SYS_USER_TBL SET
+                USER_ID = #userId#,
+                LOGIN_NAME = #loginName#,
+                LOGIN_PWD = #loginPwd#,
+                USER_NAME = #userName#,
+                USER_TYPE_ID = #userTypeId#,
+                STATUS = #status#,
+                LAST_LOGIN_IP = #lastLoginIp#,
+                EMAIL = #email#,
+                TEL = #tel#,
+                ZIP = #zip#,
+                ADDRESS = #address#,
+                GROUP_ID = #groupId#,
+                USER_TYPE = #userType#
+            WHERE
+                USER_ID = #userId#
+        </update>
+
+        <select id="getUserById" resultMap="User_NS.UserResult" parameterClass="int">
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+            WHERE
+                USER_ID = #value#
+        </select>
+
+        <select id="getUserByLoginname" resultMap="User_NS.UserResult" parameterClass="string">
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+            WHERE
+                LOGIN_NAME = #value# 
+                AND SYS_USER_TBL.STATUS  = 0 
+        </select>
+
+        <select id="getUserList" resultMap="User_NS.UserResult" parameterClass="QueryUserCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+              WHERE
+                SYS_USER_TBL.STATUS  != 2
+                <isNotNull property="userType">
+                	<isNotEqual property="userType" compareValue="-1">
+                		AND  SYS_USER_TBL.USER_TYPE  = #userType#
+                	</isNotEqual>
+	       		 </isNotNull>
+                <isNotNull property="groupId">
+                	<isNotEqual property="groupId" compareValue="0">
+                		 AND EXISTS
+              (SELECT 1
+                 FROM SYS_GROUP_TBL G
+                WHERE G.GROUP_ID = SYS_USER_TBL.GROUP_ID
+                      AND G.PARENT_GROUP_ID = (SELECT PARENT_GROUP_ID
+                                                 FROM SYS_GROUP_TBL
+                                                WHERE GROUP_ID = #groupId#))
+                	</isNotEqual>
+	       		 </isNotNull>
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+         <select id="getUserListCount" resultClass="int" parameterClass="QueryUserCondition">
+            SELECT COUNT(1)
+            FROM SYS_USER_TBL
+            WHERE
+                SYS_USER_TBL.STATUS  != 2
+                 <isNotNull property="userType">
+                 	<isNotEqual property="userType" compareValue="-1">
+						AND  SYS_USER_TBL.USER_TYPE  = #userType#	                 	
+                 	</isNotEqual>
+	       		 </isNotNull>
+                 <isNotNull property="groupId">
+                	<isNotEqual property="groupId" compareValue="0">
+                		 AND EXISTS
+              (SELECT 1
+                 FROM SYS_GROUP_TBL G
+                WHERE G.GROUP_ID = SYS_USER_TBL.GROUP_ID
+                      AND G.PARENT_GROUP_ID = (SELECT PARENT_GROUP_ID
+                                                 FROM SYS_GROUP_TBL
+                                                WHERE GROUP_ID = #groupId#))
+                	</isNotEqual>
+	       		 </isNotNull>
+        </select>
+        
+        <select id="getAllUserList" resultMap="User_NS.UserResult" parameterClass="QueryUserCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+              WHERE
+                SYS_USER_TBL.STATUS  != 2
+                 <isNotNull property="isSold" prepend="and">
+                	 SYS_USER_TBL.IS_SOLD=#isSold#
+                </isNotNull>
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getAllUserListCount" resultClass="int">
+            SELECT COUNT(1)
+            FROM SYS_USER_TBL
+            WHERE
+                SYS_USER_TBL.STATUS  != 2
+                <isNotNull property="isSold" prepend="and">
+                	 SYS_USER_TBL.IS_SOLD=#isSold#
+                </isNotNull>
+        </select>
+        
+         <select id="getUserListByKey" resultMap="User_NS.UserResult" parameterClass="QueryUserCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+			FROM SYS_USER_TBL
+			WHERE SYS_USER_TBL.STATUS != 2			
+			  AND (SYS_USER_TBL.USER_NAME LIKE '%$searchKey$%'
+  			  OR SYS_USER_TBL.LOGIN_NAME LIKE '%$searchKey$%')
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+         <select id="getUserListByKeyCount" resultClass="int" parameterClass="QueryUserCondition">
+            SELECT COUNT(1)
+            FROM SYS_USER_TBL
+            	WHERE SYS_USER_TBL.STATUS  != 2
+          		AND (SYS_USER_TBL.USER_NAME LIKE '%$searchKey$%'
+  			  	OR SYS_USER_TBL.LOGIN_NAME LIKE '%$searchKey$%')
+        </select>
+        
+         <select id="getUserByList" resultMap="User_NS.UserResult" parameterClass="QueryUserCondition">
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+        </select>
+        
+        
+         <select id="getUserListByGroupId" resultMap="User_NS.UserResult" parameterClass="QueryUserCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+            WHERE
+            	SYS_USER_TBL.STATUS  != 2
+            	 <isNotNull property="userType">
+			      AND  SYS_USER_TBL.USER_TYPE  = $userType$
+	       		 </isNotNull>
+            	 AND
+                 <iterate property="groupList" conjunction="OR" open="(" close=")">  
+			       SYS_USER_TBL.GROUP_ID =  #groupList[].groupId# 
+			     </iterate>  
+			 <include refid="public_sql.page_end"/>
+        </select>
+        
+        
+         <select id="getUserListByGroupIdCount" resultClass="int" parameterClass="QueryUserCondition">
+            SELECT COUNT(1)
+            FROM SYS_USER_TBL
+            WHERE
+                SYS_USER_TBL.STATUS  != 2 
+                  <isNotNull property="userType">
+			      AND  SYS_USER_TBL.USER_TYPE  = $userType$
+	       		 </isNotNull>
+                AND
+                 <iterate property="groupList" conjunction="OR" open="(" close=")">  
+			      SYS_USER_TBL.GROUP_ID =   #groupList[].groupId# 
+			     </iterate>  
+        </select>
+        
+        <update id="freezeUser" parameterClass="int">
+            UPDATE SYS_USER_TBL SET
+                STATUS = 1
+            WHERE
+                USER_ID = #value#
+        </update>
+        
+        <select id="getUserListByGroupId2" resultMap="User_NS.UserResult" parameterClass="int">
+            SELECT
+            <include refid="User_NS.SYS_USER_TBL_columns"/>
+            FROM SYS_USER_TBL
+            WHERE
+                GROUP_ID = #value# and status=0
+        </select>
+
+		<update id="changeContentRole" parameterClass="User">
+		 UPDATE SYS_USER_TBL SET USER_CONTENT_ROLE = #userContentRole# WHERE USER_ID = #userId#
+		</update>
+
+        <update id="changeUserPwd" parameterClass="User">
+            UPDATE SYS_USER_TBL SET LOGIN_PWD = #loginPwd# WHERE USER_ID = #userId#
+        </update>
+        
+        <select id="getUserCountByLoginName" resultClass="int" parameterClass="String">
+        	SELECT COUNT(*) FROM SYS_USER_TBL
+        	WHERE LOGIN_NAME = #loginName#
+        </select>
+        
+                
+        <select id="checkLoginName" resultClass="int" parameterClass="QueryUserCondition">
+           SELECT 
+        	COUNT(1)
+        	FROM SYS_USER_TBL
+        	WHERE LOGIN_NAME = #searchKey#
+        </select>
+        <!--end-->
+</sqlMap>

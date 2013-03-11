@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SentPersonInfo_NS">
+        <!--table:SP_SENTPERSON_Info_TBL-->
+        <typeAlias alias="SentPersonInfo" type="com.shangde.edu.sp.domain.SentPersonInfo"/>
+        <typeAlias alias="QuerySentPersonInfoCondition" type="com.shangde.edu.sp.condition.QuerySentPersonInfoCondition"/>
+
+        <resultMap id="SentPersonInfoResult" class="SentPersonInfo">
+            <result property="Id" column="ID"/>
+            <result property="spId" column="SPID"/>
+            <result property="subjectId" column="SUBJECTID"/>
+        </resultMap>
+
+        <sql id="SP_SENTPERSON_INFO_TBL_columns">
+            SP_SENTPERSON_INFO_TBL.ID,
+            SP_SENTPERSON_INFO_TBL.SPID,
+            SP_SENTPERSON_INFO_TBL.SUBJECTID
+           
+        </sql>
+
+        <sql id="SP_SENTPERSON_INFO_TBL_properties">
+            #Id#,
+            #spId#,
+            #subjectId#
+        </sql>
+
+        <insert id="createSentPersonInfo" parameterClass="SentPersonInfo">
+            INSERT INTO SP_SENTPERSON_INFO_TBL (<include refid="SentPersonInfo_NS.SP_SENTPERSON_INFO_TBL_columns"/>) VALUES (<include refid="SentPersonInfo_NS.SP_SENTPERSON_INFO_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="Id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+        
+		<select id="getSentPersonInfoListByspId" resultMap="SentPersonInfo_NS.SentPersonInfoResult" parameterClass="int">
+            SELECT
+            <include refid="SentPersonInfo_NS.SP_SENTPERSON_INFO_TBL_columns"/>
+            FROM SP_SENTPERSON_INFO_TBL
+            WHERE SPID = #spId#
+        </select>
+
+
+		<delete id="delSPInfoByspId" parameterClass="int">
+            DELETE 
+            FROM SP_SENTPERSON_INFO_TBL 
+            WHERE SPID = #spId#
+        </delete>
+        
+	<!-- 	
+ 		<select id="getSentPersonById" resultMap="SentPerson_NS.SentPersonResult" parameterClass="int">
+            SELECT
+            <include refid="SentPerson_NS.SP_SENTPERSON_TBL_columns"/>
+            FROM SP_SENTPERSON_TBL
+            WHERE ID = #id#
+        </select>
+        
+        
+        <update id="updateSentPerson" parameterClass="SentPerson">
+            UPDATE SP_SENTPERSON_TBL SET
+                ID = #Id#,
+                PERSON_NAME = #personName#,
+                PERSON_PHONE = #personPhone#
+            WHERE
+				ID = #Id#
+        </update>
+        
+
+        
+
+        
+
+   	暂时先注释，启用的时候  再开启    
+
+        <select id="getExamStatList" resultMap="ExamStat_NS.ExamStatResult" parameterClass="QueryExamStatCondition">
+            SELECT
+            <include refid="ExamStat_NS.STU_EXAM_STAT_TBL_columns"/>
+            FROM STU_EXAM_STAT_TBL
+        </select>
+        
+        -->
+        <!--end-->
+</sqlMap>

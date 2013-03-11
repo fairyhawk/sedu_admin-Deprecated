@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="purse" namespace="/purse" extends="edu-default">
+        <action name="purse" class="com.shangde.edu.purse.action.PurseAction">   
+        
+        </action>
+        <action name="purseRecord" class="com.shangde.edu.purse.action.IPurseRecordAction">   
+        	<result name="getIPurseRecordList">/back/jsp/purse/purseRecord/purseRecord_list.jsp</result>
+        	<result name="purseRecordInfo">/back/jsp/purse/purseRecord/purseRecord_info.jsp</result>
+        	<result name="exportPurseRecord" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportName}"</param>
+			</result> 
+        </action>
+        <action name="purseMoney" class="com.shangde.edu.purse.action.IPurseMoneyAction">   
+        	<result name="getPurseMoneyList">/back/jsp/purse/purseMoney/purseMoney_list.jsp</result>
+        	<result name="purseMoneyInfo">/back/jsp/purse/purseMoney/purseMoney_info.jsp</result>
+        	<result name="exportPurseMoney" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportName}"</param>
+			</result> 
+        </action>
+    </package>
+</struts>

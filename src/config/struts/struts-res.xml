@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="res" namespace="/res" extends="edu-default">
+        <action name="books" class="com.shangde.edu.res.action.BooksAction">
+            <result name="listBooks">/back/jsp/res/books/books_list.jsp</result>
+            <result name="toAddBooks">/back/jsp/res/books/books_add.jsp</result>
+            <result name="toEditBooks">/back/jsp/res/books/books_edit.jsp</result>
+            <result name="listAllBooks" type="redirect">books!getBooksList.action?queryBooksCondition.currentPage=1</result>
+        	  <result name="deletePicSuccess" type="redirect">
+           		books!toEditBooks.action?books.bkId=${books.bkId}
+            </result> 
+        	  <result name="getKpointById" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="defaultStack" />
+			<param name="savePath">/res/book</param>
+			<interceptor-ref name="fileUpload">  
+                <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <!-- 配置允许上传的文件大小，单位字节 -->  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            <result name="reupload">/back/jsp/test_pic_upload.jsp</result>
+			<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+        </action>
+         <action name="vedio" class="com.shangde.edu.res.action.VedioAction">
+        	<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="loginStack"/>
+            <result name="listVedio">/back/jsp/res/vedio/vedio_list.jsp</result>
+            <result name="toAddVedio">/back/jsp/res/vedio/vedio_add.jsp</result>
+            <result name="toEditVedio">/back/jsp/res/vedio/vedio_edit.jsp</result>
+            <result name="listAllVedio" type="redirect">vedio!getVedioList.action?queryVedioCondition.currentPage=1</result>
+             <result name="deletePicSuccess" type="redirect">
+           		vedio!toEditVedio.action?vedio.voId=${vedio.voId}
+            </result>
+        	 <result name="getKpointById" type="json">
+				<param name="root">result</param>
+			</result>
+			<param name="savePath">/res/vedio</param>
+			<interceptor-ref name="fileUpload">  
+                <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <!-- 配置允许上传的文件大小，单位字节 -->  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            <result name="reupload">/back/jsp/test_pic_upload.jsp</result>
+			<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+			<result name="updatePlayType">/back/jsp/res/vedio/updatePlayType.jsp</result>
+        </action>
+        
+        <action name="vedioweb" class="com.shangde.edu.res.action.VedioAction">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="loginStack"/>
+			<param name="savePath">/res/vedio</param>
+			<interceptor-ref name="fileUpload">  
+                <!-- 配置允许上传的文件类型，多个用","分隔 -->  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+                <!-- 配置允许上传的文件大小，单位字节 -->  
+                <param name="maximumSize">3072000</param>  
+            </interceptor-ref>
+            <result name="reupload">/back/jsp/test_pic_upload.jsp</result>
+			<result name="download" type="streamx">
+				<param name="inputName">downloadStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>  
+			</result>
+        </action>
+        
+         <action name="booksgroup" class="com.shangde.edu.res.action.BooksGroupAction">
+            <result name="listBooksgroup">/back/jsp/res/booksgroup/booksgroup_list.jsp</result>
+            <result name="toAddBooksgroup">/back/jsp/res/booksgroup/booksgroup_add.jsp</result>
+            <result name="toAddBooksList">/back/jsp/res/booksgroup/bookslist_add.jsp</result>
+            <result name="toAddBooksGroupNew">/back/jsp/res/booksgroup/booksgroup_addnew.jsp</result>
+           <result name="toEditBooksGroup">/back/jsp/res/booksgroup/booksgroup_edit.jsp</result>
+           <result name="viewBooksList">/back/jsp/res/booksgroup/viewBooks_list.jsp</result>
+           <result name="listAllBooksGroup" type="redirect">booksgroup!getBooksGroupList.action?queryBooksgroupCondition.currentPage=1</result>
+        </action>
+          <action name="vediogroup" class="com.shangde.edu.res.action.VedioGroupAction">
+            <result name="listVedioGroup">/back/jsp/res/vediogroup/vediogroup_list.jsp</result>
+            <result name="toAddVedioList">/back/jsp/res/vediogroup/vediolist_add.jsp</result>
+            <result name="toAddVedioGroup">/back/jsp/res/vediogroup/vediogroup_add.jsp</result>
+            <result name="toAddVedioGroupNew">/back/jsp/res/vediogroup/vediogroup_addnew.jsp</result>
+            <result name="toEditVedioGroup">/back/jsp/res/vediogroup/vediogroup_edit.jsp</result>
+            <result name="veiwVedioList">/back/jsp/res/vediogroup/veiwVedio_list.jsp</result>
+            <result name="listAllVedioGroup" type="redirect">vediogroup!getVedioGroupList.action?queryVedioGroupCondition.currentPage=1</result>
+        </action>
+         <action name="picture" class="com.shangde.edu.res.action.PictureAction">
+            <result name="listPicture">/back/jsp/res/picture/picture_list.jsp</result>
+            <result name="toAddBooksgroup">/back/jsp/res/booksgroup/booksgroup_add.jsp</result>
+            <result name="toEditVedio">/back/jsp/res/vedio/vedio_edit.jsp</result>
+            <result name="listAllBooks" type="redirect">books!getBooksList.action</result>
+        </action>
+         <action name="notes" class="com.shangde.edu.res.action.NotesAction">
+            <result name="list">/back/jsp/res/notes/notes_list.jsp</result>
+            <result name="addPage">/back/jsp/res/notes/notes_add.jsp</result>
+            <result name="updatePage">/back/jsp/res/notes/notes_update.jsp</result>
+            <result name="relist" type="redirect">
+        		/res/notes!showNotesList.action?queryNotesCondition.currentPage=${queryNotesCondition.currentPage}
+            </result>
+        </action>
+         <action name="noteslimit" class="com.shangde.edu.res.web.NotesWebAction">
+            <result name="showMyNotes">/web/jsp/ucenter/user_mynotes.jsp</result>
+            <result name="relist" type="redirect">
+        		/res/notes!showNotesList.action?queryNotesCondition.currentPage=${queryNotesCondition.currentPage}
+            </result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+        
+        <action name="tryVedio" class="com.shangde.edu.res.action.TryVedioAction">
+            <param name="savePath">/static/images/st</param>
+             <interceptor-ref name="fileUpload">  
+                <param name="allowedTypes">  
+                    　　　　　　image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/x-png,   
+                    image/pjpeg
+                </param>  
+              		 <param name="maximumSize">3072000</param>  
+           	</interceptor-ref> 
+           	  <result name="toAddTryVedio">/back/jsp/res/vedio/tryvedio_add.jsp</result>
+              <result name="uploadsuccess">/back/jsp/res/vedio/tryvedio_add.jsp</result>        
+        </action>
+        
+        <action name="tryVedioWeb" class="com.shangde.edu.res.web.TryVedioWebAction">
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+       
+         <action name="tjVedio" class="com.shangde.edu.res.action.TjVedioAction">
+            <result name="toAddTjVedio">/back/jsp/res/vedio/tjvedio_add.jsp</result>
+        </action>
+        
+        <action name="vedioCount" class="com.shangde.edu.res.action.VedioCountAction">
+              <result name="queryListforUser">/back/jsp/res/vedio/vediocount_list.jsp</result>
+              <result name="queryList">/back/jsp/res/vedio/vedioct_list.jsp</result>
+              <result name="queryListforUserBook">/back/jsp/res/vedio/vediobookcount_list.jsp</result>
+              <result name="queryListBook">/back/jsp/res/vedio/vediobookct_list.jsp</result>
+        </action>
+     </package>  
+     
+</struts>

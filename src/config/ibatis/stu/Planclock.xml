@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Planclock_NS">
+        <!--table:STU_PLANCLOCK_TBL-->
+        <typeAlias alias="Planclock" type="com.shangde.edu.stu.domain.Planclock"/>
+        <typeAlias alias="QueryPlanclockCondition" type="com.shangde.edu.stu.condition.QueryPlanclockCondition"/>
+        <typeAlias  alias="stuSubjectIdBackEntity" type="com.shangde.edu.stu.domain.SubjectIdBackEntity"/>
+        <typeAlias  alias="msgMessageEntity" type="com.shangde.edu.msg.domain.Message"/>
+        <typeAlias  alias="MsgUserMsgEntity" type="com.shangde.edu.msg.domain.UserMsg"/>
+         <typeAlias  alias="SubjectEntity" type="com.shangde.edu.sys.domain.Subject"/>
+        
+        
+        <resultMap id="SubjectEntityResult" class="SubjectEntity">
+            <result property="subjectId" column="subject_id"/>
+            <result property="subjectName" column="subject_name"/>
+        </resultMap>
+      
+        <resultMap id="PlanclockResult" class="Planclock">
+            <result property="clockId" column="CLOCK_ID"/>
+            <result property="ctitle" column="CTITLE"/>
+            <result property="ccontent" column="CCONTENT"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="alertdate" column="ALERTDATE"/>
+            <result property="cstatus" column="CSTATUS"/>
+            <result property="subjectnamne" column="SUBJECTNAMNE"/>
+            <result property="ctype" column="CTYPE"/>
+            <result property="coursename" column="COURSENAME"/>
+            <result property="startdate" column="STARTDATE"/>
+            <result property="enddate" column="ENDDATE"/>
+            <result property="issended" column="ISSENDED"/>
+            <result property="createdate" column="CREATEDATE"/>
+            <result property="isent" column="ISENT"/>
+        </resultMap>
+
+         <resultMap id="stuSubjectIdBackEntityResult" class="stuSubjectIdBackEntity">
+        	<result property="cusId" column="CUS_ID"/>
+        	<result property="cusName" column="CUS_NAME"/>
+        	<result property="cusMobile" column="MOBILE"/>
+        	<result property="cusEmail" column="EMAIL"/>
+        	<result property="pack_id" column="PACK_ID"/>
+        </resultMap>
+       
+       
+       
+        <sql id="sys_subject_tbl_prepoty">
+       		sys_subject_tbl.subject_id,
+			sys_subject_tbl.subject_name
+        </sql>
+        
+        <sql id="STU_SUBJECT_ID_BACK_ENTITY">
+			b.CUS_ID,
+			b.CUS_NAME,
+			b.MOBILE,
+			b.EMAIL,
+			b.PACK_ID
+        </sql>
+        
+ 		<sql id="STU_PLANCLOCK_TBL_columns">
+            STU_PLANCLOCK_TBL.CLOCK_ID,
+            STU_PLANCLOCK_TBL.CTITLE,
+            STU_PLANCLOCK_TBL.CCONTENT,
+            STU_PLANCLOCK_TBL.SUBJECT_ID,
+            STU_PLANCLOCK_TBL.ALERTDATE,
+            STU_PLANCLOCK_TBL.CSTATUS,
+            STU_PLANCLOCK_TBL.SUBJECTNAMNE,
+            STU_PLANCLOCK_TBL.CTYPE,
+            STU_PLANCLOCK_TBL.COURSENAME,
+            STU_PLANCLOCK_TBL.STARTDATE,
+            STU_PLANCLOCK_TBL.ENDDATE,
+            STU_PLANCLOCK_TBL.ISSENDED,
+            STU_PLANCLOCK_TBL.CREATEDATE,
+            STU_PLANCLOCK_TBL.ISENT
+        </sql>
+        
+        <sql id="msg_message_tbl_columns">
+			MSG_MESSAGE_TBL.MSG_ID,
+			MSG_MESSAGE_TBL.MSG_TYPE,
+			MSG_MESSAGE_TBL.MSG_SORT,
+			MSG_MESSAGE_TBL.MSG_CONTENT,
+			MSG_MESSAGE_TBL.CREATE_TIME,
+			MSG_MESSAGE_TBL.MSG_TITLE,
+			MSG_MESSAGE_TBL.SENDER_TYPE,
+			MSG_MESSAGE_TBL.SENDER_ID,
+			MSG_MESSAGE_TBL.SEnDER_NAME,
+			MSG_MESSAGE_TBL.KEY_WORD
+			
+        </sql>
+        
+    	<!-- 删除 msg_message_tbl_columns 的两个属性
+			MSG_MESSAGE_TBL.CMT_ID,
+			MSG_MESSAGE_TBL.REP_ID
+		 -->
+    	
+    	  <sql id="MSG_USER_MSG_TBL_columns">
+			MSG_USER_MSG_TBL.MSG_ID,
+			MSG_USER_MSG_TBL.ID,
+			MSG_USER_MSG_TBL.SENDER_ID,
+			MSG_USER_MSG_TBL.RECEIVER_ID,
+			MSG_USER_MSG_TBL.MSG_STATUS,
+			MSG_USER_MSG_TBL.SEND_TIME,
+			MSG_USER_MSG_TBL.CHECK_TIME,
+			MSG_USER_MSG_TBL.IS_EXPIRED,
+			MSG_USER_MSG_TBL.SENDER_TYPE,
+			MSG_USER_MSG_TBL.RECEIVER_TYPE,
+			MSG_USER_MSG_TBL.SENDER_NAME,
+			MSG_USER_MSG_TBL.RECEIVER_NAME
+        </sql>   
+          <sql id="STU_MSG_USER_MSG_TBL_properties">
+            #msgId#,
+            #id#,
+            #senderId#,
+            #receiverId#,
+            #msgStatus#,
+            #sendTime#,
+            #checkTime#,
+            #isExpired#,
+            #senderType#,
+            #receiverType#,
+            #senderName#,
+            #receiverName#
+        </sql> 
+	        
+          <sql id="STU_msg_message_tbl_properties">
+            #msgId#,
+            #msgType#,
+            #msgSort#,
+            #msgContent#,
+            #createTime#,
+            #msgTitle#,
+            #senderType#,
+            #senderId#,
+            #senderName#,
+            #keyWord#
+        </sql>
+        
+         <!-- 删除 STU_msg_message_tbl_properties 的两个属性
+            #cmtId#,
+            #repId#
+		 -->
+
+        <sql id="STU_PLANCLOCK_TBL_properties">
+            #clockId#,
+            #ctitle#,
+            #ccontent#,
+            #subjectId#,
+            #alertdate#,
+            #cstatus#,
+            #subjectnamne#,
+            #ctype#,
+            #coursename#,
+            #startdate#,
+            #enddate#,
+            #issended#,
+            #createdate#,
+            #isent#
+        </sql>
+
+
+		<!-- 
+
+        <delete id="deletePlanclockById" parameterClass="">
+            DELETE FROM STU_PLANCLOCK_TBL
+            WHERE
+
+        </delete>
+
+		-->
+		<!-- 查询所有的计划提醒，QueryPlanclockCondition为空对象 -->
+        <!--  <select id="getPlanclockList" resultMap="Planclock_NS.PlanclockResult" 
+
+		parameterClass="QueryPlanclockCondition">
+            SELECT 
+            <include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>
+            FROM STU_PLANCLOCK_TBL
+            ORDER BY CLOCK_ID ASC
+        </select>
+        -->
+
+		<select id="getPlanclockListByDate" resultMap="Planclock_NS.PlanclockResult" parameterClass="QueryPlanclockCondition">
+            SELECT 
+            <include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>
+            FROM STU_PLANCLOCK_TBL
+	            <dynamic prepend="WHERE">
+	            	<isNotNull prepend="AND" property="cstatus">
+	            		<isNotEqual property="cstatus" compareValue="-1">
+	            			CSTATUS = #cstatus#
+	            		</isNotEqual>
+	            	</isNotNull>
+	            	
+	            	<isNotNull prepend="AND" property="subjectId">
+	            		<isNotEqual property="subjectId" compareValue="-1">
+	            			SUBJECT_ID =  #subjectId#
+	            		</isNotEqual>
+	            	</isNotNull>
+	            	
+					<isNotEmpty prepend="AND" property="calendar">
+	            		 #calendar# >= STARTDATE
+	            		<isNotEmpty prepend="AND" property="calendar">
+		            		ENDDATE >= #calendar#
+		            	</isNotEmpty>
+	            	</isNotEmpty>
+	            </dynamic>
+            		 ORDER BY CLOCK_ID DESC
+        </select>
+        
+        <!-- 查询所有的计划提醒，QueryPlanclockCondition为空对象 -->
+        <select id="getPlanclockList" resultMap="Planclock_NS.PlanclockResult" parameterClass="QueryPlanclockCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT 
+            <include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>
+            FROM STU_PLANCLOCK_TBL
+            ORDER BY  CREATEDATE DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 分页 查询 -->
+        <select id="getPlanclockListCount" resultClass="int" parameterClass="QueryPlanclockCondition">
+            SELECT COUNT(1)
+            FROM STU_PLANCLOCK_TBL
+            ORDER BY CLOCK_ID ASC
+        </select>
+        
+        <!-- 按照ID查询一个计划提醒用作显示 -->
+        <select id="getPlanclockById" resultMap="Planclock_NS.PlanclockResult" parameterClass="int">
+            SELECT
+            <include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>
+            FROM STU_PLANCLOCK_TBL
+            WHERE
+               CLOCK_ID=#value# 
+        </select>
+        <!-- 更新计划提醒 -->
+        <update id="updatePlanclock" parameterClass="Planclock">
+            UPDATE STU_PLANCLOCK_TBL SET
+           		CLOCK_ID = #clockId#,
+                CTITLE = #ctitle#,
+                CCONTENT = #ccontent#,
+                SUBJECT_ID = #subjectId#,
+                ALERTDATE = #alertdate#,
+                CSTATUS = #cstatus#,
+                SUBJECTNAMNE = #subjectnamne#,
+                CTYPE = #ctype#,
+                COURSENAME = #coursename#,
+                STARTDATE = #startdate#,
+                ENDDATE = #enddate#,
+                ISSENDED = #issended#,
+                CREATEDATE = #createdate#,
+                ISENT = #isent#
+            WHERE
+                CLOCK_ID = #clockId#
+        </update>
+         <!-- 更新计划提醒 -->
+        <update id="updatePlanclockIsend" parameterClass="Planclock">
+            UPDATE STU_PLANCLOCK_TBL SET
+                isent=1
+            WHERE
+                CLOCK_ID = #clockId#
+        </update>
+        <!-- 创建一个计划提醒 -->
+        <insert id="createPlanclock" parameterClass="Planclock">
+            INSERT INTO STU_PLANCLOCK_TBL (<include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>) VALUES 
+
+(<include refid="Planclock_NS.STU_PLANCLOCK_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="clockId" >
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <!-- 按条件检索计划提醒 -->
+        <select id="searchPlanclockByParam" resultMap="Planclock_NS.PlanclockResult" 
+
+parameterClass="QueryPlanclockCondition">
+        	<include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>
+            FROM STU_PLANCLOCK_TBL
+            <dynamic prepend="WHERE">
+            	<isNotNull prepend="AND" property="kyewords">
+            		( CTITLE LIKE '%$kyewords$%')
+            	</isNotNull>
+            	<isNotNull prepend="AND" property="subjectId">
+            		<isNotEqual property="subjectId" compareValue="-1">
+            			SUBJECT_ID = #subjectId#
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotNull prepend="AND" property="cstatus">
+            		<isNotEqual property="cstatus" compareValue="-1">
+            			CSTATUS = #cstatus#
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotEmpty prepend="AND" property="startdate">
+            		STARTDATE >= #startdate# #enddate#
+            	</isNotEmpty>
+            	<isNotEmpty prepend="AND" property="enddate">
+            		#enddate# >=ENDDATE
+            	</isNotEmpty>
+            	<isNotEmpty prepend="AND" property="startCreatedate">
+            		CREATEDATE >= #startCreatedate#
+            		<isNotEmpty prepend="AND" property="endCreatedate">
+	            		#endCreatedate# >= CREATEDATE
+	            	</isNotEmpty>
+            	</isNotEmpty>
+            	ORDER BY  CREATEDATE DESC
+            </dynamic>
+            <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 分页 检索 -->
+        <select id="searchPlanclockByParamCount" resultClass="int" parameterClass="QueryPlanclockCondition">
+           	SELECT COUNT(1)
+            FROM STU_PLANCLOCK_TBL
+            <dynamic prepend="WHERE">
+            	<isNotNull prepend="AND" property="kyewords">
+            		( CTITLE LIKE '%$kyewords$%')
+            	</isNotNull>
+            	<isNotNull prepend="AND" property="subjectId">
+            		<isNotEqual property="subjectId" compareValue="-1">
+            			SUBJECT_ID = #subjectId#
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotNull prepend="AND" property="cstatus">
+            		<isNotEqual property="cstatus" compareValue="-1">
+            			CSTATUS = #cstatus#
+            		</isNotEqual>
+            	</isNotNull>
+            	<isNotEmpty prepend="AND" property="startdate">
+            		STARTDATE >= #startdate# #enddate#
+            	</isNotEmpty>
+            	<isNotEmpty prepend="AND" property="enddate">
+            		#enddate# >=ENDDATE
+            	</isNotEmpty>
+            	<isNotEmpty prepend="AND" property="startCreatedate">
+            		CREATEDATE >= #startCreatedate#
+            		<isNotEmpty prepend="AND" property="endCreatedate">
+	            		#endCreatedate# >= CREATEDATE
+	            	</isNotEmpty>
+            	</isNotEmpty>
+            	ORDER BY  CREATEDATE DESC
+            </dynamic>
+        </select>
+        
+	<select id="getMyBuySubject" resultClass="int"
+		parameterClass="int">
+		SELECT  DISTINCT COU_COURSE_TBL.SUBJECT_ID as SUBJECT_ID
+		FROM
+		(SELECT finance_cash_record_tbl.COURSE_ID as COURSE_ID,
+		finance_cash_record_tbl.CREATE_TIME
+		from finance_cash_record_tbl
+		where
+		finance_cash_record_tbl.CUS_ID =#cusId# and status=1
+		order by
+		finance_cash_record_tbl.CREATE_TIME ASC) as ma , COU_COURSE_TBL, sys_subject_tbl
+		WHERE
+		ma.COURSE_ID= COU_COURSE_TBL.COURSE_ID and cou_course_tbl.SUBJECT_ID = 
+
+sys_subject_tbl.SUBJECT_ID
+		</select>
+		<!-- 根据当天时间查询所要的项目ID -->
+        <select   id="getSubjectId"  resultMap="Planclock_NS.PlanclockResult"   parameterClass="QueryPlanclockCondition">
+        	SELECT 
+        		<include refid="Planclock_NS.STU_PLANCLOCK_TBL_columns"/>
+        		   from stu_planclock_tbl  
+        		   	 WHERE cstatus=1  and   isent=0 and  
+        			( alertdate LIKE '%$dateFind$%')
+        </select>
+        <!-- 根据项目ID查询所要发送的value值 -->
+        <select id="getSubjectIdBackEntity" resultMap="Planclock_NS.stuSubjectIdBackEntityResult"  parameterClass="int">
+        	SELECT 
+				<include  refid="Planclock_NS.STU_SUBJECT_ID_BACK_ENTITY"/>
+			FROM  (SELECT 
+				mb.PACK_ID,
+				cus_customer_tbl.CUS_ID,
+				cus_customer_tbl.CUS_NAME,
+				cus_customer_tbl.MOBILE,
+				cus_customer_tbl.EMAIL  from (
+				select finance_cash_record_tbl.PACK_ID,
+					finance_cash_record_tbl.CUS_ID,min(CREATE_TIME) 
+	 				from finance_cash_record_tbl where status=1
+					group by cus_id) as mb,	cus_customer_tbl 
+			   where 
+			cus_customer_tbl.CUS_ID= mb.cus_id)  as  b,cou_sell_way_tbl cou_sell_way_tbl
+			where 
+			   b.PACK_ID=cou_sell_way_tbl.SELL_ID  and
+			   		cou_sell_way_tbl.SUBJECT_ID=#subjectId#
+        </select>
+        
+         <!--创建一个消息提醒 -->
+        <insert id="createTSSO" parameterClass="msgMessageEntity">
+            INSERT INTO msg_message_tbl (<include refid="Planclock_NS.msg_message_tbl_columns"/>) VALUES 
+
+			(<include refid="Planclock_NS.STU_msg_message_tbl_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="msgId" >
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        <!--  创建一个用户信息 -->
+        <insert id="createTSSOuserInfo" parameterClass="MsgUserMsgEntity">
+            INSERT INTO MSG_USER_MSG_TBL (<include refid="Planclock_NS.MSG_USER_MSG_TBL_columns"/>) VALUES 
+			(<include refid="Planclock_NS.STU_MSG_USER_MSG_TBL_properties"/>)
+        </insert>
+        <!-- 根据项目ID查询所对应的值 -->
+        <select id="getSubject" resultMap="Planclock_NS.SubjectEntityResult"  parameterClass="int">
+				select 
+						<include refid="Planclock_NS.sys_subject_tbl_prepoty"/> 
+						from sys_subject_tbl  
+						where 
+            					sys_subject_tbl.SUBJECT_ID = #subjectId#
+        </select>
+        <!--end-->
+</sqlMap>

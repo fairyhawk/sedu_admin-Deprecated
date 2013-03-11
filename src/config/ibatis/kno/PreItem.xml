@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PreItem_NS">
+        <!--table:KNO_PRE_ITEM_TBL-->
+        <typeAlias alias="PreItem" type="com.shangde.edu.kno.domain.PreItem"/>
+        <typeAlias alias="QueryPreItemCondition" type="com.shangde.edu.kno.condition.QueryPreItemCondition"/>
+
+        <resultMap id="PreItemDtoResult" class="PreItem">
+            <result property="preId" column="PRE_ID"/>
+            <result property="preName" column="PRE_NAME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="status" column="STATUS"/>
+            <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+            <result property="relCount" column="RELCOUNT"/>
+        </resultMap>
+        
+        <resultMap id="PreItemResult" class="PreItem">
+            <result property="preId" column="PRE_ID"/>
+            <result property="preName" column="PRE_NAME"/>
+            <result property="content" column="CONTENT"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="status" column="STATUS"/>
+            <result property="lastEditTime" column="LAST_EDIT_TIME"/>           
+        </resultMap>
+
+        <sql id="KNO_PRE_ITEM_TBL_columns">
+            KNO_PRE_ITEM_TBL.PRE_ID,
+            KNO_PRE_ITEM_TBL.PRE_NAME,
+            KNO_PRE_ITEM_TBL.CONTENT,
+            KNO_PRE_ITEM_TBL.CREATE_TIME,
+            KNO_PRE_ITEM_TBL.AUTHOR,
+            KNO_PRE_ITEM_TBL.STATUS,
+            KNO_PRE_ITEM_TBL.LAST_EDIT_TIME
+        </sql>
+        
+        <sql id="KNO_PRE_ITEM_TBL_INSERT_columns">
+            
+            KNO_PRE_ITEM_TBL.PRE_NAME,
+            KNO_PRE_ITEM_TBL.CONTENT,
+            KNO_PRE_ITEM_TBL.CREATE_TIME,
+            KNO_PRE_ITEM_TBL.AUTHOR,
+            KNO_PRE_ITEM_TBL.STATUS,
+            KNO_PRE_ITEM_TBL.LAST_EDIT_TIME
+        </sql>
+
+        <sql id="KNO_PRE_ITEM_TBL_properties">
+            #preId#,
+            #preName#,
+            #content#,
+            #createTime#,
+            #author#,
+            #status#,
+            #lastEditTime#
+        </sql>
+        <sql id="KNO_PRE_ITEM_TBL_INSERT_properties">
+           
+            #preName#,
+            #content#,
+            #createTime#,
+            #author#,
+            #status#,
+            #lastEditTime#
+        </sql>
+
+        <insert id="createPreItem" parameterClass="PreItem">
+            INSERT INTO KNO_PRE_ITEM_TBL (<include refid="PreItem_NS.KNO_PRE_ITEM_TBL_INSERT_columns"/>) VALUES (<include refid="PreItem_NS.KNO_PRE_ITEM_TBL_INSERT_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="preId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deletePreItemById" parameterClass="int">
+            DELETE FROM KNO_PRE_ITEM_TBL
+            WHERE
+                PRE_ID = #value#
+
+
+
+
+        </delete>
+
+        <update id="updatePreItem" parameterClass="PreItem">
+            UPDATE KNO_PRE_ITEM_TBL SET               
+                PRE_NAME = #preName#,
+                CONTENT = #content#,
+                
+                AUTHOR = #author#,
+                STATUS=#status#,
+                LAST_EDIT_TIME=#lastEditTime#
+            WHERE
+                PRE_ID = #preId#
+
+
+
+
+        </update>
+
+        <select id="getPreItemById" resultMap="PreItem_NS.PreItemResult" parameterClass="int">
+            SELECT
+            <include refid="PreItem_NS.KNO_PRE_ITEM_TBL_columns"/>
+            FROM KNO_PRE_ITEM_TBL
+            WHERE
+                PRE_ID = #value#
+
+
+
+
+        </select>
+
+        <select id="getPreItemList" resultMap="PreItem_NS.PreItemResult" parameterClass="QueryPreItemCondition">
+            SELECT
+            <include refid="PreItem_NS.KNO_PRE_ITEM_TBL_columns"/>
+            FROM KNO_PRE_ITEM_TBL
+            WHERE KNO_PRE_ITEM_TBL.STATUS=1
+        </select>
+        
+        <select id="getPreItemPageList" resultMap="PreItem_NS.PreItemDtoResult" parameterClass="QueryPreItemCondition">
+        	<include refid="public_sql.page_begin"/>
+        	SELECT
+            <include refid="PreItem_NS.KNO_PRE_ITEM_TBL_columns"/>,
+            (SELECT COUNT(1) FROM kno_node_pre_mid_tbl 
+            WHERE kno_node_pre_mid_tbl.PRE_ID=KNO_PRE_ITEM_TBL.PRE_ID) AS RELCOUNT
+            FROM KNO_PRE_ITEM_TBL
+           
+            ORDER BY LAST_EDIT_TIME DESC
+            <include refid="public_sql.page_end"/>
+            
+        </select>
+        <select id="getPreItemCount" resultClass="int" parameterClass="QueryPreItemCondition">
+        	SELECT COUNT(PRE_ID) FROM KNO_PRE_ITEM_TBL 
+        </select>
+        
+        <select id="preItemRelKnowledgeCount" resultClass="int" parameterClass="int">
+        	SELECT COUNT(1) FROM kno_node_pre_mid_tbl WHERE PRE_ID=#value#
+        </select>
+        <select id="getPreItemCountByName" resultClass="int" parameterClass="java.util.Map">
+        	SELECT COUNT(PRE_ID) FROM KNO_PRE_ITEM_TBL 
+        	WHERE BINARY KNO_PRE_ITEM_TBL.PRE_NAME=#pname#
+        	<isNotNull property="pid">
+        		<isNotEqual property="pid" compareValue="0" prepend="AND">
+        			PRE_ID!=#pid#
+        		</isNotEqual>
+        	</isNotNull>
+        </select>
+        <!--end-->
+</sqlMap>

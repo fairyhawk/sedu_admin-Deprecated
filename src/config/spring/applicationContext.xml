@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-autowire="byName">
+    <import resource="classpath:/config/spring/common/aContext_db.xml"/>
+    <import resource="classpath:/config/spring/common/aContext_common.xml"/>
+    <import resource="classpath:/config/spring/common/aContext_config.xml"/>
+    <import resource="classpath:/config/spring/sys/aContext_sys.xml"/>
+    <import resource="classpath:/config/spring/cms/aContext_cms.xml"/>
+    <import resource="classpath:/config/spring/cou/aContext_cou.xml"/>
+    <import resource="classpath:/config/spring/res/aContext_res.xml"/>
+   	<import resource="classpath:/config/spring/mail/aContext_mail.xml"/>
+    <import resource="classpath:/config/spring/cus/aContext_cus.xml"/>
+    <import resource="classpath:/config/spring/exam/aContext_exam.xml"/>
+    <import resource="classpath:/config/spring/cusmgr/aContext_cusmgr.xml"/>
+    <import resource="classpath:/config/spring/finance/aContext_finance.xml"/>
+    <import resource="classpath:/config/spring/tk/aContext_tk.xml"/>
+    <!--  -->
+    <import resource="classpath:/config/spring/exp/applicationContext_exp.xml"/>
+    <import resource="classpath:/config/spring/msg/aContext_msg.xml"/>
+    <import resource="classpath:/config/spring/kb/aContext_kb.xml"/>
+    <import resource="classpath:/config/spring/ass/aContext_ass.xml"/>
+    <import resource="classpath:/config/spring/video/aContext_video.xml"/>
+    <import resource="classpath:/config/spring/crm/aContext_CRM.xml"/>
+	     <!-- discussion -->
+	<import resource="classpath:/config/spring/stu/aContext_stu.xml"/>
+    <import resource="classpath:/config/spring/dis/aContext_dis.xml"/>
+    <import resource="classpath:/config/spring/iphone/aContext_iphone.xml"/>
+    <import resource="classpath:/config/spring/kno/aContext_kno.xml"/>
+    <import resource="classpath:/config/spring/count/aContext_count.xml"/>
+	<import resource="classpath:/config/spring/feed/aContext_feed.xml"/> 
+    <import resource="classpath:/config/spring/book/aContext_book.xml"/>
+    <import resource="classpath:/config/spring/velocity/aContext_velocity.xml"/>
+	<import resource="classpath:/config/spring/change/aContext_change.xml"/>
+	<import resource="classpath:/config/spring/webservice/aContext_webservice.xml"/>
+	<import resource="classpath:/config/spring/sp/aContext_sp.xml"/>
+	<import resource="classpath:/config/spring/vst/aContext_vst.xml"/>
+	<import resource="classpath:/config/spring/purse/aContext_purse.xml"/>
+	<import resource="classpath:/config/spring/tmp/aContext_tmp.xml"/>
+	<import resource="classpath:/config/spring/ad/aContext_ad.xml"/>
+	<import resource="classpath:/config/spring/freshnews/aContext_freshnews.xml"/>
+	<import resource="classpath:/config/spring/hadata/aContext_hadata.xml"/>
+	<import resource="classpath:/config/spring/card/aContext_card.xml"/>
+	<!-- <import resource="classpath:/config/spring/common/aContext_task.xml"/> -->
+	 <!--test  -->
+	 <!-- <import resource="classpath:/config/spring/test/aContext_test.xml"/>-->
+</beans>

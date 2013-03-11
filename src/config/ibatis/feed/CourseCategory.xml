@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_CourseCategory_NS">
+
+	<typeAlias alias="CourseCategory" type="com.shangde.edu.feed.domain.CourseCategory" />
+	<resultMap class="CourseCategory" id="CourseCategoryResult">
+		<result property="id" column="id" />
+		<result property="categoryName" column="category_Name" />
+		<result property="categoryAbbreviation" column="category_Abbreviation" />
+		<result property="categoryStatus" column="category_Status" />
+		<result property="createTime" column="create_Time" />
+		<result property="createUser" column="create_User" />
+		<result property="modifTime" column="modif_Time" />
+	</resultMap>
+	<sql id="FEED_COURSE_CATEGORY_TBL_columns">
+		FEED_COURSE_CATEGORY_TBL.id
+		FEED_COURSE_CATEGORY_TBL.category_Name
+		FEED_COURSE_CATEGORY_TBL.category_Abbreviation
+		FEED_COURSE_CATEGORY_TBL.category_Status
+		FEED_COURSE_CATEGORY_TBL.create_Time
+		FEED_COURSE_CATEGORY_TBL.create_User
+		FEED_COURSE_CATEGORY_TBL.modif_Time
+    </sql>
+	<sql id="FEED_COURSE_CATEGORY_TBL_properties">
+		#id#,
+		#categoryName#,
+		#categoryAbbreviation#,
+		#categoryStatus#,
+		#createTime#,
+		#createUser#,
+		#modifTime#
+    </sql>
+
+	
+	<select id="getCourseCategoryList" resultMap="Feed_CourseCategory_NS.CourseCategoryResult">
+		SELECT * FROM FEED_COURSE_CATEGORY_TBL WHERE CATEGORY_STATUS = 3
+	</select>
+
+
+</sqlMap>
+        
+        
+        
+        
+        
+        
+        
+        
+        

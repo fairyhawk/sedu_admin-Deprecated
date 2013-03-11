@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Invoice_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="Invoice" type="com.shangde.edu.finance.domain.Invoice" />
+	<typeAlias alias="QueryInvoiceCondition" type="com.shangde.edu.finance.condition.QueryInvoiceCondition"/>
+	<typeAlias alias="InvoiceDTO" type="com.shangde.edu.finance.dto.InvoiceDTO" />
+	<resultMap id="InvoiceResult" class="Invoice">
+		<result property="invoiceId" column="invoice_id" />
+		<result property="invoiceTitle" column="invoice_title" />
+		<result property="companyName" column="company_name" />
+		<result property="invoiceContent" column="invoice_content" />
+		<result property="invoiceAddress" column="invoice_address" />
+		<result property="invoiceSum" column="invoice_sum" />
+		<result property="orderCode" column="order_code" />
+		<result property="invoiceStatus" column="invoice_status" />
+		<result property="invoiceCode" column="invoice_code" />
+		<result property="waybillCode" column="waybill_code" />
+		<result property="createDate" column="create_date" />
+		<result property="creator" column="creator" />
+		<result property="updateDate" column="update_date" />
+		<result property="updateUser" column="update_user" />
+	</resultMap>
+	<resultMap id="InvoiceDTOResult" class="InvoiceDTO" extends="InvoiceResult">
+        <result property="payType" column="pay_type" />
+        <result property="mobile" column="mobile" />
+    </resultMap>
+	<sql id="finance_invoice_tbl_columns">
+		finance_invoice_tbl.invoice_id, 
+		finance_invoice_tbl.invoice_title, 
+		finance_invoice_tbl.company_name,
+		finance_invoice_tbl.invoice_content,
+		finance_invoice_tbl.invoice_address,
+		finance_invoice_tbl.invoice_sum,
+		finance_invoice_tbl.order_code,
+		finance_invoice_tbl.invoice_status,
+		finance_invoice_tbl.invoice_code,
+		finance_invoice_tbl.waybill_code,
+		finance_invoice_tbl.create_date,
+		finance_invoice_tbl.creator,
+		finance_invoice_tbl.update_date,
+		finance_invoice_tbl.update_user
+	</sql>
+
+	<sql id="finance_invoice_tbl_properties">
+		#invoiceId#, #invoiceTitle#, #companyName#, #invoiceContent#,
+		#invoiceAddress#, #invoiceSum#, #orderCode#, #invoiceStatus#,
+		#invoiceCode#, #waybillCode#,#createDate#,#creator#,#updateDate#,#updateUser#
+	</sql>
+	<insert id="createInvoice" parameterClass="Invoice" >
+		insert into finance_invoice_tbl (
+		<include refid="Invoice_NS.finance_invoice_tbl_columns" />
+		) values (
+		<include refid="Invoice_NS.finance_invoice_tbl_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="invoiceId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteInvoice" parameterClass="int">
+		delete from finance_invoice_tbl where invoice_id = #value#
+	</delete>
+
+	<update id="updateInvoice" parameterClass="Invoice">
+		update finance_invoice_tbl set 
+		<isNotNull property="invoiceId">
+			invoice_id = #invoiceId#,
+		</isNotNull>
+		<isNotNull property="invoiceTitle">
+			invoice_title = #invoiceTitle#,
+		</isNotNull>
+		<isNotNull property="companyName">
+			company_name= #companyName# ,
+		</isNotNull>
+		<isNotNull property="invoiceContent">
+			 invoice_content = #invoiceContent#,
+		</isNotNull>
+		<isNotNull property="invoiceAddress">
+			 invoice_address = #invoiceAddress#,
+		</isNotNull>
+		<isNotNull property="invoiceSum">
+			 invoice_sum = #invoiceSum#,
+		</isNotNull>
+		<isNotNull property="orderCode">
+			 order_code = #orderCode#,
+		</isNotNull>
+		<isNotNull property="invoiceStatus">
+			 invoice_status = #invoiceStatus#,
+		</isNotNull>
+		<isNotNull property="invoiceCode">
+			 invoice_code = #invoiceCode#,
+		</isNotNull>
+		<isNotNull property="invoiceCode">
+			 waybill_code = #waybillCode#,
+		</isNotNull>
+		<isNotNull property="createDate">
+			 create_date = #createDate#,
+		</isNotNull>
+		<isNotNull property="creator">
+			 creator = #creator#,
+		</isNotNull>
+		<isNotNull property="updateDate">
+			 update_date = #updateDate#,
+		</isNotNull>
+		<isNotNull property="updateUser">
+			 update_user = #updateUser#
+		</isNotNull>
+		 WHERE invoice_id = #invoiceId#
+	</update>
+	<select id="getInvoiceById" resultMap="Invoice_NS.InvoiceResult"
+		parameterClass="Invoice">
+		select
+		<include refid="Invoice_NS.finance_invoice_tbl_columns" />
+		FROM finance_invoice_tbl WHERE invoice_id = #invoiceId#
+	</select>
+	<select id="getInvoiceList" resultMap="Invoice_NS.InvoiceDTOResult"
+		parameterClass="QueryInvoiceCondition">
+		<include refid="public_sql.page_begin"/>
+		select
+		<include refid="Invoice_NS.finance_invoice_tbl_columns" />
+		,finance_contract_tbl.pay_type,cus_customer_tbl.MOBILE
+		from finance_invoice_tbl,finance_contract_tbl,cus_customer_tbl WHERE 
+		finance_contract_tbl.cus_id=cus_customer_tbl.cus_id 
+		and finance_invoice_tbl.order_code=finance_contract_tbl.contract_id
+		<isNotEmpty prepend="and" property="orderCode">
+			finance_invoice_tbl.order_code like CONCAT(#orderCode#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="waybillCode">
+			finance_invoice_tbl.waybill_code like CONCAT(#waybillCode#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="phoneNumber">
+			cus_customer_tbl.mobile like CONCAT(#phoneNumber#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="invoiceCode">
+			finance_invoice_tbl.invoice_code like CONCAT(#invoiceCode#,'%') 
+		</isNotEmpty>
+		<isNotNull property="payType">
+			<isNotEqual prepend="and" compareValue="-1" property="payType">
+				finance_contract_tbl.pay_type =#payType#
+			</isNotEqual>
+		</isNotNull>
+		<isNotEmpty prepend="and" property="invoiceStatus">
+			finance_invoice_tbl.invoice_status =#invoiceStatus# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createBeginDate">
+            finance_invoice_tbl.create_date >= #createBeginDate#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createEndDate">
+            <![CDATA[finance_invoice_tbl.create_date <= #createEndDate# ]]>
+         </isNotEmpty> order by finance_invoice_tbl.invoice_id desc
+		<include refid="public_sql.page_end"/>
+	</select>
+	<select id="getInvoiceListCount" resultClass="int"
+		parameterClass="QueryInvoiceCondition">
+		select
+		count(1)
+		from finance_invoice_tbl,finance_contract_tbl,cus_customer_tbl WHERE 
+		finance_contract_tbl.cus_id=cus_customer_tbl.cus_id 
+		and finance_invoice_tbl.order_code=finance_contract_tbl.contract_id
+		<isNotEmpty prepend="and" property="orderCode">
+			finance_invoice_tbl.order_code like CONCAT(#orderCode#,'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="waybillCode">
+			finance_invoice_tbl.waybill_code like CONCAT(#waybillCode#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="phoneNumber">
+			cus_customer_tbl.mobile like CONCAT(#phoneNumber#,'%') 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="invoiceCode">
+			finance_invoice_tbl.invoice_code like CONCAT(#invoiceCode#,'%') 
+		</isNotEmpty>
+		<isNotNull property="payType">
+			<isNotEqual prepend="and" compareValue="-1" property="payType">
+				finance_contract_tbl.pay_type =#payType#
+			</isNotEqual>
+		</isNotNull>
+		<isNotEmpty prepend="and" property="invoiceStatus">
+			finance_invoice_tbl.invoice_status =#invoiceStatus# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createBeginDate">
+            finance_invoice_tbl.create_date >= #createBeginDate#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="createEndDate">
+            <![CDATA[finance_invoice_tbl.create_date <= #createEndDate# ]]>
+         </isNotEmpty>
+         order by finance_invoice_tbl.invoice_id desc
+	</select>  
+	
+	<select id="isInvoiceCodeRepeat" resultClass="string"
+		parameterClass="Invoice">
+		select
+		count(1)
+		from finance_invoice_tbl where  1=1 <![CDATA[ and invoice_status<>"废弃"]]>
+		<isNotEmpty prepend="and" property="invoiceCode">
+			invoice_code=#invoiceCode#
+		</isNotEmpty>
+		<isEmpty prepend="and" property="invoiceCode">
+			invoice_code='-00000';
+		</isEmpty>
+	</select>
+	<select id="isWaybillCodeRepeat" resultClass="string"
+		parameterClass="Invoice">
+		select
+		count(1)
+		from finance_invoice_tbl where  1=1 <![CDATA[ and invoice_status<>"废弃"]]>
+		<isNotEmpty prepend="and" property="waybillCode">
+			waybill_code=#waybillCode#
+		</isNotEmpty>
+		<isEmpty prepend="and" property="waybillCode">
+			waybill_code='-00000';
+		</isEmpty>
+	</select>
+</sqlMap>

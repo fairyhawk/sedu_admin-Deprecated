@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Commentfrom_NS">
+        <!--table:CMS_COMMENTFROM_TBL-->
+        <typeAlias alias="Commentfrom" type="com.shangde.edu.cms.domain.Commentfrom"/>
+        <typeAlias alias="QueryCommentfromCondition" type="com.shangde.edu.cms.condition.QueryCommentfromCondition"/>
+
+        <resultMap id="CommentfromResult" class="Commentfrom">
+            <result property="cfId" column="CF_ID"/>
+            <result property="cfName" column="CF_NAME"/>
+            <result property="cfState" column="CF_STATE"/>
+            <result property="cfInfo" column="CF_INFO"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+        </resultMap>
+
+        <sql id="CMS_COMMENTFROM_TBL_columns">
+            CMS_COMMENTFROM_TBL.CF_ID,
+            CMS_COMMENTFROM_TBL.CF_NAME,
+            CMS_COMMENTFROM_TBL.CF_STATE,
+            CMS_COMMENTFROM_TBL.CF_INFO,
+            CMS_COMMENTFROM_TBL.CREATE_TIME,
+            CMS_COMMENTFROM_TBL.UPDATE_TIME
+        </sql>
+
+        <sql id="CMS_COMMENTFROM_TBL_properties">
+            #cfId#,
+            #cfName#,
+            #cfState#,
+            #cfInfo#,
+            #createTime#,
+            #updateTime#
+        </sql>
+
+        <insert id="createCommentfrom" parameterClass="Commentfrom">
+            INSERT INTO CMS_COMMENTFROM_TBL (<include refid="Commentfrom_NS.CMS_COMMENTFROM_TBL_columns"/>) VALUES (<include refid="Commentfrom_NS.CMS_COMMENTFROM_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="cfId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteCommentfromById" parameterClass="int">
+            DELETE FROM CMS_COMMENTFROM_TBL
+            WHERE
+                CF_ID = #value#
+
+
+
+
+
+        </delete>
+
+        <update id="updateCommentfrom" parameterClass="Commentfrom">
+            UPDATE CMS_COMMENTFROM_TBL SET
+                CF_ID = #cfId#,
+                CF_NAME = #cfName#,
+                CF_STATE = #cfState#,
+                CF_INFO = #cfInfo#,
+                CREATE_TIME = #createTime#,
+                UPDATE_TIME = #updateTime#
+            WHERE
+                CF_ID = #cfId#
+
+
+
+
+
+        </update>
+
+        <select id="getCommentfromById" resultMap="Commentfrom_NS.CommentfromResult" parameterClass="int">
+            SELECT
+            <include refid="Commentfrom_NS.CMS_COMMENTFROM_TBL_columns"/>
+            FROM CMS_COMMENTFROM_TBL
+            WHERE
+                CF_ID = #value#
+
+
+
+
+
+        </select>
+
+        <select id="getCommentfromList" resultMap="Commentfrom_NS.CommentfromResult" parameterClass="QueryCommentfromCondition">
+            SELECT
+            <include refid="Commentfrom_NS.CMS_COMMENTFROM_TBL_columns"/>
+            FROM CMS_COMMENTFROM_TBL
+        </select>
+        <!--end-->
+</sqlMap>

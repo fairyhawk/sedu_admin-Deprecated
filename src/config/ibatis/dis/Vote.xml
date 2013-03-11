@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Vote_NS">
+        <!--table:DIS_VOTE_TBL-->
+        <typeAlias alias="Vote" type="com.shangde.edu.dis.domain.Vote"/>
+        <typeAlias alias="QueryVoteCondition" type="com.shangde.edu.dis.condition.QueryVoteCondition"/>
+
+        <resultMap id="VoteResult" class="Vote">
+            <result property="id" column="ID"/>
+            <result property="voteType" column="VOTE_TYPE"/>
+            <result property="topicId" column="TOPIC_ID"/>
+            <result property="referenceResults" column="reference_results"/>
+            <result property="status" column="STATUS"/>
+        </resultMap>
+
+        <sql id="DIS_VOTE_TBL_columns">
+            DIS_VOTE_TBL.ID,
+            DIS_VOTE_TBL.VOTE_TYPE,
+            DIS_VOTE_TBL.TOPIC_ID,
+            DIS_VOTE_TBL.reference_results,
+            DIS_VOTE_TBL.STATUS
+        </sql>
+
+        <sql id="DIS_VOTE_TBL_properties">
+            #id#,
+            #voteType#,
+            #topicId#,
+            #referenceResults#,
+            #status#
+        </sql>
+
+        <insert id="createVote" parameterClass="Vote">
+            INSERT INTO DIS_VOTE_TBL (<include refid="Vote_NS.DIS_VOTE_TBL_columns"/>) VALUES (<include refid="Vote_NS.DIS_VOTE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+        <select id="getVoteByTopicId" resultMap="Vote_NS.VoteResult" parameterClass="int">
+            SELECT
+            <include refid="Vote_NS.DIS_VOTE_TBL_columns"/>
+            FROM DIS_VOTE_TBL
+            WHERE
+                TOPIC_ID = #value#
+        </select>
+        
+
+        <delete id="deleteVoteById" parameterClass="int">
+            DELETE FROM DIS_VOTE_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateVote" parameterClass="Vote">
+            UPDATE DIS_VOTE_TBL SET
+                VOTE_TYPE = #voteType#,
+                TOPIC_ID = #topicId#,
+                reference_results = #referenceResults#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getVoteById" resultMap="Vote_NS.VoteResult" parameterClass="int">
+            SELECT
+            <include refid="Vote_NS.DIS_VOTE_TBL_columns"/>
+            FROM DIS_VOTE_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getVoteList" resultMap="Vote_NS.VoteResult" parameterClass="QueryVoteCondition">
+            SELECT
+            <include refid="Vote_NS.DIS_VOTE_TBL_columns"/>
+            FROM DIS_VOTE_TBL
+        </select>
+        
+        
+        
+        <!-- V1.1 写在下面，如果新写的功能上面已存在，可以将上面的代码剪切到下面来 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+</sqlMap>

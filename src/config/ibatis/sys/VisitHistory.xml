@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VisitHistory_NS">
+        <!--table:SYS_VISIT_HISTORY_TBL-->
+        <typeAlias alias="VisitHistory" type="com.shangde.edu.sys.domain.VisitHistory"/>
+        <typeAlias alias="QueryVisitHistoryCondition" type="com.shangde.edu.sys.condition.QueryVisitHistoryCondition"/>
+			<!-- 配置缓存模型 -->
+		<cacheModel id="VisitHistory_NS-cache" type="FIFO" readOnly="true" serialize="true">
+				<flushInterval hours="24" />
+	 			<flushOnExecute statement="VisitHistory_NS.createVisitHistory" />
+				<flushOnExecute statement="VisitHistory_NS.updateVisitHistory" />
+				<flushOnExecute statement="VisitHistory_NS.deleteVisitHistoryById" />
+				<property value="1000" name="size" />
+		</cacheModel>
+        <resultMap id="VisitHistoryResult" class="VisitHistory">
+            <result property="id" column="ID"/>
+            <result property="userType" column="USER_TYPE"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="visitIp" column="VISIT_IP"/>
+            <result property="visitUrl" column="VISIT_URL"/>
+            <result property="visitType" column="VISIT_TYPE"/>
+            <result property="visitTime" column="VISIT_TIME"/>
+            <result property="visitName" column="VISIT_NAME"/>
+            <result property="visitInfo" column="VISIT_INFO"/>
+            <result property="visitParms" column="VISIT_PARMS"/>
+            <result property="nameSpace" column="NAME_SPACE"/>
+            <result property="actionName" column="ACTION_NAME"/>
+        </resultMap>
+
+        <sql id="SYS_VISIT_HISTORY_TBL_columns">
+            SYS_VISIT_HISTORY_TBL.ID,
+            SYS_VISIT_HISTORY_TBL.USER_TYPE,
+            SYS_VISIT_HISTORY_TBL.USER_ID,
+            SYS_VISIT_HISTORY_TBL.VISIT_IP,
+            SYS_VISIT_HISTORY_TBL.VISIT_URL,
+            SYS_VISIT_HISTORY_TBL.VISIT_TYPE,
+            SYS_VISIT_HISTORY_TBL.VISIT_TIME,
+            SYS_VISIT_HISTORY_TBL.VISIT_NAME,
+            SYS_VISIT_HISTORY_TBL.VISIT_INFO,
+            SYS_VISIT_HISTORY_TBL.VISIT_PARMS,
+            SYS_VISIT_HISTORY_TBL.NAME_SPACE,
+            SYS_VISIT_HISTORY_TBL.ACTION_NAME
+        </sql>
+
+        <sql id="SYS_VISIT_HISTORY_TBL_properties">
+            #id#,
+            #userType#,
+            #userId#,
+            #visitIp#,
+            #visitUrl#,
+            #visitType#,
+            #visitTime#,
+            #visitName#,
+            #visitInfo#,
+            #visitParms#,
+            #nameSpace#,
+            #actionName#
+        </sql>
+
+        <insert id="createVisitHistory" parameterClass="VisitHistory">
+            INSERT INTO SYS_VISIT_HISTORY_TBL (<include refid="VisitHistory_NS.SYS_VISIT_HISTORY_TBL_columns"/>) VALUES (<include refid="VisitHistory_NS.SYS_VISIT_HISTORY_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteVisitHistoryById" parameterClass="int">
+            DELETE FROM SYS_VISIT_HISTORY_TBL
+            WHERE
+                ID = #value#
+        </delete>
+
+        <update id="updateVisitHistory" parameterClass="VisitHistory">
+            UPDATE SYS_VISIT_HISTORY_TBL SET
+                ID = #id#,
+                USER_TYPE = #userType#,
+                USER_ID = #userId#,
+                VISIT_IP = #visitIp#,
+                VISIT_URL = #visitUrl#,
+                VISIT_TYPE = #visitType#,
+                VISIT_TIME = #visitTime#,
+                VISIT_NAME = #visitName#,
+                VISIT_INFO = #visitInfo#,
+                VISIT_PARMS = #visitParms#,
+                NAME_SPACE=#nameSpace#,
+                ACTION_NAME=#actionName#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getVisitHistoryById" resultMap="VisitHistory_NS.VisitHistoryResult" parameterClass="int" cacheModel="VisitHistory_NS-cache">
+            SELECT
+            <include refid="VisitHistory_NS.SYS_VISIT_HISTORY_TBL_columns"/>
+            FROM SYS_VISIT_HISTORY_TBL
+            WHERE
+                ID = #value#
+        </select>
+
+        <select id="getVisitHistoryList" resultMap="VisitHistory_NS.VisitHistoryResult" parameterClass="QueryVisitHistoryCondition" cacheModel="VisitHistory_NS-cache">
+            SELECT
+            <include refid="VisitHistory_NS.SYS_VISIT_HISTORY_TBL_columns"/>
+            FROM SYS_VISIT_HISTORY_TBL
+        </select>
+          <select id="getVisitHistoryByList" resultMap="VisitHistory_NS.VisitHistoryResult" parameterClass="QueryVisitHistoryCondition" cacheModel="VisitHistory_NS-cache">
+	           <include refid="public_sql.page_begin"/>
+	            SELECT
+	            <include refid="VisitHistory_NS.SYS_VISIT_HISTORY_TBL_columns"/>
+	            FROM SYS_VISIT_HISTORY_TBL 
+	            <dynamic prepend="WHERE"> 
+             		<isNotNull property="visitIp">
+            			<isNotEqual property="visitIp" compareValue="0" prepend="and">
+            			VISIT_IP like '%$visitIp$%'
+            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="nameSpace">
+            			<isNotEqual property="nameSpace" compareValue="0" prepend="and">
+            			NAME_SPACE like '%$nameSpace$%'
+            			</isNotEqual>
+           			</isNotNull>
+        				<isNotNull property="actionName">
+	            			<isNotEqual property="actionName" compareValue="0" prepend="and">
+	            			ACTION_NAME like '%$actionName$%'
+	            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="visitType">
+	            			<isNotEqual property="visitType" compareValue="0" prepend="and">
+	            			VISIT_TYPE like '%$visitType$%'
+	            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="userType">
+	            			<isNotEqual property="userType" compareValue="0" prepend="and">
+	            			 USER_TYPE=#userType#
+	            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="userId">
+	            			<isNotEqual property="userId" compareValue="0" prepend="and">
+	            			 USER_ID=#userId#
+	            			</isNotEqual>
+           			</isNotNull>
+           			 <isNotNull prepend="and" property="startTime">
+					    <![CDATA[  VISIT_TIME >= #startTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[  VISIT_TIME <= #endTime# ]]>
+					</isNotNull>
+            	</dynamic>
+            	ORDER BY SYS_VISIT_HISTORY_TBL.ID DESC
+	           <include refid="public_sql.page_end"/>
+        </select>
+         <select id="getVisitHistoryByCount" resultClass="int" parameterClass="QueryVisitHistoryCondition" cacheModel="VisitHistory_NS-cache">
+            SELECT COUNT(1)
+            FROM SYS_VISIT_HISTORY_TBL 
+             <dynamic prepend="WHERE"> 
+             		<isNotNull property="visitIp">
+            			<isNotEqual property="visitIp" compareValue="0" prepend="and">
+            			VISIT_IP like '%$visitIp$%'
+            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="nameSpace">
+            			<isNotEqual property="nameSpace" compareValue="0" prepend="and">
+            			NAME_SPACE like '%$nameSpace$%'
+            			</isNotEqual>
+           			</isNotNull>
+        				<isNotNull property="actionName">
+	            			<isNotEqual property="actionName" compareValue="0" prepend="and">
+	            			ACTION_NAME like '%$actionName$%'
+	            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="visitType">
+	            			<isNotEqual property="visitType" compareValue="0" prepend="and">
+	            			VISIT_TYPE like '%$visitType$%'
+	            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="userType">
+	            			<isNotEqual property="userType" compareValue="0" prepend="and">
+	            			USER_TYPE=#userType#
+	            			</isNotEqual>
+           			</isNotNull>
+           			<isNotNull property="userId">
+	            			<isNotEqual property="userId" compareValue="0" prepend="and">
+	            			 USER_ID=#userId#
+	            			</isNotEqual>
+           			</isNotNull>
+           			 <isNotNull prepend="and" property="startTime">
+				    <![CDATA[  VISIT_TIME >= #startTime# ]]>
+					</isNotNull>
+					<isNotNull prepend="and" property="endTime">
+						<![CDATA[  VISIT_TIME <= #endTime# ]]>
+					</isNotNull>
+            	</dynamic>
+            	ORDER BY SYS_VISIT_HISTORY_TBL.ID DESC
+        </select>
+        <!--end-->
+</sqlMap>

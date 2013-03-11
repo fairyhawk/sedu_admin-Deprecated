@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DisArea_NS">
+
+	<!-- 备注：本模块全部去掉 -->
+	
+	
+	<!--table:DIS_DIS_AREA_TBL -->
+	<typeAlias alias="DisArea" type="com.shangde.edu.dis.domain.DisArea" />
+	<typeAlias alias="QueryDisAreaCondition"
+		type="com.shangde.edu.dis.condition.QueryDisAreaCondition" />
+
+	<resultMap id="DisAreaResult" class="DisArea">
+		<result property="id" column="ID" />
+		<result property="disId" column="DIS_ID" />
+		<result property="name" column="NAME" />
+		<result property="introduction" column="INTRODUCTION" />
+		<result property="sort" column="SORT" />
+		<result property="userId" column="USER_ID" jdbcType="INTEGER" />
+		<result property="subjectId" column="SUBJECT_ID" jdbcType="INTEGER" />
+		<result property="createTime" column="createtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="DIS_DIS_AREA_TBL_columns">
+		DIS_DIS_AREA_TBL.ID,
+		DIS_DIS_AREA_TBL.DIS_ID,
+		DIS_DIS_AREA_TBL.NAME,
+		DIS_DIS_AREA_TBL.INTRODUCTION,
+		DIS_DIS_AREA_TBL.SORT,
+		DIS_DIS_AREA_TBL.USER_ID,
+		DIS_DIS_AREA_TBL.SUBJECT_ID,
+		DIS_DIS_AREA_TBL.CREATETIME
+	</sql>
+
+	<sql id="DIS_DIS_AREA_TBL_properties">
+		#id#,
+		#disId#,
+		#name#,
+		#introduction#,
+		#sort#,
+		#userId#,
+		#subjectId#,
+		#createTime#
+    </sql>
+
+	<insert id="createDisArea" parameterClass="DisArea">
+		INSERT INTO DIS_DIS_AREA_TBL (
+		<include refid="DisArea_NS.DIS_DIS_AREA_TBL_columns" />
+		) VALUES (
+		<include refid="DisArea_NS.DIS_DIS_AREA_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteDisAreaById" parameterClass="int">
+		DELETE FROM DIS_DIS_AREA_TBL
+		WHERE
+		ID = #value#
+    </delete>
+
+	<update id="updateDisArea" parameterClass="DisArea">
+		UPDATE DIS_DIS_AREA_TBL SET
+		ID = #id#,
+		DIS_ID = #disId#,
+		NAME = #name#,
+		INTRODUCTION = #introduction#
+		WHERE
+		ID = #id#
+    </update>
+
+	<select id="getDisAreaById" resultMap="DisArea_NS.DisAreaResult"
+		parameterClass="int">
+		SELECT
+		<include refid="DisArea_NS.DIS_DIS_AREA_TBL_columns" />
+		FROM DIS_DIS_AREA_TBL
+		WHERE
+		ID = #value#
+	</select>
+
+	<select id="getDisAreaList" resultMap="DisArea_NS.DisAreaResult"
+		parameterClass="QueryDisAreaCondition">
+		SELECT
+		<include refid="DisArea_NS.DIS_DIS_AREA_TBL_columns" />
+		FROM DIS_DIS_AREA_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="disId">
+				<isNotEqual property="disId" compareValue="0" prepend="and">
+					DIS_ID=#disId#
+			    </isNotEqual>
+			</isNotNull>
+		</dynamic>
+		ORDER BY SORT
+	</select>
+	<!--end -->
+</sqlMap>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VstCount_NS">
+        <!--table:ASS_REASSESS_TBL-->
+        <typeAlias alias="vstCount" type="com.shangde.edu.vst.domain.VideoStatisticsCountDTO"/>
+        <typeAlias alias="condition" type="com.shangde.edu.vst.condition.VideoLevelCondition"/>
+        <typeAlias alias="Subject"
+		type="com.shangde.edu.sys.domain.Subject" />
+		
+		<typeAlias alias="QuerySubjectCondition"
+			type="com.shangde.edu.sys.condition.QuerySubjectCondition" />
+			
+		<typeAlias alias="SubjectAgentDTO"
+			type="com.shangde.edu.sys.dto.SubjectAgentDTO" />
+		
+		
+		<typeAlias alias="VideoWatchLog"
+		type="com.shangde.edu.vst.domain.VideoWatchLog" />
+		
+		
+       	<!-- 配置缓存模型 -->
+		<cacheModel id="VstCount_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+			<property value="1000" name="size" />
+		</cacheModel>
+        <sql id="queryCondition">
+        	<dynamic prepend="and">
+        	 <isNotNull property="subjectId">
+    	     <isGreaterThan compareValue="0" property="subjectId">
+        		sold.subject_id = #subjectId#
+        	</isGreaterThan>
+        	</isNotNull>
+		</dynamic>
+        </sql>
+      <!-- 
+      <select id="getSubjectVideoCount" resultClass="vstCount" parameterClass="vstCount">
+       select sell.subject_id subjectid, sys_subject_tbl.SUBJECT_NAME subjectName,count(DISTINCT cou_kpoint_tbl.point_id) subjectVideoTotal 
+       from (select subject_id,sell_id from cou_sell_way_tbl where  shop_state = 1)sell,cou_sell_cou_tbl,cou_kpoint_tbl,sys_subject_tbl 
+       where sell.sell_id = cou_sell_cou_tbl.sell_id and cou_kpoint_tbl.course_id = cou_sell_cou_tbl.course_id and sys_subject_tbl.SUBJECT_ID = sell.subject_id and cou_kpoint_tbl.leaf = 1 <include refid="queryCondition"/> group by (sell.subject_id);
+        </select>
+         -->  
+        <!--end-->
+        
+         <select id="getSubjectVideoCount" resultClass="vstCount" parameterClass="vstCount" cacheModel="VstCount_NS-cache">
+         	select 
+         		(select sys_subject_tbl.SUBJECT_NAME  from sys_subject_tbl where sold.subject_id = sys_subject_tbl.subject_id) subjectName,sold.subject_id subjectid, videoCount * soldCout subjectVideoTotal from 
+         		(select count(1) videoCount,subject_id from cou_sell_way_tbl sell,cou_sell_cou_tbl,cou_kpoint_tbl where sell.sell_id = cou_sell_cou_tbl.sell_id and cou_kpoint_tbl.course_id = cou_sell_cou_tbl.course_id and cou_kpoint_tbl.leaf = 1  group by sell.subject_id) video,
+         		(select count(1) soldCout, subject_id from finance_cash_record_tbl tmp_cash,cou_sell_way_tbl sell WHERE tmp_cash.pack_id = sell.sell_id  and shop_pay_type != 0 and type = 1  group by sell.subject_id) sold where sold.subject_id = video.subject_id 
+         		<include refid="queryCondition"/>
+         </select>
+         
+         
+         <select id="getVideoWatchLogin" parameterClass="QuerySubjectCondition" resultClass="VideoWatchLog">
+         	SELECT 
+				ma.SUBJECT_ID subjectId, 
+				ma.SUBJECT_NAME subjectName,
+				ma.logincount logincount,
+				ma.buylogincount buylogincount,
+				ma.logincount-ma.buylogincount nobuylogincount,
+				 IFNULL(mb.buyallcount,0) buyallcount
+			FROM  
+				(
+				 SELECT 
+					sys_subject_tbl.SUBJECT_ID, 
+					sys_subject_tbl.SUBJECT_NAME,
+					COUNT(DISTINCT cus_login_record_tbl.cus_id) logincount, 
+					COUNT(DISTINCT finance_contract_tbl.CUS_ID) buylogincount 
+				  FROM  cus_login_record_tbl 
+				  JOIN cus_customer_tbl ON 
+				  cus_login_record_tbl.CUS_ID=cus_customer_tbl.CUS_ID
+				  
+				  <isNotNull property="startTime" prepend="and"> 
+				   	<![CDATA[    cus_login_record_tbl.LOGIN_TIME >=#startTime# ]]>
+				  </isNotNull>
+				  
+				  <isNotNull property="endTime" prepend="and"> 
+				  	<![CDATA[  cus_login_record_tbl.LOGIN_TIME <=#endTime#  ]]>
+				  </isNotNull>
+				  
+				   JOIN sys_subject_tbl ON cus_customer_tbl.SUBJECT_ID=sys_subject_tbl.SUBJECT_ID
+				   
+				   <isNotNull property="subjectId" prepend="and"> 
+				  	<isNotEqual prepend="" property="subjectId" compareValue="0">
+				  	 	sys_subject_tbl.SUBJECT_ID  =#subjectId#
+				  	</isNotEqual>
+				  </isNotNull>
+				  
+				  LEFT JOIN finance_contract_tbl ON 
+				  finance_contract_tbl.CUS_ID=cus_login_record_tbl.CUS_ID AND 
+					finance_contract_tbl.CUS_ID=cus_customer_tbl.CUS_ID AND
+					finance_contract_tbl.STATUS!=0
+				  GROUP BY  sys_subject_tbl.SUBJECT_ID
+				  ORDER BY  cus_customer_tbl.SUBJECT_ID) ma left JOIN
+				  (
+					SELECT CR_SUBJECT_ID,
+					COUNT(finance_contract_tbl.ID) buyallcount FROM 
+					finance_contract_tbl JOIN 
+					finance_cash_record_tbl 
+					ON finance_contract_tbl.ID=finance_cash_record_tbl.CT_ID AND 
+					finance_contract_tbl.STATUS!=0 AND finance_cash_record_tbl.CR_SUBJECT_ID !=0 
+					  <![CDATA[  AND finance_cash_record_tbl.CR_SUBJECT_ID<100 ]]>
+					  
+					<isNotNull property="subjectId" prepend="and"> 
+					  	<isNotEqual prepend="" property="subjectId" compareValue="0">
+					  	 	finance_cash_record_tbl.CR_SUBJECT_ID  =#subjectId#
+					  	</isNotEqual>
+				  	</isNotNull>
+				  	
+				  
+					GROUP BY  finance_cash_record_tbl.CR_SUBJECT_ID
+					ORDER BY  finance_cash_record_tbl.CR_SUBJECT_ID
+				  ) mb  ON
+				  ma.SUBJECT_ID=mb.CR_SUBJECT_ID
+         
+         </select>
+         <!-- 
+         <select id="getVideoKpointCount" resultClass="java.util.HashMap" parameterClass="condition">
+         		select 
+         			VIDEO.POINT_ID POINTID,  soldCout PointVideoTotal from 
+         		(select count(1) videoCount,cou_kpoint_tbl.POINT_ID, sell.SELL_ID from cou_sell_way_tbl sell,cou_sell_cou_tbl,cou_kpoint_tbl where sell.sell_id = cou_sell_cou_tbl.sell_id and cou_kpoint_tbl.course_id = cou_sell_cou_tbl.course_id and cou_kpoint_tbl.leaf = 1  
+	         	<dynamic prepend="and">
+		        	<isNotEmpty property="videoName" prepend="and">
+		        		COU_KPOINT_TBL.NAME LIKE '%$videoName$%'
+		        	</isNotEmpty>
+				</dynamic>
+				group by cou_kpoint_tbl.POINT_ID) video,
+         		(select count(1) soldCout, tmp_cash.PACK_ID from finance_cash_record_tbl tmp_cash WHERE shop_pay_type != 0 and tmp_cash.status = 1 
+         			<dynamic prepend="and">
+			        	<isNotNull property="startDate" prepend="and">
+			        		tmp_cash.create_time >= #startDate#
+			        	</isNotNull>
+			    	     <isNotNull property="endDate" prepend="and">
+			    	     	<![CDATA[  tmp_cash.create_time <= #endDate# ]]>
+			        	</isNotNull>
+			        	<isGreaterThan compareValue="0" property="subjectId" prepend="and">
+			        		tmp_cash.CR_SUBJECT_ID = #subjectId#
+			        	</isGreaterThan>
+					</dynamic>
+         		 group by tmp_cash.PACK_ID) sold where sold.PACK_ID = video.SELL_ID;   
+         </select>
+          -->
+          
+           <select id="getVideoKpointCount" resultClass="java.util.HashMap" parameterClass="condition">
+         		select cou_kpoint_tbl.POINT_ID POINTID,sum(cash.soldCout) PointVideoTotal from
+					(select count(1) soldCout, tmp_cash.PACK_ID, tmp_cash.CR_SUBJECT_ID from 
+					finance_cash_record_tbl tmp_cash WHERE shop_pay_type != 0 and tmp_cash.status = 1   
+					group by tmp_cash.PACK_ID)as cash 
+        				join cou_sell_way_tbl on cou_sell_way_tbl.sell_id = cash.pack_id         
+        				join cou_sell_cou_tbl on cou_sell_cou_tbl.sell_id = cash.pack_id        
+        				join cou_kpoint_tbl on cou_kpoint_tbl.course_id = cou_sell_cou_tbl.course_id        
+        				and cou_kpoint_tbl.leaf = 1 
+        				<isNotNull property="videoName" prepend="and">
+        					COU_KPOINT_TBL.NAME LIKE '%$videoName$%'
+        				</isNotNull>
+        				<isGreaterThan compareValue="0" property="subjectId" prepend="and">
+			        		CUS_WATCH_RECORD_TBL.SUBJECTID = #subjectId#
+			        	</isGreaterThan>
+						group by cou_kpoint_tbl.point_id
+         </select>
+</sqlMap>

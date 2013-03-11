@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Sellrecord_NS">
+        <!--table:CRM_SELLRECORD_TBL-->
+        <typeAlias alias="Sellrecord" type="com.shangde.edu.crm.domain.Sellrecord"/>
+        <typeAlias alias="QuerySellrecordCondition" type="com.shangde.edu.crm.condition.QuerySellrecordCondition"/>
+		<typeAlias alias="UserDTO" type="com.shangde.edu.crm.domain.UserDTO"/>
+		<typeAlias alias="SimpleStatDTO" type="com.shangde.edu.crm.dto.SimpleStatDTO"/>
+        	<!-- 配置缓存模型 -->
+		<cacheModel id="Sellrecord_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="Sellrecord_NS.createSellrecord" />
+			<flushOnExecute statement="Sellrecord_NS.updateSellrecord" />
+			<flushOnExecute statement="Sellrecord_NS.deleteSellrecordById"/>
+			<property value="1000" name="size" />
+		</cacheModel>
+        <resultMap id="UserResult" class="UserDTO">
+            <result property="userId" column="USER_ID"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="loginName" column="LOGIN_NAME"/>
+        </resultMap>
+        
+        <resultMap id="SimpleStatResult" class="SimpleStatDTO">
+      	 	<result property="sysUserId" column="SYS_USER_ID"/>
+            <result property="sysUserName" column="SYS_USER_NAME"/>
+            <result property="sellName" column="SELL_NAME"/>
+            <result property="reasonTime" column="REASON_TIME"/>
+            <result property="sellCount" column="SELL_COUNT"/>
+            <result property="payCount" column="PAY_COUNT"/>
+            <result property="sendCount" column="SEND_COUNT"/>
+            <result property="callCount" column="CALL_COUNT"/>
+            <result property="successCount" column="SUCCESS_COUNT"/>
+            <result property="groupName" column="GROUP_NAME"/>
+            <result property="scene" column="SCENE"/>
+            <result property="hours" column="HOURS"/>
+            <result property="intBankTotelPrice" column="INT_BANK_TOTEL_PRICE"/>
+            <result property="sendTotelPrice" column="SEND_TOTEL_PRICE"/>
+            <result property="sendSuccessCount" column="SEND_SUCCESS_COUNT"/>
+            <result property="cancelCount" column="CANCEL_COUNT"/>
+            <result property="backCancelCount" column="BACK_CANCEL_COUNT"/>
+            <result property="effSendTotelPrice" column="EFF_SEND_TOTEL_PRICE"/>
+        </resultMap>
+        
+        <resultMap id="SellrecordResult" class="Sellrecord">
+        	<result property="crmId" column="CRM_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="sysUserId" column="SYS_USER_ID"/>
+            <result property="sysUserName" column="SYS_USER_NAME"/>
+            <result property="sellName" column="SELL_NAME"/>
+            <result property="reason" column="REASON"/>
+            <result property="sellTime" column="SELL_TIME"/>
+            <result property="commuStatus" column="COMMU_STATUS"/>
+            <result property="reasonTime" column="REASON_TIME"/>
+            <result property="scene" column="SCENE"/>
+            <result property="realName" column="REAL_NAME"/>
+            <result property="sex" column="SEX"/>
+            <result property="mobile" column="MOBILE"/>
+            <result property="age" column="AGE"/>
+            <result property="profession" column="PROFESSION"/>
+            <result property="studyReason" column="STUDY_REASON"/>
+            <result property="fProblem" column="F_PROBLEM"/>
+            <result property="twProblem" column="TW_PROBLEM"/>
+            <result property="thProblem" column="TH_PROBLEM"/>
+            <result property="fWorry" column="F_WORRY"/>
+            <result property="twWorry" column="TW_WORRY"/>
+            <result property="thWorry" column="TH_WORRY"/>
+            <result property="consultType" column="CONSULT_TYPE"/>
+        </resultMap>
+
+        <sql id="CRM_SELLRECORD_TBL_columns">
+      	 	CRM_SELLRECORD_TBL.CRM_ID,
+            CRM_SELLRECORD_TBL.CUS_ID,
+            CRM_SELLRECORD_TBL.SYS_USER_ID,
+            CRM_SELLRECORD_TBL.SYS_USER_NAME,
+            CRM_SELLRECORD_TBL.SELL_NAME,
+            CRM_SELLRECORD_TBL.REASON,
+            CRM_SELLRECORD_TBL.SELL_TIME,
+            CRM_SELLRECORD_TBL.REASON_TIME,
+            CRM_SELLRECORD_TBL.COMMU_STATUS,
+            CRM_SELLRECORD_TBL.SCENE,
+            CRM_SELLRECORD_TBL.REAL_NAME,
+            CRM_SELLRECORD_TBL.SEX,
+            CRM_SELLRECORD_TBL.MOBILE,
+            CRM_SELLRECORD_TBL.AGE,
+            CRM_SELLRECORD_TBL.PROFESSION,
+            CRM_SELLRECORD_TBL.STUDY_REASON,
+            CRM_SELLRECORD_TBL.F_PROBLEM,
+            CRM_SELLRECORD_TBL.TW_PROBLEM,
+            CRM_SELLRECORD_TBL.TH_PROBLEM,
+            CRM_SELLRECORD_TBL.F_WORRY,
+            CRM_SELLRECORD_TBL.TW_WORRY,
+            CRM_SELLRECORD_TBL.TH_WORRY,
+            CRM_SELLRECORD_TBL.CONSULT_TYPE
+        </sql>
+
+        <sql id="CRM_SELLRECORD_TBL_properties">
+        	#crmId#,
+            #cusId#,
+            #sysUserId#,
+            #sysUserName#,
+            #sellName#,
+            #reason#,
+            #sellTime#,
+            #reasonTime#,
+            #commuStatus#,
+            #scene#,
+            #realName#,
+            #sex#,
+            #mobile#,
+            #age#,
+            #profession#,
+            #studyReason#,
+            #fProblem#,
+            #twProblem#,
+            #thProblem#,
+            #fWorry#,
+            #twWorry#,
+            #thWorry#,
+            #consultType#
+        </sql>
+
+        <insert id="createSellrecord" parameterClass="Sellrecord">
+            INSERT INTO CRM_SELLRECORD_TBL (<include refid="Sellrecord_NS.CRM_SELLRECORD_TBL_columns"/>) VALUES (<include refid="Sellrecord_NS.CRM_SELLRECORD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="crmId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSellrecordById" parameterClass="int">
+            DELETE FROM CRM_SELLRECORD_TBL  where  CRM_ID=#value#
+        </delete>
+
+        <update id="updateSellrecord" parameterClass="Sellrecord">
+            UPDATE CRM_SELLRECORD_TBL SET
+            	CRM_ID = #crmId#,
+                CUS_ID = #cusId#,
+                SYS_USER_ID = #sysUserId#,
+                SYS_USER_NAME = #sysUserName#,
+                SELL_NAME = #sellName#,
+                REASON = #reason#,
+                SELL_TIME = #sellTime#,
+                COMMU_STATUS = #commuStatus#,
+                REASON_TIME = #reasonTime#,
+                SCENE = #scene#,
+                REAL_NAME = #realName#,
+	            SEX = #sex#,
+	            MOBILE = #mobile#,
+	            AGE= #age#,
+	            PROFESSION= #profession#,
+	            STUDY_REASON= #studyReason#,
+	            F_PROBLEM = #fProblem#,
+	            TW_PROBLEM = #twProblem#,
+	            TH_PROBLEM = #thProblem#,
+	            F_WORRY = #fWorry#,
+	            TW_WORRY = #twWorry#,
+	            TH_WORRY = #thWorry#,
+	            CONSULT_TYPE = #consultType# where CRM_ID = #crmId#
+        </update>
+
+        <select id="getSellrecordByCUSId" resultMap="Sellrecord_NS.SellrecordResult" parameterClass="int" cacheModel="Sellrecord_NS-cache">
+            SELECT
+            <include refid="Sellrecord_NS.CRM_SELLRECORD_TBL_columns"/>
+            FROM CRM_SELLRECORD_TBL  where  CUS_ID=#value#
+            ORDER BY CRM_SELLRECORD_TBL.CRM_ID DESC LIMIT 1
+        </select>
+        
+        <select id="getSellrecordCountByCUSIdList" resultClass="int" parameterClass="ArrayList" cacheModel="Sellrecord_NS-cache">
+           SELECT
+            COUNT(1)
+            FROM CRM_SELLRECORD_TBL  where  1=1
+            <iterate  prepend="AND"  open="(" close=")" conjunction="OR"> 
+				CUS_ID=#value[]# 
+			</iterate> 
+            ORDER BY CRM_SELLRECORD_TBL.CRM_ID DESC LIMIT 1
+        </select>
+        
+        <select id="getSellrecordByCrmId" resultMap="Sellrecord_NS.SellrecordResult" parameterClass="int" cacheModel="Sellrecord_NS-cache">
+            SELECT
+            <include refid="Sellrecord_NS.CRM_SELLRECORD_TBL_columns"/>
+            FROM CRM_SELLRECORD_TBL  where  CRM_ID=#value#
+        </select>
+        <!-- 获取销售人员列表 -->
+        <select id="getSoldUserList" resultMap="Sellrecord_NS.UserResult" cacheModel="Sellrecord_NS-cache">
+            SELECT
+            USER_ID,
+            USER_NAME,
+            LOGIN_NAME
+            FROM SYS_USER_TBL 
+            WHERE IS_SOLD=1 and status=0
+        </select>
+        
+        <!-- 获取简单统计列表 -->
+       <select id="getSimpleStat" resultMap="Sellrecord_NS.SimpleStatResult" parameterClass="QuerySellrecordCondition" cacheModel="Sellrecord_NS-cache">
+			 <include refid="public_sql.page_begin"/>
+			SELECT 
+			crm_sellrecord_tbl.SYS_USER_ID,
+			crm_sellrecord_tbl.SYS_USER_NAME,
+			crm_sellrecord_tbl.SELL_NAME,
+			crm_sellrecord_tbl.REASON_TIME,
+			IFNULL(crm_sellrecord_tbl.SELL_COUNT,0) SELL_COUNT,
+			IFNULL(mc.paycount,0)  PAY_COUNT, 
+			IFNULL(md.sendcount,0) SEND_COUNT,
+			IFNULL(me.callcount,0) CALL_COUNT,
+			IFNULL(mf.successcount,0) SUCCESS_COUNT,
+			IFNULL(mg.GROUP_NAME,'') GROUP_NAME,
+			crm_sellrecord_tbl.SCENE SCENE,
+			0 HOURS,
+			IFNULL(mc.CONTRACT_CUTSUMMONEY,0) INT_BANK_TOTEL_PRICE  ,
+			IFNULL(mh.CUTSUMMONEY,0)  SEND_TOTEL_PRICE,
+			IFNULL(mh.sendsuccesscount,0) SEND_SUCCESS_COUNT,
+			IFNULL(mi.canclecount,0) CANCEL_COUNT,
+			IFNULL(mj.backcanclecount,0) BACK_CANCEL_COUNT,
+			IFNULL(mk.CUTSUMMONEY,0)  EFF_SEND_TOTEL_PRICE
+			FROM
+			(
+			SELECT  SYS_USER_ID,SYS_USER_NAME,REASON_TIME,SELL_NAME,CUS_ID,crm_sellrecord_tbl.SCENE,COUNT(DISTINCT crm_sellrecord_tbl.CUS_ID) SELL_COUNT
+			FROM crm_sellrecord_tbl
+			WHERE 1=1
+			<isNotNull property="showSelf" >
+			<isEqual property="showSelf" compareValue="1" >
+				<isNotNull property="sysUserId" >
+				<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+				crm_sellrecord_tbl.SYS_USER_ID =#sysUserId#
+				</isNotEqual>
+				</isNotNull>
+			</isEqual>
+			</isNotNull>
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE ) crm_sellrecord_tbl
+			
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,SUM(finance_contract_tbl.`CONTRACT_CUTSUMMONEY`) CONTRACT_CUTSUMMONEY, 
+			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) paycount FROM crm_sellrecord_tbl JOIN finance_contract_tbl
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID 
+			AND finance_contract_tbl.status=1 AND 
+			finance_contract_tbl.PAY_TYPE!=2 AND finance_contract_tbl.PAY_TYPE!=0 AND 
+			finance_contract_tbl.PAY_TYPE!=5
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE
+			) mc ON  mc.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mc.SCENE=crm_sellrecord_tbl.SCENE
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,
+			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendcount FROM crm_sellrecord_tbl JOIN finance_contract_tbl
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID 
+			AND finance_contract_tbl.PAY_TYPE=2 
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE
+			) md ON  md.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    md.SCENE=crm_sellrecord_tbl.SCENE
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID,
+			crm_sellrecord_tbl.SCENE,
+			COUNT(crm_sellrecord_tbl.CRM_ID) callcount 
+			FROM crm_sellrecord_tbl 
+		    WHERE crm_sellrecord_tbl.COMMU_STATUS!=0
+		    <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+		    GROUP BY  crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE
+		    ) me ON me.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID    AND    me.SCENE=crm_sellrecord_tbl.SCENE
+		 
+		 	LEFT JOIN (
+		 	SELECT crm_sellrecord_tbl.SYS_USER_ID,
+		 	crm_sellrecord_tbl.SCENE,
+		 	COUNT(crm_sellrecord_tbl.CRM_ID) successcount 
+		 	FROM crm_sellrecord_tbl 
+		 	WHERE crm_sellrecord_tbl.COMMU_STATUS=5 
+		 	<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+		 	GROUP BY  crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE 
+		 	) mf ON mf.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID    AND    mf.SCENE=crm_sellrecord_tbl.SCENE
+		 	
+		 	LEFT JOIN (
+		 	SELECT sys_user_tbl.USER_ID,
+		 	sys_group_tbl.GROUP_NAME, 
+		 	sys_group_tbl.GROUP_ID
+		 	FROM sys_user_tbl 
+		 	LEFT JOIN sys_group_tbl 
+		 	ON sys_user_tbl.GROUP_ID=sys_group_tbl.GROUP_ID
+		 	)  mg ON mg.USER_ID= crm_sellrecord_tbl.SYS_USER_ID   
+		 	
+		 	LEFT JOIN (    
+		 	SELECT 
+		 	crm_sellrecord_tbl.SYS_USER_ID ,
+		 	crm_sellrecord_tbl.SCENE,
+		 	SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY  ,  
+		 	COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendsuccesscount 
+		 	FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     
+			AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS=1
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+ 			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+ 			) mh ON  mh.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mh.SCENE=crm_sellrecord_tbl.SCENE   
+ 			
+ 			LEFT JOIN (    
+ 			SELECT crm_sellrecord_tbl.SYS_USER_ID ,
+ 			crm_sellrecord_tbl.SCENE,    
+ 			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) canclecount 
+ 			FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND
+			(( finance_contract_tbl.status=4 AND finance_contract_tbl.PAY_TYPE!=2) OR ( finance_contract_tbl.status=3 AND finance_contract_tbl.PAY_TYPE=2))AND finance_contract_tbl.CANCEL_FROM=0
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+			) mi ON  mi.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mi.SCENE=crm_sellrecord_tbl.SCENE   
+			
+			LEFT JOIN (    
+ 			SELECT crm_sellrecord_tbl.SYS_USER_ID ,
+ 			crm_sellrecord_tbl.SCENE,    
+ 			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) backcanclecount 
+ 			FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND (( finance_contract_tbl.status=4 AND finance_contract_tbl.PAY_TYPE!=2) OR ( finance_contract_tbl.status=3 AND finance_contract_tbl.PAY_TYPE=2)) AND finance_contract_tbl.CANCEL_FROM=1
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+			) mj ON  mj.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mj.SCENE=crm_sellrecord_tbl.SCENE  
+			
+			LEFT JOIN (    
+		 	SELECT 
+		 	crm_sellrecord_tbl.SYS_USER_ID ,
+		 	crm_sellrecord_tbl.SCENE,
+		 	SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY 
+		 	FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     
+			AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS!=3
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+ 			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+ 			) mk ON  mk.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mk.SCENE=crm_sellrecord_tbl.SCENE 
+		 	
+			WHERE 1=1
+			<isNotNull property="sellName" >
+			<isNotEqual property="sellName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SELL_NAME LIKE CONCAT('%',#sellName#,'%') 
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserName" >
+			<isNotEqual property="sysUserName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_NAME LIKE  CONCAT('%',#sysUserName#,'%')
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="groupId">
+			<isNotEqual prepend="and" property="groupId" compareValue="0">
+			mg.GROUP_ID=#groupId#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserId" >
+			<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_ID=#sysUserId#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="scene" >
+			<isNotEqual property="scene" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SCENE=#scene#
+			</isNotEqual>
+			</isNotNull>
+			
+		     <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- 获取简单统计列表数量 -->
+        <select id="getSimpleStatCount" resultClass="int" parameterClass="QuerySellrecordCondition" cacheModel="Sellrecord_NS-cache">
+			SELECT COUNT(DISTINCT (crm_sellrecord_tbl.CRM_ID))
+			FROM
+			(
+			SELECT  SYS_USER_ID,SELL_NAME,CRM_ID,SYS_USER_NAME,crm_sellrecord_tbl.SCENE,COUNT(DISTINCT crm_sellrecord_tbl.CUS_ID) SELL_COUNT
+			FROM crm_sellrecord_tbl
+			WHERE 1=1
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE  ) crm_sellrecord_tbl
+			
+			LEFT JOIN 
+			(
+			SELECT SYS_USER_ID, COUNT(1) REASON_COUNT FROM crm_sellrecord_tbl  
+			WHERE  crm_sellrecord_tbl.REASON IS NOT NULL AND  crm_sellrecord_tbl.REASON !='' 
+			GROUP BY  crm_sellrecord_tbl.SYS_USER_ID
+			) AS ma  ON  ma.SYS_USER_ID= crm_sellrecord_tbl.SYS_USER_ID
+			
+			LEFT JOIN (
+		 	SELECT sys_user_tbl.USER_ID,
+		 	sys_group_tbl.GROUP_NAME , 
+		 	sys_group_tbl.GROUP_ID
+		 	FROM sys_user_tbl 
+		 	LEFT JOIN sys_group_tbl 
+		 	ON sys_user_tbl.GROUP_ID=sys_group_tbl.GROUP_ID
+		 	)  mg ON mg.USER_ID= crm_sellrecord_tbl.SYS_USER_ID   
+		 	
+			where 1=1
+			<isNotNull property="sellName" >
+			<isNotEqual property="sellName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SELL_NAME LIKE CONCAT('%',#sellName#,'%') 
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserName" >
+			<isNotEqual property="sysUserName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_NAME LIKE  CONCAT('%',#sysUserName#,'%')
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserId" >
+			<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_ID=#sysUserId#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="scene" >
+			<isNotEqual property="scene" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SCENE=#scene#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="groupId">
+			<isNotEqual prepend="and" property="groupId" compareValue="0">
+			mg.GROUP_ID=#groupId#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="showSelf" >
+			<isEqual property="showSelf" compareValue="1" >
+				<isNotNull property="sysUserId" >
+				<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+				crm_sellrecord_tbl.SYS_USER_ID =#sysUserId#
+				</isNotEqual>
+				</isNotNull>
+			</isEqual>
+			</isNotNull>
+        </select>
+
+        <select id="getSellrecordList" resultMap="Sellrecord_NS.SellrecordResult" parameterClass="QuerySellrecordCondition" cacheModel="Sellrecord_NS-cache">
+            SELECT
+            <include refid="Sellrecord_NS.CRM_SELLRECORD_TBL_columns"/>
+            FROM CRM_SELLRECORD_TBL
+        </select>
+        
+         <!-- 获取简单统计列表 -->
+       <select id="getSimpleStatList" resultMap="Sellrecord_NS.SimpleStatResult" parameterClass="QuerySellrecordCondition" cacheModel="Sellrecord_NS-cache">
+			SELECT 
+			crm_sellrecord_tbl.SYS_USER_ID,
+			crm_sellrecord_tbl.SYS_USER_NAME,
+			crm_sellrecord_tbl.SELL_NAME,
+			crm_sellrecord_tbl.REASON_TIME,
+			IFNULL(crm_sellrecord_tbl.SELL_COUNT,0) SELL_COUNT,
+			IFNULL(mc.paycount,0)  PAY_COUNT, 
+			IFNULL(md.sendcount,0) SEND_COUNT,
+			IFNULL(me.callcount,0) CALL_COUNT,
+			IFNULL(mf.successcount,0) SUCCESS_COUNT,
+			IFNULL(mg.GROUP_NAME,'') GROUP_NAME,
+			crm_sellrecord_tbl.SCENE SCENE,
+			0 HOURS,
+			IFNULL(mc.CONTRACT_CUTSUMMONEY,0) INT_BANK_TOTEL_PRICE  ,
+			IFNULL(mh.CUTSUMMONEY,0)  SEND_TOTEL_PRICE,
+			IFNULL(mh.sendsuccesscount,0) SEND_SUCCESS_COUNT,
+			IFNULL(mi.canclecount,0) CANCEL_COUNT,
+			IFNULL(mj.backcanclecount,0) BACK_CANCEL_COUNT,
+			IFNULL(mk.CUTSUMMONEY,0)  EFF_SEND_TOTEL_PRICE
+			FROM
+			(
+			SELECT  SYS_USER_ID,SYS_USER_NAME,REASON_TIME,SELL_NAME,CUS_ID,crm_sellrecord_tbl.SCENE,COUNT(DISTINCT crm_sellrecord_tbl.CUS_ID) SELL_COUNT
+			FROM crm_sellrecord_tbl
+			WHERE 1=1
+			<isNotNull property="showSelf" >
+			<isEqual property="showSelf" compareValue="1" >
+				<isNotNull property="sysUserId" >
+				<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+				crm_sellrecord_tbl.SYS_USER_ID =#sysUserId#
+				</isNotEqual>
+				</isNotNull>
+			</isEqual>
+			</isNotNull>
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE ) crm_sellrecord_tbl
+			
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,SUM(finance_contract_tbl.`CONTRACT_CUTSUMMONEY`) CONTRACT_CUTSUMMONEY, 
+			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) paycount FROM crm_sellrecord_tbl JOIN finance_contract_tbl
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID 
+			AND finance_contract_tbl.status=1 AND 
+			finance_contract_tbl.PAY_TYPE!=2 AND finance_contract_tbl.PAY_TYPE!=0 AND 
+			finance_contract_tbl.PAY_TYPE!=5
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE
+			) mc ON  mc.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mc.SCENE=crm_sellrecord_tbl.SCENE
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,
+			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendcount FROM crm_sellrecord_tbl JOIN finance_contract_tbl
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID 
+			AND finance_contract_tbl.PAY_TYPE=2 
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE
+			) md ON  md.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    md.SCENE=crm_sellrecord_tbl.SCENE
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID,
+			crm_sellrecord_tbl.SCENE,
+			COUNT(crm_sellrecord_tbl.CRM_ID) callcount 
+			FROM crm_sellrecord_tbl 
+		    WHERE crm_sellrecord_tbl.COMMU_STATUS!=0
+		    <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+		    GROUP BY  crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE
+		    ) me ON me.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID    AND    me.SCENE=crm_sellrecord_tbl.SCENE
+		 
+		 	LEFT JOIN (
+		 	SELECT crm_sellrecord_tbl.SYS_USER_ID,
+		 	crm_sellrecord_tbl.SCENE,
+		 	COUNT(crm_sellrecord_tbl.CRM_ID) successcount 
+		 	FROM crm_sellrecord_tbl 
+		 	WHERE crm_sellrecord_tbl.COMMU_STATUS=5 
+		 	<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+		 	GROUP BY  crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE 
+		 	) mf ON mf.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID    AND    mf.SCENE=crm_sellrecord_tbl.SCENE
+		 	
+		 	LEFT JOIN (
+		 	SELECT sys_user_tbl.USER_ID,
+		 	sys_group_tbl.GROUP_NAME, 
+		 	sys_group_tbl.GROUP_ID
+		 	FROM sys_user_tbl 
+		 	LEFT JOIN sys_group_tbl 
+		 	ON sys_user_tbl.GROUP_ID=sys_group_tbl.GROUP_ID
+		 	)  mg ON mg.USER_ID= crm_sellrecord_tbl.SYS_USER_ID   
+		 	
+		 	LEFT JOIN (    
+		 	SELECT 
+		 	crm_sellrecord_tbl.SYS_USER_ID ,
+		 	crm_sellrecord_tbl.SCENE,
+		 	SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY  ,  
+		 	COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendsuccesscount 
+		 	FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     
+			AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS=1
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+ 			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+ 			) mh ON  mh.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mh.SCENE=crm_sellrecord_tbl.SCENE   
+ 			
+ 			LEFT JOIN (    
+ 			SELECT crm_sellrecord_tbl.SYS_USER_ID ,
+ 			crm_sellrecord_tbl.SCENE,    
+ 			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) canclecount 
+ 			FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND finance_contract_tbl.status=4 AND finance_contract_tbl.CANCEL_FROM=0
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+			) mi ON  mi.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mi.SCENE=crm_sellrecord_tbl.SCENE   
+			
+			LEFT JOIN (    
+ 			SELECT crm_sellrecord_tbl.SYS_USER_ID ,
+ 			crm_sellrecord_tbl.SCENE,    
+ 			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) backcanclecount 
+ 			FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     AND finance_contract_tbl.status=4 AND finance_contract_tbl.CANCEL_FROM=1
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+			) mj ON  mj.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mj.SCENE=crm_sellrecord_tbl.SCENE 
+		 	
+		 	LEFT JOIN (    
+		 	SELECT 
+		 	crm_sellrecord_tbl.SYS_USER_ID ,
+		 	crm_sellrecord_tbl.SCENE,
+		 	SUM(finance_contract_tbl.CONTRACT_CUTSUMMONEY) CUTSUMMONEY 
+		 	FROM crm_sellrecord_tbl 
+			JOIN finance_contract_tbl    
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID     
+			AND finance_contract_tbl.PAY_TYPE=2    AND      finance_contract_tbl.STATUS!=3
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+ 			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE    
+ 			) mk ON  mk.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID  AND    mk.SCENE=crm_sellrecord_tbl.SCENE 
+		 	
+			WHERE 1=1
+			<isNotNull property="sellName" >
+			<isNotEqual property="sellName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SELL_NAME LIKE CONCAT('%',#sellName#,'%') 
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserName" >
+			<isNotEqual property="sysUserName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_NAME LIKE  CONCAT('%',#sysUserName#,'%')
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="groupId">
+			<isNotEqual prepend="and" property="groupId" compareValue="0">
+			mg.GROUP_ID=#groupId#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="scene" >
+			<isNotEqual property="scene" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SCENE=#scene#
+			</isNotEqual>
+			</isNotNull>
+			
+        </select>
+        
+        <!-- 获取简单统计子项 -->
+       <select id="getSimpleStatObj" resultMap="Sellrecord_NS.SimpleStatResult" parameterClass="QuerySellrecordCondition" cacheModel="Sellrecord_NS-cache">
+			SELECT 
+			crm_sellrecord_tbl.SYS_USER_ID,
+			crm_sellrecord_tbl.SYS_USER_NAME,
+			crm_sellrecord_tbl.SELL_NAME,
+			crm_sellrecord_tbl.REASON_TIME,
+			IFNULL(crm_sellrecord_tbl.SELL_COUNT,0) SELL_COUNT,
+			IFNULL(mc.paycount,0)  PAY_COUNT, 
+			IFNULL(md.sendcount,0) SEND_COUNT,
+			IFNULL(me.callcount,0) CALL_COUNT,
+			IFNULL(mf.successcount,0) SUCCESS_COUNT,
+			IFNULL(mg.GROUP_NAME,'') GROUP_NAME,
+			crm_sellrecord_tbl.SCENE SCENE,
+			crm_sellrecord_tbl.hours HOURS,
+			0 INT_BANK_TOTEL_PRICE  ,
+			0  SEND_TOTEL_PRICE,
+			0 SEND_SUCCESS_COUNT,
+			0 CANCEL_COUNT,
+			0 BACK_CANCEL_COUNT,
+			0 EFF_SEND_TOTEL_PRICE
+			FROM
+			(
+			SELECT  SYS_USER_ID,SYS_USER_NAME,REASON_TIME,SELL_NAME,CUS_ID,
+			HOUR(REASON_TIME) HOURS,SCENE,COUNT(DISTINCT crm_sellrecord_tbl.CUS_ID) SELL_COUNT
+			FROM crm_sellrecord_tbl
+			WHERE 1=1
+			<isNotNull property="showSelf" >
+			<isEqual property="showSelf" compareValue="1" >
+				<isNotNull property="sysUserId" >
+				<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+				crm_sellrecord_tbl.SYS_USER_ID =#sysUserId#
+				</isNotEqual>
+				</isNotNull>
+			</isEqual>
+			</isNotNull>
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="scene" prepend="and">
+			<isNotEqual prepend="and" property="scene" compareValue="0">
+			crm_sellrecord_tbl.SCENE=#scene#
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME) ) crm_sellrecord_tbl
+			
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME) HOURS,
+			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) paycount FROM crm_sellrecord_tbl JOIN finance_contract_tbl
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID 
+			AND finance_contract_tbl.status=1 AND 
+			finance_contract_tbl.PAY_TYPE!=2 AND finance_contract_tbl.PAY_TYPE!=0 AND 
+			finance_contract_tbl.PAY_TYPE!=5
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.PAY_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME)
+			) mc ON  mc.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID AND mc.SCENE=crm_sellrecord_tbl.SCENE AND crm_sellrecord_tbl.HOURS=mc.HOURS
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME) HOURS,
+			COUNT(DISTINCT finance_contract_tbl.CONTRACT_ID) sendcount FROM crm_sellrecord_tbl JOIN finance_contract_tbl
+			ON crm_sellrecord_tbl.CUS_ID=finance_contract_tbl.CUS_ID 
+			AND finance_contract_tbl.PAY_TYPE=2 AND finance_contract_tbl.PAY_TYPE!=5 AND finance_contract_tbl.PAY_TYPE!=0
+			AND  HOUR(crm_sellrecord_tbl.REASON_TIME)>7
+			<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  finance_contract_tbl.CREATE_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			GROUP BY crm_sellrecord_tbl.SYS_USER_ID ,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME)
+			) md ON  md.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID AND md.SCENE=crm_sellrecord_tbl.SCENE AND crm_sellrecord_tbl.HOURS=md.HOURS
+			
+			LEFT JOIN (
+			SELECT crm_sellrecord_tbl.SYS_USER_ID,
+			HOUR(crm_sellrecord_tbl.REASON_TIME) HOURS,
+			crm_sellrecord_tbl.SCENE,
+			COUNT(crm_sellrecord_tbl.CRM_ID) callcount 
+			FROM crm_sellrecord_tbl 
+		    WHERE crm_sellrecord_tbl.COMMU_STATUS!=0 AND  HOUR(crm_sellrecord_tbl.REASON_TIME)>7
+		    <isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+		    GROUP BY  crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME)
+		    ) me ON me.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID   AND me.SCENE=crm_sellrecord_tbl.SCENE AND crm_sellrecord_tbl.HOURS=me.HOURS
+		 
+		 	LEFT JOIN (
+		 	SELECT crm_sellrecord_tbl.SYS_USER_ID,
+		 	HOUR(crm_sellrecord_tbl.REASON_TIME) HOURS,
+		 	crm_sellrecord_tbl.SCENE,
+		 	COUNT(crm_sellrecord_tbl.CRM_ID) successcount 
+		 	FROM crm_sellrecord_tbl 
+		 	WHERE crm_sellrecord_tbl.COMMU_STATUS=5 AND  HOUR(crm_sellrecord_tbl.REASON_TIME)>7
+		 	<isNotNull  property="startTime">
+			<isNotEqual prepend="and" property="startTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME >= #startTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="endTime">
+			<isNotEqual prepend="and" property="endTime" compareValue="">
+			<![CDATA[  crm_sellrecord_tbl.REASON_TIME <= #endTime# ]]>
+			</isNotEqual>
+			</isNotNull>
+		 	GROUP BY  crm_sellrecord_tbl.SYS_USER_ID,crm_sellrecord_tbl.SCENE,HOUR(crm_sellrecord_tbl.REASON_TIME)
+		 	) mf ON mf.SYS_USER_ID=crm_sellrecord_tbl.SYS_USER_ID   AND mf.SCENE=crm_sellrecord_tbl.SCENE AND crm_sellrecord_tbl.HOURS=mf.HOURS
+		 	
+		 	LEFT JOIN (
+		 	SELECT sys_user_tbl.USER_ID,
+		 	sys_group_tbl.GROUP_NAME  , 
+		 	sys_group_tbl.GROUP_ID
+		 	FROM sys_user_tbl 
+		 	LEFT JOIN sys_group_tbl 
+		 	ON sys_user_tbl.GROUP_ID=sys_group_tbl.GROUP_ID
+		 	)  mg ON mg.USER_ID= crm_sellrecord_tbl.SYS_USER_ID   
+		 	
+			WHERE 1=1
+			<isNotNull property="sellName" >
+			<isNotEqual property="sellName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SELL_NAME LIKE CONCAT('%',#sellName#,'%') 
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserName" >
+			<isNotEqual property="sysUserName" compareValue="" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_NAME LIKE  CONCAT('%',#sysUserName#,'%')
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sysUserId" >
+			<isNotEqual property="sysUserId" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SYS_USER_ID=#sysUserId#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull property="scene" >
+			<isNotEqual property="scene" compareValue="0" prepend="and">
+			crm_sellrecord_tbl.SCENE=#scene#
+			</isNotEqual>
+			</isNotNull>
+			<isNotNull  property="groupId">
+			<isNotEqual prepend="and" property="groupId" compareValue="0">
+			mg.GROUP_ID=#groupId#
+			</isNotEqual>
+			</isNotNull>
+        </select>
+        
+        <!--end-->
+</sqlMap>

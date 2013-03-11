@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="count" namespace="/count" extends="edu-default">
+    	<action name="contractCount" class="com.shangde.edu.count.action.ContractCountAction">
+    		<result name="contractInfo">/back/jsp/count/contract_count.jsp</result>
+    	</action>
+    </package>
+    
+    <package name="sellCount" namespace="/sellCount" extends="edu-default">
+    	<action name="sellWayCount" class="com.shangde.edu.count.action.SellWayCountAction">
+    		<!--
+    		<result name="sellWayInfo">/back/jsp/count/sellWay_count.jsp</result>
+    		  -->
+    		  <result name="sellWayInfo">/back/jsp/count/sellWay_count_new.jsp</result>
+    	</action>
+    </package>
+</struts>

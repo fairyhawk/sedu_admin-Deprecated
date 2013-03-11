@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HADATA_NS">
+        <typeAlias alias="queryPackage" type="com.shangde.edu.vst.domain.VideoCusInfo" />
+        
+        <typeAlias alias="SellWayHdata" type="com.shangde.edu.vst.domain.SellWay" />
+		
+		<resultMap id="queryPackageResult" class="queryPackage">
+			<result property="subjectName" column="subjectName"/>
+            <result property="videoName" column="videoName"/>
+            <result property="teacherName" column="teacherName"/>
+            <result property="startTime" column="startTime"/>
+            <result property="courseId" column="courseId" nullValue="0"/>
+            <result property="subjectId" column="subjectId" nullValue="0"/>
+            <result property="sellId" column="sellId" nullValue="0"/>
+            <result property="kpointId" column="kpointId" nullValue="0"/>
+            <result property="count" column="count"/>
+        </resultMap>
+        
+        <resultMap id="sellWayResult" class="SellWayHdata">
+			<result property="sellId" column="SELL_ID"/>
+        </resultMap>
+        
+        <select id="getAllSell" resultMap="HADATA_NS.sellWayResult" parameterClass="int">
+            SELECT
+            SELL_ID
+            FROM COU_SELL_WAY_TBL
+        </select>
+        
+       <select id="getAllPackageCourseTop" resultMap="HADATA_NS.queryPackageResult" parameterClass="int">
+			SELECT cou_course_tbl.title AS subjectName,
+				res_vedio_tbl.vo_name AS videoName,
+				res_vedio_tbl.TEACHER_NAME AS teacherName,
+				res_vedio_tbl.CREATE_TIME AS startTime,
+				cou_sell_cou_tbl.SELL_ID AS sellId,
+				cou_sell_cou_tbl.COURSE_ID AS courseId,
+				(select count(cus_watch_record_tbl.cusid)from cus_watch_record_tbl
+				where cus_watch_record_tbl.videoPointId = cou_kpoint_tbl.POINT_ID) as count ,
+				cou_course_tbl.SUBJECT_ID AS subjectId,
+				cou_kpoint_tbl.POINT_ID AS kpointId
+				FROM 
+				 cou_sell_cou_tbl 
+				 LEFT JOIN cou_course_tbl ON 
+				 cou_sell_cou_tbl.SELL_ID = #value#
+				 AND 
+				 cou_sell_cou_tbl.COURSE_ID= cou_course_tbl.COURSE_ID 
+				LEFT JOIN  cou_kpoint_tbl   ON  cou_course_tbl.course_id = cou_kpoint_tbl.course_id AND  cou_kpoint_tbl.status=0
+				LEFT JOIN res_vedio_tbl ON 
+				cou_kpoint_tbl.POINT_ID= res_vedio_tbl.POINTID AND res_vedio_tbl.VO_URL IS NOT NULL
+				ORDER BY startTime  DESC LIMIT 10
+		</select>
+		
+		<select id="getAllPackageCourseCount" resultMap="HADATA_NS.queryPackageResult" parameterClass="int">
+			SELECT cou_course_tbl.title AS subjectName,
+				res_vedio_tbl.vo_name AS videoName,
+				res_vedio_tbl.TEACHER_NAME AS teacherName,
+				res_vedio_tbl.CREATE_TIME AS startTime,
+				cou_sell_cou_tbl.SELL_ID AS sellId,
+				cou_sell_cou_tbl.COURSE_ID AS courseId,
+				(select count(cus_watch_record_tbl.cusid)from cus_watch_record_tbl
+				where cus_watch_record_tbl.videoPointId = cou_kpoint_tbl.POINT_ID) as count ,
+				cou_course_tbl.SUBJECT_ID AS subjectId,
+				cou_kpoint_tbl.POINT_ID AS kpointId
+				FROM 
+				 cou_sell_cou_tbl 
+				 LEFT JOIN cou_course_tbl ON 
+				 cou_sell_cou_tbl.SELL_ID = #value#
+				 AND 
+				 cou_sell_cou_tbl.COURSE_ID= cou_course_tbl.COURSE_ID 
+				LEFT JOIN  cou_kpoint_tbl   ON  cou_course_tbl.course_id = cou_kpoint_tbl.course_id AND  cou_kpoint_tbl.status=0
+				LEFT JOIN res_vedio_tbl ON 
+				cou_kpoint_tbl.POINT_ID= res_vedio_tbl.POINTID AND res_vedio_tbl.VO_URL IS NOT NULL
+				ORDER BY count  DESC LIMIT 10
+		</select>
+</sqlMap>

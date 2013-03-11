@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VideoStatistics_NS">
+        <!--table:STU_VIDEO_STATISTICS_TBL-->
+        <typeAlias alias="VideoStatistics" type="com.shangde.edu.stu.domain.VideoStatistics"/>
+        <typeAlias alias="QueryVideoStatisticsCondition" type="com.shangde.edu.stu.condition.QueryVideoStatisticsCondition"/>
+
+        <resultMap id="VideoStatisticsResult" class="VideoStatistics">
+            <result property="vStatId" column="V_STAT_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="courseId" column="COURSE_ID"/>
+            <result property="viewCode" column="VIEW_CODE"/>
+        </resultMap>
+
+        <sql id="STU_VIDEO_STATISTICS_TBL_columns">
+            STU_VIDEO_STATISTICS_TBL.V_STAT_ID,
+            STU_VIDEO_STATISTICS_TBL.CUS_ID,
+            STU_VIDEO_STATISTICS_TBL.COURSE_ID,
+            STU_VIDEO_STATISTICS_TBL.VIEW_CODE
+        </sql>
+
+        <sql id="STU_VIDEO_STATISTICS_TBL_properties">
+            #vStatId#,
+            #cusId#,
+            #courseId#,
+            #viewCode#
+        </sql>
+
+        <insert id="createVideoStatistics" parameterClass="VideoStatistics">
+            INSERT INTO STU_VIDEO_STATISTICS_TBL (<include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_columns"/>) VALUES (<include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="vStatId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteVideoStatisticsById" parameterClass="QueryVideoStatisticsCondition">
+            DELETE FROM STU_VIDEO_STATISTICS_TBL
+            WHERE 
+
+        </delete>
+
+        <update id="updateVideoStatistics" parameterClass="VideoStatistics">
+            UPDATE STU_VIDEO_STATISTICS_TBL SET
+                V_STAT_ID = #vStatId#,
+                CUS_ID = #cusId#,
+                COURSE_ID = #courseId#,
+                VIEW_CODE = #viewCode#
+            WHERE 
+					 V_STAT_ID = #vStatId#
+        </update>
+
+        <select id="getVideoStatisticsById" resultMap="VideoStatistics_NS.VideoStatisticsResult" parameterClass="QueryVideoStatisticsCondition">
+            SELECT
+            <include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_columns"/>
+            FROM STU_VIDEO_STATISTICS_TBL
+            WHERE 
+
+
+        </select>
+
+        <select id="getVideoStatisticsList" resultMap="VideoStatistics_NS.VideoStatisticsResult" parameterClass="QueryVideoStatisticsCondition">
+            SELECT
+            <include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_columns"/>
+            FROM STU_VIDEO_STATISTICS_TBL
+        </select>
+        
+        <!-- 根据课程ID和用户ID查找是否存在本课程的观看记录 -->
+        <select id="getVideoStatisticsListByCouseIdCusId" resultMap="VideoStatistics_NS.VideoStatisticsResult" parameterClass="QueryVideoStatisticsCondition">
+            SELECT
+            <include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_columns"/>
+            FROM STU_VIDEO_STATISTICS_TBL
+            where CUS_ID=#cusId# and COURSE_ID=#courseId#
+        </select>
+        
+        <!-- 根据subjectId和用户ID获得看过的 节点 -->
+        <select id="getUserVideoKiponitListBySubjectId" resultClass="java.lang.String" parameterClass="java.util.Map">
+	            SELECT 
+	            	STU_VIDEO_STATISTICS_TBL.view_Code 
+	            from  STU_VIDEO_STATISTICS_TBL, cou_course_tbl
+				where   
+					STU_VIDEO_STATISTICS_TBL.course_Id=cou_course_tbl.COURSE_ID and
+					STU_VIDEO_STATISTICS_TBL.cus_id=#cusId# and 
+					cou_course_tbl.SUBJECT_ID=#subjectId#
+        </select>
+        
+        <!-- 根据courseId获得用户看过的 节点 -->
+         <select id="getUserVideoKiponitListByCourseId" resultClass="java.lang.String" parameterClass="java.util.Map">
+	            SELECT 
+	            	STU_VIDEO_STATISTICS_TBL.view_Code 
+	            from  STU_VIDEO_STATISTICS_TBL, cou_course_tbl
+				where   
+					STU_VIDEO_STATISTICS_TBL.course_Id=cou_course_tbl.COURSE_ID and
+					STU_VIDEO_STATISTICS_TBL.cus_id=#cusId# and 
+					cou_course_tbl.COURSE_ID=#courseId#
+        </select>
+        
+        
+        <!-- 根据日期和用户ID获得看过的节点 -->
+        <select id="getUserVideoKiponitListByDate" resultClass="java.lang.String" parameterClass="java.util.Map">
+	            SELECT 
+	            	STU_VIDEO_STATISTICS_TBL.view_Code 
+	            from  STU_VIDEO_STATISTICS_TBL
+				where
+					STU_VIDEO_STATISTICS_TBL.cus_id=#cusId# and 
+					STU_VIDEO_STATISTICS_TBL.view_Code like '%$today$%'
+        </select>
+        <!--end-->
+        
+        <!--YangNing 2012/2/3 get all video Statics count for colletor Date  -->
+        <select id="getVideoStaticsCount">
+        	SELECT COUNT(1) FROM STU_VIDEO_STATISTICS_TBL
+        </select>
+        
+        <!-- 
+        <select id="getVideoStatisticsListColletor" resultMap="VideoStatistics_NS.VideoStatisticsResult" parameterClass="QueryVideoStatisticsCondition">
+            SELECT
+            <include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_columns"/>
+            FROM STU_VIDEO_STATISTICS_TBL
+            <include refid=""/>
+        </select>
+         -->
+         
+          <select id="getVideoStatisticsListColletor" resultMap="VideoStatistics_NS.VideoStatisticsResult" parameterClass="QueryVideoStatisticsCondition">
+            <!-- 
+            SELECT
+            STU_VIDEO_STATISTICS_TBL.V_STAT_ID id,
+            STU_VIDEO_STATISTICS_TBL.CUS_ID cusId,
+            STU_VIDEO_STATISTICS_TBL.COURSE_ID curseId,
+            STU_VIDEO_STATISTICS_TBL.VIEW_CODE viewCode
+            FROM STU_VIDEO_STATISTICS_TBL LIMIT 100
+             -->
+              SELECT
+            <include refid="VideoStatistics_NS.STU_VIDEO_STATISTICS_TBL_columns"/>
+            FROM STU_VIDEO_STATISTICS_TBL
+        </select>
+        
+</sqlMap>

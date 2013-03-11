@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="webservice">
+<!--  -->
+	<select id="getObjectList"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
+		select 	
+			*
+	 		from $tableName$
+	 		limit #beginId# , #endId# 
+	</select>
+	
+	<select id="getObjectListMaped"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
+		select 	
+			*
+	 		from $tableName$
+	 		where   <![CDATA[  $id$  >= #beginId# ]]>  and  <![CDATA[  $id$  <= #endId# ]]>  
+	</select>
+	
+	<select id="getObjectCount"  resultClass="int" parameterClass="java.lang.String" remapResults="true">
+		select 	
+			count(1)
+	 		from $value$
+	</select>
+	
+	<select id="getObjectMaxId"  resultClass="int" parameterClass="java.util.HashMap" remapResults="true">
+		select 	
+			max($id$)
+	 		from $tableName$
+	</select>
+	
+	<select id="getObjectMinId"  resultClass="int" parameterClass="java.util.HashMap" remapResults="true">
+		select 	
+			min($id$)
+	 		from $tableName$
+	</select>
+	
+</sqlMap>

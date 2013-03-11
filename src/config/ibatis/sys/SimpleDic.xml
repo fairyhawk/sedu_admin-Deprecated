@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SimpleDic_NS">
+        <!--table:SYS_SIMPLE_DIC_TBL-->
+        <typeAlias alias="SimpleDic" type="com.shangde.edu.sys.domain.SimpleDic"/>
+        <typeAlias alias="QuerySimpleDicCondition" type="com.shangde.edu.sys.condition.QuerySimpleDicCondition"/>
+
+        <resultMap id="SimpleDicResult" class="SimpleDic">
+            <result property="dicId" column="DIC_ID"/>
+            <result property="tableName" column="TABLE_NAME"/>
+            <result property="columnName" column="COLUMN_NAME"/>
+            <result property="dicName" column="DIC_NAME"/>
+            <result property="status" column="STATUS"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+        </resultMap>
+
+        <sql id="SYS_SIMPLE_DIC_TBL_columns">
+            DIC_ID,
+            TABLE_NAME,
+            COLUMN_NAME,
+            DIC_NAME,
+            STATUS,
+            CREATE_TIME,
+            UPDATE_TIME
+        </sql>
+
+        <sql id="SYS_SIMPLE_DIC_TBL_properties">
+            #dicId#,
+            #tableName#,
+            #columnName#,
+            #dicName#,
+            #status#,
+            #createTime#,
+            #updateTime#
+        </sql>
+
+        <insert id="createSimpleDic" parameterClass="SimpleDic">
+            INSERT INTO SYS_SIMPLE_DIC_TBL (<include refid="SimpleDic_NS.SYS_SIMPLE_DIC_TBL_columns"/>) VALUES (<include refid="SimpleDic_NS.SYS_SIMPLE_DIC_TBL_properties"/>)
+        </insert>
+
+        <delete id="deleteSimpleDicById" parameterClass="java.util.Map">
+            DELETE FROM SYS_SIMPLE_DIC_TBL
+            WHERE
+                DIC_ID = #dicId#
+ AND TABLE_NAME = #tableName#
+ AND COLUMN_NAME = #columnName#
+
+
+
+
+        </delete>
+
+        <update id="updateSimpleDic" parameterClass="SimpleDic">
+            UPDATE SYS_SIMPLE_DIC_TBL SET
+                DIC_ID = #dicId#,
+                TABLE_NAME = #tableName#,
+                COLUMN_NAME = #columnName#,
+                DIC_NAME = #dicName#,
+                STATUS = #status#,
+                CREATE_TIME = #createTime#,
+                UPDATE_TIME = #updateTime#
+            WHERE
+                DIC_ID = #dicId#
+ AND TABLE_NAME = #tableName#
+ AND COLUMN_NAME = #columnName#
+
+
+
+
+        </update>
+
+        <select id="getSimpleDicById" resultMap="SimpleDic_NS.SimpleDicResult" parameterClass="java.util.Map">
+            SELECT
+            <include refid="SimpleDic_NS.SYS_SIMPLE_DIC_TBL_columns"/>
+            FROM SYS_SIMPLE_DIC_TBL
+            WHERE
+                DIC_ID = #dicId#
+ AND TABLE_NAME = #tableName#
+ AND COLUMN_NAME = #columnName#
+
+
+
+
+        </select>
+
+        <select id="getSimpleDicList" resultMap="SimpleDic_NS.SimpleDicResult" parameterClass="QuerySimpleDicCondition">
+            SELECT
+            <include refid="SimpleDic_NS.SYS_SIMPLE_DIC_TBL_columns"/>
+            FROM SYS_SIMPLE_DIC_TBL
+        </select>
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_CusCustomer_NS">
+
+	<typeAlias alias="CusCustomer" type="com.shangde.edu.feed.domain.CusCustomer" />
+	<typeAlias alias="QueryCusCustomerCondition" type="com.shangde.edu.feed.condition.QueryCusCustomerCondition"/>
+	
+	
+	<resultMap class="CusCustomer" id="CusCustomerResult">
+		<result property="cusId" column="CUS_ID" />
+		<result property="cusName" column="CUS_NAME" />
+		<result property="cusPwd" column="CUS_PWD" />
+		<result property="email" column="EMAIL" />
+		<result property="mobile" column="MOBILE" />
+		<result property="realName" column="REAL_NAME" />
+		<result property="sex" column="SEX" />
+		<result property="idNum" column="ID_NUM" />
+		<result property="lastloginIp" column="LASTLOGIN_IP" />
+		<result property="lastloginTime" column="LASTLOGIN_TIME" />
+		<result property="regTime" column="REG_TIME" />
+		<result property="birthday" column="BIRTHDAY" />
+		<result property="qq" column="QQ" />
+		<result property="photo" column="PHOTO" />
+		<result property="loginTimes" column="LOGIN_TIMES" />
+		<result property="isComplete" column="IS_COMPLETE" />
+		<result property="completeTime" column="COMPLETE_TIME" />
+		<result property="address" column="ADDRESS" />
+		<result property="msn" column="MSN" />
+		<result property="cusType" column="CUS_TYPE" />
+		<result property="studyType" column="STUDY_TYPE" />
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="cusFormUrl" column="CUS_FROM_URL" />
+		<result property="newerFlag" column="newerflag" />
+		<result property="userContentRole" column="USER_CONTENT_ROLE" />
+		<result property="cusWebFrom" column="CUS_WEB_FROM" />
+		<result property="cusWebAgent" column="CUS_WEB_AGENT" />
+		<result property="fromType" column="fromtype" />
+	
+	</resultMap>
+	<sql id="cus_customer_tbl_columns">
+		cus_customer_tbl.CUS_ID,
+		cus_customer_tbl.CUS_NAME,
+		cus_customer_tbl.CUS_PWD,
+		cus_customer_tbl.EMAIL,
+		cus_customer_tbl.MOBILE,
+		cus_customer_tbl.REAL_NAME,
+		cus_customer_tbl.SEX,
+		cus_customer_tbl.ID_NUM,
+		cus_customer_tbl.LASTLOGIN_IP,
+		cus_customer_tbl.LASTLOGIN_TIME,
+		cus_customer_tbl.REG_TIME,
+		cus_customer_tbl.BIRTHDAY,
+		cus_customer_tbl.QQ,
+		cus_customer_tbl.PHOTO,
+		cus_customer_tbl.LOGIN_TIMES,
+		cus_customer_tbl.IS_COMPLETE,
+		cus_customer_tbl.COMPLETE_TIME,
+		cus_customer_tbl.ADDRESS,
+		cus_customer_tbl.MSN,
+		cus_customer_tbl.CUS_TYPE,
+		cus_customer_tbl.STUDY_TYPE,
+		cus_customer_tbl.SUBJECT_ID,
+		cus_customer_tbl.CUS_FROM_URL,
+		cus_customer_tbl.newerflag,
+		cus_customer_tbl.USER_CONTENT_ROLE,
+		cus_customer_tbl.CUS_WEB_FROM,
+		cus_customer_tbl.CUS_WEB_AGENT,
+		cus_customer_tbl.fromtype
+		
+    </sql>
+	<sql id="cus_customer_tbl_properties">
+		#cusId#,
+		#cusName#,
+		#cusPwd#,
+		#email#,
+		#mobile#,
+		#realName#,
+		#sex#,
+		#idNum#,
+		#lastloginIp#,
+		#lastloginTime#,
+		#regTime#,
+		#birthday#,
+		#qq#,
+		#photo#,
+		#loginTimes#,
+		#isComplete#,
+		#completeTime#,
+		#address#,
+		#msn#,
+		#cusType#,
+		#studyType#,
+		#subjectId#,
+		#cusFormUrl#,
+		#newerFlag#,
+		#userContentRole#,
+		#cusWebFrom#,
+		#cusWebAgent#,
+		#fromType#
+    </sql>
+
+	<!-- 
+		<select id="getByemail" resultMap="Feed_CusCustomer_NS.CusCustomerResult">
+			SELECT * FROM cus_customer_tbl WHERE EMAIL like '%$email$%'
+		</select>
+	 -->
+		
+	 
+        <select id="getCusCustomerByemail" resultMap="Feed_CusCustomer_NS.CusCustomerResult" parameterClass="QueryCusCustomerCondition">
+        	<include refid="public_sql.page_begin"/> 
+        		SELECT <include refid="cus_customer_tbl_columns"/> FROM cus_customer_tbl
+		 	<dynamic prepend="where">
+		 		<isNotNull property="email">
+		 			EMAIL like '%$email$%'
+		 		</isNotNull>
+		 	</dynamic>
+        	 <include refid="public_sql.page_end"/>
+        </select>
+
+		 <select id="getCusCustomerCountByemail" resultClass="int" parameterClass="QueryCusCustomerCondition">
+		 	SELECT COUNT(1) FROM cus_customer_tbl
+		 	<dynamic prepend="where">
+		 		<isNotNull property="email">
+		 			EMAIL like '%$email$%'
+		 		</isNotNull>
+		 	</dynamic>
+        </select>
+        
+        <select id="getByemail" resultMap="Feed_CusCustomer_NS.CusCustomerResult" parameterClass="QueryCusCustomerCondition">
+        	<include refid="public_sql.page_begin"/> 
+        		SELECT <include refid="cus_customer_tbl_columns"/> FROM cus_customer_tbl
+		 	<dynamic prepend="where">
+		 		<isNotNull property="email">
+		 			EMAIL like '%$email$%'
+		 		</isNotNull>
+		 	</dynamic>
+        	 <include refid="public_sql.page_end"/>
+        </select>
+
+		 <select id="getCountByemail" resultClass="int" parameterClass="QueryCusCustomerCondition">
+		 	SELECT COUNT(1) FROM cus_customer_tbl WHERE 1=1
+		 	<isNotNull prepend="and" property="email">
+		 			 EMAIL like '%$email$%'
+		 	</isNotNull>
+        </select>
+        
+        
+        
+
+</sqlMap>
+        
+        
+        
+        
+        
+        
+        
+        
+        

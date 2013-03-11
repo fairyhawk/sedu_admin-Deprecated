@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CustoerFeedback_NS">
+        <!--table:CUS_FEEDBACK_TBL-->
+         <typeAlias alias="CustomerFeedback" type="com.shangde.edu.cus.domain.CustomerFeedback"/> 
+        <typeAlias alias="CustomerFeedbackCondition" type="com.shangde.edu.cus.condition.QueryCustomerFeedbackCondition"/>
+		 <!-- 配置缓存模型 -->
+		<cacheModel id="CustoerFeedback_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="CustoerFeedback_NS.createCustomerFeedback" />
+			<flushOnExecute statement="CustoerFeedback_NS.ansCustomerFeedByid" />
+			<flushOnExecute statement="CustoerFeedback_NS.delCustomerFeedbackById" />
+			<property value="1000" name="size" />
+		</cacheModel>
+		 <sql id="queryCondition">
+  			<dynamic prepend="WHERE">
+		  		<isNotEmpty property="email" prepend="and">
+		  			EMAIL = #email#
+		  		</isNotEmpty>
+			  	<isGreaterThan property="qq" prepend="and" compareValue="0">
+			  		QQ = #qq#
+			  	</isGreaterThan>
+			  	<isNotEmpty property="mobile" prepend="and">
+			  			MOBILE = #mobile#
+			  	</isNotEmpty>
+		  		<isGreaterThan property="province" prepend="and" compareValue="0">
+		  			PROVINCE = #province#
+		  		</isGreaterThan>
+		  		<isGreaterThan property="city" prepend="and" compareValue="0">
+		  			CITY = #city#
+		  		</isGreaterThan>
+		  		<isGreaterThan property="subject_id" prepend="and" compareValue="0">
+		  			SUBJECT_ID = #subject_id#
+		  		</isGreaterThan>
+		  		<isGreaterThan property="sp" prepend="and" compareValue="0">
+		  			SP = #sp#
+		  		</isGreaterThan>
+		  		<isGreaterThan property="bandwidth" prepend="and" compareValue="0">
+		  			BANDWIDTH = #bandwidth#
+		  		</isGreaterThan>
+		  		<isNotEmpty property="description" prepend="and">
+		  			DESCRIPTION like '%$description$%'
+		  		</isNotEmpty>
+		  		<isNotNull property="startTime" prepend="and">
+		  			<![CDATA[ createTime  >= #startTime# ]]>
+		  		</isNotNull>
+		  		<isNotNull property="endTime" prepend="and">
+		  			<![CDATA[ endTime  <= #endTime# ]]>
+		  		</isNotNull>
+		  	</dynamic>
+        </sql>
+       
+        <insert id="createCustomerFeedback" parameterClass="CustomerFeedback">
+            INSERT INTO  CUS_FEEDBACK_TBL (EMAIL,MOBILE,QQ,PROVINCE,CITY,SUBJECT_ID,SP,BANDWIDTH,DESCRIPTION) 
+            VALUES (#email#,#mobile#,#qq#,#province#,#city#,#subject_id#,#sp#,#bandwidth#,#description#)
+            <selectKey resultClass="java.lang.Integer" keyProperty="id"> 
+        		SELECT LAST_INSERT_ID(); 
+   			</selectKey>
+        </insert>
+        
+        <select id="getCustomerFeedbackList" parameterClass="CustomerFeedbackCondition" resultClass="CustomerFeedback" cacheModel="CustoerFeedback_NS-cache">
+        	<include refid="public_sql.page_begin"/>
+        	select t.*,s.subject_name subjectname,p.area_name provincename,c.area_name cityname 
+        	from 
+        	(select
+        	id, 
+        	email,
+        	mobile,
+        	qq,
+        	province,
+        	city,
+        	subject_id,
+        	sp,
+        	bandwidth,
+        	description,
+     	    status,
+        	soltype,
+        	soldept,
+        	createtime 
+        	from cus_feedback_tbl <include refid="queryCondition"/> )t,
+        	cus_area_tbl p, cus_area_tbl c ,sys_subject_tbl s where t.province = p.id and t.city = c.id and t.subject_id = s.subject_id
+        	order by t.id desc
+        	<include refid="public_sql.page_end" />
+        </select>
+        
+         <select id="getCustomerFeedbackCount" parameterClass="CustomerFeedbackCondition" resultClass="java.lang.Integer" cacheModel="CustoerFeedback_NS-cache">
+        	select count(1)
+        	from 
+        	(select 
+        	id,
+        	email,
+        	mobile,
+        	qq,
+        	province,
+        	city,
+        	subject_id,
+        	sp,
+        	bandwidth,
+        	description,
+        	createtime 
+        	from cus_feedback_tbl <include refid="queryCondition"/>)t,
+        	cus_area_tbl p, cus_area_tbl c ,sys_subject_tbl s where t.province = p.id and t.city = c.id and t.subject_id = s.subject_id
+        </select>
+        
+        <select id="getCustomerFeedbackById" parameterClass="java.lang.Integer" resultClass="CustomerFeedback" cacheModel="CustoerFeedback_NS-cache">
+        	select t.*,s.subject_name subjectname,p.area_name provincename,c.area_name  cityname
+        	from 
+        	(select
+        	id, 
+        	email,
+        	mobile,
+        	qq,
+        	province,
+        	city,
+        	subject_id,
+        	sp,
+        	bandwidth,
+        	description,
+        	status,
+        	soltype,
+        	soldept,
+        	createtime from cus_feedback_tbl where id = #VALUE# limit 1)t,
+        	cus_area_tbl p, cus_area_tbl c ,sys_subject_tbl s where t.province = p.id and t.city = c.id and t.subject_id = s.subject_id
+        </select>
+        
+        <!-- 客服人员填写解决方案 -->
+        <update id="ansCustomerFeedByid" parameterClass="CustomerFeedback">
+			update  CUS_FEEDBACK_TBL set
+					STATUS = 1,
+					SOLDEPT = #soldept#,
+					SOLTYPE = #soltype#
+			where ID = #id#
+        </update>
+        
+        <delete id="delCustomerFeedbackById" parameterClass="java.lang.Integer">
+        	delete from CUS_FEEDBACK_TBL where id = #value#
+        </delete>
+</sqlMap> 

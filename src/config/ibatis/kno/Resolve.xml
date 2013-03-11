@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Resolve_NS">
+        <!--table:KNO_RESOLVE_TBL-->
+        <typeAlias alias="Resolve" type="com.shangde.edu.kno.domain.Resolve"/>
+        <typeAlias alias="QueryResolveCondition" type="com.shangde.edu.kno.condition.QueryResolveCondition"/>
+
+        <resultMap id="ResolveResult" class="Resolve">
+            <result property="resId" column="RES_ID"/>
+            <result property="resContent" column="RES_CONTENT"/>
+            <result property="resKeyword" column="RES_KEYWORD"/>
+            <result property="resPerson" column="RES_PERSON"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+            <result property="isFirst" column="IS_FIRST"/>
+            <result property="ksnId" column="KSN_ID"/>
+            <result property="nodeId" column="NODE_ID"/>
+        </resultMap>
+
+        <sql id="KNO_RESOLVE_TBL_columns">
+            KNO_RESOLVE_TBL.RES_ID,
+            KNO_RESOLVE_TBL.RES_CONTENT,
+            KNO_RESOLVE_TBL.RES_KEYWORD,
+            KNO_RESOLVE_TBL.RES_PERSON,
+            KNO_RESOLVE_TBL.CREATE_TIME,
+            KNO_RESOLVE_TBL.LAST_EDIT_TIME,
+            KNO_RESOLVE_TBL.IS_FIRST,
+            KNO_RESOLVE_TBL.KSN_ID,
+            KNO_RESOLVE_TBL.NODE_ID
+        </sql>
+
+        <sql id="KNO_RESOLVE_TBL_properties">
+            #resId#,
+            #resContent#,
+            #resKeyword#,
+            #resPerson#,
+            #createTime#,
+            #lastEditTime#,
+            #isFirst#,
+            #ksnId#,
+            #nodeId#
+        </sql>
+
+        <insert id="createResolve" parameterClass="Resolve">
+            INSERT INTO KNO_RESOLVE_TBL (<include refid="Resolve_NS.KNO_RESOLVE_TBL_columns"/>) VALUES (<include refid="Resolve_NS.KNO_RESOLVE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="resId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteResolveById" parameterClass="int">
+            DELETE FROM KNO_RESOLVE_TBL
+            WHERE
+                RES_ID = #value#
+
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateResolve" parameterClass="Resolve">
+            UPDATE KNO_RESOLVE_TBL SET
+                RES_ID = #resId#,
+                RES_CONTENT = #resContent#,
+                RES_KEYWORD = #resKeyword#,
+                RES_PERSON = #resPerson#,
+                CREATE_TIME = #createTime#,
+                LAST_EDIT_TIME = #lastEditTime#,
+                IS_FIRST = #isFirst#,
+                KSN_ID = #ksnId#,
+                NODE_ID=#nodeId#
+            WHERE
+                RES_ID = #resId#
+
+
+
+
+
+
+
+        </update>
+
+        <select id="getResolveById" resultMap="Resolve_NS.ResolveResult" parameterClass="int">
+            SELECT
+            <include refid="Resolve_NS.KNO_RESOLVE_TBL_columns"/>
+            FROM KNO_RESOLVE_TBL
+            WHERE
+                RES_ID = #value#
+
+
+
+
+
+
+
+        </select>
+
+		 <select id="getResolveListByKsnId" resultMap="Resolve_NS.ResolveResult" parameterClass="int">
+            SELECT
+            <include refid="Resolve_NS.KNO_RESOLVE_TBL_columns"/>
+            FROM KNO_RESOLVE_TBL
+            WHERE KSN_ID=#value#
+        </select>
+        <!-- 查找首选解析的节点 -->
+        <select id="getResolveFirstByKsnId" resultMap="Resolve_NS.ResolveResult" parameterClass="int">
+            SELECT
+            <include refid="Resolve_NS.KNO_RESOLVE_TBL_columns"/>
+            FROM KNO_RESOLVE_TBL
+            WHERE KSN_ID=#value# AND IS_FIRST=1
+        </select>
+	
+        <select id="getResolveList" resultMap="Resolve_NS.ResolveResult" parameterClass="QueryResolveCondition">
+            SELECT
+            <include refid="Resolve_NS.KNO_RESOLVE_TBL_columns"/>
+            FROM KNO_RESOLVE_TBL
+        </select>
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="OptRecord_NS">
+	<!--  -->
+	<delete id="deleteOptRecordByCusId" parameterClass="int">
+		DELETE FROM
+		EXAM_OPT_RECORD_TBL WHERE CUS_ID = #value#
+    </delete>
+    <!--Yangning 后台批量删除用户时批量删除optRecord-->
+	<delete id="deleteOptRecordByCusIds" parameterClass="String">
+		DELETE FROM
+		EXAM_OPT_RECORD_TBL WHERE CUS_ID in ($value$)
+    </delete>
+    <!-- -->
+	<delete id="deleteOptRecordByQstId" parameterClass="int">
+		DELETE 
+		FROM
+		  exam_opt_record_tbl 
+		WHERE qst_id = #value# 
+	</delete>
+</sqlMap>

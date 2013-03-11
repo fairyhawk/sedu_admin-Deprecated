@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserClass_NS">
+        <!--table:SYS_USER_CLASS_TBL-->
+        <typeAlias alias="UserClass" type="com.shangde.edu.sys.domain.UserClass"/>
+        <typeAlias alias="QueryUserClassCondition" type="com.shangde.edu.sys.condition.QueryUserClassCondition"/>
+
+        <resultMap id="UserClassResult" class="UserClass">
+            <result property="userId" column="USER_ID"/>
+            <result property="classId" column="CLASS_ID"/>
+            <result property="status" column="STATUS"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+        </resultMap>
+
+        <sql id="SYS_USER_CLASS_TBL_columns">
+            USER_ID,
+            CLASS_ID,
+            STATUS,
+            CREATE_TIME,
+            UPDATE_TIME
+        </sql>
+
+        <sql id="SYS_USER_CLASS_TBL_properties">
+            #userId#,
+            #classId#,
+            #status#,
+            #createTime#,
+            #updateTime#
+        </sql>
+
+        <insert id="createUserClass" parameterClass="UserClass">
+            INSERT INTO SYS_USER_CLASS_TBL (<include refid="UserClass_NS.SYS_USER_CLASS_TBL_columns"/>) VALUES (<include refid="UserClass_NS.SYS_USER_CLASS_TBL_properties"/>)
+        </insert>
+
+        <delete id="deleteUserClassById" parameterClass="java.util.Map">
+            DELETE FROM SYS_USER_CLASS_TBL
+            WHERE
+                USER_ID = #userId#
+ AND CLASS_ID = #classId#
+
+
+
+        </delete>
+
+        <update id="updateUserClass" parameterClass="UserClass">
+            UPDATE SYS_USER_CLASS_TBL SET
+                USER_ID = #userId#,
+                CLASS_ID = #classId#,
+                STATUS = #status#,
+                CREATE_TIME = #createTime#,
+                UPDATE_TIME = #updateTime#
+            WHERE
+                USER_ID = #userId#
+ AND CLASS_ID = #classId#
+
+
+
+        </update>
+
+        <select id="getUserClassById" resultMap="UserClass_NS.UserClassResult" parameterClass="java.util.Map">
+            SELECT
+            <include refid="UserClass_NS.SYS_USER_CLASS_TBL_columns"/>
+            FROM SYS_USER_CLASS_TBL
+            WHERE
+                USER_ID = #userId#
+ AND CLASS_ID = #classId#
+
+
+
+        </select>
+
+        <select id="getUserClassList" resultMap="UserClass_NS.UserClassResult" parameterClass="QueryUserClassCondition">
+            SELECT
+            <include refid="UserClass_NS.SYS_USER_CLASS_TBL_columns"/>
+            FROM SYS_USER_CLASS_TBL
+        </select>
+        <select id="getUserClassListByUserId" resultMap="UserClass_NS.UserClassResult" parameterClass="int">
+        	 SELECT
+            <include refid="UserClass_NS.SYS_USER_CLASS_TBL_columns"/>
+            FROM SYS_USER_CLASS_TBL WHERE
+            USER_ID = #userId#
+        </select>
+        
+        <!--end-->
+</sqlMap>

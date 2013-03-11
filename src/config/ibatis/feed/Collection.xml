@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Feed_Collection_NS">
+
+	<typeAlias alias="FeedCollection" type="com.shangde.edu.feed.domain.Collection"/>
+	<resultMap class="FeedCollection" id="collectionResult">
+		<result property="id" column="ID"/>
+		<result property="videoId" column="VIDEO_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="courseId" column="COURSE_ID"/>
+		<result property="statisticsTime" column="STATISTICS_TIME"/>
+	</resultMap>
+	<sql id="FEED_COLLECTION_TBL_columns">
+		FEED_COLLECTION_TBL.ID,
+		FEED_COLLECTION_TBL.VIDEO_ID,
+		FEED_COLLECTION_TBL.USER_ID,
+		FEED_COLLECTION_TBL.COURSE_ID,
+		FEED_COLLECTION_TBL.STATISTICS_TIME
+	</sql>
+	
+	<sql id="FEED_COLLECTION_TBL_properties">
+		#id#,
+		#videoId#,
+		#userId#,
+		#courseId#,
+		#statisticsTime#
+	</sql>
+	
+	<insert id="createCollection" parameterClass="FeedCollection">
+		INSERT INTO FEED_COLLECTION_TBL(<include refid="FEED_COLLECTION_TBL_columns"/>)
+		VALUES(<include refid="FEED_COLLECTION_TBL_properties"/>)
+		<selectKey resultClass="int" type="post" keyProperty="id">
+			<include refid="public_sql.increment_sql"/>
+		</selectKey>
+	</insert>
+	
+
+</sqlMap>

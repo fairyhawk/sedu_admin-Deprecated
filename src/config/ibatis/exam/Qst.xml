@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Qst_NS">
+        <!--table:EXAM_QST_TBL-->
+        <typeAlias alias="Qst" type="com.shangde.edu.exam.domain.Qst"/>
+        <typeAlias alias="Coursesort" type="com.shangde.edu.cou.domain.Coursesort"/>
+        <typeAlias alias="QueryQstCondition" type="com.shangde.edu.exam.condition.QueryQstCondition"/>
+		<typeAlias alias="QstAddQueryDTO" type="com.shangde.edu.exam.dto.QstAddQueryDTO"/>
+
+		<resultMap id="CoursesortResult" class="Coursesort">
+			<result property="coursesortId" column="COURSESORT_ID"/>
+			<result property="coursesortName" column="COURSESORT_NAME"/>
+		</resultMap>
+        <resultMap id="QstResult" class="Qst">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstindexId" column="QST_INDEX_ID"/>
+            <result property="qsttype" column="QSTTYPE"/>
+            <result property="korcouId" column="KorCouId"/>
+            <result property="courseId" column="CourseId"/>
+            <result property="sortId" column="SortId"/>
+            <result property="epId" column="EP_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="isAsr" column="IS_ASR"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="score" column="SCORE"/>
+            <result property="ctPerson" column="CT_PERSON"/>
+            <result property="level" column="LEVEL"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="wrongJude" column="WRONG_JUDE"/>
+            <result property="note" column="NOTE"/>
+            <result property="author" column="AUTHOR"/>
+             <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+            <result property="qstPic" column="QST_ID" select="QstPic_NS.getQstPicListByQstId"/>
+            <result property="options" column="QST_ID" select="Options_NS.getOptionsListByQstId"/>
+        	<result property="exampaper" column="EP_ID" select="Exampaper_NS.getExampaperById"/>
+        	<result property="qstziti" column="QST_ID" select="Qst_NS.getQstByindexId"/>
+        	<result property="qstsize" column="QST_ID" select="Qstmiddle_NS.getQstbyidCount"/>
+        	<result property="coursesort" column="SortId" select="Coursesort_NS.getCoursesortById"/>
+        	<result property="course" column="CourseId" select="Course_NS.getCourseById"/>
+        </resultMap>
+
+		<resultMap id="QstCaiLiaoAddResult" class="Qst">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstindexId" column="QST_INDEX_ID"/>
+            <result property="qsttype" column="QSTTYPE"/>
+            <result property="korcouId" column="KorCouId"/>
+            <result property="courseId" column="CourseId"/>
+            <result property="sortId" column="SortId"/>
+            <result property="epId" column="EP_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="isAsr" column="IS_ASR"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="score" column="SCORE"/>
+            <result property="ctPerson" column="CT_PERSON"/>
+            <result property="level" column="LEVEL"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="wrongJude" column="WRONG_JUDE"/>
+            <result property="note" column="NOTE"/>
+            <result property="author" column="AUTHOR"/>
+             <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+        	<result property="qstziti" column="QST_ID" select="Qst_NS.getQstByindexId"/>
+        </resultMap>
+
+		<resultMap id="QstZiTiResult" class="Qst">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstindexId" column="QST_INDEX_ID"/>
+            <result property="qsttype" column="QSTTYPE"/>
+            <result property="korcouId" column="KorCouId"/>
+            <result property="courseId" column="CourseId"/>
+            <result property="sortId" column="SortId"/>
+            <result property="epId" column="EP_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="isAsr" column="IS_ASR"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="score" column="SCORE"/>
+            <result property="ctPerson" column="CT_PERSON"/>
+            <result property="level" column="LEVEL"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="wrongJude" column="WRONG_JUDE"/>
+            <result property="note" column="NOTE"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+        </resultMap>
+
+		<!-- 优化后查询试题信息跳转到试题更新页 -->
+		<resultMap id="QstToUpdateResult" class="Qst">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstindexId" column="QST_INDEX_ID"/>
+            <result property="qsttype" column="QSTTYPE"/>
+            <result property="korcouId" column="KorCouId"/>
+            <result property="courseId" column="CourseId"/>
+            <result property="sortId" column="SortId"/>
+            <result property="epId" column="EP_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="isAsr" column="IS_ASR"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="score" column="SCORE"/>
+            <result property="ctPerson" column="CT_PERSON"/>
+            <result property="level" column="LEVEL"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="wrongJude" column="WRONG_JUDE"/>
+            <result property="note" column="NOTE"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="coursesortName" column="COURSESORT_NAME"/>
+            <result property="title" column="TITLE"/> 
+            <result property="options" column="QST_ID" select="Options_NS.getOptionsListByQstId"/>
+        </resultMap>
+        
+         <resultMap class="Qst" id="allQstResult">
+       		<result property="qstId" column="qst_id"/>
+        </resultMap>
+
+		<resultMap id="QstSearchResult" class="Qst">
+            <result property="qstId" column="QST_ID"/>
+            <result property="qstContent" column="QST_CONTENT"/>
+            <result property="isAsr" column="IS_ASR"/>
+            <result property="qstType" column="QST_TYPE"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="author" column="AUTHOR"/>
+            <result property="lastEditTime" column="LAST_EDIT_TIME"/>
+            <result property="qstsize" column="QST_ID" select="Qstmiddle_NS.getQstbyidCount"/>
+        </resultMap>
+
+		<!-- 试题添弹出页查询 -->
+		<resultMap class="Qst" id="QstAddResult">
+			<result property="qstId" column="QST_ID"/>
+			<result property="qstContent" column="QST_CONTENT"/>
+			<result property="qstType" column="QST_TYPE"/>
+		</resultMap>
+
+		<!-- ***********优化后，试题添加时查询试题返回信息。 -->
+		<resultMap class="QstAddQueryDTO" id="QstResultAdd">
+            <result property="courseId" column="courseId"/>
+            <result property="sortId" column="sortId"/>
+            <result property="isAsr" column="isAsr"/>
+            <result property="qstType" column="qstType"/>
+            <result property="level" column="level"/>
+        	<result property="coursesortName" column="coursesortName"/>
+        	<result property="courseTitle" column="courseTitle"/>
+		</resultMap>
+
+        <sql id="EXAM_QST_TBL_columns">
+            EXAM_QST_TBL.QST_ID,
+            EXAM_QST_TBL.QST_INDEX_ID,
+            EXAM_QST_TBL.QSTTYPE,
+            EXAM_QST_TBL.CourseId,
+            EXAM_QST_TBL.SortId,
+            EXAM_QST_TBL.KorCouId,
+            EXAM_QST_TBL.EP_ID,
+            EXAM_QST_TBL.QST_CONTENT,
+            EXAM_QST_TBL.IS_ASR,
+            EXAM_QST_TBL.QST_TYPE,
+            EXAM_QST_TBL.SCORE,
+            EXAM_QST_TBL.CT_PERSON,
+            EXAM_QST_TBL.LEVEL,
+            EXAM_QST_TBL.ADDTIME,
+            EXAM_QST_TBL.WRONG_JUDE,
+            EXAM_QST_TBL.NOTE,
+            EXAM_QST_TBL.AUTHOR,
+            EXAM_QST_TBL.LAST_EDIT_TIME
+        </sql>
+
+        <sql id="EXAM_QST_TBL_properties">
+            #qstId#,
+            #qstindexId#,
+            #qsttype#,
+            #courseId#,
+            #sortId#,
+            #korcouId#,
+            #epId#,
+            #qstContent#,
+            #isAsr#,
+            #qstType#,
+            #score#,
+            #ctPerson#,
+            #level#,
+            #addtime#,
+            #wrongJude#,
+            #note#,
+            #author#,
+            #lastEditTime#
+        </sql>
+
+        <insert id="createQst" parameterClass="Qst">
+            INSERT INTO EXAM_QST_TBL (<include refid="Qst_NS.EXAM_QST_TBL_columns"/>) VALUES (<include refid="Qst_NS.EXAM_QST_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="qstId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteQstById" parameterClass="int">
+            DELETE FROM EXAM_QST_TBL
+            WHERE
+                QST_ID = #value#
+        </delete>
+
+        <update id="updateQst" parameterClass="Qst">
+            UPDATE EXAM_QST_TBL SET
+                QST_ID = #qstId#,
+                QST_INDEX_ID= #qstindexId#,
+                QSTTYPE =  #qsttype#,
+                NOTE = #note#,
+         		KorCouId = #korcouId#,
+           		CourseId = #courseId#,
+           		SortId = #sortId#,
+                EP_ID = #epId#,
+                QST_CONTENT = #qstContent#,
+                IS_ASR = #isAsr#,
+                QST_TYPE = #qstType#,
+                SCORE = #score#,
+                CT_PERSON = #ctPerson#,
+                LEVEL = #level#,
+                ADDTIME = #addtime#,
+                WRONG_JUDE = #wrongJude#,
+                AUTHOR=#author#,
+                LAST_EDIT_TIME=#lastEditTime#
+            WHERE
+                QST_ID = #qstId#
+        </update>
+
+        <select id="getQstById" resultMap="Qst_NS.QstResult" parameterClass="int">
+            SELECT
+            <include refid="Qst_NS.EXAM_QST_TBL_columns"/>
+            FROM EXAM_QST_TBL
+            WHERE
+                QST_ID = #value#
+        </select>
+		
+		<select id="getQstCaiLiaoToAdd" resultMap="Qst_NS.QstCaiLiaoAddResult" parameterClass="int">
+			SELECT
+            <include refid="Qst_NS.EXAM_QST_TBL_columns"/>
+            FROM EXAM_QST_TBL
+            WHERE
+                QST_ID = #value#
+		</select>
+		
+		<!-- 优化后查询试题信息跳转到试题更新页 -->
+		<select id="getQstToUpdateById" resultMap="Qst_NS.QstToUpdateResult" parameterClass="int">
+			SELECT
+			  EXAM_QST_TBL.QST_ID,
+			  EXAM_QST_TBL.QST_INDEX_ID,
+			  EXAM_QST_TBL.QSTTYPE,
+			  EXAM_QST_TBL.CourseId,
+			  EXAM_QST_TBL.SortId,
+			  EXAM_QST_TBL.KorCouId,
+			  EXAM_QST_TBL.EP_ID,
+			  EXAM_QST_TBL.QST_CONTENT,
+			  EXAM_QST_TBL.IS_ASR,
+			  EXAM_QST_TBL.QST_TYPE,
+			  EXAM_QST_TBL.SCORE,
+			  EXAM_QST_TBL.CT_PERSON,
+			  EXAM_QST_TBL.LEVEL,
+			  EXAM_QST_TBL.ADDTIME,
+			  EXAM_QST_TBL.WRONG_JUDE,
+			  EXAM_QST_TBL.NOTE,
+			  EXAM_QST_TBL.AUTHOR,
+			  EXAM_QST_TBL.LAST_EDIT_TIME,
+			  COU_COURSESORT_TBL.COURSESORT_NAME,
+			  COU_COURSE_TBL.TITLE
+            FROM 
+              EXAM_QST_TBL, COU_COURSESORT_TBL, COU_COURSE_TBL
+            WHERE
+              EXAM_QST_TBL.QST_ID = #value# AND
+              EXAM_QST_TBL.SortId = COU_COURSESORT_TBL.COURSESORT_ID AND 
+  			  EXAM_QST_TBL.CourseId = COU_COURSE_TBL.COURSE_ID
+		</select>
+		
+		<!-- ***********优化后，试题添加时根据试题ID查询试题信息。 -->
+		<select id="getQstAddById" resultMap="Qst_NS.QstResultAdd" parameterClass="int">
+			SELECT 
+			  EXAM_QST_TBL.CourseId AS courseId,
+			  EXAM_QST_TBL.SortId AS sortId,
+			  EXAM_QST_TBL.IS_ASR AS isAsr,
+			  EXAM_QST_TBL.QST_TYPE AS qstType,
+			  EXAM_QST_TBL.LEVEL AS LEVEL,
+			  COU_COURSESORT_TBL.COURSESORT_NAME AS coursesortName,
+			  COU_COURSE_TBL.TITLE AS courseTitle
+			FROM
+			  EXAM_QST_TBL,
+			  cou_coursesort_tbl,
+			  COU_COURSE_TBL 
+			WHERE EXAM_QST_TBL.qst_id = #value# 
+			  AND exam_qst_tbl.SortId = COU_COURSESORT_TBL.COURSESORT_ID 
+			  AND COU_COURSE_TBL.COURSE_ID = EXAM_QST_TBL.CourseId
+        </select>
+		
+		  <select id="getQstByindexId" resultMap="Qst_NS.QstZiTiResult" parameterClass="int">
+            SELECT
+            <include refid="Qst_NS.EXAM_QST_TBL_columns"/>
+            FROM EXAM_QST_TBL
+            WHERE
+                QST_INDEX_ID = #value#
+        </select>
+
+
+        <select id="getQstList" resultMap="Qst_NS.QstResult" parameterClass="QueryQstCondition">
+            SELECT
+            <include refid="Qst_NS.EXAM_QST_TBL_columns"/>
+            FROM EXAM_QST_TBL
+               <isNotNull property="epId">
+	            	<isNotEqual property="epId" compareValue="0">
+	            		WHERE EP_ID= #epId#
+	            	</isNotEqual>
+            	</isNotNull>
+            	
+            	  <isNotNull property="qstindexId">
+	            	<isNotEqual property="qstindexId" compareValue="0">
+	            		WHERE QST_INDEX_ID= #qstindexId#
+	            	</isNotEqual>
+            	</isNotNull>
+            	ORDER BY QST_TYPE ASC
+        </select>
+        
+         <select id="getQstListByEpid" resultMap="Qst_NS.QstResult" parameterClass="int">
+            SELECT
+            <include refid="Qst_NS.EXAM_QST_TBL_columns"/>
+            FROM EXAM_QST_TBL
+            		WHERE EP_ID= #value#
+        </select>
+
+        
+        <!-- 查询所有的课程 -->
+        <select  id="getCourseList" resultMap="Qst_NS.CoursesortResult">
+			SELECT COURSESORT_ID,COURSESORT_NAME FROM COU_COURSESORT_TBL  WHERE P_ID=4
+        </select>
+        
+        
+        <!-- 分页 弹出-->
+        <select id="getQstListPage" resultMap="Qst_NS.QstAddResult" parameterClass="QueryQstCondition">
+        <include refid="public_sql.page_begin"/>
+       		SELECT
+				EXAM_QST_TBL.QST_ID,
+				EXAM_QST_TBL.QST_CONTENT,
+				EXAM_QST_TBL.QST_TYPE
+            FROM EXAM_QST_TBL
+             WHERE
+             EXAM_QST_TBL.QST_INDEX_ID = 0
+               <isNotNull property="qstType">
+	            	<isGreaterThan property="qstType"  compareValue="0" prepend="and">
+	            		 EXAM_QST_TBL.QST_TYPE= #qstType#
+	            	</isGreaterThan>
+            	</isNotNull>
+            	<isNotNull property="sortId">
+	            	<isGreaterThan property="sortId"  compareValue="0" prepend="and">
+	            		 EXAM_QST_TBL.SortId= #sortId#
+	            	</isGreaterThan>
+            	</isNotNull>
+            	
+            	<isNotNull property="tiaojian">
+	            	 <isEqual  property="tiaojian" compareValue="1" prepend="and">
+			                  EXAM_QST_TBL.QST_ID like    '%$searchKey$%' 
+			          </isEqual>
+			          <isEqual  property="tiaojian" compareValue="2" prepend="and">
+			                  EXAM_QST_TBL.QST_CONTENT like   '%$searchKey$%' 
+				      </isEqual>
+				     
+			</isNotNull>
+			
+        	order by EXAM_QST_TBL.QST_ID desc
+         <include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getQstListPageCount" resultClass="int" parameterClass="QueryQstCondition">
+        SELECT COUNT(1)
+         FROM EXAM_QST_TBL
+             WHERE
+            EXAM_QST_TBL.QST_INDEX_ID =0
+               <isNotNull property="qstType">
+	            	<isGreaterThan property="qstType"  compareValue="0" prepend="and">
+	            		 EXAM_QST_TBL.QST_TYPE= #qstType#
+	            	</isGreaterThan>
+            	</isNotNull>
+            	        	<isNotNull property="sortId">
+	            	<isGreaterThan property="sortId"  compareValue="0" prepend="and">
+	            		 EXAM_QST_TBL.SortId= #sortId#
+	            	</isGreaterThan>
+            	</isNotNull>
+            	
+            	<isNotNull property="tiaojian">
+	            	 <isEqual  property="tiaojian" compareValue="1" prepend="and">
+			                  EXAM_QST_TBL.QST_ID like    '%$searchKey$%' 
+			          </isEqual>
+			          <isEqual  property="tiaojian" compareValue="2" prepend="and">
+			                  EXAM_QST_TBL.QST_CONTENT like   '%$searchKey$%' 
+				      </isEqual>
+				     
+			</isNotNull>
+        	order by EXAM_QST_TBL.QST_ID desc
+        
+        </select>
+
+	<!--试题查询条件 -->
+	<select id="getQstListPageqst" resultMap="Qst_NS.QstSearchResult" parameterClass="QueryQstCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		EXAM_QST_TBL.QST_ID,
+		EXAM_QST_TBL.QST_CONTENT,
+		EXAM_QST_TBL.IS_ASR,
+		EXAM_QST_TBL.QST_TYPE,
+		EXAM_QST_TBL.ADDTIME,
+		EXAM_QST_TBL.AUTHOR,
+		EXAM_QST_TBL.LAST_EDIT_TIME
+		FROM EXAM_QST_TBL
+		<isNotEqual property="subjectId" compareValue="0">
+			LEFT JOIN cou_course_tbl ON EXAM_QST_TBL.CourseId = cou_course_tbl.COURSE_ID
+		</isNotEqual>
+		WHERE
+		EXAM_QST_TBL.QST_INDEX_ID !=-1
+		<isNotEqual prepend="and" property="subjectId" compareValue="0">
+			cou_course_tbl.SUBJECT_ID = #subjectId#
+		</isNotEqual>
+		<isNotNull property="qstType">
+			<isGreaterThan property="qstType" compareValue="0"
+				prepend="and">
+				EXAM_QST_TBL.QST_TYPE= #qstType#
+		            	</isGreaterThan>
+		</isNotNull>
+	
+		<isNotNull property="tiaojian">
+			<isEqual property="tiaojian" compareValue="1" prepend="and">
+				EXAM_QST_TBL.QST_CONTENT like '%$searchKey$%' 
+				          </isEqual>
+			<isEqual property="tiaojian" compareValue="2" prepend="and">
+				EXAM_QST_TBL.IS_ASR like '%$searchKey$%' 
+					      </isEqual>
+	
+		</isNotNull>
+		<isNotNull prepend="and" property="startTime">
+				    <![CDATA[  EXAM_QST_TBL.ADDTIME >= #startTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="endTime">
+						<![CDATA[  EXAM_QST_TBL.ADDTIME <= #endTime# ]]>
+		</isNotNull>
+		<isNotNull prepend="and" property="author">
+			EXAM_QST_TBL.AUTHOR like '%$author$%' 
+					</isNotNull>
+	
+		order by EXAM_QST_TBL.QST_ID desc
+		<include refid="public_sql.page_end" />
+	</select>
+
+	<select id="getQstListPageCountqst" resultClass="int"
+		parameterClass="QueryQstCondition">
+		SELECT COUNT(1)
+		FROM EXAM_QST_TBL
+		<isNotEqual property="subjectId" compareValue="0">
+			LEFT JOIN cou_course_tbl ON EXAM_QST_TBL.CourseId = cou_course_tbl.COURSE_ID
+		</isNotEqual>
+		WHERE
+		EXAM_QST_TBL.QST_INDEX_ID !=-1
+		<isNotEqual prepend="and" property="subjectId" compareValue="0">
+			cou_course_tbl.SUBJECT_ID = #subjectId#
+		</isNotEqual>
+		<isNotNull property="qstType">
+			<isGreaterThan property="qstType" compareValue="0"
+				prepend="and">
+				EXAM_QST_TBL.QST_TYPE= #qstType#
+	            	</isGreaterThan>
+		</isNotNull>
+
+		<isNotNull property="tiaojian">
+			<isEqual property="tiaojian" compareValue="1" prepend="and">
+				EXAM_QST_TBL.QST_CONTENT like '%$searchKey$%' 
+			          </isEqual>
+			<isEqual property="tiaojian" compareValue="2" prepend="and">
+				EXAM_QST_TBL.IS_ASR like '%$searchKey$%' 
+				      </isEqual>
+
+		</isNotNull>
+		<isNotNull prepend="and" property="author">
+			EXAM_QST_TBL.AUTHOR like '%$author$%' 
+		</isNotNull>
+	</select>
+	
+	 <!-- 根据试题类型获得所有此类型的试题   add by yanghaibo 2012-07-25 13:23 -->
+	<select id="getAllQstByType" resultMap="allQstResult" parameterClass="QueryQstCondition">
+        	SELECT DISTINCT qst_id FROM `kno_qst_rel_tbl` WHERE qst_type=#qstType# AND ksn_id=#ksnId#
+    </select>
+    <!--end-->
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Record_NS">
+        <!--table:CRM_RECORD_TBL-->
+        <typeAlias alias="Record" type="com.shangde.edu.crm.domain.Record"/>
+        <typeAlias alias="RecordDTO" type="com.shangde.edu.crm.dto.RecordDTO"/>
+        <typeAlias alias="QueryRecordCondition" type="com.shangde.edu.crm.condition.QueryRecordCondition"/>
+		<!-- 配置缓存模型 -->
+		<cacheModel id="Record_NS-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+ 			<flushOnExecute statement="Record_NS.createRecord" />
+			<flushOnExecute statement="Record_NS.updateRecord" />
+			<flushOnExecute statement="Record_NS.deleteRecordById"/>
+			<property value="1000" name="size" />
+		</cacheModel>
+        <resultMap id="RecordResult" class="Record">
+            <result property="id" column="ID"/>
+            <result property="crmChanceId" column="CRM_CHANCE_ID"/>
+            <result property="commStatus" column="COMM_STATUS"/>
+            <result property="whyLearm" column="WHY_LEARM"/>
+            <result property="concerns" column="CONCERNS"/>
+            <result property="remarks" column="REMARKS"/>
+            <result property="userId" column="USER_ID"/>
+            <result property="leyuId" column="LEYU_ID"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="reasons" column="reasons"/>
+        </resultMap>
+        
+        <resultMap id="RecordDTO" class="RecordDTO">
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="userName" column="USER_NAME"/>
+        </resultMap>
+        
+         <resultMap id="RecordResultDTO" class="RecordDTO">
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="commStatus" column="COMM_STATUS"/>
+            <result property="concerns" column="CONCERNS"/>
+            <result property="remarks" column="REMARKS"/>
+            <result property="userName" column="USER_NAME"/>
+            <result property="whyLearm" column="WHY_LEARM"/>
+            <result property="reasons" column="reasons"/>
+        </resultMap>
+        
+        <sql id="CRM_RECORD_TBL_columns">
+            CRM_RECORD_TBL.ID,
+            CRM_RECORD_TBL.CRM_CHANCE_ID,
+            CRM_RECORD_TBL.COMM_STATUS,
+            CRM_RECORD_TBL.WHY_LEARM,
+            CRM_RECORD_TBL.CONCERNS,
+            CRM_RECORD_TBL.REMARKS,
+            CRM_RECORD_TBL.USER_ID,
+            CRM_RECORD_TBL.LEYU_ID,
+            CRM_RECORD_TBL.CREATE_TIME,
+            CRM_RECORD_TBL.reasons
+        </sql>
+
+        <sql id="CRM_RECORD_TBL_properties">
+            #id#,
+            #crmChanceId#,
+            #commStatus#,
+            #whyLearm#,
+            #concerns#,
+            #remarks#,
+            #userId#,
+            #leyuId#,
+            #createTime#,
+            #reasons#
+        </sql>
+
+        <insert id="createRecord" parameterClass="Record">
+            INSERT INTO CRM_RECORD_TBL (<include refid="Record_NS.CRM_RECORD_TBL_columns"/>) VALUES (<include refid="Record_NS.CRM_RECORD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteRecordById" parameterClass="int">
+            DELETE FROM CRM_RECORD_TBL
+            WHERE
+                ID = #value#
+
+
+
+
+
+
+        </delete>
+
+        <update id="updateRecord" parameterClass="Record">
+            UPDATE CRM_RECORD_TBL SET
+                ID = #id#,
+                CRM_CHANCE_ID = #crmChanceId#,
+                COMM_STATUS = #commStatus#,
+                WHY_LEARM = #whyLearm#,
+                CONCERNS = #concerns#,
+                REMARKS = #remarks#,
+                USER_ID = #userId#,
+                LEYU_ID = #leyuId#,
+                CREATE_TIME=#createTime#,
+                reasons=#reasons#
+            WHERE
+                ID = #id#
+
+
+
+
+
+
+        </update>
+
+        <select id="getRecordById" resultMap="Record_NS.RecordResult" parameterClass="int" cacheModel="Record_NS-cache">
+            SELECT
+            <include refid="Record_NS.CRM_RECORD_TBL_columns"/>
+            FROM CRM_RECORD_TBL
+            WHERE
+                ID = #value#
+
+
+
+
+
+
+        </select>
+
+        <select id="getRecordList" resultMap="Record_NS.RecordResult" parameterClass="QueryRecordCondition" cacheModel="Record_NS-cache">
+            SELECT
+            <include refid="Record_NS.CRM_RECORD_TBL_columns"/>
+            FROM CRM_RECORD_TBL
+        </select>
+        <!-- 获取销售机会对应的销售人 -->
+        <select id="getRecordDTOListByChanceId" resultMap="Record_NS.RecordDTO" parameterClass="int" cacheModel="Record_NS-cache">
+            SELECT CRM_RECORD_TBL.CREATE_TIME,sys_user_tbl.USER_NAME
+            FROM CRM_RECORD_TBL 
+            LEFT JOIN sys_user_tbl 
+            ON sys_user_tbl.USER_ID=CRM_RECORD_TBL.USER_ID
+            WHERE CRM_RECORD_TBL.CRM_CHANCE_ID=#value# AND CRM_RECORD_TBL.COMM_STATUS=0 
+            ORDER BY CRM_RECORD_TBL.CREATE_TIME  DESC
+        </select>
+        
+        <select id="getRecordListByChanceId" resultMap="Record_NS.RecordResultDTO" parameterClass="int" cacheModel="Record_NS-cache">
+            SELECT  
+			CRM_RECORD_TBL.CREATE_TIME,
+			CRM_RECORD_TBL.COMM_STATUS,
+			CRM_RECORD_TBL.CONCERNS,
+			CRM_RECORD_TBL.REMARKS,
+			sys_user_tbl.USER_NAME,
+			CRM_RECORD_TBL.WHY_LEARM,
+            CRM_RECORD_TBL.reasons
+            FROM CRM_RECORD_TBL 
+            LEFT JOIN sys_user_tbl 
+            ON sys_user_tbl.USER_ID=CRM_RECORD_TBL.USER_ID
+            WHERE CRM_RECORD_TBL.CRM_CHANCE_ID=#value# AND CRM_RECORD_TBL.COMM_STATUS!=0 
+            ORDER BY CRM_RECORD_TBL.CREATE_TIME  ASC
+        </select>
+        
+        
+        <select id="getEndRecord"  resultMap="Record_NS.RecordResult" parameterClass="int" cacheModel="Record_NS-cache">
+        	select <include refid="Record_NS.CRM_RECORD_TBL_columns"/> from crm_record_tbl where CRM_CHANCE_ID=#value# order by id desc limit 1
+        </select>
+        
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Knowledge_NS">
+	<!--table:KB_KNOWLEDGE_TBL-->
+	<typeAlias alias="Knowledge"
+		type="com.shangde.edu.kb.domain.Knowledge" />
+	<typeAlias alias="QueryKnowledgeCondition"
+		type="com.shangde.edu.kb.condition.QueryKnowledgeCondition" />
+
+
+	<resultMap id="KnowledgeResult" class="Knowledge">
+		<result property="kId" column="K_ID" />
+		<result property="kPId" column="K_P_ID" />
+		<result property="plId" column="PL_ID" />
+		<result property="upIndex" column="UP_INDEX" />
+		<result property="kName" column="K_NAME" />
+		<result property="kIndex" column="K_INDEX" />
+		<result property="kVersion" column="K_VERSION" />
+		<result property="kLevel" column="K_LEVEL" />
+		<result property="kCreateTime" column="K_CREATE_TIME" />
+		<result property="kStuts" column="K_STUTS" />
+		<result property="kNote" column="K_NOTE" />
+		<result property="scId" column="S_C_ID" />
+		<result property="kSort" column="K_SORT" />
+	</resultMap>
+
+	<sql id="KB_KNOWLEDGE_TBL_columns">
+		KB_KNOWLEDGE_TBL.K_ID, KB_KNOWLEDGE_TBL.K_P_ID,
+		KB_KNOWLEDGE_TBL.PL_ID, KB_KNOWLEDGE_TBL.UP_INDEX,
+		KB_KNOWLEDGE_TBL.K_NAME, KB_KNOWLEDGE_TBL.K_INDEX,
+		KB_KNOWLEDGE_TBL.K_VERSION, KB_KNOWLEDGE_TBL.K_LEVEL,
+		KB_KNOWLEDGE_TBL.K_CREATE_TIME, KB_KNOWLEDGE_TBL.K_STUTS,
+		KB_KNOWLEDGE_TBL.K_NOTE, KB_KNOWLEDGE_TBL.S_C_ID,
+		KB_KNOWLEDGE_TBL.K_SORT
+	</sql>
+
+
+	<sql id="KB_KNOWLEDGE_TBL_properties">
+		#kId#, #kPId#, #plId#, #upIndex#, #kName#, #kIndex#, #kVersion#,
+		#kLevel#, #kCreateTime#, #kStuts#, #kNote#, #scId# ,#kSort#
+	</sql>
+
+
+	<insert id="createKnowledge" parameterClass="Knowledge">
+		INSERT INTO KB_KNOWLEDGE_TBL (
+		<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns" />
+		) VALUES (
+		<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="kId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+         <select id="getKnowledgeByIndex" resultMap="Knowledge_NS.KnowledgeResult" parameterClass="String">
+            SELECT
+            <include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns"/>
+            FROM KB_KNOWLEDGE_TBL
+            WHERE
+                K_INDEX = #value#
+        </select>
+        <select id="getKnowledgeList" resultMap="Knowledge_NS.KnowledgeResult" parameterClass="QueryKnowledgeCondition">
+            SELECT
+            <include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns"/>
+            FROM KB_KNOWLEDGE_TBL
+            <dynamic prepend="WHERE">
+            	<isNotEqual property="kPId" compareValue="0" prepend="and">
+            		K_P_ID=#kPId#
+            	</isNotEqual>
+            </dynamic>
+        </select>
+        
+         <select id="getKnowledgeListByScId" resultMap="Knowledge_NS.KnowledgeResult" parameterClass="QueryKnowledgeCondition">
+            SELECT
+            <include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns"/>
+            FROM KB_KNOWLEDGE_TBL
+            <dynamic prepend="WHERE">
+	            <isNotEqual property="scId" compareValue="0" prepend="and">
+	            S_C_ID = #scId#
+	            </isNotEqual>
+	            <isNotNull property="upIndex">
+	            <isNotEqual property="upIndex" compareValue="" prepend="and">
+	            UP_INDEX = #upIndex#
+	            </isNotEqual>
+	            </isNotNull>
+            </dynamic>
+            ORDER BY K_SORT DESC
+        </select>
+        <!--end-->
+	<delete id="deleteKnowledgeById" parameterClass="int">
+		DELETE FROM KB_KNOWLEDGE_TBL WHERE K_ID = #value#
+	</delete>
+
+
+	<update id="updateKnowledge" parameterClass="Knowledge">
+		UPDATE KB_KNOWLEDGE_TBL SET K_ID = #kId#, K_P_ID = #kPId#, PL_ID
+		= #plId#, UP_INDEX = #upIndex#, K_NAME = #kName#, K_INDEX =
+		#kIndex#, K_VERSION = #kVersion#, K_LEVEL = #kLevel#,
+		K_CREATE_TIME = #kCreateTime#, K_STUTS = #kStuts#, K_NOTE =
+		#kNote#, S_C_ID = #scId#,K_SORT=#kSort# WHERE K_ID = #kId#
+	</update>
+
+	<update id="publishKnowledge" parameterClass="Knowledge">
+		UPDATE KB_KNOWLEDGE_TBL SET K_STUTS = 1 where K_ID=#kId#
+	</update>
+
+	<select id="getKnowledgeEpidList" resultMap="Knowledge_NS.KnowledgeResult" parameterClass="int" >
+		SELECT
+		<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns" />
+		FROM KB_KNOWLEDGE_TBL  
+		WHERE KB_KNOWLEDGE_TBL.K_ID in
+		( select  distinct  (EXAM_QST_KB_TBL.K_ID) from EXAM_QST_TBL,EXAM_QST_KB_TBL where EXAM_QST_TBL.QST_ID=EXAM_QST_KB_TBL.QST_ID and EXAM_QST_TBL.EP_ID=#value#)
+	</select>
+	
+	<select id="getKnowledgeById"
+		resultMap="Knowledge_NS.KnowledgeResult" parameterClass="int">
+		SELECT
+		<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns" />
+		FROM KB_KNOWLEDGE_TBL WHERE K_ID = #value#
+	</select>
+	
+	<select id="getKnowledgeLast"
+		resultMap="Knowledge_NS.KnowledgeResult" parameterClass="QueryKnowledgeCondition">
+		SELECT
+		<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns" />
+		FROM KB_KNOWLEDGE_TBL 
+		    <dynamic prepend="WHERE">
+	            <isNotEqual property="scId" compareValue="0" prepend="and">
+	            S_C_ID = #scId#
+	            </isNotEqual>
+	            <isNotNull property="upIndex">
+	            <isNotEqual property="upIndex" compareValue="" prepend="and">
+	            UP_INDEX = #upIndex#
+	            </isNotEqual>
+	            </isNotNull>
+            </dynamic>
+        	ORDER BY K_ID DESC LIMIT 1
+	</select>
+
+	<select id="getKnowledgediguiList" resultMap="Knowledge_NS.KnowledgeResult" parameterClass="String">
+	
+	SELECT 
+	<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns" />
+    FROM kb_knowledge_tbl WHERE LOCATE ( kb_knowledge_tbl.K_INDEX, #value# ) >0   ORDER BY kb_knowledge_tbl.K_INDEX ASC
+	</select>
+
+	<select id="getKnowledgeListByPidOrIndex"
+		resultMap="Knowledge_NS.KnowledgeResult"
+		parameterClass="QueryKnowledgeCondition">
+		SELECT
+		<include refid="Knowledge_NS.KB_KNOWLEDGE_TBL_columns" />
+		FROM KB_KNOWLEDGE_TBL
+		<dynamic prepend="WHERE">
+			<isNotEqual property="plId" compareValue="0"
+				prepend="and">
+				PL_ID = #plId#
+			</isNotEqual>
+			<isNotNull property="kIndex">
+				<isNotEqual property="kIndex" compareValue=""
+					prepend="and">
+					K_INDEX=#kIndex#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+</sqlMap>

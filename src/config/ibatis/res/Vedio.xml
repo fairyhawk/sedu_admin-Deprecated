@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Vedio_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="Vedio" type="com.shangde.edu.res.domain.Vedio" />
+	<typeAlias alias="QueryVedioCondition"
+		type="com.shangde.edu.res.condition.QueryVedioCondition" />
+	<typeAlias alias="SubjectPlayTypeDTO" type="com.shangde.edu.res.dto.SubjectPlayTypeDTO" />
+
+	<resultMap id="VedioResult" class="Vedio">
+		<result property="voId" column="VO_ID" />
+		<result property="vgId" column="VG_ID" />
+		<result property="pointid" column="POINTID" />
+		<result property="voName" column="VO_NAME" />
+		<result property="voUrl" column="VO_URL" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="downTime" column="DOWN_TIME" />
+		<result property="lecture" column="LECTURE" />
+		<result property="content" column="CONTENT" />
+		<result property="viewNum" column="VIEW_NUM" />
+		<result property="voSize" column="VO_SIZE" />
+		<result property="isShare" column="IS_SHARE" />
+		<result property="collectionNum" column="COLLECTION_NUM" />
+		<result property="isAudition" column="IS_AUDITION" />
+		<result property="reachUrl" column="REACH_URL" />
+		<result property="voOrder" column="VO_ORDER" />
+		<result property="voInfo" column="VO_INFO" />
+		<result property="voRadOne" column="VO_RADONE" />
+		<result property="xuanXiu" column="VO_XUANXIU" />
+		<result property="tcId" column="TC_ID" />
+		<result property="vedioPicList" column="VO_ID" select="Picture_NS.getPictureByVoId"/>
+		<result property="kpointName" column="POINTID" select="Kpoint_NS.getKpointNameById"/>
+		<result property="voScores" column="VO_SCORES" />
+		<result property="voBScores" column="VO_BSCORES" />
+		<result property="teacherName" column="TEACHER_NAME" />
+		<result property="auditionSize" column="AUDITION_SIZE" />
+		<result property="auditionUrl" column="AUDITION_URL" />
+		<result property="freeVedio" column="FREE_VEDIO" />
+		<result property="recommend" column="RECOMMEND" />
+		<result property="vedioPicUrl" column="VEDIO_PIC_URL" />
+		<result property="ccUrl" column="CC_URL" />
+		<result property="playType" column="PLAY_TYPE" />
+	</resultMap>
+	
+	
+	
+	<resultMap id="SubjectPlayTypeResult" class="SubjectPlayTypeDTO">
+		<result property="subjectId" column="SUBJECT_ID" />
+		<result property="subjectName" column="SUBJECT_NAME" />
+		<result property="playType" column="PLAY_TYPE" />
+	</resultMap>
+	
+
+	<sql id="RES_VEDIO_TBL_columns">
+		RES_VEDIO_TBL.VO_ID, 
+		RES_VEDIO_TBL.VG_ID, 
+		RES_VEDIO_TBL.POINTID,
+		RES_VEDIO_TBL.VO_NAME, 
+		RES_VEDIO_TBL.VO_URL,
+		RES_VEDIO_TBL.CREATE_TIME, 
+		RES_VEDIO_TBL.DOWN_TIME,
+		RES_VEDIO_TBL.LECTURE, 
+		RES_VEDIO_TBL.CONTENT,
+		RES_VEDIO_TBL.VIEW_NUM, 
+		RES_VEDIO_TBL.VO_SIZE,
+		RES_VEDIO_TBL.IS_SHARE, 
+		RES_VEDIO_TBL.COLLECTION_NUM,
+		RES_VEDIO_TBL.IS_AUDITION, 
+		RES_VEDIO_TBL.REACH_URL,
+		RES_VEDIO_TBL.VO_ORDER, 
+		RES_VEDIO_TBL.VO_INFO,
+		RES_VEDIO_TBL.VO_RADONE,
+		RES_VEDIO_TBL.VO_XUANXIU,
+		RES_VEDIO_TBL.TC_ID,
+		RES_VEDIO_TBL.VO_SCORES,
+		RES_VEDIO_TBL.VO_BSCORES,
+		RES_VEDIO_TBL.TEACHER_NAME,
+		RES_VEDIO_TBL.AUDITION_SIZE,
+		RES_VEDIO_TBL.AUDITION_URL,
+		RES_VEDIO_TBL.FREE_VEDIO,
+		RES_VEDIO_TBL.RECOMMEND,
+		RES_VEDIO_TBL.VEDIO_PIC_URL,
+		RES_VEDIO_TBL.CC_URL,
+		RES_VEDIO_TBL.PLAY_TYPE
+	</sql>
+
+	<sql id="RES_VEDIO_TBL_properties">
+		#voId#, #vgId#, #pointid#, #voName#, #voUrl#, #createTime#,
+		#downTime#, #lecture#, #content#, #viewNum#, #voSize#,
+		#isShare#, #collectionNum#, #isAudition#, #reachUrl#, #voOrder#,
+		#voInfo# ,#voRadOne#, #xuanXiu#,#tcId#,#voScores#,#voBScores#,#teacherName#,
+		#auditionSize#,#auditionUrl#,#freeVedio#,#recommend#,#vedioPicUrl#,#ccUrl#,#playType#  
+	</sql>
+
+	<insert id="createVedio" parameterClass="Vedio">
+		INSERT INTO RES_VEDIO_TBL (
+		<include refid="Vedio_NS.RES_VEDIO_TBL_columns" />
+		) VALUES (
+		<include refid="Vedio_NS.RES_VEDIO_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="voId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteVedioById" parameterClass="int">
+		DELETE FROM RES_VEDIO_TBL WHERE VO_ID = #value#
+	</delete>
+	
+	<delete id="deleteVedioByPointid" parameterClass="int">
+		DELETE FROM RES_VEDIO_TBL WHERE pointId = #value#
+	</delete>
+
+	<update id="updateVedio" parameterClass="Vedio">
+		UPDATE RES_VEDIO_TBL SET VO_ID = #voId#, VG_ID = #vgId#, POINTID
+		= #pointid#, VO_NAME = #voName#, VO_URL = #voUrl#, CREATE_TIME =
+		#createTime#, DOWN_TIME = #downTime#, LECTURE = #lecture#,
+		CONTENT = #content#, VIEW_NUM = #viewNum#, VO_SIZE = #voSize#,
+		IS_SHARE = #isShare#, COLLECTION_NUM = #collectionNum#,
+		IS_AUDITION = #isAudition#, REACH_URL = #reachUrl#, VO_ORDER =
+		#voOrder#, VO_INFO = #voInfo# ,VO_RADONE = #voRadOne# ,VO_XUANXIU=#xuanXiu#,TC_ID=#tcId#,VO_SCORES=#voScores#,VO_BSCORES=#voBScores#,
+		TEACHER_NAME = #teacherName# ,AUDITION_SIZE = #auditionSize# ,AUDITION_URL = #auditionUrl# ,FREE_VEDIO = #freeVedio# ,RECOMMEND = #recommend#,
+		VEDIO_PIC_URL=#vedioPicUrl#,
+		CC_URL = #ccUrl#,
+		PLAY_TYPE = #playType#
+		 WHERE VO_ID = #voId#
+	</update>
+
+	<select id="getVedioById" resultMap="Vedio_NS.VedioResult"
+		parameterClass="int">
+		SELECT
+		<include refid="Vedio_NS.RES_VEDIO_TBL_columns" />
+		FROM RES_VEDIO_TBL WHERE VO_ID = #value#
+	</select>
+	<select id="getVedioByPointid" resultMap="Vedio_NS.VedioResult" parameterClass="int">
+		SELECT
+		<include refid="Vedio_NS.RES_VEDIO_TBL_columns" />
+		FROM RES_VEDIO_TBL WHERE POINTID = #value#
+	</select>
+	
+	<select id="getVedioListCount" resultClass="int"
+		parameterClass="QueryVedioCondition">
+		SELECT COUNT(1) FROM RES_VEDIO_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="searchKey">
+				<isNotEqual property="searchKey" compareValue="0"
+					prepend="and">
+					(VO_NAME like '%$searchKey$%' OR LECTURE like
+					'%$searchKey$%')
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+	</select>
+
+	<select id="getVedioList" resultMap="Vedio_NS.VedioResult"
+		parameterClass="QueryVedioCondition">
+		<include refid="public_sql.page_begin" />
+		SELECT
+		<include refid="Vedio_NS.RES_VEDIO_TBL_columns" />
+		FROM RES_VEDIO_TBL
+		<dynamic prepend="WHERE">
+			<isNotNull property="searchKey">
+				<isNotEqual property="searchKey" compareValue="0"
+					prepend="and">
+					(VO_NAME like '%$searchKey$%' OR LECTURE like
+					'%$searchKey$%')
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		order by RES_VEDIO_TBL.VO_ID desc
+		<include refid="public_sql.page_end" />
+	</select>
+	<select id="getVedioByVgId" resultMap="Vedio_NS.VedioResult"
+		parameterClass="int">
+
+		SELECT
+		<include refid="Vedio_NS.RES_VEDIO_TBL_columns" />
+		FROM RES_VEDIO_TBL WHERE VG_ID = #value#
+
+	</select>
+	
+	
+	 <select id="getKponitIdByUrl" resultClass="int" parameterClass="string">
+        	SELECT VO_ID AS ID FROM RES_VEDIO_TBL WHERE VO_URL = #VALUE# LIMIT 1
+        </select>
+        
+        <update id="updateCCURLbyVOId" parameterClass="java.util.HashMap">
+        	UPDATE RES_VEDIO_TBL SET CC_URL = #ccUrl# WHERE VO_ID = #id#
+        </update>
+        
+        <select id="getKpointList4cc" resultClass="java.util.HashMap" parameterClass="QueryVedioCondition">
+        	SELECT VO_ID AS ID ,SUBSTR(REVERSE(LEFT(REVERSE(VO_URL),INSTR(REVERSE(VO_URL),'/'))),2) AS TRIM_URL,VO_URL AS VOURL FROM RES_VEDIO_TBL WHERE RES_VEDIO_TBL.VO_URL IS NOT NULL AND RES_VEDIO_TBL.VO_URL != '' AND (RES_VEDIO_TBL.CC_URL IS NULL OR RES_VEDIO_TBL.CC_URL = '')
+        	<!-- SELECT VO_ID AS ID,VO_URL VOURL FROM RES_VEDIO_TBL -->
+        	<include refid="public_sql.page_end"/>
+        </select>
+        
+        <select id="getKpointList4ccCount" resultClass="int">
+        	SELECT COUNT(1) FROM RES_VEDIO_TBL WHERE RES_VEDIO_TBL.VO_URL IS NOT NULL AND RES_VEDIO_TBL.VO_URL != '' AND (RES_VEDIO_TBL.CC_URL IS NULL OR RES_VEDIO_TBL.CC_URL = '')
+        	<!-- SELECT COUNT(1)  FROM RES_VEDIO_TBL -->
+        </select>
+        
+     	<select id="getSubjectPlayType" resultMap="Vedio_NS.SubjectPlayTypeResult">
+		SELECT DISTINCT
+					cou_course_tbl.SUBJECT_ID,
+					sys_subject_tbl.SUBJECT_NAME,
+					res_vedio_tbl.PLAY_TYPE
+			
+					FROM
+					cou_course_tbl ,
+					cou_kpoint_tbl ,
+					res_vedio_tbl ,
+					sys_subject_tbl
+					WHERE
+					cou_course_tbl.COURSE_ID = cou_kpoint_tbl.COURSE_ID AND
+					cou_kpoint_tbl.POINT_ID = res_vedio_tbl.POINTID AND
+					cou_course_tbl.SUBJECT_ID = sys_subject_tbl.SUBJECT_ID AND
+					res_vedio_tbl.CC_URL IS NOT NULL AND
+					res_vedio_tbl.PLAY_TYPE is not NULL
+		</select>
+        
+        
+     <update id="updatePlayType" parameterClass="java.util.HashMap">
+		 UPDATE RES_VEDIO_TBL,
+				COU_COURSE_TBL,
+				COU_KPOINT_TBL
+			SET RES_VEDIO_TBL.PLAY_TYPE = #playType#
+			WHERE
+				COU_COURSE_TBL.COURSE_ID = COU_KPOINT_TBL.COURSE_ID
+			AND COU_KPOINT_TBL.POINT_ID = RES_VEDIO_TBL.POINTID
+			AND COU_COURSE_TBL.SUBJECT_ID = #subjectId#
+      </update>
+	<!--end-->
+</sqlMap>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ReProblem_NS">
+        <!--table:CUS_RE_PROBLEM_TBL-->
+        <typeAlias alias="ReProblem" type="com.shangde.edu.cus.domain.ReProblem"/>
+        <typeAlias alias="QueryReProblemCondition" type="com.shangde.edu.cus.condition.QueryReProblemCondition"/>
+
+        <resultMap id="ReProblemResult" class="ReProblem">
+            <result property="reId" column="RE_ID"/>
+            <result property="pblId" column="PBL_ID"/>
+            <result property="reInfo" column="RE_INFO"/>
+            <result property="reTime" column="RE_TIME"/>
+            <result property="reManType" column="RE_MAN_TYPE"/>
+            <result property="reManId" column="RE_MAN_ID"/>
+            <result property="isResult" column="RE_IS_RESULT"/>
+            <result property="reStatus" column="RE_STATUS"/>
+            <result property="customer" column="RE_MAN_ID" select="Customer_NS.getCustomerById"/>
+            <result property="user" column="RE_MAN_ID" select="User_NS.getUserById"/>
+        </resultMap>
+        
+        <resultMap id="ReProblemResultAndOffic" class="ReProblem">
+            <result property="reId" column="RE_ID"/>
+            <result property="pblId" column="PBL_ID"/>
+            <result property="reInfo" column="RE_INFO"/>
+            <result property="reTime" column="RE_TIME"/>
+            <result property="reManType" column="RE_MAN_TYPE"/>
+            <result property="reManId" column="RE_MAN_ID"/>
+            <result property="isResult" column="RE_IS_RESULT"/>
+            <result property="reStatus" column="RE_STATUS"/>
+            <result property="isOfficial" column="CUS_ID"/>
+            <result property="customer" column="RE_MAN_ID" select="Customer_NS.getCustomerById"/>
+            <result property="user" column="RE_MAN_ID" select="User_NS.getUserById"/>
+        </resultMap>
+
+        <sql id="CUS_RE_PROBLEM_TBL_columns">
+            CUS_RE_PROBLEM_TBL.RE_ID,
+            CUS_RE_PROBLEM_TBL.PBL_ID,
+            CUS_RE_PROBLEM_TBL.RE_INFO,
+            CUS_RE_PROBLEM_TBL.RE_TIME,
+            CUS_RE_PROBLEM_TBL.RE_MAN_TYPE,
+            CUS_RE_PROBLEM_TBL.RE_MAN_ID,
+            CUS_RE_PROBLEM_TBL.RE_IS_RESULT,
+            CUS_RE_PROBLEM_TBL.RE_STATUS
+        </sql>
+
+        <sql id="CUS_RE_PROBLEM_TBL_properties">
+            #reId#,
+            #pblId#,
+            #reInfo#,
+            #reTime#,
+            #reManType#,
+            #reManId#,
+            #isResult#,
+            #reStatus#
+        </sql>
+
+        <insert id="createReProblem" parameterClass="ReProblem">
+            INSERT INTO CUS_RE_PROBLEM_TBL (<include refid="ReProblem_NS.CUS_RE_PROBLEM_TBL_columns"/>) VALUES (<include refid="ReProblem_NS.CUS_RE_PROBLEM_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="reId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteReProblemById" parameterClass="int">
+            DELETE FROM CUS_RE_PROBLEM_TBL
+            WHERE
+                RE_ID = #value#
+        </delete>
+
+        <update id="updateReProblem" parameterClass="ReProblem">
+            UPDATE CUS_RE_PROBLEM_TBL SET
+                RE_ID = #reId#,
+                PBL_ID = #pblId#,
+                RE_INFO = #reInfo#,
+                RE_TIME = #reTime#,
+                RE_MAN_TYPE = #reManType#,
+                RE_MAN_ID = #reManId#,
+                RE_IS_RESULT=#isResult#,
+                RE_STATUS=#reStatus#
+               
+            WHERE
+                RE_ID = #reId#
+        </update>
+
+        <select id="getReProblemById" resultMap="ReProblem_NS.ReProblemResult" parameterClass="int">
+            SELECT
+            <include refid="ReProblem_NS.CUS_RE_PROBLEM_TBL_columns"/>
+            FROM CUS_RE_PROBLEM_TBL
+            WHERE
+                RE_ID = #value#
+        </select>
+
+		 <select id="getReProblem" resultMap="ReProblem_NS.ReProblemResultAndOffic" parameterClass="int">
+            SELECT
+            <include refid="ReProblem_NS.CUS_RE_PROBLEM_TBL_columns"/>,CUS_OFFICIAL_CUSTOMER_TBL.`CUS_ID`
+              FROM CUS_RE_PROBLEM_TBL 
+              LEFT JOIN CUS_OFFICIAL_CUSTOMER_TBL ON CUS_RE_PROBLEM_TBL.`RE_MAN_ID`= CUS_OFFICIAL_CUSTOMER_TBL.`CUS_ID`
+            WHERE
+                PBL_ID=#pblId# ORDER BY RE_ID DESC
+        </select>
+
+        <select id="getReProblemList" resultMap="ReProblem_NS.ReProblemResult" parameterClass="QueryReProblemCondition">
+            SELECT
+            <include refid="ReProblem_NS.CUS_RE_PROBLEM_TBL_columns"/>
+            FROM CUS_RE_PROBLEM_TBL
+             <dynamic prepend="WHERE"> 
+             <isNotNull property="pblId">
+            	<isNotEqual property="pblId" compareValue="0" prepend="and">
+		               PBL_ID=#pblId#
+			    </isNotEqual>
+			  </isNotNull>
+			   <isNotNull property="reManId">
+            	<isNotEqual property="reManId" compareValue="0" prepend="and">
+		               RE_MAN_ID=#reManId#
+			    </isNotEqual>
+			  </isNotNull>
+		  </dynamic>
+        </select>
+         <select id="getReProblemCountByList" resultClass="int" parameterClass="QueryReProblemCondition">
+            SELECT COUNT(1) FROM CUS_RE_PROBLEM_TBL 
+            where CUS_RE_PROBLEM_TBL.PBL_ID=#pblId# 
+        </select>
+        <select id="getReProblemByList" resultMap="ReProblem_NS.ReProblemResultAndOffic" parameterClass="QueryReProblemCondition">
+           <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="ReProblem_NS.CUS_RE_PROBLEM_TBL_columns"/>,CUS_OFFICIAL_CUSTOMER_TBL.`CUS_ID`
+            FROM CUS_RE_PROBLEM_TBL 
+             LEFT JOIN CUS_OFFICIAL_CUSTOMER_TBL ON CUS_RE_PROBLEM_TBL.`RE_MAN_ID`= CUS_OFFICIAL_CUSTOMER_TBL.`CUS_ID`
+            where CUS_RE_PROBLEM_TBL.PBL_ID=#pblId# GROUP BY CUS_OFFICIAL_CUSTOMER_TBL.`CUS_ID` order by CUS_RE_PROBLEM_TBL.re_time desc
+		   <include refid="public_sql.page_end"/>
+        </select>
+        
+        <!-- get count of reword -->
+        <select id="getCountByCusId" resultClass="int" parameterClass="QueryReProblemCondition">
+            SELECT
+            count(1)
+            FROM CUS_RE_PROBLEM_TBL
+            WHERE
+                RE_MAN_TYPE = #reManType# and RE_MAN_ID = #reManId#
+        </select>
+        
+        <!--Yangning 后台批量删除用户信息时 同时回复信息 -->
+        <delete id="deleteReProblemByCusIds" parameterClass="String">
+            DELETE FROM CUS_RE_PROBLEM_TBL
+            WHERE
+                PBL_ID IN (SELECT PBL_ID FROM CUS_PROBLEM_TBL WHERE CUS_ID IN ($value$))
+        </delete>
+        <!--end-->
+</sqlMap>

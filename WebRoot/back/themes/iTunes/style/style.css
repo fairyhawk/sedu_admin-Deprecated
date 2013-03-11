@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* iTunes Style */
+body{
+	background-color: #F2F2F2;
+}
+#header{
+	height: 80px;
+	background: url(../images/header_bg.jpg) repeat-x 0 0;
+}
+	.clock{
+		color: #111;
+	}
+#top_nav_box{
+	background: url(../images/top_nav_bg.jpg) repeat-x 0 0;
+}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Section_NS">
+        <!--table:KB_SECTION_TBL-->
+        <typeAlias alias="Section" type="com.shangde.edu.kb.domain.Section"/>
+        <typeAlias alias="QuerySectionCondition" type="com.shangde.edu.kb.condition.QuerySectionCondition"/>
+
+        <resultMap id="SectionResult" class="Section">
+            <result property="sId" column="S_ID"/>
+            <result property="sIndex" column="S_INDEX"/>
+            <result property="sName" column="S_NAME"/>
+            <result property="chId" column="CH_ID"/>
+            <result property="cId" column="C_ID"/>
+            <result property="pId" column="P_ID"/>
+            <result property="sVersion" column="S_VERSION"/>
+            <result property="sKSubject" column="S_K_SUBJECT"/>
+            <result property="sCreatetime" column="S_CREATETIME"/>
+            <result property="sUpdatetime" column="S_UPDATETIME"/>
+            <result property="sNote" column="S_NOTE"/>
+        </resultMap>
+
+        <sql id="KB_SECTION_TBL_columns">
+            KB_SECTION_TBL.S_ID,
+            KB_SECTION_TBL.S_INDEX,
+            KB_SECTION_TBL.S_NAME,
+            KB_SECTION_TBL.CH_ID,
+            KB_SECTION_TBL.C_ID,
+            KB_SECTION_TBL.P_ID,
+            KB_SECTION_TBL.S_VERSION,
+            KB_SECTION_TBL.S_K_SUBJECT,
+            KB_SECTION_TBL.S_CREATETIME,
+            KB_SECTION_TBL.S_UPDATETIME,
+            KB_SECTION_TBL.S_NOTE
+        </sql>
+
+        <sql id="KB_SECTION_TBL_properties">
+            #sId#,
+            #sIndex#,
+            #sName#,
+            #chId#,
+            #cId#,
+            #pId#,
+            #sVersion#,
+            #sKSubject#,
+            #sCreatetime#,
+            #sUpdatetime#,
+            #sNote#
+        </sql>
+
+        <insert id="createSection" parameterClass="Section">
+            INSERT INTO KB_SECTION_TBL (<include refid="Section_NS.KB_SECTION_TBL_columns"/>) VALUES (<include refid="Section_NS.KB_SECTION_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="sId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteSectionById" parameterClass="int">
+            DELETE FROM KB_SECTION_TBL
+            WHERE
+                S_ID = #value#
+        </delete>
+        <update id="updateSection" parameterClass="Section">
+            UPDATE KB_SECTION_TBL SET
+                S_ID = #sId#,
+                S_INDEX = #sIndex#,
+                S_NAME = #sName#,
+                CH_ID = #chId#,
+                C_ID = #cId#,
+                P_ID = #pId#,
+                S_VERSION = #sVersion#,
+                S_K_SUBJECT = #sKSubject#,
+                S_CREATETIME = #sCreatetime#,
+                S_UPDATETIME = #sUpdatetime#,
+                S_NOTE=#sNote#
+            WHERE
+                S_ID = #sId#
+        </update>
+
+        <select id="getSectionById" resultMap="Section_NS.SectionResult" parameterClass="int">
+            SELECT
+            <include refid="Section_NS.KB_SECTION_TBL_columns"/>
+            FROM KB_SECTION_TBL
+            WHERE
+                S_ID = #value#
+        </select>
+        <select id="getSectionList" resultMap="Section_NS.SectionResult" parameterClass="QuerySectionCondition">
+            SELECT
+            <include refid="Section_NS.KB_SECTION_TBL_columns"/>
+            FROM KB_SECTION_TBL
+        </select>
+         <select id="getSectionByList" resultMap="Section_NS.SectionResult" parameterClass="QuerySectionCondition">
+            SELECT
+            <include refid="Section_NS.KB_SECTION_TBL_columns"/>
+            FROM KB_SECTION_TBL
+              <dynamic prepend="WHERE">
+	            <isNotEqual property="chId" compareValue="0" prepend="and">
+	           CH_ID = #chId#
+	            </isNotEqual>
+            </dynamic>
+        </select>
+        <!--end-->
+</sqlMap>

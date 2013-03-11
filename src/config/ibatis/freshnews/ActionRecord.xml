@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ActionRecord_NS">
+        <!--table:CUS_ACTION_RECORD_TBL-->
+        <typeAlias alias="ActionRecord" type="com.shangde.edu.freshnews.domain.ActionRecord"/>
+        <typeAlias alias="QueryActionRecordCondition" type="com.shangde.edu.freshnews.condition.QueryActionRecordCondition"/>
+		<typeAlias alias="Customer" type="com.shangde.edu.cus.domain.Customer" />
+		<typeAlias alias="Subject" type="com.shangde.edu.sys.domain.Subject" />
+		<typeAlias alias="Contract" type="com.shangde.edu.finance.domain.Contract"/>
+		<typeAlias alias="CashRecord" type="com.shangde.edu.finance.domain.CashRecord" />
+		<typeAlias alias="ActionRecordByExam" type="com.shangde.edu.freshnews.domain.ActionRecordByExam"/>
+        <resultMap id="ActionRecordResult" class="ActionRecord">
+            <result property="id" column="ID"/>
+            <result property="relateId" column="RELATE_ID"/>
+            <result property="currentType" column="CURRENT_TYPE"/>
+            <result property="content" column="CONTENT"/>
+            <result property="cusName" column="CUS_NAME"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="cusEmail" column="CUS_EMAIL"/>
+            <result property="isAnswer" column="IS_ANSWER"/>
+            <result property="subjectId" column="SUBJECT_ID"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="updateTime" column="UPDATE_TIME"/>
+            <result property="otherInfo" column="OTHER_INFO"/>
+            <result property="headImg" column="HEAD_IMG"/>
+        </resultMap>
+
+        <sql id="CUS_ACTION_RECORD_TBL_columns">
+            CUS_ACTION_RECORD_TBL.ID,
+            CUS_ACTION_RECORD_TBL.RELATE_ID,
+            CUS_ACTION_RECORD_TBL.CURRENT_TYPE,
+            CUS_ACTION_RECORD_TBL.CONTENT,
+            CUS_ACTION_RECORD_TBL.CUS_NAME,
+            CUS_ACTION_RECORD_TBL.CUS_ID,
+            CUS_ACTION_RECORD_TBL.CUS_EMAIL,
+            CUS_ACTION_RECORD_TBL.IS_ANSWER,
+            CUS_ACTION_RECORD_TBL.SUBJECT_ID,
+            CUS_ACTION_RECORD_TBL.CREATE_TIME,
+            CUS_ACTION_RECORD_TBL.UPDATE_TIME,
+            CUS_ACTION_RECORD_TBL.OTHER_INFO,
+            CUS_ACTION_RECORD_TBL.HEAD_IMG
+        </sql>
+
+        <sql id="CUS_ACTION_RECORD_TBL_properties">
+            #id#,
+            #relateId#,
+            #currentType#,
+            #content#,
+            #cusName#,
+            #cusId#,
+            #cusEmail#,
+            #isAnswer#,
+            #subjectId#,
+            #createTime#,
+            #updateTime#,
+            #otherInfo#,
+            #headImg#
+        </sql>
+		<insert id="createActionRecord" parameterClass="ActionRecord">
+            INSERT INTO CUS_ACTION_RECORD_TBL (<include refid="ActionRecord_NS.CUS_ACTION_RECORD_TBL_columns"/>) VALUES (<include refid="ActionRecord_NS.CUS_ACTION_RECORD_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+       
+        <select id="getActionRecordByProblemId" parameterClass="int" resultMap="ActionRecordResult">
+        	SELECT <include refid="CUS_ACTION_RECORD_TBL_columns"/> 
+        		FROM CUS_ACTION_RECORD_TBL
+        			WHERE CUS_ACTION_RECORD_TBL.RELATE_ID=#VALUE#
+        </select>
+        <update id="updateActionRecord" parameterClass="ActionRecord">
+        	UPDATE CUS_ACTION_RECORD_TBL SET
+                ID = #id#,
+                RELATE_ID = #relateId#,
+                CURRENT_TYPE = #currentType#,
+                CONTENT = #content#,
+                CUS_NAME = #cusName#,
+                CUS_ID = #cusId#,
+                CUS_EMAIL = #cusEmail#,
+                IS_ANSWER = #isAnswer#,
+                SUBJECT_ID = #subjectId#,
+                CREATE_TIME = #createTime#,
+                UPDATE_TIME = #updateTime#,
+                OTHER_INFO=#otherInfo#,
+                HEAD_IMG=#headImg#
+            WHERE ID=#id#
+        </update>
+        <select id="getBeginCusWatchRecordId" resultClass="int">
+        	SELECT WATCH_RECORD_ID FROM HADATA_WATCH_RECORD  LIMIT 0,1
+        </select>
+        <update id="updateCusWatchRecordId" parameterClass="int">
+        	UPDATE HADATA_WATCH_RECORD SET WATCH_RECORD_ID=#VALUE#
+        </update>
+        <select id="getBeginId" parameterClass="int" resultClass="int">
+        	SELECT BEGIN_ID FROM BEGIN_ID_TBL WHERE TYPE=#VALUE#
+        </select>
+        <update id="updateBeginId" parameterClass="map">
+        	UPDATE BEGIN_ID_TBL SET BEGIN_ID=#beginId# WHERE TYPE=#type#
+        </update>
+        <select id="getCustomerList" parameterClass="int" resultClass="Customer">
+        	SELECT
+				cus_customer_tbl.cus_id AS cusId,
+				cus_customer_tbl.email AS email,
+				cus_customer_tbl.cus_name AS cusName,
+				cus_customer_tbl.reg_time AS regTime,
+				cus_customer_tbl.subject_id AS subjectId
+			FROM
+				cus_customer_tbl
+			WHERE
+				cus_customer_tbl.cus_id > #VALUE# order by cus_customer_tbl.cus_id desc
+        </select>
+        <select id="getSubjectById" parameterClass="int" resultClass="Subject">
+        	SELECT
+				sys_subject_tbl.subject_name AS subjectName
+			FROM
+				sys_subject_tbl
+			WHERE
+				sys_subject_tbl.subject_id =#value#
+        </select>
+        <select id="getContractList" parameterClass="int" resultClass="Contract">
+        	SELECT
+        		finance_contract_tbl.id ,
+				finance_contract_tbl.contract_id AS contractId,
+				finance_contract_tbl.create_time AS createTime,
+				finance_contract_tbl.cus_id AS cusId
+			FROM
+				finance_contract_tbl
+			WHERE
+				finance_contract_tbl.id > #value# order by finance_contract_tbl.id desc
+        </select>
+        <select id="getCashRecordList" parameterClass="string" resultClass="CashRecord">
+        	SELECT
+				finance_cash_record_tbl.pack_id AS packId,
+				cou_sell_way_tbl.sell_name AS crInfo,
+				finance_cash_record_tbl.CR_SUBJECT_ID as crSubjectId
+			FROM
+				finance_cash_record_tbl
+			JOIN cou_sell_way_tbl ON cou_sell_way_tbl.sell_id = finance_cash_record_tbl.pack_id
+			WHERE
+				finance_cash_record_tbl.contract_id = #value#
+        </select>
+        <select id="getActionRecordByExamList" parameterClass="int" resultClass="ActionRecordByExam">
+        	SELECT
+        		exam_exampaper_record_tbl.user_ep_id as userEpId,
+				exam_exampaper_record_tbl.accuracy,
+				exam_exampaper_record_tbl.ADDTIME AS createTime,
+				exam_exampaper_tbl.ep_name AS examName,
+				cus_customer_tbl.cus_id AS cusId,
+				cus_customer_tbl.cus_name AS cusName,
+				cus_customer_tbl.email AS email
+			FROM
+				exam_exampaper_record_tbl
+			JOIN exam_exampaper_tbl ON exam_exampaper_record_tbl.ep_id = exam_exampaper_tbl.ep_id
+			JOIN cus_customer_tbl ON cus_customer_tbl.cus_id = exam_exampaper_record_tbl.cus_id 
+			where exam_exampaper_record_tbl.user_ep_id>#value# order by exam_exampaper_record_tbl.user_ep_id desc
+        </select>
+</sqlMap>

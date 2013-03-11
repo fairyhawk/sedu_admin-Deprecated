@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Difficulty_NS">
+	<!--table:KB_DIFFICULTY_TBL-->
+	<typeAlias alias="Difficulty"
+		type="com.shangde.edu.kb.domain.Difficulty" />
+	<typeAlias alias="QueryDifficultyCondition"
+		type="com.shangde.edu.kb.condition.QueryDifficultyCondition" />
+
+	<resultMap id="DifficultyResult" class="Difficulty">
+		<result property="dId" column="D_ID" />
+		<result property="dName" column="D_NAME" />
+		<result property="note" column="NOTE" />
+		<result property="dLevel" column="D_LEVEL" />
+	</resultMap>
+
+	<resultMap class="Difficulty" id="DifficultyDlevel">
+		<result property="dLevel" column="D_LEVEL" />
+	</resultMap>
+
+	<sql id="KB_DIFFICULTY_TBL_columns">
+		KB_DIFFICULTY_TBL.D_ID, KB_DIFFICULTY_TBL.D_NAME,
+		KB_DIFFICULTY_TBL.NOTE, KB_DIFFICULTY_TBL.D_LEVEL
+	</sql>
+
+
+	<sql id="KB_DIFFICULTY_TBL_properties">
+		#dId#, #dName#, #note#, #dLevel#
+	</sql>
+
+	<insert id="createDifficulty" parameterClass="Difficulty">
+		INSERT INTO KB_DIFFICULTY_TBL (
+		<include refid="Difficulty_NS.KB_DIFFICULTY_TBL_columns" />
+		) VALUES (
+		<include refid="Difficulty_NS.KB_DIFFICULTY_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="dId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteDifficultyById" parameterClass="int">
+		DELETE FROM KB_DIFFICULTY_TBL WHERE D_ID = #value#
+
+
+
+	</delete>
+
+	<update id="updateDifficulty" parameterClass="Difficulty">
+		UPDATE KB_DIFFICULTY_TBL SET D_ID = #dId#, D_NAME = #dName#,
+		NOTE = #note#, D_LEVEL = #dLevel# WHERE D_ID = #dId#
+
+
+
+	</update>
+
+	<select id="getDifficultyById"
+		resultMap="Difficulty_NS.DifficultyResult" parameterClass="int">
+		SELECT
+		<include refid="Difficulty_NS.KB_DIFFICULTY_TBL_columns" />
+		FROM KB_DIFFICULTY_TBL WHERE D_ID = #value#
+
+
+
+	</select>
+
+	<select id="getDifficulty"
+		resultMap="Difficulty_NS.DifficultyResult"
+		parameterClass="Difficulty">
+		SELECT * FROM KB_DIFFICULTY_TBL WHERE D_LEVEL=(SELECT
+		MAX(D_LEVEL)FROM KB_DIFFICULTY_TBL)
+	</select>
+
+	<select id="getDifficultyDid"
+		resultMap="Difficulty_NS.DifficultyDlevel"
+		parameterClass="Difficulty">
+		SELECT COUNT(*) AS D_LEVEL FROM KB_DIFFICULTY_TBL
+	</select>
+
+	<select id="getDifficultyList"
+		resultMap="Difficulty_NS.DifficultyResult"
+		parameterClass="QueryDifficultyCondition">
+		SELECT
+		<include refid="Difficulty_NS.KB_DIFFICULTY_TBL_columns" />
+		FROM KB_DIFFICULTY_TBL
+	</select>
+	<!--end-->
+</sqlMap>

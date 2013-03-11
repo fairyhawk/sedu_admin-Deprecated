@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ExampaperRecord_NS">
+        <!--table:EXAM_EXAMPAPER_RECORD_TBL-->
+        <typeAlias alias="ExampaperRecord" type="com.shangde.edu.exam.domain.ExampaperRecord"/>
+        <typeAlias alias="QueryExampaperRecordCondition" type="com.shangde.edu.exam.condition.QueryExampaperRecordCondition"/>
+        <typeAlias alias="ExamAnalysisDTO" type="com.shangde.edu.exam.dto.ExamAnalysisDTO"/>
+        <typeAlias alias="ExampaperRecorDTO" type="com.shangde.edu.exam.dto.ExampaperRecorDTO"/>
+		
+		<!-- NOMAL -->
+        <resultMap id="ExampaperRecordResult" class="ExampaperRecorDTO">
+        	<result property="cusId" column="CUS_ID"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="accuracy" column="ACCURACY"/>
+            <result property="userScore" column="USER_SCORE"/>
+            <result property="testTime" column="TEST_TIME"/>
+            <result property="userEpId" column="USER_EP_ID"/>
+            <result property="email" column="EMAIL"/>
+            <result property="epName" column="EP_NAME"/>
+            <result property="eptype" column="EP_TYPE"/>
+            <result property="joinNum" column="JOIN_NUM"/>
+            <result property="epTotelScore" column="EP_TOTEL_SCORE"/>
+            <result property="subjectName" column="SUBJECT_NAME"/>          
+        </resultMap>
+        
+        <sql id="EXAM_EXAMPAPER_RECORD_TBL_columns">
+			  EXAM_EXAMPAPER_RECORD_TBL.CUS_ID,
+			  EXAM_EXAMPAPER_RECORD_TBL.ADDTIME,
+			  EXAM_EXAMPAPER_RECORD_TBL.ACCURACY,
+			  EXAM_EXAMPAPER_RECORD_TBL.USER_SCORE,
+			  EXAM_EXAMPAPER_RECORD_TBL.TEST_TIME,
+			  EXAM_EXAMPAPER_RECORD_TBL.USER_EP_ID,
+			  CUS_CUSTOMER_TBL.EMAIL,
+			  EXAM_EXAMPAPER_TBL.EP_NAME,
+			  EXAM_EXAMPAPER_TBL.EP_TYPE,
+			  EXAM_EXAMPAPER_TBL.JOIN_NUM,
+			  EXAM_EXAMPAPER_TBL.EP_TOTEL_SCORE,
+			  SYS_SUBJECT_TBL.SUBJECT_NAME 
+        </sql>
+        <!-- NOMAL -->
+        
+        <!-- exam analysis -->
+        <resultMap id="ExamAnalysisDTOResult" class="ExamAnalysisDTO">
+            <result property="examSum" column="EXAMSUM"/>
+            <result property="maxAccuracy" column="MAXACCURACY"/>
+            <result property="minAccuracy" column="MINACCURACY"/>
+        </resultMap>
+
+          <delete id="deleteERecordById" parameterClass="int">
+            DELETE FROM EXAM_EXAMPAPER_RECORD_TBL WHERE CUS_ID=#value#
+        </delete>
+        
+        <select id="getExampaperRecordAll" resultMap="ExampaperRecord_NS.ExampaperRecordResult" parameterClass="QueryExampaperRecordCondition">
+            <include refid="public_sql.page_begin"/>
+        	SELECT   
+        	<include refid="ExampaperRecord_NS.EXAM_EXAMPAPER_RECORD_TBL_columns"/>
+			FROM
+			  EXAM_EXAMPAPER_RECORD_TBL,
+			  EXAM_EXAMPAPER_TBL,
+			  CUS_CUSTOMER_TBL,
+			  SYS_SUBJECT_TBL 
+			WHERE EXAM_EXAMPAPER_RECORD_TBL.EP_ID = EXAM_EXAMPAPER_TBL.EP_ID
+			  AND EXAM_EXAMPAPER_RECORD_TBL.CUS_ID = CUS_CUSTOMER_TBL.CUS_ID
+			  AND EXAM_EXAMPAPER_TBL.SUBJECT_ID = SYS_SUBJECT_TBL.SUBJECT_ID
+        	<isNotNull property="tiaojian">
+	            	 <isEqual  property="tiaojian" compareValue="1" prepend="and">
+			                  EXAM_EXAMPAPER_TBL.EP_NAME like    '%$searchKey$%' 
+			          </isEqual>
+			          <isEqual  property="tiaojian" compareValue="2" prepend="and">
+			                  CUS_CUSTOMER_TBL.email like   '%$searchKey$%' 
+				      </isEqual>
+				      <isEqual  property="tiaojian" compareValue="3" prepend="and">
+			                  EXAM_EXAMPAPER_RECORD_TBL.USER_SCORE = #searchKey#  
+					  </isEqual>
+					  <isEqual  property="tiaojian" compareValue="4" prepend="and">
+			                  EXAM_EXAMPAPER_RECORD_TBL.TEST_TIME = #searchKey# 
+				     </isEqual>
+				     <isEqual  property="tiaojian" compareValue="5" prepend="and">
+			                   format( EXAM_EXAMPAPER_RECORD_TBL.ACCURACY,3) = format(#searchKey#,3)
+				     </isEqual>
+				     <isEqual  property="tiaojian" compareValue="6" prepend="and">
+			                  EXAM_EXAMPAPER_TBL.JOIN_NUM = #searchKey# 
+				    </isEqual>
+			</isNotNull>
+        	
+        	<isNotNull>
+        		<isNotEqual property="subject_id" compareValue="0" prepend="and">
+        		EXAM_EXAMPAPER_TBL.SUBJECT_ID=#subject_id#
+        		</isNotEqual>
+        	
+        	</isNotNull>
+        	
+        	<isNotNull>
+        		<isNotEqual property="cusId" compareValue="0" prepend="and">
+        		EXAM_EXAMPAPER_RECORD_TBL.CUS_ID=#cusId#
+        		</isNotEqual>
+        	
+        	</isNotNull>
+        	<isNotNull property="courseId">
+	            	 <isGreaterThan prepend="and" property="courseId" compareValue="0">
+	                		EXAM_EXAMPAPER_TBL.COURSE_ID=#courseId#
+	                </isGreaterThan>
+	        	</isNotNull>
+       		<isNotNull>
+	       		<isNotEqual property="eptype" compareValue="0" prepend="and">
+	       		EXAM_EXAMPAPER_TBL.EP_TYPE=#eptype#
+	       		</isNotEqual>
+        	</isNotNull>
+        	
+    		<isNotNull prepend="and" property="startTime">
+			    <![CDATA[  EXAM_EXAMPAPER_RECORD_TBL.ADDTIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  EXAM_EXAMPAPER_RECORD_TBL.ADDTIME <= #endTime# ]]>
+			</isNotNull>
+			<isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		EXAM_EXAMPAPER_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        	<isNotNull property="paixu">
+	            	 <isEqual  property="paixu" compareValue="1">
+	                		order by EXAM_EXAMPAPER_TBL.JOIN_NUM desc 
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="2">
+	                		order by EXAM_EXAMPAPER_TBL.JOIN_NUM ASC 
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="3">
+	                		order by EXAM_EXAMPAPER_TBL.COEFFCIENT desc 
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="4">
+	                		order by EXAM_EXAMPAPER_TBL.COEFFCIENT ASC 
+	                </isEqual>
+	                
+	                 <isEqual  property="paixu" compareValue="0">
+	                		order by EXAM_EXAMPAPER_RECORD_TBL.USER_EP_ID desc 
+	                </isEqual>
+	                
+	        	</isNotNull>
+           <include refid="public_sql.page_end"/>
+        	
+        </select>
+        
+        <!-- get exam analysis -->
+        <select id="getExampaperAnalysisDTO" resultMap="ExampaperRecord_NS.ExamAnalysisDTOResult" parameterClass="QueryExampaperRecordCondition">
+	         (select (CASE WHEN min(accuracy) IS NULL THEN 0 ELSE min(accuracy) END) as MINACCURACY, 
+				(CASE WHEN max(accuracy) IS NULL THEN 0 ELSE max(accuracy) END) as MAXACCURACY,
+				 count(*) EXAMSUM
+				 from EXAM_EXAMPAPER_RECORD_TBL right join exam_exampaper_tbl on exam_exampaper_tbl.EP_ID = exam_exampaper_record_tbl.EP_ID
+				where EXAM_EXAMPAPER_RECORD_TBL.CUS_ID = #cusId# and exam_exampaper_tbl.TYPE = 1 and exam_exampaper_tbl.K_OR_COU_ID = #courseId# 
+					
+			) union 
+			(select (CASE WHEN min(accuracy) IS NULL THEN 0 ELSE min(accuracy) END) as MINACCURACY, 
+					(CASE WHEN max(accuracy) IS NULL THEN 0 ELSE max(accuracy) END) as MAXACCURACY,
+					count(*) EXAMSUM
+					from EXAM_EXAMPAPER_RECORD_TBL right join exam_exampaper_tbl on exam_exampaper_tbl.EP_ID = EXAM_EXAMPAPER_RECORD_TBL.EP_ID,cou_kpoint_tbl
+			where EXAM_EXAMPAPER_RECORD_TBL.CUS_ID = #cusId# and exam_exampaper_tbl.TYPE = 2  and cou_kpoint_tbl.POINT_ID = exam_exampaper_tbl.K_OR_COU_ID  
+				and cou_kpoint_tbl.COURSE_ID = #courseId#  
+			);
+        </select>
+        <!-- get exam analysis -->
+        
+        <!-- rightQstNum -->
+        <select id="getRightQstNumByCourseId" resultClass="int" parameterClass="QueryExampaperRecordCondition">
+         select sum(b.bsum)  from 
+         		((select count(*) bsum  from EXAM_OPT_RECORD_TBL ,EXAM_QST_TBL,exam_exampaper_tbl
+					WHERE EXAM_OPT_RECORD_TBL.CUS_ID = #cusId#
+					AND EXAM_OPT_RECORD_TBL.user_answer = EXAM_QST_TBL.IS_ASR and EXAM_QST_TBL.qst_id = EXAM_OPT_RECORD_TBL.qst_id
+					AND exam_qst_tbl.EP_ID = exam_exampaper_tbl.EP_ID and exam_exampaper_tbl.TYPE = 1 
+					and exam_exampaper_tbl.K_OR_COU_ID = #courseId#)
+				union
+				(select count(*) bsum  from EXAM_OPT_RECORD_TBL ,EXAM_QST_TBL,exam_exampaper_tbl,cou_kpoint_tbl
+									WHERE EXAM_OPT_RECORD_TBL.CUS_ID = #cusId#
+									AND EXAM_OPT_RECORD_TBL.user_answer = EXAM_QST_TBL.IS_ASR and EXAM_QST_TBL.qst_id = EXAM_OPT_RECORD_TBL.qst_id
+									AND exam_qst_tbl.EP_ID = exam_exampaper_tbl.EP_ID and exam_exampaper_tbl.TYPE = 2 and exam_exampaper_tbl.K_OR_COU_ID =  cou_kpoint_tbl.POINT_ID
+									and  cou_kpoint_tbl.COURSE_ID = #courseId# )) b;
+        </select>
+         <!-- rightQstNum  qsttype=0 remove -->
+         
+         <!-- qstNum -->
+        <select id="getQstNumByCourseId" resultClass="int" parameterClass="QueryExampaperRecordCondition">
+	         select sum(b.bsum)  from ((select count(*) bsum  
+	         	from EXAM_OPT_RECORD_TBL ,EXAM_QST_TBL,exam_exampaper_tbl
+						WHERE EXAM_OPT_RECORD_TBL.CUS_ID = #cusId#
+						 and EXAM_QST_TBL.qst_id = EXAM_OPT_RECORD_TBL.qst_id
+						AND exam_qst_tbl.EP_ID = exam_exampaper_tbl.EP_ID and exam_exampaper_tbl.TYPE = 1 and exam_exampaper_tbl.K_OR_COU_ID = #courseId#)
+					union
+				(select count(*) bsum  from EXAM_OPT_RECORD_TBL ,EXAM_QST_TBL,exam_exampaper_tbl,cou_kpoint_tbl
+						WHERE EXAM_OPT_RECORD_TBL.CUS_ID = #cusId#
+						and EXAM_QST_TBL.qst_id = EXAM_OPT_RECORD_TBL.qst_id
+						AND exam_qst_tbl.EP_ID = exam_exampaper_tbl.EP_ID and exam_exampaper_tbl.TYPE = 2 and exam_exampaper_tbl.K_OR_COU_ID =  cou_kpoint_tbl.POINT_ID
+						and  cou_kpoint_tbl.COURSE_ID = #courseId# )) b;
+        </select>
+        
+         <select id="getExampaperRecordAllCount" resultClass="int" parameterClass="QueryExampaperRecordCondition">
+        	SELECT COUNT(1)
+        	FROM EXAM_EXAMPAPER_RECORD_TBL,EXAM_EXAMPAPER_TBL,CUS_CUSTOMER_TBL 
+        	where  EXAM_EXAMPAPER_RECORD_TBL.CUS_ID=CUS_CUSTOMER_TBL.CUS_ID 
+        	and  EXAM_EXAMPAPER_RECORD_TBL.EP_ID=EXAM_EXAMPAPER_TBL.EP_ID
+        	<isNotNull property="tiaojian">
+	            	 <isEqual  property="tiaojian" compareValue="1" prepend="and">
+			                  EXAM_EXAMPAPER_TBL.EP_NAME like    '%$searchKey$%' 
+			          </isEqual>
+			          <isEqual  property="tiaojian" compareValue="2" prepend="and">
+			                  CUS_CUSTOMER_TBL.email like   '%$searchKey$%' 
+				      </isEqual>
+				      <isEqual  property="tiaojian" compareValue="3" prepend="and">
+			                  EXAM_EXAMPAPER_RECORD_TBL.USER_SCORE = #searchKey#  
+					  </isEqual>
+					  <isEqual  property="tiaojian" compareValue="4" prepend="and">
+			                  EXAM_EXAMPAPER_RECORD_TBL.TEST_TIME = #searchKey# 
+				     </isEqual>
+				     <isEqual  property="tiaojian" compareValue="5" prepend="and">
+			                 format( EXAM_EXAMPAPER_RECORD_TBL.ACCURACY,3) = format(#searchKey#,3)
+				     </isEqual>
+				     <isEqual  property="tiaojian" compareValue="6" prepend="and">
+			                  EXAM_EXAMPAPER_TBL.JOIN_NUM = #searchKey# 
+				    </isEqual>
+			</isNotNull>
+        	
+        	<isNotNull>
+        		<isNotEqual property="subject_id" compareValue="0" prepend="and">
+        		EXAM_EXAMPAPER_TBL.SUBJECT_ID=#subject_id#
+        		</isNotEqual>
+        	
+        	</isNotNull>
+        	
+        	 <isNotNull>
+        		<isNotEqual property="cusId" compareValue="0" prepend="and">
+        		EXAM_EXAMPAPER_RECORD_TBL.CUS_ID=#cusId#
+        		</isNotEqual>
+        	
+        	</isNotNull>
+        	
+       		<isNotNull>
+	       		<isNotEqual property="eptype" compareValue="0" prepend="and">
+	       		EXAM_EXAMPAPER_TBL.EP_TYPE=#eptype#
+	       		</isNotEqual>
+        	</isNotNull>
+        	
+        	<isNotNull property="courseId">
+	            	 <isGreaterThan prepend="and" property="courseId" compareValue="0">
+	                		EXAM_EXAMPAPER_TBL.COURSE_ID=#courseId#
+	                </isGreaterThan>
+	        	</isNotNull>
+        	
+    		<isNotNull prepend="and" property="startTime">
+			    <![CDATA[  EXAM_EXAMPAPER_RECORD_TBL.ADDTIME >= #startTime# ]]>
+			</isNotNull>
+			<isNotNull prepend="and" property="endTime">
+				<![CDATA[  EXAM_EXAMPAPER_RECORD_TBL.ADDTIME <= #endTime# ]]>
+			</isNotNull>
+			
+			<isNotNull property="sortId">
+	            	 <isGreaterThan prepend="and" property="sortId" compareValue="0">
+	                		EXAM_EXAMPAPER_TBL.SORT_ID=#sortId#
+	                </isGreaterThan>
+	        	</isNotNull>
+			
+        	<isNotNull property="paixu">
+	            	 <isEqual  property="paixu" compareValue="1">
+	                		order by EXAM_EXAMPAPER_TBL.JOIN_NUM desc 
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="2">
+	                		order by EXAM_EXAMPAPER_TBL.JOIN_NUM ASC 
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="3">
+	                		order by EXAM_EXAMPAPER_TBL.COEFFCIENT desc 
+	                </isEqual>
+	                 <isEqual  property="paixu" compareValue="4">
+	                		order by EXAM_EXAMPAPER_TBL.COEFFCIENT ASC 
+	                </isEqual>
+	                
+	                 <isEqual  property="paixu" compareValue="0">
+	                		order by EXAM_EXAMPAPER_RECORD_TBL.USER_EP_ID desc 
+	                </isEqual>
+	                
+	        	</isNotNull>
+        </select>
+        <!--Yangning 后台批量删除用户时批量删除删除Erecord-->
+        <delete id="deleteERecordByIds" parameterClass="String">
+            DELETE FROM EXAM_EXAMPAPER_RECORD_TBL WHERE CUS_ID IN ($value$)
+        </delete>
+</sqlMap>

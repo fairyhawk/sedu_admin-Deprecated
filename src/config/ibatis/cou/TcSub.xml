@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TcSub_NS">
+        <!--table:COU_TC_SUB_TBL-->
+        <typeAlias alias="TcSub" type="com.shangde.edu.cou.domain.TcSub"/>
+
+        <resultMap id="TcSubResult" class="TcSub">
+            <result property="id" column="ID"/>
+            <result property="tcId" column="tcId"/>
+            <result property="subjectId" column="subjectId"/>
+        </resultMap>
+
+        <sql id="COU_TC_SUB_TBL_columns">
+           ID,
+           tcId,
+           SUBJECTID
+        </sql>
+
+        <sql id="COU_TC_SUB_TBL_properties">
+            #id#,
+            #tcId#,
+            #subjectId#
+        </sql>
+
+        <insert id="createTcSub" parameterClass="TcSub">
+            INSERT INTO COU_TC_SUB_TBL (<include refid="TcSub_NS.COU_TC_SUB_TBL_columns"/>) VALUES (<include refid="TcSub_NS.COU_TC_SUB_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+<!--         <delete id="deleteTcSubById" parameterClass="">
+            DELETE FROM COU_TC_SUB_TBL
+            WHERE        </delete>-->
+
+        <update id="updateTcSub" parameterClass="TcSub">
+            UPDATE COU_TC_SUB_TBL SET
+                ID = #id#,
+                tcId = #tcId#,
+                SUBJECTID = #subjectId#
+            WHERE  Id=#id#
+        </update>
+
+        <select id="getTcSubBytcId" resultMap="TcSubResult"  parameterClass="int">
+            SELECT * FROM COU_TC_SUB_TBL WHERE tcId=#value# limit 1
+        </select> 
+
+       
+        <!--end-->
+</sqlMap>

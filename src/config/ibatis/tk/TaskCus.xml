@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TaskCus_NS">
+        <typeAlias alias="TaskCus" type="com.shangde.edu.tk.domain.TaskCus"/>
+        <typeAlias alias="QueryTaskCusCondition" type="com.shangde.edu.tk.condition.QueryTaskCusCondition"/>
+        <resultMap id="TaskCusResult" class="TaskCus">
+            <result property="id" column="ID"/>
+            <result property="taskId" column="TASK_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="isComplete" column="IS_COMPLETE"/>
+            <result property="isExpired" column="IS_EXPIRED"/>
+            <result property="acceptTime" column="ACCEPT_TIME"/>
+            <result property="completeTime" column="COMPLETE_TIME"/>
+            <result property="isReceived" column="is_received"/>
+            <result property="task" column="TASK_ID" select="Task_NS.getNomalTaskById"/>
+        </resultMap>
+
+        <sql id="TK_TASK_CUS_TBL_columns">
+            TK_TASK_CUS_TBL.ID,
+            TK_TASK_CUS_TBL.TASK_ID,
+            TK_TASK_CUS_TBL.CUS_ID,
+            TK_TASK_CUS_TBL.IS_COMPLETE,
+            TK_TASK_CUS_TBL.IS_EXPIRED,
+            TK_TASK_CUS_TBL.ACCEPT_TIME,
+            TK_TASK_CUS_TBL.COMPLETE_TIME,
+            TK_TASK_CUS_TBL.is_received
+        </sql>
+
+        <sql id="TK_TASK_CUS_TBL_properties">
+            #id#,
+            #taskId#,
+            #cusId#,
+            #isComplete#,
+            #isExpired#,
+            #acceptTime#,
+            #completeTime#,
+            #isReceived#
+        </sql>
+
+        <insert id="createTaskCus" parameterClass="TaskCus">
+            INSERT INTO TK_TASK_CUS_TBL (<include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>) VALUES (<include refid="TaskCus_NS.TK_TASK_CUS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTaskCusById" parameterClass="int">
+            DELETE FROM TK_TASK_CUS_TBL
+            WHERE
+                ID = #value#
+        </delete>
+        
+        <delete id="deleteTaskCusByTaskId" parameterClass="int">
+            DELETE FROM TK_TASK_CUS_TBL
+            WHERE
+                TASK_ID = #value#
+        </delete>
+          <delete id="deleteTaskCusByCusId" parameterClass="int">
+            DELETE FROM TK_TASK_CUS_TBL
+            WHERE
+                CUS_ID = #value#
+        </delete>
+
+        <update id="updateTaskCus" parameterClass="TaskCus">
+            UPDATE TK_TASK_CUS_TBL SET
+                ID = #id#,
+                TASK_ID = #taskId#,
+                CUS_ID = #cusId#,
+                IS_COMPLETE = #isComplete#,
+                IS_EXPIRED = #isExpired#,
+                ACCEPT_TIME = #acceptTime#,
+                COMPLETE_TIME = #completeTime#,
+                is_received = #isReceived#
+            WHERE
+                ID = #id#
+        </update>
+
+        <select id="getTaskCusById" resultMap="TaskCus_NS.TaskCusResult" parameterClass="int">
+            SELECT
+            <include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>
+            FROM TK_TASK_CUS_TBL
+            WHERE
+                ID = #value#
+        </select>
+        
+        <select id="getTaskCusByKey" resultMap="TaskCus_NS.TaskCusResult" parameterClass="QueryTaskCusCondition">
+            SELECT
+            <include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>
+            FROM TK_TASK_CUS_TBL, TK_TASK_TBL
+            WHERE
+                TK_TASK_TBL.TASK_ID = TK_TASK_CUS_TBL.TASK_ID AND TK_TASK_CUS_TBL.CUS_ID = #cusId# and TK_TASK_TBL.key_word = #keyWord#;
+        </select>
+        
+        <select id="getTaskCusByTaskIdAndCusId" resultMap="TaskCus_NS.TaskCusResult" parameterClass="QueryTaskCusCondition">
+            SELECT
+            <include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>
+            FROM TK_TASK_CUS_TBL
+            WHERE
+           		TK_TASK_CUS_TBL.cus_Id = #cusId# and
+           		TK_TASK_CUS_TBL.task_Id = #taskId#
+        </select>
+
+        <select id="getTaskCusList" resultMap="TaskCus_NS.TaskCusResult" parameterClass="QueryTaskCusCondition">
+            SELECT
+            <include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>
+            FROM TK_TASK_CUS_TBL
+        </select>
+        
+        <select id="getWebTaskCusList" resultMap="TaskCus_NS.TaskCusResult" parameterClass="QueryTaskCusCondition">
+            SELECT
+            <include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>
+            FROM TK_TASK_CUS_TBL,TK_TASK_TBL where 1 = 1 and 
+            	TK_TASK_CUS_TBL.task_id = TK_TASK_TBL.task_id and TK_TASK_CUS_TBL.is_Expired=0 and TK_TASK_CUS_TBL.is_received = 0
+            	<isNotEqual property="cusId" compareValue="0" prepend="AND">
+            		TK_TASK_CUS_TBL.cus_Id = #cusId#
+            	</isNotEqual>
+            	order by TK_TASK_TBL.IS_TOP desc,TK_TASK_TBL.IS_RECOMMEND desc ,TK_TASK_TBL.SORT_NUM;
+        </select>
+        
+        <select id="getCountByCusIdAndTaskId" resultClass="int" parameterClass="QueryTaskCusCondition">
+            SELECT
+            count(1)
+            FROM TK_TASK_CUS_TBL where 1 = 1
+            	<isNotEqual property="cusId" compareValue="0" prepend="AND">
+            		TK_TASK_CUS_TBL.cus_Id = #cusId#
+            	</isNotEqual>
+            	<isNotEqual property="taskId" compareValue="0" prepend="AND">
+            		TK_TASK_CUS_TBL.task_Id = #taskId#
+            	</isNotEqual>
+        </select>
+        
+        <select id="getFirstWebTaskCus" resultMap="TaskCus_NS.TaskCusResult" parameterClass="QueryTaskCusCondition">
+            SELECT
+            <include refid="TaskCus_NS.TK_TASK_CUS_TBL_columns"/>
+            FROM TK_TASK_CUS_TBL,TK_TASK_TBL where 1 = 1 and 
+            	TK_TASK_CUS_TBL.task_id = TK_TASK_TBL.task_id and TK_TASK_CUS_TBL.is_Expired=0 and TK_TASK_CUS_TBL.is_received = 0
+            	<isNotEqual property="cusId" compareValue="0" prepend="AND">
+            		TK_TASK_CUS_TBL.cus_Id = #cusId#
+            	</isNotEqual>
+            	order by TK_TASK_TBL.IS_TOP desc,TK_TASK_TBL.IS_RECOMMEND desc ,TK_TASK_TBL.SORT_NUM limit 1;
+        </select>
+        <!--end-->
+        <!--Yangning 后台批量删除用户时批量级联删除用户 -->
+        <delete id="deleteTaskCusByIds" parameterClass="String">
+            DELETE FROM TK_TASK_CUS_TBL
+            WHERE
+                CUS_ID IN ($value$)
+        </delete>
+</sqlMap>

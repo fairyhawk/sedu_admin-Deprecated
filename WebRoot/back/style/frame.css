@@ -1,0 +1,31 @@
+@charset "gb2312";
+body { 
+	width:100%; 
+	height:100%; 
+	margin:0; 
+	padding:0; 
+	font-size:13px; 
+	color:#4c5f66; 
+	line-height:23px;
+	background:#2c2c2c;
+}
+
+/* manage */
+.table_main {
+	width:100%;	
+	height:auto;
+	border:0;
+	border-top:2px #525252 solid;
+	background:url(../img/main_bg.gif) left repeat-y #525252;
+	}
+.table_left {
+	width:249px;
+	}
+.table_line {
+	width:7px;
+	}
+.table_right {
+	text-align:left;
+	background:#fff;
+	}
+/* manage --*/

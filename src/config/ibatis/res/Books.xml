@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Books_NS">
+        <!--table:RES_BOOKS_TBL-->
+        <typeAlias alias="Books" type="com.shangde.edu.res.domain.Books"/>
+        <typeAlias alias="QueryBooksCondition" type="com.shangde.edu.res.condition.QueryBooksCondition"/>
+
+        <resultMap id="BooksResult" class="Books">
+            <result property="bkId" column="BK_ID"/>
+            <result property="bgId" column="BG_ID"/>
+            <result property="pointid" column="POINTID"/>
+            <result property="bkName" column="BK_NAME"/>
+            <result property="bkAuthor" column="BK_AUTHOR"/>
+            <result property="bkType" column="BK_TYPE"/>
+            <result property="bkTitle" column="BK_TITLE"/>
+            <result property="bkPrice" column="BK_PRICE"/>
+            <result property="bkUrl" column="BK_URL"/>
+            <result property="ypUrl" column="YP_URL"/>
+            <result property="bkSales" column="BK_SALES"/>
+            <result property="discPrice" column="DISC_PRICE"/>
+            <result property="publisher" column="PUBLISHER"/>
+            <result property="barcode" column="BARCODE"/>
+            <result property="part" column="PART"/>
+            <result property="reach" column="REACH"/>
+            <result property="bkOrder" column="BK_ORDER"/>
+            <result property="createTime" column="CREATE_TIME"/>
+            <result property="downTime" column="DOWN_TIME"/>
+            <result property="bkInfo" column="BK_INFO"/>
+        </resultMap>
+
+        <sql id="RES_BOOKS_TBL_columns">
+            RES_BOOKS_TBL.BK_ID,
+            RES_BOOKS_TBL.BG_ID,
+            RES_BOOKS_TBL.POINTID,
+            RES_BOOKS_TBL.BK_NAME,
+            RES_BOOKS_TBL.BK_AUTHOR,
+            RES_BOOKS_TBL.BK_TYPE,
+            RES_BOOKS_TBL.BK_TITLE,
+            RES_BOOKS_TBL.BK_PRICE,
+            RES_BOOKS_TBL.BK_URL,
+            RES_BOOKS_TBL.YP_URL,
+            RES_BOOKS_TBL.BK_SALES,
+            RES_BOOKS_TBL.DISC_PRICE,
+            RES_BOOKS_TBL.PUBLISHER,
+            RES_BOOKS_TBL.BARCODE,
+            RES_BOOKS_TBL.PART,
+            RES_BOOKS_TBL.REACH,
+            RES_BOOKS_TBL.BK_ORDER,
+            RES_BOOKS_TBL.CREATE_TIME,
+            RES_BOOKS_TBL.DOWN_TIME,
+            RES_BOOKS_TBL.BK_INFO
+        </sql>
+
+        <sql id="RES_BOOKS_TBL_properties">
+            #bkId#,
+            #bgId#,
+            #pointid#,
+            #bkName#,
+            #bkAuthor#,
+            #bkType#,
+            #bkTitle#,
+            #bkPrice#,
+            #bkUrl#,
+            #ypUrl#,
+            #bkSales#,
+            #discPrice#,
+            #publisher#,
+            #barcode#,
+            #part#,
+            #reach#,
+            #bkOrder#,
+            #createTime#,
+            #downTime#,
+            #bkInfo#
+        </sql>
+
+        <insert id="createBooks" parameterClass="Books">
+            INSERT INTO RES_BOOKS_TBL (<include refid="Books_NS.RES_BOOKS_TBL_columns"/>) VALUES (<include refid="Books_NS.RES_BOOKS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="bkId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteBooksById" parameterClass="int">
+            DELETE FROM RES_BOOKS_TBL
+            WHERE
+                BK_ID = #value#
+        </delete>
+        
+        <delete id="deleteBooksByPointId" parameterClass="int">
+            DELETE FROM RES_BOOKS_TBL
+            WHERE
+                POINTID = #value#
+        </delete>
+
+        <update id="updateBooks" parameterClass="Books">
+            UPDATE RES_BOOKS_TBL SET
+                BK_ID = #bkId#,
+                BG_ID = #bgId#,
+                POINTID = #pointid#,
+                BK_NAME = #bkName#,
+                BK_AUTHOR = #bkAuthor#,
+                BK_TYPE = #bkType#,
+                BK_TITLE = #bkTitle#,
+                BK_PRICE = #bkPrice#,
+                BK_URL = #bkUrl#,
+                YP_URL = #ypUrl#,
+                BK_SALES = #bkSales#,
+                DISC_PRICE = #discPrice#,
+                PUBLISHER = #publisher#,
+                BARCODE = #barcode#,
+                PART = #part#,
+                REACH = #reach#,
+                BK_ORDER = #bkOrder#,
+                CREATE_TIME = #createTime#,
+                DOWN_TIME = #downTime#,
+                BK_INFO = #bkInfo#
+            WHERE
+                BK_ID = #bkId#
+
+        </update>
+
+        <select id="getBooksById" resultMap="Books_NS.BooksResult" parameterClass="int">
+            SELECT
+            <include refid="Books_NS.RES_BOOKS_TBL_columns"/>
+            FROM RES_BOOKS_TBL
+            WHERE
+                BK_ID = #value#
+
+        </select>
+          <select id="getBooksListCount" resultClass="int" parameterClass="QueryBooksCondition">
+            SELECT COUNT(1)
+            FROM RES_BOOKS_TBL
+            <dynamic prepend="WHERE"> 
+               <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                 (BK_NAME like '%$searchKey$%'
+		          		OR
+			                BK_TITLE like '%$searchKey$%')
+			    </isNotEqual>
+			  </isNotNull>
+           </dynamic>
+        </select>
+
+        <select id="getBooksList" resultMap="Books_NS.BooksResult" parameterClass="QueryBooksCondition">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="Books_NS.RES_BOOKS_TBL_columns"/>
+            FROM RES_BOOKS_TBL 
+            <dynamic prepend="WHERE"> 
+             <isNotNull property="searchKey">
+            	<isNotEqual property="searchKey" compareValue="0" prepend="and">
+		                 (BK_NAME like '%$searchKey$%'
+		          		OR
+			                BK_TITLE like '%$searchKey$%')
+			    </isNotEqual>
+			  </isNotNull>
+          </dynamic>
+          ORDER BY BK_ID DESC
+            <include refid="public_sql.page_end"/>
+        </select>
+         <select id="getBooksByBgId" resultMap="Books_NS.BooksResult" parameterClass="int">
+            
+            SELECT
+            <include refid="Books_NS.RES_BOOKS_TBL_columns"/>
+            FROM RES_BOOKS_TBL
+            WHERE
+                BG_ID = #value#
+            
+        </select>
+        
+        <!-- select book by courseId -->
+        <select id="getBooksListByCourseId" resultMap="Books_NS.BooksResult" parameterClass="int">
+            select 
+            	<include refid="Books_NS.RES_BOOKS_TBL_columns"/>
+             from res_books_tbl, cou_kpoint_tbl  where res_books_tbl.POINTID = cou_kpoint_tbl.POINT_ID
+				and cou_kpoint_tbl.COURSE_ID = #value#
+        </select>
+     	 <select id="getBooksListByPointId" resultMap="Books_NS.BooksResult" parameterClass="int">
+            select 
+            	<include refid="Books_NS.RES_BOOKS_TBL_columns"/>
+             from res_books_tbl where POINTID=#value#
+             
+         </select>
+     
+        <!--end-->
+</sqlMap>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Options_NS">
+        <!--table:EXAM_OPTIONS_TBL-->
+        <typeAlias alias="Options" type="com.shangde.edu.exam.domain.Options"/>
+
+        <resultMap id="OptionsResult" class="Options">
+            <result property="optId" column="OPT_ID"/>
+            <result property="qstId" column="QST_ID"/>
+            <result property="optContent" column="OPT_CONTENT"/>
+            <result property="optOrder" column="OPT_ORDER"/>
+            <result property="wrongJudement" column="WRONG_JUDEMENT"/>
+            <result property="addtime" column="ADDTIME"/>
+        </resultMap>
+
+        <sql id="EXAM_OPTIONS_TBL_columns">
+            EXAM_OPTIONS_TBL.OPT_ID,
+            EXAM_OPTIONS_TBL.QST_ID,
+            EXAM_OPTIONS_TBL.OPT_CONTENT,
+            EXAM_OPTIONS_TBL.OPT_ORDER,
+            EXAM_OPTIONS_TBL.WRONG_JUDEMENT,
+            EXAM_OPTIONS_TBL.ADDTIME
+        </sql>
+
+        <sql id="EXAM_OPTIONS_TBL_properties">
+            #optId#,
+            #qstId#,
+            #optContent#,
+            #optOrder#,
+            #wrongJudement#,
+            #addtime#
+        </sql>
+
+        <insert id="createOptions" parameterClass="Options">
+            INSERT INTO EXAM_OPTIONS_TBL (<include refid="Options_NS.EXAM_OPTIONS_TBL_columns"/>) VALUES (<include refid="Options_NS.EXAM_OPTIONS_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="optId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteOptionsById" parameterClass="int">
+            DELETE FROM EXAM_OPTIONS_TBL
+            WHERE
+                QST_ID = #value#
+        </delete>
+
+        <update id="updateOptions" parameterClass="Options">
+            UPDATE EXAM_OPTIONS_TBL SET
+                OPT_ID = #optId#,
+                QST_ID = #qstId#,
+                OPT_CONTENT = #optContent#,
+                OPT_ORDER = #optOrder#,
+                WRONG_JUDEMENT = #wrongJudement#,
+                ADDTIME = #addtime#
+            WHERE
+                OPT_ID = #optId#
+        </update>
+
+        
+        <!-- 根据qstid查询options -->
+        <select id="getOptionsListByQstId" resultMap="Options_NS.OptionsResult" parameterClass="int">
+        	SELECT
+        	<include refid="Options_NS.EXAM_OPTIONS_TBL_columns"/>
+            FROM EXAM_OPTIONS_TBL
+            WHERE QST_ID = #VALUE# ORDER BY OPT_ORDER
+        </select>
+        
+        <!--end-->
+</sqlMap>

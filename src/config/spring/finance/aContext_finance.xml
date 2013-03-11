@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="accountService" class="com.shangde.edu.finance.service.AccountImpl" parent="baseService"/>
+    <bean id="cashRecordService" class="com.shangde.edu.finance.service.CashRecordImpl" parent="baseServiceManyDb"/>
+    <bean id="contractService" class="com.shangde.edu.finance.service.ContractImpl" parent="baseServiceManyDb"/>
+    <bean id="codService" class="com.shangde.edu.finance.service.CodImpl" parent="baseService"/>
+    
+    <bean id="contractWebService" class="com.shangde.edu.finance.webService.ContractWebImpl" parent="baseService"/>
+    <bean id="cashRecordWebService" class="com.shangde.edu.finance.webService.CashRecordWebImpl" parent="baseService"/>
+    <bean id="sellService" class="com.shangde.edu.cou.service.SellCouImpl" parent="baseService"/>
+    <bean id="financeCouponService" class="com.shangde.edu.finance.service.CouponImpl" parent="baseServiceManyDb"/>
+    <bean id="financeCoursesortService" class="com.shangde.edu.cou.service.CoursesortImpl" parent="baseService"/>
+    <bean id="refundService" class="com.shangde.edu.finance.service.RefundImpl" parent="baseServiceManyDb" />
+	
+	<bean id="customerWebService" class="com.shangde.edu.cus.webservice.CustomerWSImpl" parent="baseService">
+    	<property name="customerService" ref="customerService"></property>
+    	<property name="contractService" ref="contractService"></property>
+    	<property name="sellCouService" ref="sellCouService"></property>
+    	<property name="courseService" ref="courseService"></property>
+    	<property name="cashRecordService" ref="cashRecordService"></property>
+    	<property name="gmrecordService" ref="gmrecordService"></property>
+    	<property name="sellWayService" ref="sellWayService"></property>
+	 	<property name="tsRecordService" ref="tsRecordService"></property>   
+    	<property name="totolsScoreService" ref="totolsScoreService"></property>
+    	<property name="addressService" ref="addressService"></property>
+    </bean>
+	<bean id="childContractService" class="com.shangde.edu.finance.service.ChildContractImpl" parent="baseService"/>
+	<bean id="invoiceService" class="com.shangde.edu.finance.service.InvoiceServiceImpl" parent="baseService"/>
+	<bean id="waybillService" class="com.shangde.edu.finance.service.WaybillServiceImpl" parent="baseService"/>
+</beans>

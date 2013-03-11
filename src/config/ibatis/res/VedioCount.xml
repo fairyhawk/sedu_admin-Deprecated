@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Vedio_CT">
+	<!--table:video_count_tbl-->
+	<typeAlias alias="VedioCount" type="com.shangde.edu.res.domain.VedioCount" />
+	<typeAlias alias="VedioCountStatus" type="com.shangde.edu.res.domain.VedioCountStatus" />
+	<typeAlias alias="VedioBookCountStatus" type="com.shangde.edu.res.domain.VedioBookCountStatus" />
+	<!-- 配置缓存模型 -->
+		<cacheModel id="Vedio_CT-cache" type="FIFO" readOnly="true" serialize="true">
+			<flushInterval hours="24" />
+			<property value="1000" name="size" />
+		</cacheModel>
+	<resultMap class="VedioCountStatus" id="UserResult">
+		<result property="data" column="data"/>
+		<result property="userNo" column="userNo"/>
+		<result property="vediono" column="vediono"/>
+		<result property="noteNo" column="noteNo"/>
+		<result property="noteLoad" column="noteLoad"/>
+		<result property="jiangyi" column="jiangyi"/>
+		<result property="pingjia" column="pingjia"/>
+		<result property="ceshi" column="ceshi"/>
+		<result property="qiehuan" column="qiehuan"/>
+		<result property="zice" column="zice"/>
+		<result property="tiwen" column="tiwen"/>
+	</resultMap>
+	
+	<resultMap class="VedioBookCountStatus" id="UserBookResult">
+		<result property="data" column="data"/>
+		<result property="kjzc" column="kjzc"/>
+		<result property="kjz" column="kjz"/>
+		<result property="jjs" column="jjs"/>
+		<result property="xl" column="xl"/>
+		<result property="jz2" column="jz2"/>
+	</resultMap>
+	
+	<sql id="video_count_TBL_columns">
+		video_count_TBL.id, 
+		video_count_TBL.cus_id, 
+		video_count_TBL.count_num, 
+		video_count_TBL.count_time, 
+		video_count_TBL.status 
+	</sql>
+
+	<sql id="video_COUNT_TBL_properties">
+		#id#,
+		#cusid#,
+		#countnum#,
+		#counttime#,
+		#status#
+	</sql>
+	
+	
+	<!-- 根据时间段查询用户 -->
+	<select id="getUserIdNum" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from  (select id from video_count_tbl where  <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]>  and status = 2 group by cus_id,DATE_FORMAT(count_time,'%Y-%m-%d')  ) as  mycount
+		 
+	</select>
+	<!-- 根据时间段查询播放器 -->
+	<select id="getVedioNum" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=2 	
+	</select>
+	<!-- 根据时间段 -->
+	<select id="getNoteNum" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where  <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=3	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getNoteLoad" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where  <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=4	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getjiangyi" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where  <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=5	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getpingjia" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where  <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=6	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getCeshi" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where  <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]>	and status=7	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getqiehuan" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=8	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getzice" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]>	and status=9	
+	</select>
+	<!-- 根据时间段进行查询 -->
+	<select id="getiwen" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=10	
+	</select>
+	
+	
+	<select id="getStatusNo" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=#status#	
+	</select>
+	
+	<select id="getKjzc" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=11	
+	</select>
+	<select id="getKjz" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=12	
+	</select>
+	<select id="getJjs" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=13	
+	</select>
+	<select id="getXl" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=14	
+	</select>
+	<select id="getJz2" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from video_count_tbl where <![CDATA[ count_time > #beginDate# and count_time < #endDate# ]]> 	and status=15	
+	</select>
+	
+	
+	
+	<!-- 统计当天使用人数 -->
+	<select id="getCusListCountbydate" resultClass="int" cacheModel="Vedio_CT-cache">
+		select COUNT(DISTINCT cus_id) from video_count_tbl where  to_days(count_time) = to_days(now())	and status=2
+	</select>
+	
+	<!-- 统计本周使用人数 -->
+	<select id="getCusListCountbyweek" resultClass="int" cacheModel="Vedio_CT-cache">
+		 select count(1) from  (select id from video_count_tbl where  YEARWEEK(date_format(count_time,'%Y-%m-%d')) = YEARWEEK(now())  and status = 2 group by cus_id,DATE_FORMAT(count_time,'%Y-%m-%d')) as  mycount 
+	</select>
+	
+	<!-- 统计本月使用人数 -->
+	<select id="getCusListCountbymonth" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from  (select id from video_count_tbl where  DATE_FORMAT( count_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) ,'%Y%m' )   and status = 2 group by cus_id,DATE_FORMAT(count_time,'%Y-%m-%d')) as  mycount  
+	</select>
+
+
+	<!-- 统计当天状态所对应次数 -->
+	<select id="getVideoCountbydate" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from VIDEO_COUNT_TBL where to_days(count_time) = to_days(now()) and status = #value# 	
+	</select>
+	
+	<!-- 统计本周状态所对应次数 -->
+	<select id="getVideoCountbyweek" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from VIDEO_COUNT_TBL where YEARWEEK(date_format(count_time,'%Y-%m-%d')) = YEARWEEK(now()) and status = #value#	
+	</select>
+	
+	<!-- 统计本月状态所对应次数 -->
+	<select id="getVideoCountbymonth" resultClass="int" cacheModel="Vedio_CT-cache">
+		select count(1) from VIDEO_COUNT_TBL where DATE_FORMAT( count_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) and status = #value#	
+	</select>
+	
+	<!-- 统计每天的数据 -->
+	<select id="getNoByDate" resultMap="Vedio_CT.UserResult"  cacheModel="Vedio_CT-cache">
+	SELECT    
+			DATE(video_count_tbl.count_time) AS DATA,  
+            COUNT(DISTINCT CASE WHEN video_count_tbl.status=2 THEN video_count_tbl.cus_id ELSE NULL END ) AS userNo,
+            SUM(CASE WHEN video_count_tbl.status='2' THEN 1 ELSE 0 END) AS 'vediono',
+			SUM(CASE WHEN video_count_tbl.status='3' THEN 1 ELSE 0 END) AS 'noteNo',
+			SUM(CASE WHEN video_count_tbl.status='4' THEN 1 ELSE 0 END) AS 'noteLoad',
+			SUM(CASE WHEN video_count_tbl.status='5' THEN 1 ELSE 0 END) AS 'jiangyi',
+			SUM(CASE WHEN video_count_tbl.status='6' THEN 1 ELSE 0 END) AS 'pingjia',
+			SUM(CASE WHEN video_count_tbl.status='7' THEN 1 ELSE 0 END) AS 'ceshi',
+			SUM(CASE WHEN video_count_tbl.status='8' THEN 1 ELSE 0 END) AS 'qiehuan',
+			SUM(CASE WHEN video_count_tbl.status='9' THEN 1 ELSE 0 END) AS 'zice',
+			SUM(CASE WHEN video_count_tbl.status='10' THEN 1 ELSE 0 END) AS 'tiwen'
+			FROM video_count_tbl GROUP BY DATE(video_count_tbl.count_time)  ORDER BY DATE(video_count_tbl.count_time) DESC LIMIT 100
+	</select>	
+	
+	<!-- 统计图书每天的数据 -->
+	<select id="getBookNoByDate" resultMap="Vedio_CT.UserBookResult"  cacheModel="Vedio_CT-cache">
+	select    
+			date(video_count_tbl.count_time) as data,  
+            SUM(CASE WHEN video_count_tbl.status='11' THEN 1 ELSE 0 END) AS 'kjzc',
+			SUM(CASE WHEN video_count_tbl.status='12' THEN 1 ELSE 0 END) AS 'kjz',
+			SUM(CASE WHEN video_count_tbl.status='13' THEN 1 ELSE 0 END) AS 'jjs',
+			SUM(CASE WHEN video_count_tbl.status='14' THEN 1 ELSE 0 END) AS 'xl',
+			SUM(CASE WHEN video_count_tbl.status='15' THEN 1 ELSE 0 END) AS 'jz2'
+			from video_count_tbl group by date(video_count_tbl.count_time)  order by count_time desc limit 100
+	</select>
+</sqlMap>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

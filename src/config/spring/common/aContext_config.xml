@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean name="configurator"
+		class="com.shangde.common.service.ConfigService" scope="singleton"
+		parent="baseService">
+		<property name="paperStatusMap">
+			<map>
+				<entry key="0" value="全部" />
+				<entry key="1" value="待处理" />
+				<entry key="2" value="锁定" />
+				<entry key="3" value="提交审核" />
+				<entry key="4" value="审核未通过" />
+				<entry key="5" value="审核通过" />
+			</map>
+		</property>
+		
+		<!-- 任务应用分类 -->
+		<property name="applicationSortMap">
+			<map>
+				<entry key="0" value="通用" />
+				<entry key="1" value="平台欢迎词" />
+				<entry key="2" value="学习计划" />
+				<entry key="3" value="问答相关" />
+				<entry key="4" value="讨论区" />
+			</map>
+		</property>
+		
+		<!-- 任务应用分类 -->
+		<property name="userLevelMap">
+			<map>
+				<entry key="0" value='通用' />
+				<entry key="1" value='1' />
+				<entry key="2" value="2" />
+				<entry key="3" value="3" />
+				<entry key="4" value="4" />
+				<entry key="5" value="5" />
+				<entry key="6" value="6" />
+				<entry key="7" value="7" />
+				<entry key="8" value="8" />
+				<entry key="9" value="9" />
+				<entry key="10" value="10" />
+				<entry key="11" value="11" />
+				<entry key="12" value="12" />
+				<entry key="13" value="13" />
+				<entry key="14" value="14" />
+				<entry key="15" value="15" />
+				<entry key="16" value="16" />
+				<entry key="17" value="17" />
+				<entry key="18" value="18" />
+			</map>
+		</property>
+		
+		<!-- 任务应用分类 -->
+		<property name="msgSortMap">
+			<map>
+				<entry key="-1" value="请选择" />
+				<entry key="0" value="普通信息" />
+				<entry key="1" value="平台欢迎词" />
+				<entry key="2" value="学习计划" />
+				<entry key="3" value="问答相关" />
+				<entry key="4" value="讨论区" />
+			</map>
+		</property>
+		
+		<!-- 消息类型 -->
+		<property name="msgTypeMap">
+			<map>
+				<entry key="-1" value="请选择" />
+				<entry key="1" value="单人发送" />
+				<entry key="2" value="群发全部消息" />
+				<entry key="3" value="群发内部学员消息" />
+				<entry key="4" value="群发网站学员消息" />
+				<entry key="5" value="定时消息" />
+			</map>
+		</property>
+		
+		<!-- 考试状态 -->
+		<property name="examStatusMap">
+			<map>
+				<entry key="0" value="全部" />
+				<entry key="1" value="发布中" />
+				<entry key="2" value="进行中" />
+				<entry key="3" value="考试结束" />
+				<entry key="4" value="提前终止" />
+			</map>
+		</property>
+		
+		<!-- 考试状态 -->
+		<property name="telephoneMap">			
+			 <map>
+			 <!--  
+				<entry key="欧总" value="13911717200,qb"/>
+				<entry key="刘国强" value="13260008070,qb"/>
+				<entry key="肖总" value="13810652202,qb"/>
+				<entry key="张宇" value="13466508093,qb"/>
+				<entry key="吕敏" value="15901412517,qb"/>
+				<entry key="全晶" value="13911992828,qb"/>
+				<entry key="杜鑫" value="15810764652,qb"/>
+				<entry key="孙丽莹" value="15901256898,qb"/>
+				<entry key="徐浩" value="13810616158,sf"/>
+				<entry key="王丽媛" value="13501184845,c;k;z;gk"/>
+				<entry key="刘明霞" value="18611737288,jz"/>
+				<entry key="赵睿" value="13269620027,qb"/>
+				<entry key="国强" value="13810632602,人力资源管理师;心理咨询师;会计资格证;司法考试;注册会计师;证券从业;建造师考试课程;高级会计师;公务员"/>
+				<entry key="国强" value="13810632602,人力资源管理师;心理咨询师;会计资格证;司法考试;注册会计师;证券从业;建造师考试课程;高级会计师;公务员"/>
+				<entry key="国强" value="13810632602,人力资源管理师;心理咨询师;会计资格证;司法考试;注册会计师;证券从业;建造师考试课程;高级会计师;公务员"/>
+				<entry key="王超" value="15010877467,人力资源管理师;心理咨询师;会计资格证;司法考试;注册会计师;证券从业;建造师考试课程;高级会计师;公务员"/>
+					
+				-->
+				
+				
+				
+			</map>
+		</property>
+		
+		
+		<!-- 课程推荐模式 -->
+		<property name="courseMode">
+			<map>
+				<entry key="0" value="模式一" />
+				<entry key="1" value="模式二" />
+			</map>
+		</property>
+		
+		<!-- 课程推荐模式 -->
+		<property name="examlevel">
+			<map>
+				<entry key="1" value="简单" />
+				<entry key="2" value="普通" />
+				<entry key="3" value="困难" />
+			</map>
+		</property>
+		
+		<!-- 课程推荐模式 -->
+		
+		<!-- 推广来源网站列表 -->
+		<property name="webFromList">
+			<list>
+				<value>uxuan001</value>
+				<value>uxuan002</value>
+				<value>uxuan003</value>
+				<value>uxuan004</value>
+				<value>uxuan005</value>
+				<value>uxuan006</value>
+				<value>uxuan007</value>
+				<value>uxuan008</value>
+				<value>uxuan009</value>
+				<value>uxuan010</value>
+				<value>uxuan011</value>
+				<value>uxuan012</value>
+				<value>uxuan013</value>
+				<value>uxuan014</value>
+				<value>uxuan015</value>
+				<value>uxuan016</value>
+				<value>uxuan017</value>
+				<value>uxuan018</value>
+				<value>uxuan019</value>
+				<value>uxuan020</value>
+				<value>xuefa</value>
+				<value>baidu</value>
+				<value>google</value>
+			</list>
+		</property>
+		<!-- 推广来源网站列表 //-->
+		
+		<!-- 推广代理商列表 -->
+		<property name="webAgentList">
+			<list>
+				<value>youyi</value>
+				<value>adsage0001</value>
+				<value>adsage0002</value>
+				<value>adsage0003</value>
+				<value>adsage0004</value>
+				<value>adsage0005</value>
+				<value>adsage0006</value>
+				<value>adsage0007</value>
+				<value>adsage0008</value>
+				<value>adsage0009</value>
+				<value>adsage0010</value>
+			</list>
+		</property>
+		<!-- 推广代理商列表 //-->
+		
+		<property name="projectURL">
+			<value>http://172.16.123.184:8080/sedu</value>
+			<!-- <value>http://highso.org.cn</value> -->
+		</property>
+		
+		<property name="importURL">
+			<value>http://172.16.123.184:8080/sedu</value>
+			<!-- <value>http://highso.org.cn</value> -->
+		</property>
+	</bean>
+</beans>

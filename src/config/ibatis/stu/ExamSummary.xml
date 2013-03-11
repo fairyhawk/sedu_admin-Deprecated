@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ExamSummary_NS">
+        <!--table:STU_EXAM_SUMMARY_TBL-->
+        <typeAlias alias="ExamSummary" type="com.shangde.edu.stu.domain.ExamSummary"/>
+        <typeAlias alias="QueryExamSummaryCondition" type="com.shangde.edu.stu.condition.QueryExamSummaryCondition"/>
+        
+        <typeAlias alias="ExapaRe" type="com.shangde.edu.stu.domain.ExapaRe"/>
+        <typeAlias alias="Exapa" type="com.shangde.edu.stu.domain.Exapa"/>
+        <typeAlias alias="QueryExapaReCondition" type="com.shangde.edu.stu.condition.QueryExapaReCondition"/>
+ 		
+ 		
+        <resultMap id="ExamSummaryResult" class="ExamSummary">
+            <result property="eSumId" column="E_SUM_ID"/>
+            <result property="planId" column="PLAN_ID" nullValue="0"/>
+            <result property="summarydate" column="SUMMARYDATE"/>
+            <result property="isexam" column="ISEXAM" nullValue="0"/>
+            <result property="examname" column="EXAMNAME"/>
+            <result property="examId" column="EXAM_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+        </resultMap>
+
+        <sql id="STU_EXAM_SUMMARY_TBL_columns">
+            STU_EXAM_SUMMARY_TBL.E_SUM_ID,
+            STU_EXAM_SUMMARY_TBL.PLAN_ID,
+            STU_EXAM_SUMMARY_TBL.SUMMARYDATE,
+            STU_EXAM_SUMMARY_TBL.ISEXAM,
+            STU_EXAM_SUMMARY_TBL.EXAMNAME,
+            STU_EXAM_SUMMARY_TBL.EXAM_ID,
+            STU_EXAM_SUMMARY_TBL.CUS_ID
+        </sql>
+
+        <sql id="STU_EXAM_SUMMARY_TBL_properties">
+            #eSumId#,
+            #planId#,
+            #summarydate#,
+            #isexam#,
+            #examname#,
+            #examId#,
+            #cusId#
+        </sql>
+
+        <insert id="createExamSummary" parameterClass="ExamSummary">
+            INSERT INTO STU_EXAM_SUMMARY_TBL (<include refid="ExamSummary_NS.STU_EXAM_SUMMARY_TBL_columns"/>) VALUES (<include refid="ExamSummary_NS.STU_EXAM_SUMMARY_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="eSumId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+        
+        <select id="getExamSummaryList" resultMap="ExamSummary_NS.ExamSummaryResult" parameterClass="QueryExamSummaryCondition">
+            SELECT
+            <include refid="ExamSummary_NS.STU_EXAM_SUMMARY_TBL_columns"/>
+            FROM STU_EXAM_SUMMARY_TBL 
+	           	<dynamic prepend="WHERE">
+	           		<isNotNull prepend="AND" property="cusId">
+	           			cus_id=  #cusId#
+	           		</isNotNull>
+	           		<isNotEmpty prepend="AND" property="summarydate">
+            		( SUMMARYDATE LIKE '%$summarydate$%')
+            		</isNotEmpty>
+            		
+            		<!-- 
+	           		<isNotEmpty prepend="AND" property="summarydate">
+	            		SUMMARYDATE >= #summarydate#
+	            		<isNotEmpty prepend="AND" property="bfdate">
+		            		#bfdate# >= SUMMARYDATE
+		            	</isNotEmpty>
+	            	</isNotEmpty>
+	            	 -->
+	           	</dynamic>
+	            ORDER BY E_SUM_ID DESC
+        </select>
+
+		<!-- NOMAL -->
+        <resultMap id="ExampaperRecordResult" class="ExapaRe">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="epId" column="EP_ID"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="exapa" column="EP_ID" select="ExamSummary_NS.getExampaperById"/>
+        </resultMap>
+        
+        <sql id="EXAM_EXAMPAPER_RECORD_TBL_columns">
+            EXAM_EXAMPAPER_RECORD_TBL.CUS_ID,
+            EXAM_EXAMPAPER_RECORD_TBL.EP_ID,
+            EXAM_EXAMPAPER_RECORD_TBL.ADDTIME
+        </sql>
+        <!-- NOMAL -->
+
+        <sql id="EXAM_EXAMPAPER_RECORD_TBL_properties">
+            #cusId#,
+            #epId#,
+            #addtime#
+        </sql>
+        
+        <select id="getExampaperRecordList" resultMap="ExamSummary_NS.ExampaperRecordResult" parameterClass="QueryExapaReCondition">
+            SELECT
+            <include refid="ExamSummary_NS.EXAM_EXAMPAPER_RECORD_TBL_columns"/>
+            FROM EXAM_EXAMPAPER_RECORD_TBL
+            	<dynamic prepend="WHERE">
+	           		<isNotNull prepend="AND" property="cusId">
+	           			cus_id=  #cusId#
+	           		</isNotNull>
+	           		<isNotEmpty prepend="AND" property="addtime">
+            		( ADDTIME LIKE '%$addtime$%')
+            		</isNotEmpty>
+            		
+	           		<!-- 
+	           		<isNotEmpty prepend="AND" property="addtime">
+	            		ADDTIME >= #addtime#
+	            		<isNotEmpty prepend="AND" property="bftime">
+		            		#bftime# >= ADDTIME
+		            	</isNotEmpty>
+	            	</isNotEmpty> 
+	            	-->
+	           	</dynamic> 
+	           	ORDER BY ADDTIME ASC
+        </select>
+        
+        <resultMap id="ExampaperResult" class="Exapa">
+            <result property="epId" column="EP_ID"/>
+            <result property="epName" column="EP_NAME"/>
+        </resultMap>
+        
+
+        <sql id="EXAM_EXAMPAPER_TBL_columns">
+            EXAM_EXAMPAPER_TBL.EP_ID,
+            EXAM_EXAMPAPER_TBL.EP_NAME
+        </sql>
+
+        <sql id="EXAM_EXAMPAPER_TBL_properties">
+            #epId#,
+            #epName#
+        </sql>
+        
+        
+        <select id="getExampaperById" resultMap="ExamSummary_NS.ExampaperResult" parameterClass="int">
+            SELECT
+            <include refid="ExamSummary_NS.EXAM_EXAMPAPER_TBL_columns"/>
+            FROM EXAM_EXAMPAPER_TBL
+            WHERE
+                EP_ID = #value#
+
+        </select>
+        
+
+        <delete id="deleteExamSummaryById" parameterClass="int">
+            DELETE FROM STU_EXAM_SUMMARY_TBL
+            WHERE
+				 E_SUM_ID = #value#
+        </delete>
+        
+<!-- 暂时先注释，启用的时候  再开启
+        <update id="updateExamSummary" parameterClass="ExamSummary">
+            UPDATE STU_EXAM_SUMMARY_TBL SET
+                E_SUM_ID = #eSumId#,
+                PLAN_ID = #planId#,
+                SUMMARYDATE = #summarydate#,
+                ISEXAM = #isexam#,
+                EXAMNAME = #examname#,
+                EXAM_ID = #examId#,
+                CUS_ID = #cusId#
+            WHERE
+
+        </update>
+
+        <select id="getExamSummaryById" resultMap="ExamSummary_NS.ExamSummaryResult" parameterClass="">
+            SELECT
+            <include refid="ExamSummary_NS.STU_EXAM_SUMMARY_TBL_columns"/>
+            FROM STU_EXAM_SUMMARY_TBL
+            WHERE
+
+        </select>
+
+
+        
+        -->
+        <!--end-->
+</sqlMap>

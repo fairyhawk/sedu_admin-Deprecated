@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="msg" namespace="/msg" extends="edu-default">
+       <!--考试后台action -->
+       <action name="msg" class="com.shangde.edu.msg.action.MsgAction">
+       	   <interceptor-ref name="eduStack"/>
+	       <result name="addMsg">/back/jsp/common/success.jsp</result>
+	       <result name="toSendMsg">/back/jsp/msg/msg_add.jsp</result>
+	       <result name="listMsgsByCondition">/back/jsp/msg/msg_list.jsp</result>
+	       <result name="viewMsg">/back/jsp/msg/msg_view.jsp</result>
+	       <result name="toUpdateMsg">/back/jsp/msg/msg_update.jsp</result>
+	       <result name="updateMsg" type="redirect">msg!listMsgsByCondition.action?queryMessageCondition.currentPage=1</result>
+	       <result name="deleteMsg" type="redirect">msg!listMsgsByCondition.action?queryMessageCondition.currentPage=1</result>
+	       <result name="publishTask" type="redirect">task!toListTasks.action?queryTaskCondition.currentPage=1</result> 
+	       <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+       </action>
+       
+       <action name="webmsg" class="com.shangde.edu.msg.web.UserMsgWebAction">
+       	   <interceptor-ref name="loginStack"/>
+       	   <result name="deleteMsg" type='redirect'>webmsg!listReceiveMsgs.action?queryUserMsgCondition.currentPage=1</result>
+       	   
+	       <result name="listReceiveMsgs">/static/usercenter/jsp/msg/user_msg.jsp</result>
+	       <result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+       </action>
+    </package>
+</struts>

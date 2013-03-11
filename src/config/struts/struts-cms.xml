@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="cms" namespace="/cms" extends="edu-default">
+    	<!-- 栏目 -->
+      	<action name="column" class="com.shangde.edu.cms.action.ColumnAction">
+      		<result name="toaddColumn">/back/jsp/cms/addColumn.jsp</result>
+      		<result name="addSuccess">/back/jsp/cms/ok.jsp</result>
+      		<result name="showList">/back/jsp/cms/columnList.jsp</result>
+      		<result name="showColumn">/back/jsp/cms/editColumn.jsp</result>
+      	</action>
+     
+
+		<!-- comment -->
+        <action name="comment" class="com.shangde.edu.cms.action.CommentAction">
+        	<result name="search">/back/jsp/cms/comment/comment_list.jsp</result>
+        	<result name="showAdviceList">/back/jsp/cms/comment/advice_list.jsp</result>
+        	<result name="reshowAdviceList" type="redirect">/cms/comment!showAdviceList.action?queryCommentCondition.currentPage=${queryCommentCondition.currentPage}</result>
+        	<result name="initReplyAdvice">/back/jsp/cms/comment/advice_reply.jsp</result>
+        	<result name="initReplyUpdate">/back/jsp/cms/comment/reply_update.jsp</result>
+        	<result name="adviceMsg">/back/jsp/cms/comment/advice_msg_list.jsp</result>
+        	<result name="adviceDetail">/back/jsp/cms/comment/advice_detail.jsp</result>
+        	<result name="showReplyList">/back/jsp/cms/comment/advice_reply_list.jsp</result>
+        	<result name="research" type="redirect">
+				/cms/comment!getCommentListBySearch.action?queryCommentCondition.cfId=${queryCommentCondition.cfId}&amp;
+				queryCommentCondition.cmtInfo=${queryCommentCondition.cmtInfo}&amp;queryCommentCondition.currentPage=${queryCommentCondition.currentPage}
+        		&amp;queryCommentCondition.checkState=${queryCommentCondition.checkState}
+        	</result>
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+        	<result name="reshowReplyList" type="redirect">/cms/comment!showReplyList.action?queryCommentCondition.currentPage=1
+        	&amp;comment.cmtId=${reComment.sourceId}
+        	</result>
+        	<result name="exportComment" type="streamx">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			   <param name="contentDisposition">attachment;filename="${excelName}"</param>
+			    <param name="bufferSize">1024</param>
+			</result>
+        </action>
+		<!-- comment end -->        
+        
+        <!-- 以下为article -->
+        <action name="article" class="com.shangde.edu.cms.action.ArticleAction">
+        	<result name="toaddColumn">/back/jsp/cms/addArticle.jsp</result>
+        	<result name="addArticleSuccess" type="redirect">article!toAddArticle.action</result>
+        	<result name="readArticleSuccess" >/back/jsp/cms/readArticle.jsp</result>
+        	<result name="addArticleError">/back/jsp/cms/addArticle.jsp</result>
+        	<result name="showList">/back/jsp/cms/articleList.jsp</result>
+        	<result name="showEdit">/back/jsp/cms/editArticle.jsp</result>
+        	<result name="editSuccess" type="redirect">article!showArticleList.action</result>
+        	<result name="delSuccess" type="redirect">article!showArticleList.action</result>
+        	<result name="updateTypeSuccess" type="redirect">article!showArticleList.action</result>
+        </action>        
+     	<!-- article-end -->
+		
+		<!-- template -->
+        <action name="template" class="com.shangde.edu.cms.action.TemplateAction">
+        	<result name="list">/back/jsp/cms/template/template_list.jsp</result>
+        	<result name="addPage">/back/jsp/cms/template/template_add.jsp</result>
+        	<result name="updatePage">/back/jsp/cms/template/template_update.jsp</result>
+        	<result name="relist" type="redirect">
+        		/cms/template!showTemplateList.action?queryTemplateCondition.tmpName=${queryTemplateCondition.tmpName}&amp;
+        		queryTemplateCondition.currentPage=${queryTemplateCondition.currentPage}&amp;queryTemplateCondition.tmpType=${queryTemplateCondition.tmpType}
+        		&amp;queryTemplateCondition.tmpContent=${queryTemplateCondition.tmpContent}&amp;queryTemplateCondition.isUse=${queryTemplateCondition.isUse}
+            </result>
+        </action>
+        <!-- template end -->
+        
+        <!-- commentweb -->
+        <action name="cmtweb" class="com.shangde.edu.cms.web.CommentWebAction">
+        	<result name="answer">/static/web/comment/answer.jsp</result>
+        	<result name="reanswer" type="redirect">/cms/cmtweb!showAdviceList.action?queryCommentCondition.currentPage=1</result>
+        	<result name="showCommentList">/static/web/comment/comment.jsp</result>
+        	<result name="reshowCommentList" type="redirectAction"> 
+				<param name="actionName">cmtweb!showCommentList</param> 
+				<param name="queryCommentCondition.currentPage">1</param>
+				<param name="comment.cfId">${comment.cfId}</param>
+				<param name="comment.sourceId">${comment.sourceId}</param>
+				<param name="sourceName">${sourceName}</param>
+				<param name="sourceURL">${sourceURL}</param>
+			</result>
+			<!-- 
+        	<result name="reshowCommentList" type="redirect-action">cmtweb!showCommentList.action?queryCommentCondition.currentPage=1&amp;
+        		queryCommentCondition.cfId=${comment.cfId}&amp;
+        		queryCommentCondition.sourceId=${comment.sourceId}&amp;sourceURL=${sourceURL}
+        	</result>
+        	 -->
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+
+        <action name="cmtlimit" class="com.shangde.edu.cms.web.CommentWebAction">
+        	<result name="json" type="json">
+				<param name="root">result</param>
+			</result>
+			<interceptor-ref name="eduStackForWeb" />
+        </action>
+        <!-- commentweb end-->
+         <action name="acment" class="com.shangde.edu.cms.action.AcmentAction">
+        	<result name="acment_list">/back/jsp/cms/acment/acment_list.jsp</result>
+        	<result name="acment_add">/back/jsp/cms/acment/acment_add.jsp</result>
+        	<result name="acment_edit">/back/jsp/cms/acment/acment_edit.jsp</result>
+        	<result name="preview">/back/jsp/cms/acment/preview.jsp</result>
+        	<result name="json" type="json">
+        		<param name="root">jsonResult</param>
+        	</result>
+        </action>
+        
+        <!-- Survey -->
+        
+        <action name="sq" class="com.shangde.edu.cms.action.SqAction">
+        	<result name="showSurveyList">/back/jsp/cms/survey/survey_list.jsp</result>
+        	<result name="initAddSurvey">/back/jsp/cms/survey/survey_add.jsp</result>
+        	<result name="initUpdateSurvey">/back/jsp/cms/survey/survey_update.jsp</result>
+        </action>
+        
+        <action name="sqweb" class="com.shangde.edu.cms.web.SqWebAction">
+        	<result name="initSurvey">/web/jsp/survey/survey.jsp</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+        
+        <action name="sqasweb" class="com.shangde.edu.cms.web.SqAnswerWebAction">
+        	<result name="surveySuccess" type="redirect">/static/web/other/survey_success.html</result>
+			<interceptor-ref name="loginStack" />
+        </action>
+        
+        <!-- Survey  end //-->
+        <action name="tmpHistory" class="com.shangde.edu.cms.action.TmpHistoryAction">
+        	<result name="tmpHistory_list">/back/jsp/cms/template/tmpHistory_list.jsp</result>
+        	<result name="json" type="json">
+        		<param name="root">jsonResult</param>
+        	</result>
+        	<result name="restore" type="json">
+				<param name="includeProperties">jsonResult,tmpIds</param>
+			</result>
+			<result name="history" type="json">
+				<param name="includeProperties">jsonResult,history\.tmpContent,history\.tmpName,history\.tmpType</param>
+			</result>
+        </action>
+        
+        <!-- 资讯修改 12.12-->
+         <action name="information" class="com.shangde.edu.cms.action.InformationAction">
+         	<result name="information">/back/jsp/cms/informationShow.jsp</result>
+         </action>
+
+    </package>
+</struts>

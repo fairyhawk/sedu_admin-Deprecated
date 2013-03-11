@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TotolsScore_NS">
+        <!--table:CUS_TOTOLS_SCORE_TBL-->
+        <typeAlias alias="TotolsScore" type="com.shangde.edu.cus.domain.TotolsScore"/>
+        <typeAlias alias="QueryTotolsScoreCondition" type="com.shangde.edu.cus.condition.QueryTotolsScoreCondition"/>
+			<!-- 配置缓存模型 -->
+		<cacheModel id="TotolsScore_NS-cache" type="FIFO" readOnly="true" serialize="true">
+				<flushInterval hours="24" />
+	 			<flushOnExecute statement="TotolsScore_NS.createTotolsScore" />
+				<flushOnExecute statement="TotolsScore_NS.updateTotolsScore" />
+				<flushOnExecute statement="TotolsScore_NS.deleteTotolsScoreById" />
+				<flushOnExecute statement="TotolsScore_NS.deleteTotolsScoreByCusId" />
+				<flushOnExecute statement="TotolsScore_NS.deleteTotolsScoreByCusIds" />
+				<property value="1000" name="size" />
+		</cacheModel>
+		
+        <resultMap id="TotolsScoreResult" class="TotolsScore">
+            <result property="tsId" column="TS_ID"/>
+            <result property="cusId" column="CUS_ID"/>
+            <result property="tsCurrent" column="TS_CURRENT"/>
+            <result property="tsAction" column="TS_ACTION"/>
+            <result property="customer" column="CUS_ID" select="Customer_NS.getCustomerById"/>
+        </resultMap>
+      
+
+        <sql id="CUS_TOTOLS_SCORE_TBL_columns">
+            CUS_TOTOLS_SCORE_TBL.TS_ID,
+            CUS_TOTOLS_SCORE_TBL.CUS_ID,
+            CUS_TOTOLS_SCORE_TBL.TS_CURRENT,
+            CUS_TOTOLS_SCORE_TBL.TS_ACTION
+        </sql>
+
+        <sql id="CUS_TOTOLS_SCORE_TBL_properties">
+            #tsId#,
+            #cusId#,
+            #tsCurrent#,
+            #tsAction#
+        </sql>
+
+        <insert id="createTotolsScore" parameterClass="TotolsScore">
+            INSERT INTO CUS_TOTOLS_SCORE_TBL (<include refid="TotolsScore_NS.CUS_TOTOLS_SCORE_TBL_columns"/>) VALUES (<include refid="TotolsScore_NS.CUS_TOTOLS_SCORE_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="tsId" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteTotolsScoreById" parameterClass="int">
+            DELETE FROM CUS_TOTOLS_SCORE_TBL
+            WHERE
+                TS_ID = #value#
+        </delete>
+	
+		<delete id="deleteTotolsScoreByCusId" parameterClass="int">
+            DELETE FROM CUS_TOTOLS_SCORE_TBL
+            WHERE
+                CUS_ID = #value#
+        </delete>
+	
+        <update id="updateTotolsScore" parameterClass="TotolsScore">
+            UPDATE CUS_TOTOLS_SCORE_TBL SET
+                TS_ID = #tsId#,
+                CUS_ID = #cusId#,
+                TS_CURRENT = #tsCurrent#,
+                TS_ACTION = #tsAction#
+            WHERE
+                TS_ID = #tsId#
+        </update>
+
+        <select id="getTotolsScoreById" resultMap="TotolsScore_NS.TotolsScoreResult" parameterClass="int" cacheModel="TotolsScore_NS-cache">
+            SELECT
+            <include refid="TotolsScore_NS.CUS_TOTOLS_SCORE_TBL_columns"/>
+            FROM CUS_TOTOLS_SCORE_TBL
+            WHERE
+                TS_ID = #value#
+        </select>
+        <select id="getTotolsScore" resultMap="TotolsScore_NS.TotolsScoreResult" parameterClass="int" cacheModel="TotolsScore_NS-cache">
+        	SELECT
+            <include refid="TotolsScore_NS.CUS_TOTOLS_SCORE_TBL_columns"/>
+            FROM CUS_TOTOLS_SCORE_TBL
+            WHERE
+                CUS_ID = #value#
+        </select>
+
+        <select id="getTotolsScoreList" resultMap="TotolsScore_NS.TotolsScoreResult" parameterClass="QueryTotolsScoreCondition" cacheModel="TotolsScore_NS-cache">
+            SELECT
+            <include refid="TotolsScore_NS.CUS_TOTOLS_SCORE_TBL_columns"/>
+            FROM CUS_TOTOLS_SCORE_TBL
+            <dynamic prepend="WHERE"> 
+             <isNotNull property="cusId">
+            	<isNotEqual property="cusId" compareValue="0" prepend="and">
+		               CUS_ID=#cusId#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+        </select>
+        
+         <select id="getTotolsScorePageList" resultMap="TotolsScore_NS.TotolsScoreResult" parameterClass="QueryTotolsScoreCondition" cacheModel="TotolsScore_NS-cache">
+            <include refid="public_sql.page_begin"/>
+            SELECT
+            <include refid="TotolsScore_NS.CUS_TOTOLS_SCORE_TBL_columns"/>
+            FROM CUS_TOTOLS_SCORE_TBL            
+             <dynamic prepend="WHERE"> 
+             <isNotNull property="cusId">
+            	<isNotEqual property="cusId" compareValue="0" prepend="and">
+		              CUS_TOTOLS_SCORE_TBL.CUS_ID=#cusId#
+			    </isNotEqual>
+			  </isNotNull>
+			   <isNotNull property="tsCurrent">
+            	<isNotEqual property="tsCurrent" compareValue="0" prepend="and">
+		               CUS_TOTOLS_SCORE_TBL.TS_CURRENT=#tsCurrent#
+			    </isNotEqual>
+			  </isNotNull>		   
+			  </dynamic>
+             <include refid="public_sql.page_end"/>
+        </select>
+        
+         <select id="getTotolsScoreByCount" resultClass="int" parameterClass="QueryTotolsScoreCondition" cacheModel="TotolsScore_NS-cache">
+            SELECT COUNT(1) FROM CUS_TOTOLS_SCORE_TBL
+            <dynamic prepend="WHERE"> 
+             <isNotNull property="cusId">
+            	<isNotEqual property="cusId" compareValue="0" prepend="and">
+		               CUS_ID=#cusId#
+			    </isNotEqual>
+			  </isNotNull>
+			   <isNotNull property="tsCurrent">
+            	<isNotEqual property="tsCurrent" compareValue="0" prepend="and">
+		               TS_CURRENT=#tsCurrent#
+			    </isNotEqual>
+			  </isNotNull>
+			  </dynamic>
+        </select>
+        <!--end-->
+        
+        <delete id="deleteTotolsScoreByCusIds" parameterClass="String">
+            DELETE FROM CUS_TOTOLS_SCORE_TBL
+            WHERE
+                CUS_ID IN ($value$)
+        </delete>
+</sqlMap>

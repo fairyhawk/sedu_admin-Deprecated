@@ -1,0 +1,19 @@
+@charset "gb2312";
+body { 
+	width:100%; 
+	height:100%; 
+	margin:0; 
+	padding:0; 
+	font-size:13px; 
+	color:#4c5f66; 
+	line-height:23px;
+	background:#2c2c2c;
+}
+
+/* manage */
+.bottom {
+	width:100%;
+	height:7px;
+	background:url(../img/bottom_bg.gif) repeat-x;
+	}
+/* manage --*/

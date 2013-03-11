@@ -1,0 +1,15 @@
+/* manage */
+.manage {
+	background:#adadad;
+	}
+
+.display_left {
+	width:5px;
+	height:498px;
+	margin-left:1px;
+	background:url(../img/display_left.gif) no-repeat top #adadad;
+	float:left;
+	display:inline;	
+	cursor:pointer;
+	}
+/* manage --*/

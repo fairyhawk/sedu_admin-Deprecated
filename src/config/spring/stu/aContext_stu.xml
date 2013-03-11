@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+    <bean id="courseSummaryService" class="com.shangde.edu.stu.service.CourseSummaryImpl" parent="baseService"/>
+    <bean id="examStatService" class="com.shangde.edu.stu.service.ExamStatImpl" parent="baseService"/>
+    <bean id="examSummaryService" class="com.shangde.edu.stu.service.ExamSummaryImpl" parent="baseService"/>
+    <bean id="planService" class="com.shangde.edu.stu.service.PlanImpl" parent="baseService"/>
+    <bean id="planclockService" class="com.shangde.edu.stu.service.PlanclockImpl" parent="baseService">
+    	<property name="mailService" ref="mailService"/>
+    </bean>
+    <bean id="planitemService" class="com.shangde.edu.stu.service.PlanitemImpl" parent="baseService"/>
+    <bean id="videoStatService" class="com.shangde.edu.stu.service.VideoStatImpl" parent="baseService"/>
+    <bean id="videoStatisticsService" class="com.shangde.edu.stu.service.VideoStatisticsImpl" parent="baseService"/>
+    <bean id="videoStatisticsServiceDetail" class="com.shangde.edu.stu.service.VideoStatisticsDetailImpl" parent="baseService" />
+</beans>

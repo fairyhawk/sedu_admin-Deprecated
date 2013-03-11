@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="card" namespace="/card" extends="edu-default">
+        <action name="cardMain" class="com.shangde.edu.card.action.CardMainAction"> 
+        	<result name="saveCourseCardInfo" type="redirect">cardMain!getCardCourseList.action?queryCardCourseCondition.currentPage=1&amp;queryCardCourseCondition.cardMainId=${cardMain.cardMainId}</result>
+        	<result name="courseCardInfo">/back/jsp/card/cardCourse/cardCourse_info.jsp</result>
+        	<result name="getSellById" type="json">
+        		<param name="root">result</param>
+        	</result>
+        	<result name="getCardCourseList">/back/jsp/card/cardCourse/cardCourseDetail_list.jsp</result>
+        	<result name="getCardCourseDetail">/back/jsp/card/cardCourse/cardCourseDetail_info.jsp</result>
+        	 <result name="exportCardCourse" type="stream">
+			    <param name="contentType">application/vnd.ms-excel</param>
+			    <param name="inputName">excelFile</param>       
+			    <param name="contentDisposition">attachment;filename="${exportName}"</param>
+			</result>
+			<result name="getCardCourseMainInfo">/back/jsp/card/cardCourse/cardCourseMain_view.jsp</result>
+			<result name="getCardCourseMainList">/back/jsp/card/cardCourse/cardCourseMain_list.jsp</result>
+        </action>
+    </package>
+</struts>

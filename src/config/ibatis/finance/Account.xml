@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Account_NS">
+        <!--table:FINANCE_ACCOUNT_TBL-->
+        <typeAlias alias="Account" type="com.shangde.edu.finance.domain.Account"/>
+        <typeAlias alias="QueryAccountCondition" type="com.shangde.edu.finance.condition.QueryAccountCondition"/>
+
+        <resultMap id="AccountResult" class="Account">
+            <result property="cusId" column="CUS_ID"/>
+            <result property="id" column="ID"/>
+            <result property="totolPrice" column="TOTOL_PRICE"/>
+        </resultMap>
+
+        <sql id="FINANCE_ACCOUNT_TBL_columns">
+            FINANCE_ACCOUNT_TBL.CUS_ID,
+            FINANCE_ACCOUNT_TBL.ID,
+            FINANCE_ACCOUNT_TBL.TOTOL_PRICE
+        </sql>
+
+        <sql id="FINANCE_ACCOUNT_TBL_properties">
+            #cusId#,
+            #id#,
+            #totolPrice#
+        </sql>
+
+        <insert id="createAccount" parameterClass="Account">
+            INSERT INTO FINANCE_ACCOUNT_TBL (<include refid="Account_NS.FINANCE_ACCOUNT_TBL_columns"/>) VALUES (<include refid="Account_NS.FINANCE_ACCOUNT_TBL_properties"/>)
+            <selectKey resultClass="int" type="post" keyProperty="id" >   
+                <include refid="public_sql.increment_sql"/>
+            </selectKey>
+        </insert>
+
+        <delete id="deleteAccountById" parameterClass="int">
+            DELETE FROM FINANCE_ACCOUNT_TBL
+            WHERE
+                
+ID = #value#
+
+        </delete>
+
+        <update id="updateAccount" parameterClass="Account">
+            UPDATE FINANCE_ACCOUNT_TBL SET
+                CUS_ID = #cusId#,
+                ID = #id#,
+                TOTOL_PRICE = #totolPrice#
+            WHERE
+                
+ID = #id#
+
+        </update>
+
+        <select id="getAccountById" resultMap="Account_NS.AccountResult" parameterClass="int">
+            SELECT
+            <include refid="Account_NS.FINANCE_ACCOUNT_TBL_columns"/>
+            FROM FINANCE_ACCOUNT_TBL
+            WHERE
+                
+ID = #value#
+
+        </select>
+
+        <select id="getAccountList" resultMap="Account_NS.AccountResult" parameterClass="QueryAccountCondition">
+            SELECT
+            <include refid="Account_NS.FINANCE_ACCOUNT_TBL_columns"/>
+            FROM FINANCE_ACCOUNT_TBL
+        </select>
+        <!--end-->
+</sqlMap>

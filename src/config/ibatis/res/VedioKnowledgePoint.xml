@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE sqlMap
+        PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VedioKnowledge_NS">
+	<!--table:RES_VEDIO_TBL-->
+	<typeAlias alias="VedioKnowledge" type="com.shangde.edu.res.domain.VedioKnowledge" />
+
+	<resultMap id="VedioKnowledgeResult" class="VedioKnowledge">
+		<result property="knowledgePointId" column="KNOWLEDGE_POINT_ID" />
+		<result property="voId" column="VO_ID" />
+		<result property="knowledgePoint" column="KNOWLEDGE_POINT" />
+		<result property="timePoint" column="TIME_POINT" />
+	</resultMap>
+
+	<sql id="RES_VEDIO_KNOWLEDGE_TBL_columns">
+		RES_VEDIO_KNOWLEDGE_TBL.KNOWLEDGE_POINT_ID, 
+		RES_VEDIO_KNOWLEDGE_TBL.VO_ID, 
+		RES_VEDIO_KNOWLEDGE_TBL.KNOWLEDGE_POINT,
+		RES_VEDIO_KNOWLEDGE_TBL.TIME_POINT
+	</sql>
+
+	<sql id="RES_VEDIO_KNOWLEDGE_TBL_properties">
+		#knowledgePointId#, #voId#, #knowledgePoint#, #timePoint#
+	</sql>
+
+	<insert id="createVedioKnowledge" parameterClass="VedioKnowledge" >
+		INSERT INTO RES_VEDIO_KNOWLEDGE_TBL (
+		<include refid="VedioKnowledge_NS.RES_VEDIO_KNOWLEDGE_TBL_columns" />
+		) VALUES (
+		<include refid="VedioKnowledge_NS.RES_VEDIO_KNOWLEDGE_TBL_properties" />
+		)
+		<selectKey resultClass="int" type="post" keyProperty="knowledgePointId">
+			<include refid="public_sql.increment_sql" />
+		</selectKey>
+	</insert>
+
+	<delete id="deleteVedioKnowledgeById" parameterClass="int">
+		DELETE FROM RES_VEDIO_KNOWLEDGE_TBL WHERE KNOWLEDGE_POINT_ID = #value#
+	</delete>
+	
+	<delete id="deleteVedioKnowledgeByVoID" parameterClass="int">
+		DELETE FROM RES_VEDIO_KNOWLEDGE_TBL WHERE VO_ID = #value#
+	</delete>
+
+	<update id="updateVedioKnowledge" parameterClass="VedioKnowledge">
+		UPDATE RES_VEDIO_KNOWLEDGE_TBL SET VO_ID = #voId#, KNOWLEDGE_POINT = #knowledgePointId#, TIME_POINT
+		= #timePoint# 
+		 WHERE KNOWLEDGE_POINT_ID = #knowledgePointId#
+	</update>
+
+	<select id="getVedioKnowledgeById" resultMap="VedioKnowledge_NS.VedioKnowledgeResult"
+		parameterClass="int">
+		SELECT
+		<include refid="VedioKnowledge_NS.RES_VEDIO_KNOWLEDGE_TBL_columns" />
+		FROM RES_VEDIO_KNOWLEDGE_TBL WHERE KNOWLEDGE_POINT_ID = #value#
+	</select>
+	<select id="getVedioByVoId" resultMap="VedioKnowledge_NS.VedioKnowledgeResult" parameterClass="int">
+		SELECT
+		<include refid="VedioKnowledge_NS.RES_VEDIO_KNOWLEDGE_TBL_columns" />
+		FROM RES_VEDIO_KNOWLEDGE_TBL WHERE VO_ID = #value# ORDER BY RES_VEDIO_KNOWLEDGE_TBL.KNOWLEDGE_POINT_ID
+	</select>
+</sqlMap>
